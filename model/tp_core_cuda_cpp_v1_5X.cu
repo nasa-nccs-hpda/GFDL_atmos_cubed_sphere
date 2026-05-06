@@ -470,95 +470,64 @@ __global__ void final_fy_kernel(float *fy_out, const float *fy, const float *fy2
 void xppm8(float *flux, const float *q, const float *c, const float *dxa,
            float *dm, float *al, float *bl, float *br, int is, int ie,
            int isd, int ied, int jfirst, int jlast, int jsd, int jed, int npx,
-           bool nested, int grid_type, int nxq, cudaStream_t stream) {
+           bool nested, int grid_type, int nxq) {
   const int threads = 256;
   const int is1 = (!nested && grid_type < 3) ? std::max(3, is - 1) : is - 1;
   const int ie1 = (!nested && grid_type < 3) ? std::min(npx - 3, ie + 1) : ie + 1;
 
   int count = (ie - is + 5) * (jlast - jfirst + 1);
-  x_dm_kernel<<<(count + threads - 1) / threads, threads, 0, stream>>>(dm, q, is, ie, jfirst, jlast, isd, jsd, nxq);
+  x_dm_kernel<<<(count + threads - 1) / threads, threads>>>(dm, q, is, ie, jfirst, jlast, isd, jsd, nxq);
   count = (ie1 - is1 + 2) * (jlast - jfirst + 1);
-  x_al_kernel<<<(count + threads - 1) / threads, threads, 0, stream>>>(al, q, dm, is1, ie1, jfirst, jlast, isd, jsd, nxq);
+  x_al_kernel<<<(count + threads - 1) / threads, threads>>>(al, q, dm, is1, ie1, jfirst, jlast, isd, jsd, nxq);
   count = (ie1 - is1 + 1) * (jlast - jfirst + 1);
-  x_blbr_kernel<<<(count + threads - 1) / threads, threads, 0, stream>>>(bl, br, q, dm, al, is1, ie1, jfirst, jlast,
-                                                                         isd, jsd, nxq);
+  x_blbr_kernel<<<(count + threads - 1) / threads, threads>>>(bl, br, q, dm, al, is1, ie1, jfirst, jlast,
+                                                               isd, jsd, nxq);
   if (!nested && grid_type < 3) {
     if (is == 1) {
       const int n_j = jlast - jfirst + 1;
-      x_edge_west_kernel<<<(n_j + threads - 1) / threads, threads, 0, stream>>>(bl, br, q, dm, al, dxa, jfirst,
-                                                                                jlast, isd, jsd, nxq);
+      x_edge_west_kernel<<<(n_j + threads - 1) / threads, threads>>>(bl, br, q, dm, al, dxa, jfirst,
+                                                                      jlast, isd, jsd, nxq);
     }
     if ((ie + 1) == npx) {
       const int n_j = jlast - jfirst + 1;
-      x_edge_east_kernel<<<(n_j + threads - 1) / threads, threads, 0, stream>>>(bl, br, q, dm, al, dxa, jfirst,
-                                                                                jlast, npx, isd, jsd, nxq);
+      x_edge_east_kernel<<<(n_j + threads - 1) / threads, threads>>>(bl, br, q, dm, al, dxa, jfirst,
+                                                                      jlast, npx, isd, jsd, nxq);
     }
   }
   count = (ie - is + 2) * (jlast - jfirst + 1);
-  x_flux_kernel<<<(count + threads - 1) / threads, threads, 0, stream>>>(flux, q, c, bl, br, is, ie, jfirst, jlast,
-                                                                         isd, jsd, nxq);
+  x_flux_kernel<<<(count + threads - 1) / threads, threads>>>(flux, q, c, bl, br, is, ie, jfirst, jlast,
+                                                              isd, jsd, nxq);
 }
 
 void yppm8(float *flux, const float *q, const float *c, const float *dya,
            float *dm, float *al, float *bl, float *br, int ifirst, int ilast,
            int isd, int ied, int js, int je, int jsd, int jed, int npy,
-           bool nested, int grid_type, int nxq, cudaStream_t stream) {
+           bool nested, int grid_type, int nxq) {
   const int threads = 256;
   const int js1 = (!nested && grid_type < 3) ? std::max(3, js - 1) : js - 1;
   const int je1 = (!nested && grid_type < 3) ? std::min(npy - 3, je + 1) : je + 1;
 
   int count = (ilast - ifirst + 1) * (je - js + 5);
-  y_dm_kernel<<<(count + threads - 1) / threads, threads, 0, stream>>>(dm, q, ifirst, ilast, js, je, isd, jsd, nxq);
+  y_dm_kernel<<<(count + threads - 1) / threads, threads>>>(dm, q, ifirst, ilast, js, je, isd, jsd, nxq);
   count = (ilast - ifirst + 1) * (je1 - js1 + 2);
-  y_al_kernel<<<(count + threads - 1) / threads, threads, 0, stream>>>(al, q, dm, ifirst, ilast, js1, je1, isd, jsd, nxq);
+  y_al_kernel<<<(count + threads - 1) / threads, threads>>>(al, q, dm, ifirst, ilast, js1, je1, isd, jsd, nxq);
   count = (ilast - ifirst + 1) * (je1 - js1 + 1);
-  y_blbr_kernel<<<(count + threads - 1) / threads, threads, 0, stream>>>(bl, br, q, dm, al, ifirst, ilast, js1, je1,
-                                                                         isd, jsd, nxq);
+  y_blbr_kernel<<<(count + threads - 1) / threads, threads>>>(bl, br, q, dm, al, ifirst, ilast, js1, je1,
+                                                               isd, jsd, nxq);
   if (!nested && grid_type < 3) {
     const int n_i = ilast - ifirst + 1;
     if (js == 1) {
-      y_edge_south_kernel<<<(n_i + threads - 1) / threads, threads, 0, stream>>>(bl, br, q, dm, al, dya, ifirst, ilast,
-                                                                                 isd, jsd, nxq);
+      y_edge_south_kernel<<<(n_i + threads - 1) / threads, threads>>>(bl, br, q, dm, al, dya, ifirst, ilast,
+                                                                       isd, jsd, nxq);
     }
     if ((je + 1) == npy) {
-      y_edge_north_kernel<<<(n_i + threads - 1) / threads, threads, 0, stream>>>(bl, br, q, dm, al, dya, ifirst, ilast,
-                                                                                 npy, isd, jsd, nxq);
+      y_edge_north_kernel<<<(n_i + threads - 1) / threads, threads>>>(bl, br, q, dm, al, dya, ifirst, ilast,
+                                                                       npy, isd, jsd, nxq);
     }
   }
   count = (ilast - ifirst + 1) * (je - js + 2);
-  y_flux_kernel<<<(count + threads - 1) / threads, threads, 0, stream>>>(flux, q, c, bl, br, ifirst, ilast, js, je,
-                                                                         isd, jsd, nxq);
-}
-
-void launch_tp_iteration(float *dq, const float *dcrx, const float *dcry,
-                         const float *dxfx, const float *dyfx, const float *ddxa,
-                         const float *ddya, const float *darea, const float *dra_x,
-                         const float *dra_y, float *q_i, float *q_j, float *fx_work,
-                         float *fy_work, float *fx2, float *fy2, float *dm, float *al,
-                         float *bl, float *br, int npx, int npy, int is, int ie,
-                         int js, int je, int isd, int ied, int jsd, int jed, int nxq,
-                         int threads, bool nested, int grid_type, cudaStream_t stream) {
-  copy_corners_kernel<<<1, 128, 0, stream>>>(dq, npx, npy, 2, isd, jsd, nxq);
-  yppm8(fy2, dq, dcry, ddya, dm, al, bl, br, isd, ied, isd, ied, js, je, jsd, jed,
-        npy, nested, grid_type, nxq, stream);
-
-  int loop_count = (ied - isd + 1) * (je - js + 1);
-  qi_kernel<<<(loop_count + threads - 1) / threads, threads, 0, stream>>>(
-      q_i, dq, darea, dyfx, fy2, dra_y, isd, ied, js, je, jsd, nxq);
-
-  xppm8(fx_work, q_i, dcrx, ddxa, dm, al, bl, br, is, ie, isd, ied, js, je, jsd, jed,
-        npx, nested, grid_type, nxq, stream);
-
-  copy_corners_kernel<<<1, 128, 0, stream>>>(dq, npx, npy, 1, isd, jsd, nxq);
-  xppm8(fx2, dq, dcrx, ddxa, dm, al, bl, br, is, ie, isd, ied, jsd, jed, jsd, jed,
-        npx, nested, grid_type, nxq, stream);
-
-  loop_count = (ie - is + 1) * (jed - jsd + 1);
-  qj_kernel<<<(loop_count + threads - 1) / threads, threads, 0, stream>>>(
-      q_j, dq, darea, dxfx, fx2, dra_x, is, ie, jsd, jed, isd, jsd, nxq);
-
-  yppm8(fy_work, q_j, dcry, ddya, dm, al, bl, br, is, ie, isd, ied, js, je, jsd, jed,
-        npy, nested, grid_type, nxq, stream);
+  y_flux_kernel<<<(count + threads - 1) / threads, threads>>>(flux, q, c, bl, br, ifirst, ilast, js, je,
+                                                              isd, jsd, nxq);
 }
 
 }  // namespace
@@ -622,33 +591,39 @@ extern "C" void fv_tp_2d_cuda_cpp(float *q, const float *crx, const float *cry,
   const int threads = 256;
   const bool nested = false;
   const int grid_type = 0;
-  cudaStream_t stream = nullptr;
-  cudaGraph_t graph = nullptr;
-  cudaGraphExec_t graph_exec = nullptr;
-  check_cuda(cudaStreamCreate(&stream), "cudaStreamCreate");
 
-  if (n_iterations > 0) {
-    check_cuda(cudaStreamBeginCapture(stream, cudaStreamCaptureModeGlobal), "cudaStreamBeginCapture");
-    launch_tp_iteration(dq, dcrx, dcry, dxfx, dyfx, ddxa, ddya, darea, dra_x, dra_y,
-                        q_i, q_j, fx_work, fy_work, fx2, fy2, dm, al, bl, br,
-                        npx, npy, is, ie, js, je, isd, ied, jsd, jed, nxq,
-                        threads, nested, grid_type, stream);
-    check_cuda(cudaStreamEndCapture(stream, &graph), "cudaStreamEndCapture");
-    check_cuda(cudaGraphInstantiate(&graph_exec, graph, nullptr, nullptr, 0), "cudaGraphInstantiate");
+  for (int iter = 0; iter < n_iterations; ++iter) {
+    copy_corners_kernel<<<1, 128>>>(dq, npx, npy, 2, isd, jsd, nxq);
+    yppm8(fy2, dq, dcry, ddya, dm, al, bl, br, isd, ied, isd, ied, js, je, jsd, jed,
+          npy, nested, grid_type, nxq);
 
-    for (int iter = 0; iter < n_iterations; ++iter) {
-      check_cuda(cudaGraphLaunch(graph_exec, stream), "cudaGraphLaunch");
-    }
+    int count = (ied - isd + 1) * (je - js + 1);
+    qi_kernel<<<(count + threads - 1) / threads, threads>>>(q_i, dq, darea, dyfx, fy2, dra_y,
+                                                            isd, ied, js, je, jsd, nxq);
+
+    xppm8(fx_work, q_i, dcrx, ddxa, dm, al, bl, br, is, ie, isd, ied, js, je, jsd, jed,
+          npx, nested, grid_type, nxq);
+
+    copy_corners_kernel<<<1, 128>>>(dq, npx, npy, 1, isd, jsd, nxq);
+    xppm8(fx2, dq, dcrx, ddxa, dm, al, bl, br, is, ie, isd, ied, jsd, jed, jsd, jed,
+          npx, nested, grid_type, nxq);
+
+    count = (ie - is + 1) * (jed - jsd + 1);
+    qj_kernel<<<(count + threads - 1) / threads, threads>>>(q_j, dq, darea, dxfx, fx2, dra_x,
+                                                            is, ie, jsd, jed, isd, jsd, nxq);
+
+    yppm8(fy_work, q_j, dcry, ddya, dm, al, bl, br, is, ie, isd, ied, js, je, jsd, jed,
+          npy, nested, grid_type, nxq);
   }
 
   int count = nxfx * nyfx;
-  final_fx_kernel<<<(count + threads - 1) / threads, threads, 0, stream>>>(
-      dfx_out, fx_work, fx2, dxfx, is, ie, js, je, isd, jsd, nxq, nxfx);
+  final_fx_kernel<<<(count + threads - 1) / threads, threads>>>(dfx_out, fx_work, fx2, dxfx, is, ie,
+                                                                js, je, isd, jsd, nxq, nxfx);
   count = nxfy * nyfy;
-  final_fy_kernel<<<(count + threads - 1) / threads, threads, 0, stream>>>(
-      dfy_out, fy_work, fy2, dyfx, is, ie, js, je, isd, jsd, nxq, nxfy);
+  final_fy_kernel<<<(count + threads - 1) / threads, threads>>>(dfy_out, fy_work, fy2, dyfx, is, ie,
+                                                                js, je, isd, jsd, nxq, nxfy);
   check_cuda(cudaGetLastError(), "launch fv_tp_2d_cuda_cpp");
-  check_cuda(cudaStreamSynchronize(stream), "sync fv_tp_2d_cuda_cpp");
+  check_cuda(cudaDeviceSynchronize(), "sync fv_tp_2d_cuda_cpp");
 
   check_cuda(cudaMemcpy(fx, dfx_out, static_cast<std::size_t>(nxfx) * nyfx * sizeof(float),
                         cudaMemcpyDeviceToHost),
@@ -679,8 +654,5 @@ extern "C" void fv_tp_2d_cuda_cpp(float *q, const float *crx, const float *cry,
   cudaFree(al);
   cudaFree(bl);
   cudaFree(br);
-  if (graph_exec) cudaGraphExecDestroy(graph_exec);
-  if (graph) cudaGraphDestroy(graph);
-  cudaStreamDestroy(stream);
 }
 

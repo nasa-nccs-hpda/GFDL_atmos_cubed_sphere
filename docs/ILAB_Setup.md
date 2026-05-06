@@ -49,7 +49,7 @@ cmake -S standalone-tp-core -B build-cpu -DCMAKE_BUILD_TYPE=Release
 cmake --build build-cpu -j 8
 ```
 
-5. Run Example
+5. Run CPU Example
 
 ```bash
 ./build-cpu/tp-core-driver 180 10
@@ -58,6 +58,7 @@ cmake --build build-cpu -j 8
 6. Compile GPU Version
 
 ```bash
+module load nvidia/nvhpc
 cmake -S standalone-tp-core -B build-gpu   -DCMAKE_BUILD_TYPE=Release   -DENABLE_CUDA_CPP=ON
 cmake --build build-gpu --target tp-core-driver-cuda-cpp -j 8
 ```
