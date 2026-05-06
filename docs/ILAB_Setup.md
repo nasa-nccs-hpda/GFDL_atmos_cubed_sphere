@@ -42,7 +42,7 @@ git checkout agentic-ai-develop
 module load GEOSenv
 ```
 
-4. Compile
+4. Compile CPU Version
 
 ```bash
 cmake -S standalone-tp-core -B build-cpu -DCMAKE_BUILD_TYPE=Release
@@ -55,3 +55,15 @@ cmake --build build-cpu -j 8
 ./build-cpu/tp-core-driver 180 10
 ```
 
+6. Compile GPU Version
+
+```bash
+cmake -S standalone-tp-core -B build-gpu   -DCMAKE_BUILD_TYPE=Release   -DENABLE_CUDA_CPP=ON
+cmake --build build-gpu --target tp-core-driver-cuda-cpp -j 8
+```
+
+7. Run GPU Example
+
+```bash
+./build-gpu/tp-core-driver-cuda-cpp 720 1000
+```
