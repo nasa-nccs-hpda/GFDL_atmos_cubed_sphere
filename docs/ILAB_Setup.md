@@ -33,6 +33,7 @@ fi
 
 ```bash
 git clone https://github.com/nasa-nccs-hpda/GFDL_atmos_cubed_sphere
+git checkout agentic-ai-develop
 ``` 
 
 3. Load Module
