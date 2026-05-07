@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:22.04
 
 ENV GFDL_WORK /tmp
 ENV GFDL_BASE /isca
