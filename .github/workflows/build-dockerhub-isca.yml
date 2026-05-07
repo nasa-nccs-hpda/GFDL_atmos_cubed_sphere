@@ -1,8 +1,8 @@
 name: Isca to Docker Hub - with all dependencies - amd64 only - (Debian slim-bullseye)
 on:
   push:
-  branches:
-    - hs-dev-jl
+    branches:
+      - hs-dev-jl
   workflow_dispatch:
 
 jobs:
