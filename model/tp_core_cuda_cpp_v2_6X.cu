@@ -8,7 +8,6 @@
 namespace {
 
 constexpr int NG = 3;
-constexpr int DEFAULT_GRAPH_ITERATIONS = 64;
 constexpr float R3 = 1.0f / 3.0f;
 constexpr float S11 = 11.0f / 14.0f;
 constexpr float S14 = 4.0f / 7.0f;
@@ -23,18 +22,6 @@ inline void check_cuda(cudaError_t status, const char *what) {
 
 inline void alloc_device(float **ptr, std::size_t count, const char *name) {
   check_cuda(cudaMalloc(reinterpret_cast<void **>(ptr), count * sizeof(float)), name);
-}
-
-int graph_iteration_count(int n_iterations) {
-  int graph_iterations = DEFAULT_GRAPH_ITERATIONS;
-  if (const char *env_value = std::getenv("TP_CORE_CUDA_GRAPH_ITERS")) {
-    const int requested = std::atoi(env_value);
-    if (requested > 0) {
-      graph_iterations = requested;
-    }
-  }
-  graph_iterations = std::max(1, std::min(graph_iterations, 256));
-  return std::min(n_iterations, graph_iterations);
 }
 
 __host__ __device__ inline int idx2(int i, int j, int ilo, int jlo, int nx) {
@@ -641,28 +628,16 @@ extern "C" void fv_tp_2d_cuda_cpp(float *q, const float *crx, const float *cry,
   check_cuda(cudaStreamCreate(&stream), "cudaStreamCreate");
 
   if (n_iterations > 0) {
-    const int graph_iterations = graph_iteration_count(n_iterations);
     check_cuda(cudaStreamBeginCapture(stream, cudaStreamCaptureModeGlobal), "cudaStreamBeginCapture");
-    for (int graph_iter = 0; graph_iter < graph_iterations; ++graph_iter) {
-      launch_tp_iteration(dq, dcrx, dcry, dxfx, dyfx, ddxa, ddya, darea, dra_x, dra_y,
-                          q_i, q_j, fx_work, fy_work, fx2, fy2, dm, al, bl, br,
-                          npx, npy, is, ie, js, je, isd, ied, jsd, jed, nxq,
-                          threads, nested, grid_type, stream);
-    }
+    launch_tp_iteration(dq, dcrx, dcry, dxfx, dyfx, ddxa, ddya, darea, dra_x, dra_y,
+                        q_i, q_j, fx_work, fy_work, fx2, fy2, dm, al, bl, br,
+                        npx, npy, is, ie, js, je, isd, ied, jsd, jed, nxq,
+                        threads, nested, grid_type, stream);
     check_cuda(cudaStreamEndCapture(stream, &graph), "cudaStreamEndCapture");
     check_cuda(cudaGraphInstantiate(&graph_exec, graph, nullptr, nullptr, 0), "cudaGraphInstantiate");
 
-    const int graph_replays = n_iterations / graph_iterations;
-    const int remainder_iterations = n_iterations - graph_replays * graph_iterations;
-
-    for (int replay = 0; replay < graph_replays; ++replay) {
+    for (int iter = 0; iter < n_iterations; ++iter) {
       check_cuda(cudaGraphLaunch(graph_exec, stream), "cudaGraphLaunch");
-    }
-    for (int iter = 0; iter < remainder_iterations; ++iter) {
-      launch_tp_iteration(dq, dcrx, dcry, dxfx, dyfx, ddxa, ddya, darea, dra_x, dra_y,
-                          q_i, q_j, fx_work, fy_work, fx2, fy2, dm, al, bl, br,
-                          npx, npy, is, ie, js, je, isd, ied, jsd, jed, nxq,
-                          threads, nested, grid_type, stream);
     }
   }
 
