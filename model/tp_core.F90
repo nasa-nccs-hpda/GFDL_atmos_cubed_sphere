@@ -57,6 +57,9 @@ module tp_core_mod
 
  private
  public fv_tp_2d, pert_ppm, copy_corners
+#ifdef UNIT_TEST
+ public yppm
+#endif
 
  real, parameter:: ppm_fac = 1.5   !< nonlinear scheme limiter: between 1 and 2
  real, parameter:: r3 = 1./3.
