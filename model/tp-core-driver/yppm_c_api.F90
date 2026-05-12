@@ -35,6 +35,9 @@ contains
     ni_dya = ied - isd + 1
     nj_dya = jed - jsd + 1
 
+    ! Arrays are passed from C++ as flat buffers laid out in Fortran (column-major) order.
+    ! These rank remaps are contiguous and preserve element ordering; yppm receives the
+    ! expected Fortran extents via the index bounds arguments (ifirst/jsd/etc.).
     flux2d(1:ni_flux, 1:nj_flux) => flux(1:ni_flux*nj_flux)
     q2d(1:ni_q, 1:nj_q) => q(1:ni_q*nj_q)
     c2d(1:ni_c, 1:nj_c) => c(1:ni_c*nj_c)

@@ -10,8 +10,7 @@ extern "C" void yppm_c_api(float* flux, const float* q, const float* c, int jord
 
 namespace {
 
-int idx_2d(const int i, const int j, const int i_lo, const int i_hi, const int j_lo) {
-  const int ni = i_hi - i_lo + 1;
+int idx_f_order(const int i, const int j, const int i_lo, const int j_lo, const int ni) {
   return (i - i_lo) + ni * (j - j_lo);
 }
 
@@ -34,9 +33,10 @@ bool assert_constant_field_flux(const int jord,
              dya.data(), nested, grid_type, lim_fac);
 
   float max_err = 0.0f;
+  const int ni_flux = ilast - ifirst + 1;
   for (int j = js; j <= je + 1; ++j) {
     for (int i = ifirst; i <= ilast; ++i) {
-      const float err = std::fabs(flux[idx_2d(i, j, ifirst, ilast, js)] - constant_field);
+      const float err = std::fabs(flux[idx_f_order(i, j, ifirst, js, ni_flux)] - constant_field);
       if (err > max_err) {
         max_err = err;
       }
@@ -77,10 +77,11 @@ int main() {
   std::vector<float> c((ied - isd + 1) * (je - js + 2), 0.0f);
   std::vector<float> dya((ied - isd + 1) * (jed - jsd + 1), 1.0f);
   std::vector<float> flux((ilast - ifirst + 1) * (je - js + 2), 0.0f);
+  const int ni_c = ied - isd + 1;
 
   for (int j = js; j <= je + 1; ++j) {
     for (int i = isd; i <= ied; ++i) {
-      c[idx_2d(i, j, isd, ied, js)] = ((i + j) % 2 == 0) ? 0.25f : -0.35f;
+      c[idx_f_order(i, j, isd, js, ni_c)] = ((i + j) % 2 == 0) ? 0.25f : -0.35f;
     }
   }
 
