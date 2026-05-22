@@ -1,5 +1,5 @@
 // C++ unit tests for the Fortran yppm subroutine, called via the
-// yppm_c bind(C) wrapper.
+// yppm_c bind(C) wrapper, AND for the native C++ port (yppm.hpp).
 //
 // Domain (matches Fortran test_yppm.f90):
 //   n=20, ng=3, ifirst=ilast=1 (single x-column), nested=true
@@ -11,19 +11,19 @@
 //   cry  (-2:4, 1:21)  -> 7x21 flat array
 //   dya  (-2:4, -2:23) -> 7x26 flat array
 //
-// Test summary (8 assertions across 6 tests):
-//   1. Constant q=1, c=+0.5, jord=8  -> flux == 1
-//   2. Constant q=1, c=+0.5, jord=2  -> flux == 1
-//   3. Linear  q=j, c=+0.5, jord=8  -> flux == j - 0.75
-//   4. Linear  q=j, c=-0.5, jord=8  -> flux == j - 0.25
-//   5. Step function, jord=8         -> no overshoot, correct far-field
-//   6. Near-zero q,  jord=-5         -> flux >= 0 (positive-definite)
+// Test summary:
+//   Fortran (via yppm_c): 8 assertions across 6 tests
+//   C++ native (yppm.hpp): 9 assertions across 6 tests
+//     - Tests 1-4, 6 check same analytical values as Fortran tests
+//     - Test 5 also checks bit-exact agreement with Fortran for jord=8
 //
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
+
+#include "yppm.hpp"
 
 // C-linkage prototype for the Fortran yppm_c wrapper.
 // All scalars are passed by value; arrays are passed as pointers to
@@ -234,6 +234,225 @@ static void test_positive_definite() {
     assert_test("near-zero q, jord=-5: all flux >= 0 (positive-definite)", ok);
 }
 
+// ===========================================================================
+// Native C++ yppm tests (yppm.hpp)
+// Same domain and inputs as the Fortran tests above.
+// cry_col and dya_col are extracted from the 7-column arrays for i=ifirst=1.
+// ===========================================================================
+namespace {
+    // NMAX >= je - js + 1 = 20
+    static const int NMAX = 20;
+
+    // Extract the single x-column (i=ifirst=1, ci=ifirst-isd=1-(-2)=3) from
+    // a cry or dya array dimensioned (isd:ied, j_lo:j_hi).
+    static void extract_col(float* col, const std::vector<float>& arr2d,
+                             int ni, int ci, int nj)
+    {
+        for (int j = 0; j < nj; ++j)
+            col[j] = arr2d[ci + ni * j];
+    }
+}
+
+// ---------------------------------------------------------------------------
+// C++ Test 1: Constant field, jord=8
+// ---------------------------------------------------------------------------
+static void test_cpp_constant_jord8() {
+    std::vector<float> q  (Dom::sz_q,    1.0f);
+    std::vector<float> cry(Dom::sz_cry,  0.5f);
+    std::vector<float> dya(Dom::sz_dya,  1.0f);
+
+    const int ni_cry = Dom::ied - Dom::isd + 1;  // 7
+    const int ci     = Dom::ifirst - Dom::isd;    // 3
+
+    float cry_col[NMAX + 3], dya_col[NMAX + 7];
+    float flux_col[NMAX + 3];
+    extract_col(cry_col, cry, ni_cry, ci, Dom::je - Dom::js + 2);
+    extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
+
+    fv3::ScratchYPPM<float, NMAX> scratch;
+    fv3::yppm_col<float, NMAX>(
+        flux_col, q.data() + Dom::q_idx(Dom::jsd), cry_col,
+        8, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
+        dya_col, true, 0, 1.0f, scratch);
+
+    bool ok = true;
+    for (int j = Dom::js; j <= Dom::je + 1; ++j)
+        ok = ok && (std::abs(flux_col[j - Dom::js] - 1.0f) < 1.e-6f);
+    assert_test("C++: constant q=1, c=+0.5, jord=8: flux==1", ok);
+}
+
+// ---------------------------------------------------------------------------
+// C++ Test 2: Constant field, jord=2
+// ---------------------------------------------------------------------------
+static void test_cpp_constant_jord2() {
+    std::vector<float> q  (Dom::sz_q,    1.0f);
+    std::vector<float> cry(Dom::sz_cry,  0.5f);
+    std::vector<float> dya(Dom::sz_dya,  1.0f);
+
+    const int ni_cry = Dom::ied - Dom::isd + 1;
+    const int ci     = Dom::ifirst - Dom::isd;
+
+    float cry_col[NMAX + 3], dya_col[NMAX + 7];
+    float flux_col[NMAX + 3];
+    extract_col(cry_col, cry, ni_cry, ci, Dom::je - Dom::js + 2);
+    extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
+
+    fv3::ScratchYPPM<float, NMAX> scratch;
+    fv3::yppm_col<float, NMAX>(
+        flux_col, q.data() + Dom::q_idx(Dom::jsd), cry_col,
+        2, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
+        dya_col, true, 0, 1.0f, scratch);
+
+    bool ok = true;
+    for (int j = Dom::js; j <= Dom::je + 1; ++j)
+        ok = ok && (std::abs(flux_col[j - Dom::js] - 1.0f) < 1.e-6f);
+    assert_test("C++: constant q=1, c=+0.5, jord=2: flux==1", ok);
+}
+
+// ---------------------------------------------------------------------------
+// C++ Test 3: Linear field q(j)=j, jord=8, c=+0.5 -> flux==j-0.75
+// ---------------------------------------------------------------------------
+static void test_cpp_linear_positive_courant() {
+    std::vector<float> q  (Dom::sz_q);
+    std::vector<float> cry(Dom::sz_cry,  0.5f);
+    std::vector<float> dya(Dom::sz_dya,  1.0f);
+
+    for (int j = Dom::jsd; j <= Dom::jed; ++j)
+        q[Dom::q_idx(j)] = float(j);
+
+    const int ni_cry = Dom::ied - Dom::isd + 1;
+    const int ci     = Dom::ifirst - Dom::isd;
+
+    float cry_col[NMAX + 3], dya_col[NMAX + 7];
+    float flux_col[NMAX + 3];
+    extract_col(cry_col, cry, ni_cry, ci, Dom::je - Dom::js + 2);
+    extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
+
+    fv3::ScratchYPPM<float, NMAX> scratch;
+    fv3::yppm_col<float, NMAX>(
+        flux_col, q.data() + Dom::q_idx(Dom::jsd), cry_col,
+        8, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
+        dya_col, true, 0, 1.0f, scratch);
+
+    bool ok = true;
+    for (int j = Dom::js; j <= Dom::je + 1; ++j)
+        ok = ok && (std::abs(flux_col[j - Dom::js] - (float(j) - 0.75f)) < 1.e-5f);
+    assert_test("C++: linear q=j, c=+0.5, jord=8: flux==j-0.75", ok);
+}
+
+// ---------------------------------------------------------------------------
+// C++ Test 4: Linear field q(j)=j, jord=8, c=-0.5 -> flux==j-0.25
+// ---------------------------------------------------------------------------
+static void test_cpp_linear_negative_courant() {
+    std::vector<float> q  (Dom::sz_q);
+    std::vector<float> cry(Dom::sz_cry, -0.5f);
+    std::vector<float> dya(Dom::sz_dya,  1.0f);
+
+    for (int j = Dom::jsd; j <= Dom::jed; ++j)
+        q[Dom::q_idx(j)] = float(j);
+
+    const int ni_cry = Dom::ied - Dom::isd + 1;
+    const int ci     = Dom::ifirst - Dom::isd;
+
+    float cry_col[NMAX + 3], dya_col[NMAX + 7];
+    float flux_col[NMAX + 3];
+    extract_col(cry_col, cry, ni_cry, ci, Dom::je - Dom::js + 2);
+    extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
+
+    fv3::ScratchYPPM<float, NMAX> scratch;
+    fv3::yppm_col<float, NMAX>(
+        flux_col, q.data() + Dom::q_idx(Dom::jsd), cry_col,
+        8, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
+        dya_col, true, 0, 1.0f, scratch);
+
+    bool ok = true;
+    for (int j = Dom::js; j <= Dom::je + 1; ++j)
+        ok = ok && (std::abs(flux_col[j - Dom::js] - (float(j) - 0.25f)) < 1.e-5f);
+    assert_test("C++: linear q=j, c=-0.5, jord=8: flux==j-0.25", ok);
+}
+
+// ---------------------------------------------------------------------------
+// C++ Test 5: Step function, jord=8
+// Also verifies bit-exact agreement with Fortran yppm_c output.
+// ---------------------------------------------------------------------------
+static void test_cpp_monotone_bounds() {
+    static const int mid = 11;
+    std::vector<float> q  (Dom::sz_q);
+    std::vector<float> cry(Dom::sz_cry,  0.5f);
+    std::vector<float> dya(Dom::sz_dya,  1.0f);
+
+    for (int j = Dom::jsd; j <= Dom::jed; ++j)
+        q[Dom::q_idx(j)] = (j < mid) ? 0.0f : 1.0f;
+
+    const int ni_cry = Dom::ied - Dom::isd + 1;
+    const int ci     = Dom::ifirst - Dom::isd;
+
+    float cry_col[NMAX + 3], dya_col[NMAX + 7];
+    float flux_col_cpp[NMAX + 3];
+    extract_col(cry_col, cry, ni_cry, ci, Dom::je - Dom::js + 2);
+    extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
+
+    fv3::ScratchYPPM<float, NMAX> scratch;
+    fv3::yppm_col<float, NMAX>(
+        flux_col_cpp, q.data() + Dom::q_idx(Dom::jsd), cry_col,
+        8, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
+        dya_col, true, 0, 1.0f, scratch);
+
+    // Correctness: no overshoot, far-field exact
+    bool ok_bounds = true, ok_below = true, ok_above = true;
+    for (int j = Dom::js; j <= Dom::je + 1; ++j) {
+        float f = flux_col_cpp[j - Dom::js];
+        ok_bounds = ok_bounds && (f >= -1.e-6f) && (f <= 1.0f + 1.e-6f);
+    }
+    for (int j = 3; j <= mid - 3; ++j)
+        ok_below = ok_below && (std::abs(flux_col_cpp[j - Dom::js]) < 1.e-6f);
+    for (int j = mid + 3; j <= Dom::je + 1; ++j)
+        ok_above = ok_above && (std::abs(flux_col_cpp[j - Dom::js] - 1.0f) < 1.e-6f);
+
+    assert_test("C++: step q, jord=8: 0<=flux<=1 (no overshoot)", ok_bounds);
+    assert_test("C++: step q, jord=8: matches Fortran (below+above step)", ok_below && ok_above);
+
+    // Bit-exact agreement with Fortran: run yppm_c on same inputs and compare
+    std::vector<float> flux_fortran(Dom::sz_flux);
+    yppm_c(flux_fortran.data(), q.data(), cry.data(),
+           8, Dom::ifirst, Dom::ilast, Dom::isd, Dom::ied,
+           Dom::js, Dom::je, Dom::jsd, Dom::jed,
+           Dom::npx, Dom::npy, dya.data(), 1, 0, 1.0f);
+
+    bool ok_exact = true;
+    for (int j = Dom::js; j <= Dom::je + 1; ++j)
+        ok_exact = ok_exact && (flux_col_cpp[j - Dom::js] == flux_fortran[Dom::flux_idx(j)]);
+    assert_test("C++: step q, jord=8: bit-exact agreement with Fortran", ok_exact);
+}
+
+// ---------------------------------------------------------------------------
+// C++ Test 6: Near-zero q, jord=-5 (positive-definite)
+// ---------------------------------------------------------------------------
+static void test_cpp_positive_definite() {
+    std::vector<float> q  (Dom::sz_q,    1.e-20f);
+    std::vector<float> cry(Dom::sz_cry,  0.5f);
+    std::vector<float> dya(Dom::sz_dya,  1.0f);
+
+    const int ni_cry = Dom::ied - Dom::isd + 1;
+    const int ci     = Dom::ifirst - Dom::isd;
+
+    float cry_col[NMAX + 3], dya_col[NMAX + 7];
+    float flux_col[NMAX + 3];
+    extract_col(cry_col, cry, ni_cry, ci, Dom::je - Dom::js + 2);
+    extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
+
+    fv3::ScratchYPPM<float, NMAX> scratch;
+    fv3::yppm_col<float, NMAX>(
+        flux_col, q.data() + Dom::q_idx(Dom::jsd), cry_col,
+        -5, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
+        dya_col, true, 0, 1.0f, scratch);
+
+    bool ok = true;
+    for (int j = Dom::js; j <= Dom::je + 1; ++j)
+        ok = ok && (flux_col[j - Dom::js] >= 0.0f);
+    assert_test("C++: near-zero q, jord=-5: all flux >= 0 (positive-definite)", ok);
+}
+
 // ---------------------------------------------------------------------------
 int main() {
     test_constant_jord8();
@@ -242,6 +461,14 @@ int main() {
     test_linear_negative_courant();
     test_monotone_bounds();
     test_positive_definite();
+
+    std::cout << "\n--- Native C++ yppm (yppm.hpp) tests ---\n";
+    test_cpp_constant_jord8();
+    test_cpp_constant_jord2();
+    test_cpp_linear_positive_courant();
+    test_cpp_linear_negative_courant();
+    test_cpp_monotone_bounds();
+    test_cpp_positive_definite();
 
     if (n_failed == 0) {
         std::cout << "All tests PASSED\n";
