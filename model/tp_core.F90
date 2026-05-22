@@ -56,7 +56,7 @@ module tp_core_mod
  implicit none
 
  private
- public fv_tp_2d, pert_ppm, copy_corners
+ public fv_tp_2d, pert_ppm, copy_corners, yppm
 
  real, parameter:: ppm_fac = 1.5   !< nonlinear scheme limiter: between 1 and 2
  real, parameter:: r3 = 1./3.
