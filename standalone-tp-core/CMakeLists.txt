@@ -55,3 +55,20 @@ target_tp_core_flags(test_yppm)
 
 add_test(NAME test_yppm COMMAND test_yppm)
 
+# ---- C++ unit tests ----
+enable_language(CXX)
+
+add_executable(test_yppm_cpp
+  ${stub_srcs}
+  ../model/tp_core.F90
+  yppm_c_binding.f90
+  test_yppm_cpp.cpp
+)
+set_target_properties(test_yppm_cpp PROPERTIES
+  Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/mod/test_yppm_cpp
+  CXX_STANDARD 11
+  CXX_STANDARD_REQUIRED ON)
+target_tp_core_flags(test_yppm_cpp)
+
+add_test(NAME test_yppm_cpp COMMAND test_yppm_cpp)
+
