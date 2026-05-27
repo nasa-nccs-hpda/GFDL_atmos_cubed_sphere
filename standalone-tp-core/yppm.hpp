@@ -1,27 +1,36 @@
 // yppm.hpp — C++ port of the yppm subroutine from tp_core.F90
 //
 // Design goals:
-//   - Header-only: suitable for later annotation as __host__ __device__
+//   - Header-only: suitable for CUDA __device__ compilation
 //   - No heap allocation: all scratch lives in caller-supplied ScratchYPPM
-//   - Template on Real (float/double) for future GPU float usage
+//   - Template on Real (float/double) for GPU float / CPU double usage
 //   - No STL containers inside function bodies
 //
-// Usage (single column, as in tests):
+// CPU usage (single column):
 //   ScratchYPPM<float, 20> scratch;
 //   yppm_col<float,20>(flux_col, q_col, cry_col, jord, js, je, jsd, jed,
 //                      npx, npy, dya_col, nested, grid_type, lim_fac, scratch);
 //
-// Usage (multi-column wrapper, matching Fortran yppm signature):
+// CPU usage (multi-column wrapper, matching Fortran yppm signature):
 //   yppm<float,20>(flux, q, cry, jord, ifirst, ilast, isd, ied, js, je,
 //                  jsd, jed, npx, npy, dya, nested, grid_type, lim_fac, scratch);
 //
-// Note for GPU porting:
-//   Replace std::abs/std::copysign with fabsf/copysignf (or __device__ equivalents).
-//   Replace std::min/std::max with explicit ternary expressions.
-//   Annotate pert_ppm, yppm_col with __host__ __device__.
-//   Provide scratch from shared memory instead of the stack.
+// GPU usage: call yppm_col directly from a __global__ kernel,
+//   one thread per x-column, with ScratchYPPM as a thread-local variable.
 #pragma once
-#include <cmath>
+
+// Portability macros: resolve to nothing on CPU, CUDA annotations on GPU.
+#ifdef __CUDACC__
+#  define YPPM_HOST_DEVICE __host__ __device__
+#  define YPPM_INLINE      __forceinline__
+#else
+#  define YPPM_HOST_DEVICE
+#  define YPPM_INLINE      inline
+#endif
+
+#ifndef __CUDACC__
+#  include <cmath>
+#endif
 
 namespace fv3 {
 
@@ -47,26 +56,35 @@ struct Const {
 };
 
 template <typename Real>
-inline Real fmin3(Real a, Real b, Real c) {
+YPPM_HOST_DEVICE YPPM_INLINE Real fmin3(Real a, Real b, Real c) {
     Real ab = a < b ? a : b;
     return ab < c ? ab : c;
 }
 
 template <typename Real>
-inline Real fmax3(Real a, Real b, Real c) {
+YPPM_HOST_DEVICE YPPM_INLINE Real fmax3(Real a, Real b, Real c) {
     Real ab = a > b ? a : b;
     return ab > c ? ab : c;
 }
 
 template <typename Real>
-inline Real fmin4(Real a, Real b, Real c, Real d) {
+YPPM_HOST_DEVICE YPPM_INLINE Real fmin4(Real a, Real b, Real c, Real d) {
     return fmin3(a < b ? a : b, c, d);
 }
 
 template <typename Real>
-inline Real fmax4(Real a, Real b, Real c, Real d) {
+YPPM_HOST_DEVICE YPPM_INLINE Real fmax4(Real a, Real b, Real c, Real d) {
     return fmax3(a > b ? a : b, c, d);
 }
+
+// Device-safe replacements for detail::yabs and detail::ycopysign.
+// std:: versions are not available in CUDA device code.
+template <typename T>
+YPPM_HOST_DEVICE YPPM_INLINE T yabs(T x) { return x < T(0) ? -x : x; }
+
+template <typename T>
+YPPM_HOST_DEVICE YPPM_INLINE T ycopysign(T mag, T sgn)
+{ return sgn < T(0) ? -yabs(mag) : yabs(mag); }
 
 } // namespace detail
 
@@ -96,6 +114,7 @@ struct ScratchYPPM {
 // This matches calling with offset pointers into the scratch j-arrays.
 // ---------------------------------------------------------------------------
 template <typename Real>
+YPPM_HOST_DEVICE YPPM_INLINE
 void pert_ppm(int im, const Real* a0, Real* al, Real* ar, int iv)
 {
     using C = detail::Const<Real>;
@@ -109,7 +128,7 @@ void pert_ppm(int im, const Real* a0, Real* al, Real* ar, int iv)
             } else {
                 const Real a4  = -Real(3) * (ar[i] + al[i]);
                 const Real da1 = ar[i] - al[i];
-                if (std::abs(da1) < -a4) {
+                if (detail::yabs(da1) < -a4) {
                     const Real fmin = a0[i] + Real(0.25)/a4 * da1*da1 + a4*C::r12;
                     if (fmin < Real(0)) {
                         if (ar[i] > Real(0) && al[i] > Real(0)) {
@@ -153,6 +172,7 @@ void pert_ppm(int im, const Real* a0, Real* al, Real* ar, int iv)
 // NMAX must satisfy NMAX >= (je - js + 1).
 // ---------------------------------------------------------------------------
 template <typename Real, int NMAX>
+YPPM_HOST_DEVICE
 void yppm_col(
     Real*       flux_col,
     const Real* q_col,
@@ -243,7 +263,7 @@ void yppm_col(
                 bl[j]   = al_s[j]   - q[j];
                 br[j]   = al_s[j+1] - q[j];
                 b0[j]   = bl[j] + br[j];
-                smt5[j] = std::abs(lim_fac * b0[j]) < std::abs(bl[j] - br[j]);
+                smt5[j] = detail::yabs(lim_fac * b0[j]) < detail::yabs(bl[j] - br[j]);
             }
             for (int j = js; j <= je + 1; ++j) {
                 if (cry[j] > Real(0)) {
@@ -275,8 +295,8 @@ void yppm_col(
                 bl[j] = al_s[j]   - q[j];
                 br[j] = al_s[j+1] - q[j];
                 b0[j] = bl[j] + br[j];
-                const Real x0 = std::abs(b0[j]);
-                const Real xt = std::abs(bl[j] - br[j]);
+                const Real x0 = detail::yabs(b0[j]);
+                const Real xt = detail::yabs(bl[j] - br[j]);
                 smt5[j] =         x0 < xt;
                 smt6[j] = Real(3)*x0 < xt;
             }
@@ -300,8 +320,8 @@ void yppm_col(
                 bl[j] = al_s[j]   - q[j];
                 br[j] = al_s[j+1] - q[j];
                 b0[j] = bl[j] + br[j];
-                const Real x0 = std::abs(b0[j]);
-                const Real xt = std::abs(bl[j] - br[j]);
+                const Real x0 = detail::yabs(b0[j]);
+                const Real xt = detail::yabs(bl[j] - br[j]);
                 smt5[j] =         x0 < xt;
                 smt6[j] = Real(3)*x0 < xt;
             }
@@ -337,7 +357,7 @@ void yppm_col(
                     xt1     = br[j] - bl[j];
                     a4_val  = -Real(3) * b0[j];
                     smt5[j] = bl[j] * br[j] < Real(0);
-                    if (std::abs(xt1) < -a4_val) {
+                    if (detail::yabs(xt1) < -a4_val) {
                         if (q[j] + Real(0.25)/a4_val * xt1*xt1 + a4_val*C::r12 < Real(0)) {
                             if (!smt5[j]) {
                                 br[j] = Real(0); bl[j] = Real(0); b0[j] = Real(0);
@@ -355,7 +375,7 @@ void yppm_col(
                     bl[j]   = al_s[j]   - q[j];
                     br[j]   = al_s[j+1] - q[j];
                     b0[j]   = bl[j] + br[j];
-                    smt5[j] = Real(3)*std::abs(b0[j]) < std::abs(bl[j] - br[j]);
+                    smt5[j] = Real(3)*detail::yabs(b0[j]) < detail::yabs(bl[j] - br[j]);
                 }
                 // WMP edge fix (Fortran lines 938-951)
                 if (!nested && grid_type < 3) {
@@ -394,8 +414,8 @@ void yppm_col(
         const Real xt    = Real(0.25) * (q[j+1] - q[j-1]);
         const Real qmax  = detail::fmax3(q[j-1], q[j], q[j+1]);
         const Real qmin  = detail::fmin3(q[j-1], q[j], q[j+1]);
-        const Real lim   = detail::fmin3(std::abs(xt), qmax - q[j], q[j] - qmin);
-        dm[j] = std::copysign(lim, xt);
+        const Real lim   = detail::fmin3(detail::yabs(xt), qmax - q[j], q[j] - qmin);
+        dm[j] = detail::ycopysign(lim, xt);
     }
 
     // Compute edge values al_s (Fortran lines 984-988)
@@ -406,11 +426,11 @@ void yppm_col(
     if (jord == 8) {
         for (int j = js1; j <= je1; ++j) {
             const Real xt   = Real(2) * dm[j];
-            const Real abxt = std::abs(xt);
-            const Real bll  = std::abs(al_s[j]   - q[j]);
-            const Real brr  = std::abs(al_s[j+1] - q[j]);
-            bl[j] = -std::copysign(abxt < bll ? abxt : bll, xt);
-            br[j] =  std::copysign(abxt < brr ? abxt : brr, xt);
+            const Real abxt = detail::yabs(xt);
+            const Real bll  = detail::yabs(al_s[j]   - q[j]);
+            const Real brr  = detail::yabs(al_s[j+1] - q[j]);
+            bl[j] = -detail::ycopysign(abxt < bll ? abxt : bll, xt);
+            br[j] =  detail::ycopysign(abxt < brr ? abxt : brr, xt);
         }
 
     } else if (jord == 10) {
@@ -419,11 +439,11 @@ void yppm_col(
         for (int j = js1; j <= je1; ++j) {
             bl[j] = al_s[j]   - q[j];
             br[j] = al_s[j+1] - q[j];
-            const Real dm_sum = std::abs(dm[j-1]) + std::abs(dm[j]) + std::abs(dm[j+1]);
+            const Real dm_sum = detail::yabs(dm[j-1]) + detail::yabs(dm[j]) + detail::yabs(dm[j+1]);
             if (dm_sum < C::near_zero) {
                 bl[j] = Real(0);
                 br[j] = Real(0);
-            } else if (std::abs(Real(3)*(bl[j] + br[j])) > std::abs(bl[j] - br[j])) {
+            } else if (detail::yabs(Real(3)*(bl[j] + br[j])) > detail::yabs(bl[j] - br[j])) {
                 const Real pmp_2 = dq[j-1];
                 const Real lac_2 = pmp_2 - Real(0.75) * dq[j-2];
                 const Real brmax = pmp_2 > Real(0) ? pmp_2 : Real(0);
@@ -448,11 +468,11 @@ void yppm_col(
     } else if (jord == 11) {
         for (int j = js1; j <= je1; ++j) {
             const Real xt   = C::ppm_fac * dm[j];
-            const Real abxt = std::abs(xt);
-            const Real bll  = std::abs(al_s[j]   - q[j]);
-            const Real brr  = std::abs(al_s[j+1] - q[j]);
-            bl[j] = -std::copysign(abxt < bll ? abxt : bll, xt);
-            br[j] =  std::copysign(abxt < brr ? abxt : brr, xt);
+            const Real abxt = detail::yabs(xt);
+            const Real bll  = detail::yabs(al_s[j]   - q[j]);
+            const Real brr  = detail::yabs(al_s[j+1] - q[j]);
+            bl[j] = -detail::ycopysign(abxt < bll ? abxt : bll, xt);
+            br[j] =  detail::ycopysign(abxt < brr ? abxt : brr, xt);
         }
 
     } else if (jord == 7 || jord == 12) {
@@ -462,7 +482,7 @@ void yppm_col(
             xt1    = br[j] - bl[j];
             a4_val = -Real(3) * (br[j] + bl[j]);
             hi5    = bl[j] * br[j] > Real(0);
-            hi6    = std::abs(xt1) < -a4_val;
+            hi6    = detail::yabs(xt1) < -a4_val;
             if (hi6) {
                 if (q[j] + Real(0.25)/a4_val * xt1*xt1 + a4_val*C::r12 < Real(0)) {
                     if (hi5) {
