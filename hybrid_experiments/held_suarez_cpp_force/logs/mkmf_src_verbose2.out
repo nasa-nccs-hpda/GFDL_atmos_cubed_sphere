@@ -1,0 +1,10 @@
+ERROR opening file atmos_shared/interpolator/interpolator.F90 of object interpolator.o: No such file or directory
+/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/bin/mkmf $Id: mkmf,v 16.1 2010/05/19 18:49:19 fms Exp $ 
+Making makefile Makefile ...
+target=./
+Processing directory ./
+target=path_names
+Reading commands from path_names...
+target=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/src/
+Processing directory /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/src/
+Scanning file atmos_shared/interpolator/interpolator.F90 of object interpolator.o ...

@@ -1,0 +1,28 @@
+{
+  "files": {
+    "output_tdt.bin": {
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0,
+      "rmse": 0.0,
+      "pass": true
+    },
+    "output_teq.bin": {
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0,
+      "rmse": 0.0,
+      "pass": true
+    },
+    "output_udt.bin": {
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0,
+      "rmse": 0.0,
+      "pass": true
+    },
+    "output_vdt.bin": {
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0,
+      "rmse": 0.0,
+      "pass": true
+    }
+  }
+}

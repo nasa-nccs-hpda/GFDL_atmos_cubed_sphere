@@ -42,3 +42,35 @@ or activity by DOC or the United States Government.
 
 This project code is made available through GitHub but is managed by NOAA-GFDL
 at https://gitlab.gfdl.noaa.gov.
+
+# Development Agentic AI Structure
+project/
+├── agents/
+│   ├── code_mapper.py
+│   ├── translator.py
+│   ├── validator.py
+│   ├── build_runner.py
+│   └── debug_agent.py
+│
+├── memory/
+│   ├── Claude.md
+│   ├── architecture.md
+│   └── migration_notes.md
+│
+├── artifacts/
+│   ├── code_map.json
+│   ├── validation_report.json
+│   └── dependency_graph.json
+│
+├── translated/
+│   ├── cpp/
+│   └── cuda/
+│
+├── tests/
+│   ├── baseline/
+│   └── regression/
+│
+└── prompts/
+    ├── translate.txt
+    ├── debug.txt
+    └── validate.txt

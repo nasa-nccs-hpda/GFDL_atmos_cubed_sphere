@@ -1,0 +1,4251 @@
+{
+  "repo": "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere",
+  "keywords": [
+    "held_suarez",
+    "held",
+    "suarez",
+    "forcing",
+    "hs"
+  ],
+  "n_files_scanned": 377,
+  "n_relevant_files": 40,
+  "relevant_files": [
+    {
+      "path": "src/atmos_param/hs_forcing/hs_forcing.F90",
+      "language": "fortran",
+      "n_lines": 1028,
+      "modules": [
+        "hs_forcing_mod"
+      ],
+      "uses": [
+        "astronomy_mod",
+        "constants_mod",
+        "diag_manager_mod",
+        "field_manager_mod",
+        "fms_mod",
+        "interpolator_mod",
+        "mpp_mod",
+        "spec_mpp_mod",
+        "time_manager_mod",
+        "tracer_manager_mod",
+        "transforms_mod"
+      ],
+      "subroutines": [
+        "calc_ecc_anomaly",
+        "calc_hour_angle",
+        "get_zonal_mean_flow",
+        "get_zonal_mean_temp",
+        "hs_forcing",
+        "hs_forcing_end",
+        "hs_forcing_init",
+        "local_heating",
+        "newtonian_damping",
+        "rayleigh_damping",
+        "top_down_newtonian_damping",
+        "tracer_source_sink",
+        "update_orbit"
+      ],
+      "functions": [],
+      "calls": [
+        "astronomy_init",
+        "calc_ecc_anomaly",
+        "calc_hour_angle",
+        "close_file",
+        "diurnal_exoplanet",
+        "error_mesg",
+        "get_grid_domain",
+        "get_number_tracers",
+        "get_time",
+        "get_zonal_mean_flow",
+        "get_zonal_mean_temp",
+        "interpolator",
+        "interpolator_end",
+        "interpolator_init",
+        "local_heating",
+        "newtonian_damping",
+        "rayleigh_damping",
+        "read_data",
+        "set_domain",
+        "top_down_newtonian_damping",
+        "tracer_source_sink",
+        "update_orbit",
+        "write_data",
+        "write_version_number"
+      ],
+      "relevance_score": 120
+    },
+    {
+      "path": "exp/test_cases/held_suarez/held_suarez_test_case.py",
+      "language": "python",
+      "n_lines": 110,
+      "mentions": {
+        "held_suarez": true,
+        "namelist": true,
+        "compile": true,
+        "run": true,
+        "fms": true,
+        "mpp": false
+      },
+      "relevance_score": 110
+    },
+    {
+      "path": "exp/test_cases/held_suarez/parameter_sweep.py",
+      "language": "python",
+      "n_lines": 42,
+      "mentions": {
+        "held_suarez": true,
+        "namelist": true,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 90
+    },
+    {
+      "path": "run_held_suarez.sh",
+      "language": "script",
+      "n_lines": 37,
+      "mentions": {
+        "held_suarez": true,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 80
+    },
+    {
+      "path": "src/atmos_spectral/driver/solo/atmosphere.F90",
+      "language": "fortran",
+      "n_lines": 400,
+      "modules": [
+        "atmosphere_mod"
+      ],
+      "uses": [
+        "column_grid_mod",
+        "column_mod",
+        "constants_mod",
+        "field_manager_mod",
+        "fms_mod",
+        "hs_forcing_mod",
+        "idealized_moist_phys_mod",
+        "mpp_mod",
+        "press_and_geopot_mod",
+        "spec_mpp_mod",
+        "spectral_dynamics_mod",
+        "time_manager_mod",
+        "tracer_manager_mod",
+        "tracer_type_mod",
+        "transforms_mod"
+      ],
+      "subroutines": [
+        "atmosphere",
+        "atmosphere_end",
+        "atmosphere_init"
+      ],
+      "functions": [],
+      "calls": [
+        "close_file",
+        "column",
+        "column_diagnostics",
+        "column_end",
+        "column_init",
+        "compute_pressures_and_heights",
+        "error_mesg",
+        "field_size",
+        "get_deg_lat",
+        "get_deg_lon",
+        "get_grid_boundaries",
+        "get_grid_domain",
+        "get_initial_fields",
+        "get_lat_max",
+        "get_lon_max",
+        "get_num_levels",
+        "get_number_tracers",
+        "get_surf_geopotential",
+        "get_time",
+        "hs_forcing",
+        "hs_forcing_end",
+        "hs_forcing_init",
+        "idealized_moist_phys",
+        "idealized_moist_phys_end",
+        "idealized_moist_phys_init",
+        "nullify_domain",
+        "read_data",
+        "set_domain",
+        "spectral_diagnostics",
+        "spectral_dynamics",
+        "spectral_dynamics_end",
+        "spectral_dynamics_init",
+        "write_data",
+        "write_version_number"
+      ],
+      "relevance_score": 80
+    },
+    {
+      "path": "agents/code_mapper.py",
+      "language": "python",
+      "n_lines": 316,
+      "mentions": {
+        "held_suarez": true,
+        "namelist": true,
+        "compile": true,
+        "run": true,
+        "fms": true,
+        "mpp": true
+      },
+      "relevance_score": 60
+    },
+    {
+      "path": "src/extra/python/isca/codebase.py",
+      "language": "python",
+      "n_lines": 477,
+      "mentions": {
+        "held_suarez": true,
+        "namelist": false,
+        "compile": true,
+        "run": true,
+        "fms": true,
+        "mpp": false
+      },
+      "relevance_score": 40
+    },
+    {
+      "path": "src/extra/python/isca/templates/compile.sh",
+      "language": "script",
+      "n_lines": 83,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": true,
+        "run": true,
+        "fms": true,
+        "mpp": true
+      },
+      "relevance_score": 40
+    },
+    {
+      "path": "src/extra/python/scripts/get_namelist_defaults.py",
+      "language": "python",
+      "n_lines": 83,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": true,
+        "compile": true,
+        "run": true,
+        "fms": true,
+        "mpp": false
+      },
+      "relevance_score": 40
+    },
+    {
+      "path": "tools/test_cases.F90",
+      "language": "fortran",
+      "n_lines": 9350,
+      "modules": [
+        "test_cases_mod"
+      ],
+      "uses": [
+        "constants_mod",
+        "field_manager_mod",
+        "fv_arrays_mod",
+        "fv_diagnostics_mod",
+        "fv_eta_mod",
+        "fv_grid_tools_mod",
+        "fv_grid_utils_mod",
+        "fv_mp_mod",
+        "fv_sg_mod",
+        "fv_surf_map_mod",
+        "init_hydro_mod",
+        "mpp_domains_mod",
+        "mpp_mod",
+        "mpp_parameter_mod",
+        "tracer_manager_mod"
+      ],
+      "subroutines": [
+        "atob_s",
+        "atoc",
+        "atod",
+        "balanced_K",
+        "case51_forcing",
+        "case9_forcing1",
+        "case9_forcing2",
+        "check_courant_numbers",
+        "checker_tracers",
+        "ctoa",
+        "d2a2c",
+        "DCMIP16_BC",
+        "DCMIP16_TC",
+        "DCMIP16_TC_uwind_pert",
+        "dtoa",
+        "get_case9_B",
+        "get_pt_on_great_circle",
+        "get_scalar_stats",
+        "get_stats",
+        "get_unit_vector",
+        "get_vector_stats",
+        "get_vorticity",
+        "init_case",
+        "init_double_periodic",
+        "init_latlon",
+        "init_latlon_winds",
+        "init_winds",
+        "interp_left_edge_1d",
+        "mp_ghost_ew",
+        "mp_update_dwinds_2d",
+        "mp_update_dwinds_3d",
+        "normalize_vect",
+        "output",
+        "output_ncdf",
+        "pmxn",
+        "prt_m1",
+        "rankine_vortex",
+        "rotate_winds",
+        "sm1_edge",
+        "SuperK_Sounding",
+        "SuperK_u",
+        "terminator_tracers",
+        "var_dz",
+        "vpol5",
+        "wrt2d",
+        "wrtvar_ncdf"
+      ],
+      "functions": [
+        "DCMIP16_BC_pressure",
+        "DCMIP16_BC_sphum",
+        "DCMIP16_BC_temperature",
+        "DCMIP16_BC_uwind",
+        "DCMIP16_BC_uwind_pert",
+        "DCMIP16_TC_pressure",
+        "DCMIP16_TC_sphum",
+        "DCMIP16_TC_temperature",
+        "gh_jet",
+        "globalsum",
+        "u_jet"
+      ],
+      "calls": [
+        "atob_s",
+        "atoc",
+        "atod",
+        "balanced_K",
+        "cart_to_latlon",
+        "checker_tracers",
+        "compute_dz_L101",
+        "compute_dz_L32",
+        "ctoa",
+        "cubed_to_latlon",
+        "DCMIP16_BC",
+        "DCMIP16_TC",
+        "DCMIP16_TC_uwind_pert",
+        "dtoa",
+        "exit",
+        "fill_corners",
+        "get_case9_B",
+        "get_latlon_vector",
+        "get_pt_on_great_circle",
+        "get_scalar_stats",
+        "get_unit_vect2",
+        "get_unit_vector",
+        "get_vector_stats",
+        "get_vorticity",
+        "gw_1d",
+        "hybrid_z_dz",
+        "hydro_eq",
+        "init_latlon_winds",
+        "init_winds",
+        "interp_left_edge_1d",
+        "latlon2xyz",
+        "make_eta_level",
+        "mid_pt_sphere",
+        "mp_gather",
+        "mp_ghost_ew",
+        "mp_reduce_max",
+        "mp_reduce_sum",
+        "mp_stop",
+        "mp_update_dwinds",
+        "mpp_broadcast",
+        "mpp_error",
+        "mpp_sum",
+        "mpp_update_domains",
+        "normalize_vect",
+        "p_var",
+        "pmxn",
+        "ppme",
+        "project_sphere_v",
+        "prt_m1",
+        "prt_maxmin",
+        "qsmith",
+        "random_number",
+        "random_seed",
+        "rankine_vortex",
+        "rotate_winds",
+        "set_hybrid_z",
+        "sm1_edge",
+        "spherical_to_cartesian",
+        "SuperK_Sounding",
+        "SuperK_u",
+        "surfdrv",
+        "terminator_tracers",
+        "var_dz",
+        "vpol5",
+        "wrt2d",
+        "wrtvar_ncdf"
+      ],
+      "relevance_score": 30
+    },
+    {
+      "path": "src/extra/python/isca/__init__.py",
+      "language": "python",
+      "n_lines": 86,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": true,
+        "compile": true,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 30
+    },
+    {
+      "path": "src/extra/python/isca/experiment.py",
+      "language": "python",
+      "n_lines": 400,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": true,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": true
+      },
+      "relevance_score": 30
+    },
+    {
+      "path": "src/extra/python/isca/util.py",
+      "language": "python",
+      "n_lines": 264,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": true,
+        "compile": true,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 30
+    },
+    {
+      "path": "agents/tools.py",
+      "language": "python",
+      "n_lines": 155,
+      "mentions": {
+        "held_suarez": true,
+        "namelist": false,
+        "compile": true,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 30
+    },
+    {
+      "path": "agents/pipeline.py",
+      "language": "python",
+      "n_lines": 383,
+      "mentions": {
+        "held_suarez": true,
+        "namelist": false,
+        "compile": true,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 30
+    },
+    {
+      "path": "model/dyn_core.F90",
+      "language": "fortran",
+      "n_lines": 2528,
+      "modules": [
+        "dyn_core_mod"
+      ],
+      "uses": [
+        "a2b_edge_mod",
+        "boundary_mod",
+        "constants_mod",
+        "diag_manager_mod",
+        "fv_ada_nudge_mod",
+        "fv_arrays_mod",
+        "fv_diagnostics_mod",
+        "fv_mp_mod",
+        "fv_nwp_nudge_mod",
+        "fv_timing_mod",
+        "fv_update_phys_mod",
+        "mpp_domains_mod",
+        "mpp_mod",
+        "mpp_parameter_mod",
+        "nh_core_mod",
+        "sw_core_mod",
+        "test_cases_mod",
+        "tp_core_mod"
+      ],
+      "subroutines": [
+        "adv_pe",
+        "Beljaars",
+        "del2_cubed",
+        "dyn_core",
+        "geopk",
+        "grad1_p_update",
+        "init_ijk_mem",
+        "mix_dp",
+        "nh_p_grad",
+        "one_grad_p",
+        "p_grad_c",
+        "pe_halo",
+        "pk3_halo",
+        "pln_halo",
+        "Ray_fast",
+        "split_p_grad"
+      ],
+      "functions": [],
+      "calls": [
+        "a2b_ord2",
+        "a2b_ord4",
+        "adv_pe",
+        "Beljaars",
+        "breed_slp_inline",
+        "breed_slp_inline_ada",
+        "c_sw",
+        "case9_forcing1",
+        "case9_forcing2",
+        "complete_group_halo_update",
+        "copy_corners",
+        "d2a2c_vect",
+        "d_sw",
+        "del2_cubed",
+        "geopk",
+        "grad1_p_update",
+        "init_ijk_mem",
+        "mix_dp",
+        "mpp_get_boundary",
+        "mpp_update_domains",
+        "nest_halo_nh",
+        "nested_grid_BC_apply_intT",
+        "nh_p_grad",
+        "one_grad_p",
+        "p_grad_c",
+        "pe_halo",
+        "pk3_halo",
+        "pln_halo",
+        "prt_mxm",
+        "Ray_fast",
+        "Riem_Solver3",
+        "Riem_Solver_C",
+        "split_p_grad",
+        "start_group_halo_update",
+        "timing_off",
+        "timing_on",
+        "update_dwinds_phys",
+        "update_dz_c",
+        "update_dz_d"
+      ],
+      "relevance_score": 20
+    },
+    {
+      "path": "src/extra/python/isca/templates/run.sh",
+      "language": "script",
+      "n_lines": 42,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": true
+      },
+      "relevance_score": 20
+    },
+    {
+      "path": "src/extra/python/scripts/edit_nc_file_to_preserve_monthly_means.py",
+      "language": "python",
+      "n_lines": 120,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": true,
+        "mpp": false
+      },
+      "relevance_score": 20
+    },
+    {
+      "path": "src/extra/python/scripts/qflux_warmpool_with_amip.py",
+      "language": "python",
+      "n_lines": 296,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": true,
+        "mpp": false
+      },
+      "relevance_score": 20
+    },
+    {
+      "path": "src/extra/python/scripts/remove_certain_restart_and_data_files.py",
+      "language": "python",
+      "n_lines": 142,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": true,
+        "mpp": false
+      },
+      "relevance_score": 20
+    },
+    {
+      "path": "src/extra/python/scripts/calculate_qflux/nc_file_io_xarray.py",
+      "language": "python",
+      "n_lines": 321,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": true,
+        "mpp": false
+      },
+      "relevance_score": 20
+    },
+    {
+      "path": "postprocessing/compile_mppn.sh",
+      "language": "script",
+      "n_lines": 28,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": true,
+        "run": false,
+        "fms": false,
+        "mpp": true
+      },
+      "relevance_score": 20
+    },
+    {
+      "path": "postprocessing/mppnccombine_run.sh",
+      "language": "script",
+      "n_lines": 10,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": true
+      },
+      "relevance_score": 20
+    },
+    {
+      "path": "postprocessing/plevel_interpolation/compile_plev_interpolation.sh",
+      "language": "script",
+      "n_lines": 10,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": true,
+        "run": false,
+        "fms": false,
+        "mpp": true
+      },
+      "relevance_score": 20
+    },
+    {
+      "path": "postprocessing/plevel_interpolation/scripts/run_plevel.py",
+      "language": "python",
+      "n_lines": 109,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": true,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 20
+    },
+    {
+      "path": "requirements/docker-entrypoint.sh",
+      "language": "script",
+      "n_lines": 20,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/atmos_param/edt/edt.F90",
+      "language": "fortran",
+      "n_lines": 4800,
+      "modules": [
+        "edt_mod"
+      ],
+      "uses": [
+        "constants_mod",
+        "diag_manager_mod",
+        "fms_io_mod",
+        "fms_mod",
+        "monin_obukhov_mod",
+        "mpp_mod",
+        "sat_vapor_pres_mod",
+        "time_manager_mod"
+      ],
+      "subroutines": [
+        "caleddy",
+        "edt",
+        "edt_end",
+        "edt_init",
+        "exacol",
+        "galperin",
+        "gaussian_cloud",
+        "sfdiag",
+        "trbintd",
+        "zisocl"
+      ],
+      "functions": [
+        "erfcc",
+        "lengthscale"
+      ],
+      "calls": [
+        "caleddy",
+        "Close_File",
+        "compute_qs",
+        "error_mesg",
+        "exacol",
+        "galperin",
+        "gaussian_cloud",
+        "get_date",
+        "mo_diff",
+        "restore_state",
+        "save_restart",
+        "sfdiag",
+        "trbintd",
+        "write_version_number",
+        "zisocl"
+      ],
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/setup.py",
+      "language": "python",
+      "n_lines": 28,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/isca/create_alert.py",
+      "language": "python",
+      "n_lines": 37,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/isca/diagtable.py",
+      "language": "python",
+      "n_lines": 122,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": false,
+        "fms": true,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/isca/git_info.py",
+      "language": "python",
+      "n_lines": 41,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/isca/helpers.py",
+      "language": "python",
+      "n_lines": 84,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/scripts/cell_area.py",
+      "language": "python",
+      "n_lines": 86,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": false,
+        "fms": true,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/scripts/change_horizontal_resolution_of_restart_file.py",
+      "language": "python",
+      "n_lines": 185,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": false,
+        "fms": true,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/scripts/create_era5_topography.py",
+      "language": "python",
+      "n_lines": 189,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/scripts/create_timeseries.py",
+      "language": "python",
+      "n_lines": 253,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/scripts/find_namelists_to_check.py",
+      "language": "python",
+      "n_lines": 88,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": true,
+        "compile": false,
+        "run": false,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/scripts/general_spinup_fn.py",
+      "language": "python",
+      "n_lines": 157,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/scripts/modified_time_script.py",
+      "language": "python",
+      "n_lines": 86,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 10
+    },
+    {
+      "path": "src/extra/python/scripts/resolutions.py",
+      "language": "python",
+      "n_lines": 188,
+      "mentions": {
+        "held_suarez": false,
+        "namelist": false,
+        "compile": false,
+        "run": true,
+        "fms": false,
+        "mpp": false
+      },
+      "relevance_score": 10
+    }
+  ],
+  "module_index": {
+    "cub2cub_mod": {
+      "module": "CUB2CUB_mod",
+      "path": "geos_utils/CUB2CUB/cub2cub.F90"
+    },
+    "cub2latlon_mod": {
+      "module": "CUB2LATLON_mod",
+      "path": "geos_utils/cub2latlon.F90"
+    },
+    "fill_corner_mod": {
+      "module": "FILL_CORNER_mod",
+      "path": "geos_utils/fill_corner.F90"
+    },
+    "flow_proj_mod": {
+      "module": "FLOW_PROJ_mod",
+      "path": "geos_utils/flow_proj.F90"
+    },
+    "ghost_cubsph_mod": {
+      "module": "GHOST_CUBSPH_mod",
+      "path": "geos_utils/ghost_cubsph.F90"
+    },
+    "grid_utils_mod": {
+      "module": "GRID_UTILS_mod",
+      "path": "geos_utils/grid_utils_mod.F90"
+    },
+    "a2b_edge_mod": {
+      "module": "a2b_edge_mod",
+      "path": "model/a2b_edge.F90"
+    },
+    "boundary_mod": {
+      "module": "boundary_mod",
+      "path": "model/boundary.F90"
+    },
+    "dyn_core_mod": {
+      "module": "dyn_core_mod",
+      "path": "model/dyn_core.F90"
+    },
+    "fv_arrays_mod": {
+      "module": "fv_arrays_mod",
+      "path": "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    },
+    "fv_cmp_mod": {
+      "module": "fv_cmp_mod",
+      "path": "model/fv_cmp.F90"
+    },
+    "fv_control_mod": {
+      "module": "fv_control_mod",
+      "path": "model/fv_control.F90"
+    },
+    "fv_dynamics_mod": {
+      "module": "fv_dynamics_mod",
+      "path": "model/fv_dynamics.F90"
+    },
+    "fv_fill_mod": {
+      "module": "fv_fill_mod",
+      "path": "model/fv_fill.F90"
+    },
+    "fv_grid_utils_mod": {
+      "module": "fv_grid_utils_mod",
+      "path": "model/tp-core-driver/stubs/fv_grid_utils_stub.F90"
+    },
+    "fv_mapz_mod": {
+      "module": "fv_mapz_mod",
+      "path": "model/fv_mapz.F90"
+    },
+    "fv_nesting_mod": {
+      "module": "fv_nesting_mod",
+      "path": "model/fv_nesting.F90"
+    },
+    "fv_sg_mod": {
+      "module": "fv_sg_mod",
+      "path": "model/fv_sg.F90"
+    },
+    "fv_tracer2d_mod": {
+      "module": "fv_tracer2d_mod",
+      "path": "model/fv_tracer2d.F90"
+    },
+    "fv_update_phys_mod": {
+      "module": "fv_update_phys_mod",
+      "path": "model/fv_update_phys.F90"
+    },
+    "gfdl_lin_cloud_microphys_mod": {
+      "module": "gfdl_lin_cloud_microphys_mod",
+      "path": "model/lin_cloud_microphys.F90"
+    },
+    "nh_core_mod": {
+      "module": "nh_core_mod",
+      "path": "model/nh_core.F90"
+    },
+    "nh_utils_mod": {
+      "module": "nh_utils_mod",
+      "path": "model/nh_utils.F90"
+    },
+    "nwp_nudge_mod": {
+      "module": "nwp_nudge_mod",
+      "path": "model/nwp_nudge.F90"
+    },
+    "sw_core_mod": {
+      "module": "sw_core_mod",
+      "path": "model/sw_core.F90"
+    },
+    "tp_core_mod": {
+      "module": "tp_core_mod",
+      "path": "model/tp_core.F90"
+    },
+    "input_array_extents_mod": {
+      "module": "input_array_extents_mod",
+      "path": "model/mapz-driver/input/input_array_extents.f90"
+    },
+    "input_arrays_mod": {
+      "module": "input_arrays_mod",
+      "path": "model/tp-core-driver/input/input_arrays.f90"
+    },
+    "input_domain_layout_mod": {
+      "module": "input_domain_layout_mod",
+      "path": "model/mapz-driver/input/input_domain_layout.f90"
+    },
+    "input_flagstruct_mod": {
+      "module": "input_flagstruct_mod",
+      "path": "model/mapz-driver/input/input_flagstruct.f90"
+    },
+    "input_gridstruct_mod": {
+      "module": "input_gridstruct_mod",
+      "path": "model/mapz-driver/input/input_gridstruct.f90"
+    },
+    "input_scalars_mod": {
+      "module": "input_scalars_mod",
+      "path": "model/mapz-driver/input/input_scalars.f90"
+    },
+    "output_mod": {
+      "module": "output_mod",
+      "path": "model/mapz-driver/output/output.f90"
+    },
+    "external_ic_mod": {
+      "module": "external_ic_mod",
+      "path": "tools/external_ic.F90"
+    },
+    "driver_cpu_mod": {
+      "module": "driver_cpu_mod",
+      "path": "model/tp-core-driver/driver_cpu.f90"
+    },
+    "output_arrays_mod": {
+      "module": "output_arrays_mod",
+      "path": "model/tp-core-driver/output/output_arrays.f90"
+    },
+    "fv_mp_mod": {
+      "module": "fv_mp_mod",
+      "path": "tools/fv_mp_mod.F90"
+    },
+    "fv_my_mpp": {
+      "module": "fv_my_mpp",
+      "path": "model_mpp/fv_my_mpp.F90"
+    },
+    "adfv_my_mpp": {
+      "module": "adfv_my_mpp",
+      "path": "model_mpp/fv_my_mpp_ad.F90"
+    },
+    "g_fv_my_mpp": {
+      "module": "g_fv_my_mpp",
+      "path": "model_mpp/fv_my_mpp_ftl.F90"
+    },
+    "external_sst_mod": {
+      "module": "external_sst_mod",
+      "path": "tools/external_sst.F90"
+    },
+    "fv_climate_nudge_mod": {
+      "module": "fv_climate_nudge_mod",
+      "path": "tools/fv_climate_nudge.F90"
+    },
+    "fv_diagnostics_mod": {
+      "module": "fv_diagnostics_mod",
+      "path": "tools/fv_diagnostics.F90"
+    },
+    "fv_eta_mod": {
+      "module": "fv_eta_mod",
+      "path": "tools/fv_eta.F90"
+    },
+    "fv_grid_tools_mod": {
+      "module": "fv_grid_tools_mod",
+      "path": "tools/fv_grid_tools.F90"
+    },
+    "fv_io_mod": {
+      "module": "fv_io_mod",
+      "path": "tools/fv_io.F90"
+    },
+    "fv_nwp_nudge_mod": {
+      "module": "fv_nwp_nudge_mod",
+      "path": "tools/fv_nudge.F90"
+    },
+    "fv_restart_mod": {
+      "module": "fv_restart_mod",
+      "path": "tools/fv_restart.F90"
+    },
+    "fv_surf_map_mod": {
+      "module": "fv_surf_map_mod",
+      "path": "tools/fv_surf_map.F90"
+    },
+    "fv_timing_mod": {
+      "module": "fv_timing_mod",
+      "path": "tools/fv_timing.F90"
+    },
+    "fv_treat_da_inc_mod": {
+      "module": "fv_treat_da_inc_mod",
+      "path": "tools/fv_treat_da_inc.F90"
+    },
+    "init_hydro_mod": {
+      "module": "init_hydro_mod",
+      "path": "tools/init_hydro.F90"
+    },
+    "read_climate_nudge_data_mod": {
+      "module": "read_climate_nudge_data_mod",
+      "path": "tools/read_climate_nudge_data.F90"
+    },
+    "sim_nc_mod": {
+      "module": "sim_nc_mod",
+      "path": "tools/sim_nc_mod.F90"
+    },
+    "sorted_index_mod": {
+      "module": "sorted_index_mod",
+      "path": "tools/sorted_index.F90"
+    },
+    "test_cases_mod": {
+      "module": "test_cases_mod",
+      "path": "tools/test_cases.F90"
+    },
+    "column_mod": {
+      "module": "column_mod",
+      "path": "src/atmos_column/column.F90"
+    },
+    "column_grid_mod": {
+      "module": "column_grid_mod",
+      "path": "src/atmos_column/column_grid.F90"
+    },
+    "column_init_cond_mod": {
+      "module": "column_init_cond_mod",
+      "path": "src/atmos_column/column_init_cond.F90"
+    },
+    "column_initialize_fields_mod": {
+      "module": "column_initialize_fields_mod",
+      "path": "src/atmos_column/column_initialize_fields.F90"
+    },
+    "betts_miller_mod": {
+      "module": "betts_miller_mod",
+      "path": "src/atmos_param/betts_miller/betts_miller.f90"
+    },
+    "cg_drag_mod": {
+      "module": "cg_drag_mod",
+      "path": "src/atmos_param/cg_drag/cg_drag.f90"
+    },
+    "cloud_cover_diags_mod": {
+      "module": "cloud_cover_diags_mod",
+      "path": "src/atmos_param/cloud_simple/cloud_cover_diags.F90"
+    },
+    "cloud_simple_mod": {
+      "module": "cloud_simple_mod",
+      "path": "src/atmos_param/cloud_simple/cloud_simple.F90"
+    },
+    "cloud_spookie_mod": {
+      "module": "cloud_spookie_mod",
+      "path": "src/atmos_param/cloud_simple/cloud_spookie.F90"
+    },
+    "large_scale_cloud_mod": {
+      "module": "large_scale_cloud_mod",
+      "path": "src/atmos_param/cloud_simple/large_scale_cloud.F90"
+    },
+    "lcl_mod": {
+      "module": "lcl_mod",
+      "path": "src/atmos_param/cloud_simple/lcl.F90"
+    },
+    "marine_strat_cloud_mod": {
+      "module": "marine_strat_cloud_mod",
+      "path": "src/atmos_param/cloud_simple/marine_strat_cloud.F90"
+    },
+    "damping_driver_mod": {
+      "module": "damping_driver_mod",
+      "path": "src/atmos_param/damping_driver/damping_driver.f90"
+    },
+    "diffusivity_mod": {
+      "module": "diffusivity_mod",
+      "path": "src/atmos_param/diffusivity/diffusivity.F90"
+    },
+    "dry_convection_mod": {
+      "module": "dry_convection_mod",
+      "path": "src/atmos_param/dry_convection/dry_convection.f90"
+    },
+    "edt_mod": {
+      "module": "edt_mod",
+      "path": "src/atmos_param/edt/edt.F90"
+    },
+    "entrain_mod": {
+      "module": "entrain_mod",
+      "path": "src/atmos_param/entrain/entrain.F90"
+    },
+    "hs_forcing_mod": {
+      "module": "hs_forcing_mod",
+      "path": "src/atmos_param/hs_forcing/hs_forcing.F90"
+    },
+    "lscale_cond_mod": {
+      "module": "lscale_cond_mod",
+      "path": "src/atmos_param/lscale_cond/lscale_cond.F90"
+    },
+    "mg_drag_mod": {
+      "module": "mg_drag_mod",
+      "path": "src/atmos_param/mg_drag/mg_drag.f90"
+    },
+    "monin_obukhov_mod": {
+      "module": "monin_obukhov_mod",
+      "path": "src/atmos_param/monin_obukhov/monin_obukhov.F90"
+    },
+    "monin_obukhov_inter": {
+      "module": "monin_obukhov_inter",
+      "path": "src/atmos_param/monin_obukhov/monin_obukhov_kernel.F90"
+    },
+    "my25_turb_mod": {
+      "module": "MY25_TURB_MOD",
+      "path": "src/atmos_param/my25_turb/my25_turb.F90"
+    },
+    "qe_moist_convection_mod": {
+      "module": "qe_moist_convection_mod",
+      "path": "src/atmos_param/qe_moist_convection/qe_moist_convection.F90"
+    },
+    "qflux_mod": {
+      "module": "qflux_mod",
+      "path": "src/atmos_param/qflux/qflux.f90"
+    },
+    "moist_processes_mod": {
+      "module": "moist_processes_mod",
+      "path": "src/atmos_param/ras/moist_processes.f90"
+    },
+    "ras_mod": {
+      "module": "RAS_MOD",
+      "path": "src/atmos_param/ras/ras.f90"
+    },
+    "rayleigh_bottom_drag_mod": {
+      "module": "rayleigh_bottom_drag_mod",
+      "path": "src/atmos_param/rayleigh_bottom_drag/rayleigh_bottom_drag.F90"
+    },
+    "rrtm_radiation": {
+      "module": "rrtm_radiation",
+      "path": "src/atmos_param/rrtm_radiation/rrtm_radiation.F90"
+    },
+    "rrtm_vars": {
+      "module": "rrtm_vars",
+      "path": "src/atmos_param/rrtm_radiation/rrtm_radiation.F90"
+    },
+    "parkind": {
+      "module": "parkind",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    },
+    "parrrtm": {
+      "module": "parrrtm",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90"
+    },
+    "rrlw_cld": {
+      "module": "rrlw_cld",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_cld.f90"
+    },
+    "rrlw_con": {
+      "module": "rrlw_con",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_con.f90"
+    },
+    "rrlw_kg01": {
+      "module": "rrlw_kg01",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg01.f90"
+    },
+    "rrlw_kg02": {
+      "module": "rrlw_kg02",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg02.f90"
+    },
+    "rrlw_kg03": {
+      "module": "rrlw_kg03",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg03.f90"
+    },
+    "rrlw_kg04": {
+      "module": "rrlw_kg04",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg04.f90"
+    },
+    "rrlw_kg05": {
+      "module": "rrlw_kg05",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg05.f90"
+    },
+    "rrlw_kg06": {
+      "module": "rrlw_kg06",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg06.f90"
+    },
+    "rrlw_kg07": {
+      "module": "rrlw_kg07",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg07.f90"
+    },
+    "rrlw_kg08": {
+      "module": "rrlw_kg08",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg08.f90"
+    },
+    "rrlw_kg09": {
+      "module": "rrlw_kg09",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg09.f90"
+    },
+    "rrlw_kg10": {
+      "module": "rrlw_kg10",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg10.f90"
+    },
+    "rrlw_kg11": {
+      "module": "rrlw_kg11",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg11.f90"
+    },
+    "rrlw_kg12": {
+      "module": "rrlw_kg12",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg12.f90"
+    },
+    "rrlw_kg13": {
+      "module": "rrlw_kg13",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg13.f90"
+    },
+    "rrlw_kg14": {
+      "module": "rrlw_kg14",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg14.f90"
+    },
+    "rrlw_kg15": {
+      "module": "rrlw_kg15",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg15.f90"
+    },
+    "rrlw_kg16": {
+      "module": "rrlw_kg16",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg16.f90"
+    },
+    "rrlw_ncpar": {
+      "module": "rrlw_ncpar",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_ncpar.f90"
+    },
+    "rrlw_ref": {
+      "module": "rrlw_ref",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_ref.f90"
+    },
+    "rrlw_tbl": {
+      "module": "rrlw_tbl",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_tbl.f90"
+    },
+    "rrlw_vsn": {
+      "module": "rrlw_vsn",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90"
+    },
+    "rrlw_wvn": {
+      "module": "rrlw_wvn",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90"
+    },
+    "mcica_random_numbers": {
+      "module": "mcica_random_numbers",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/mcica_random_numbers.f90"
+    },
+    "mersennetwister": {
+      "module": "MersenneTwister",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/mcica_random_numbers.f90"
+    },
+    "mcica_subcol_gen_lw": {
+      "module": "mcica_subcol_gen_lw",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/mcica_subcol_gen_lw.f90"
+    },
+    "rrtmg_lw_cldprmc": {
+      "module": "rrtmg_lw_cldprmc",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_cldprmc.f90"
+    },
+    "rrtmg_lw_cldprop": {
+      "module": "rrtmg_lw_cldprop",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_cldprop.f90"
+    },
+    "rrtmg_lw_init": {
+      "module": "rrtmg_lw_init",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_init.f90"
+    },
+    "rrtmg_lw_rad": {
+      "module": "rrtmg_lw_rad",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rad.nomcica.f90"
+    },
+    "rrtmg_lw_rtrn": {
+      "module": "rrtmg_lw_rtrn",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rtrn.f90"
+    },
+    "rrtmg_lw_rtrnmc": {
+      "module": "rrtmg_lw_rtrnmc",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rtrnmc.f90"
+    },
+    "rrtmg_lw_rtrnmr": {
+      "module": "rrtmg_lw_rtrnmr",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rtrnmr.f90"
+    },
+    "rrtmg_lw_setcoef": {
+      "module": "rrtmg_lw_setcoef",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_setcoef.f90"
+    },
+    "rrtmg_lw_taumol": {
+      "module": "rrtmg_lw_taumol",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_taumol.f90"
+    },
+    "parrrsw": {
+      "module": "parrrsw",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    },
+    "rrsw_aer": {
+      "module": "rrsw_aer",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_aer.f90"
+    },
+    "rrsw_cld": {
+      "module": "rrsw_cld",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_cld.f90"
+    },
+    "rrsw_con": {
+      "module": "rrsw_con",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_con.f90"
+    },
+    "rrsw_kg16": {
+      "module": "rrsw_kg16",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg16.f90"
+    },
+    "rrsw_kg17": {
+      "module": "rrsw_kg17",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg17.f90"
+    },
+    "rrsw_kg18": {
+      "module": "rrsw_kg18",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg18.f90"
+    },
+    "rrsw_kg19": {
+      "module": "rrsw_kg19",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg19.f90"
+    },
+    "rrsw_kg20": {
+      "module": "rrsw_kg20",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg20.f90"
+    },
+    "rrsw_kg21": {
+      "module": "rrsw_kg21",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg21.f90"
+    },
+    "rrsw_kg22": {
+      "module": "rrsw_kg22",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg22.f90"
+    },
+    "rrsw_kg23": {
+      "module": "rrsw_kg23",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg23.f90"
+    },
+    "rrsw_kg24": {
+      "module": "rrsw_kg24",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg24.f90"
+    },
+    "rrsw_kg25": {
+      "module": "rrsw_kg25",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg25.f90"
+    },
+    "rrsw_kg26": {
+      "module": "rrsw_kg26",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg26.f90"
+    },
+    "rrsw_kg27": {
+      "module": "rrsw_kg27",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg27.f90"
+    },
+    "rrsw_kg28": {
+      "module": "rrsw_kg28",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg28.f90"
+    },
+    "rrsw_kg29": {
+      "module": "rrsw_kg29",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg29.f90"
+    },
+    "rrsw_ncpar": {
+      "module": "rrsw_ncpar",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_ncpar.f90"
+    },
+    "rrsw_ref": {
+      "module": "rrsw_ref",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_ref.f90"
+    },
+    "rrsw_tbl": {
+      "module": "rrsw_tbl",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_tbl.f90"
+    },
+    "rrsw_vsn": {
+      "module": "rrsw_vsn",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90"
+    },
+    "rrsw_wvn": {
+      "module": "rrsw_wvn",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_wvn.f90"
+    },
+    "mcica_subcol_gen_sw": {
+      "module": "mcica_subcol_gen_sw",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/mcica_subcol_gen_sw.f90"
+    },
+    "rrtmg_sw_cldprmc": {
+      "module": "rrtmg_sw_cldprmc",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_cldprmc.f90"
+    },
+    "rrtmg_sw_cldprop": {
+      "module": "rrtmg_sw_cldprop",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_cldprop.f90"
+    },
+    "rrtmg_sw_init": {
+      "module": "rrtmg_sw_init",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_init.f90"
+    },
+    "rrtmg_sw_rad": {
+      "module": "rrtmg_sw_rad",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_rad.nomcica.f90"
+    },
+    "rrtmg_sw_reftra": {
+      "module": "rrtmg_sw_reftra",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_reftra.f90"
+    },
+    "rrtmg_sw_setcoef": {
+      "module": "rrtmg_sw_setcoef",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_setcoef.f90"
+    },
+    "rrtmg_sw_spcvmc": {
+      "module": "rrtmg_sw_spcvmc",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_spcvmc.f90"
+    },
+    "rrtmg_sw_spcvrt": {
+      "module": "rrtmg_sw_spcvrt",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_spcvrt.f90"
+    },
+    "rrtmg_sw_taumol": {
+      "module": "rrtmg_sw_taumol",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_taumol.f90"
+    },
+    "rrtmg_sw_vrtqdr": {
+      "module": "rrtmg_sw_vrtqdr",
+      "path": "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_vrtqdr.f90"
+    },
+    "rad_utilities_mod": {
+      "module": "rad_utilities_mod",
+      "path": "src/atmos_param/sea_esf_rad/null/rad_utilities.F90"
+    },
+    "shallow_conv_mod": {
+      "module": "SHALLOW_CONV_MOD",
+      "path": "src/atmos_param/shallow_conv/shallow_conv.F90"
+    },
+    "compress_spectrum_mod": {
+      "module": "compress_spectrum_mod",
+      "path": "src/atmos_param/socrates/interface/compress_spectrum.F90"
+    },
+    "read_control_mod": {
+      "module": "read_control_mod",
+      "path": "src/atmos_param/socrates/interface/read_control.F90"
+    },
+    "set_aer_mod": {
+      "module": "set_aer_mod",
+      "path": "src/atmos_param/socrates/interface/set_aer.F90"
+    },
+    "set_atm_mod": {
+      "module": "set_atm_mod",
+      "path": "src/atmos_param/socrates/interface/set_atm.F90"
+    },
+    "set_bound_mod": {
+      "module": "set_bound_mod",
+      "path": "src/atmos_param/socrates/interface/set_bound.F90"
+    },
+    "set_cld_mod": {
+      "module": "set_cld_mod",
+      "path": "src/atmos_param/socrates/interface/set_cld.F90"
+    },
+    "set_control_mod": {
+      "module": "set_control_mod",
+      "path": "src/atmos_param/socrates/interface/set_control.F90"
+    },
+    "set_dimen_mod": {
+      "module": "set_dimen_mod",
+      "path": "src/atmos_param/socrates/interface/set_dimen.F90"
+    },
+    "soc_constants_mod": {
+      "module": "soc_constants_mod",
+      "path": "src/atmos_param/socrates/interface/soc_constants.f90"
+    },
+    "socrates_calc_mod": {
+      "module": "socrates_calc_mod",
+      "path": "src/atmos_param/socrates/interface/socrates_calc.F90"
+    },
+    "socrates_config_mod": {
+      "module": "socrates_config_mod",
+      "path": "src/atmos_param/socrates/interface/socrates_config_mod.f90"
+    },
+    "socrates_interface_mod": {
+      "module": "socrates_interface_mod",
+      "path": "src/atmos_param/socrates/interface/socrates_interface.F90"
+    },
+    "socrates_set_cld": {
+      "module": "socrates_set_cld",
+      "path": "src/atmos_param/socrates/interface/socrates_set_cld.F90"
+    },
+    "stable_bl_turb_mod": {
+      "module": "STABLE_BL_TURB_MOD",
+      "path": "src/atmos_param/stable_bl_turb/stable_bl_turb.F90"
+    },
+    "strat_cloud_mod": {
+      "module": "strat_cloud_mod",
+      "path": "src/atmos_param/strat_cloud/null/strat_cloud.F90"
+    },
+    "topo_drag_mod": {
+      "module": "topo_drag_mod",
+      "path": "src/atmos_param/topo_drag/topo_drag.f90"
+    },
+    "two_stream_gray_rad_mod": {
+      "module": "two_stream_gray_rad_mod",
+      "path": "src/atmos_param/two_stream_gray_rad/two_stream_gray_rad.F90"
+    },
+    "vert_diff_mod": {
+      "module": "vert_diff_mod",
+      "path": "src/atmos_param/vert_diff/vert_diff.F90"
+    },
+    "vert_turb_driver_mod": {
+      "module": "vert_turb_driver_mod",
+      "path": "src/atmos_param/vert_turb_driver/vert_turb_driver.F90"
+    },
+    "interpolator_mod": {
+      "module": "interpolator_mod",
+      "path": "src/atmos_shared/interpolator/interpolator.F90"
+    },
+    "vert_advection_mod": {
+      "module": "vert_advection_mod",
+      "path": "src/atmos_shared/vert_advection/vert_advection.F90"
+    },
+    "atmosphere_mod": {
+      "module": "atmosphere_mod",
+      "path": "src/atmos_spectral_shallow/atmosphere.F90"
+    },
+    "idealized_moist_phys_mod": {
+      "module": "idealized_moist_phys_mod",
+      "path": "src/atmos_spectral/driver/solo/idealized_moist_phys.F90"
+    },
+    "mixed_layer_mod": {
+      "module": "mixed_layer_mod",
+      "path": "src/atmos_spectral/driver/solo/mixed_layer.F90"
+    },
+    "ic_from_external_file_mod": {
+      "module": "ic_from_external_file_mod",
+      "path": "src/atmos_spectral/init/ic_from_external_file.F90"
+    },
+    "jablonowski_2006_mod": {
+      "module": "jablonowski_2006_mod",
+      "path": "src/atmos_spectral/init/jablonowski_2006.F90"
+    },
+    "polvani_2004_mod": {
+      "module": "polvani_2004_mod",
+      "path": "src/atmos_spectral/init/polvani_2004.F90"
+    },
+    "polvani_2007_mod": {
+      "module": "polvani_2007_mod",
+      "path": "src/atmos_spectral/init/polvani_2007.F90"
+    },
+    "spectral_init_cond_mod": {
+      "module": "spectral_init_cond_mod",
+      "path": "src/atmos_spectral/init/spectral_init_cond.F90"
+    },
+    "spectral_initialize_fields_mod": {
+      "module": "spectral_initialize_fields_mod",
+      "path": "src/atmos_spectral/init/spectral_initialize_fields.F90"
+    },
+    "topog_regularization_mod": {
+      "module": "topog_regularization_mod",
+      "path": "src/atmos_spectral/init/topog_regularization.F90"
+    },
+    "vert_coordinate_mod": {
+      "module": "vert_coordinate_mod",
+      "path": "src/atmos_spectral/init/vert_coordinate.F90"
+    },
+    "every_step_diagnostics_mod": {
+      "module": "every_step_diagnostics_mod",
+      "path": "src/atmos_spectral/model/every_step_diagnostics.F90"
+    },
+    "fv_advection_mod": {
+      "module": "fv_advection_mod",
+      "path": "src/atmos_spectral/model/fv_advection.F90"
+    },
+    "global_integral_mod": {
+      "module": "global_integral_mod",
+      "path": "src/atmos_spectral/model/global_integral.F90"
+    },
+    "implicit_mod": {
+      "module": "implicit_mod",
+      "path": "src/atmos_spectral/model/implicit.F90"
+    },
+    "leapfrog_mod": {
+      "module": "leapfrog_mod",
+      "path": "src/atmos_spectral/model/leapfrog.F90"
+    },
+    "matrix_invert_mod": {
+      "module": "matrix_invert_mod",
+      "path": "src/atmos_spectral/model/matrix_invert.F90"
+    },
+    "press_and_geopot_mod": {
+      "module": "press_and_geopot_mod",
+      "path": "src/atmos_spectral/model/press_and_geopot.F90"
+    },
+    "spectral_damping_mod": {
+      "module": "spectral_damping_mod",
+      "path": "src/atmos_spectral/model/spectral_damping.F90"
+    },
+    "spectral_dynamics_mod": {
+      "module": "spectral_dynamics_mod",
+      "path": "src/atmos_spectral/model/spectral_dynamics.F90"
+    },
+    "tracer_type_mod": {
+      "module": "tracer_type_mod",
+      "path": "src/atmos_spectral/model/tracer_type.F90"
+    },
+    "water_borrowing_mod": {
+      "module": "water_borrowing_mod",
+      "path": "src/atmos_spectral/model/water_borrowing.F90"
+    },
+    "gauss_and_legendre_mod": {
+      "module": "gauss_and_legendre_mod",
+      "path": "src/atmos_spectral/tools/gauss_and_legendre.F90"
+    },
+    "grid_fourier_mod": {
+      "module": "grid_fourier_mod",
+      "path": "src/atmos_spectral/tools/grid_fourier.F90"
+    },
+    "spec_mpp_mod": {
+      "module": "spec_mpp_mod",
+      "path": "src/atmos_spectral/tools/spec_mpp.F90"
+    },
+    "spherical_mod": {
+      "module": "spherical_mod",
+      "path": "src/atmos_spectral/tools/spherical.F90"
+    },
+    "spherical_fourier_mod": {
+      "module": "spherical_fourier_mod",
+      "path": "src/atmos_spectral/tools/spherical_fourier.F90"
+    },
+    "transforms_mod": {
+      "module": "transforms_mod",
+      "path": "src/atmos_spectral/tools/transforms.F90"
+    },
+    "barotropic_diagnostics_mod": {
+      "module": "barotropic_diagnostics_mod",
+      "path": "src/atmos_spectral_barotropic/barotropic_diagnostics.F90"
+    },
+    "barotropic_dynamics_mod": {
+      "module": "barotropic_dynamics_mod",
+      "path": "src/atmos_spectral_barotropic/barotropic_dynamics.F90"
+    },
+    "barotropic_physics_mod": {
+      "module": "barotropic_physics_mod",
+      "path": "src/atmos_spectral_barotropic/barotropic_physics.F90"
+    },
+    "stirring_mod": {
+      "module": "stirring_mod",
+      "path": "src/atmos_spectral_barotropic/stirring.F90"
+    },
+    "shallow_diagnostics_mod": {
+      "module": "shallow_diagnostics_mod",
+      "path": "src/atmos_spectral_shallow/shallow_diagnostics.F90"
+    },
+    "shallow_dynamics_mod": {
+      "module": "shallow_dynamics_mod",
+      "path": "src/atmos_spectral_shallow/shallow_dynamics.F90"
+    },
+    "shallow_physics_mod": {
+      "module": "shallow_physics_mod",
+      "path": "src/atmos_spectral_shallow/shallow_physics.F90"
+    },
+    "surface_flux_mod": {
+      "module": "surface_flux_mod",
+      "path": "src/coupler/surface_flux.F90"
+    },
+    "astronomy_mod": {
+      "module": "astronomy_mod",
+      "path": "src/shared/astronomy/astronomy.f90"
+    },
+    "axis_utils_mod": {
+      "module": "axis_utils_mod",
+      "path": "src/shared/axis_utils/axis_utils.F90"
+    },
+    "constants_mod": {
+      "module": "constants_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/constants/constants.F90"
+    },
+    "diag_axis_mod": {
+      "module": "diag_axis_mod",
+      "path": "src/shared/diag_manager/diag_axis.F90"
+    },
+    "diag_data_mod": {
+      "module": "diag_data_mod",
+      "path": "src/shared/diag_manager/diag_data.F90"
+    },
+    "diag_grid_mod": {
+      "module": "diag_grid_mod",
+      "path": "src/shared/diag_manager/diag_grid.F90"
+    },
+    "diag_manager_mod": {
+      "module": "diag_manager_mod",
+      "path": "src/shared/diag_manager/diag_manager.F90"
+    },
+    "diag_output_mod": {
+      "module": "diag_output_mod",
+      "path": "src/shared/diag_manager/diag_output.F90"
+    },
+    "diag_table_mod": {
+      "module": "diag_table_mod",
+      "path": "src/shared/diag_manager/diag_table.F90"
+    },
+    "diag_util_mod": {
+      "module": "diag_util_mod",
+      "path": "src/shared/diag_manager/diag_util.F90"
+    },
+    "fft_mod": {
+      "module": "fft_mod",
+      "path": "src/shared/fft/fft.F90"
+    },
+    "fft99_mod": {
+      "module": "fft99_mod",
+      "path": "src/shared/fft/fft99.F90"
+    },
+    "field_manager_mod": {
+      "module": "field_manager_mod",
+      "path": "src/shared/field_manager/field_manager.F90"
+    },
+    "fm_util_mod": {
+      "module": "fm_util_mod",
+      "path": "src/shared/field_manager/fm_util.F90"
+    },
+    "fms_mod": {
+      "module": "fms_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/fms/fms.F90"
+    },
+    "fms_io_mod": {
+      "module": "fms_io_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90"
+    },
+    "null_fms_io_test": {
+      "module": "null_fms_io_test",
+      "path": "postprocessing/plevel_interpolation/src/shared/fms/test_fms_io.F90"
+    },
+    "horiz_interp_mod": {
+      "module": "horiz_interp_mod",
+      "path": "src/shared/horiz_interp/horiz_interp.F90"
+    },
+    "horiz_interp_bicubic_mod": {
+      "module": "horiz_interp_bicubic_mod",
+      "path": "src/shared/horiz_interp/horiz_interp_bicubic.F90"
+    },
+    "horiz_interp_bilinear_mod": {
+      "module": "horiz_interp_bilinear_mod",
+      "path": "src/shared/horiz_interp/horiz_interp_bilinear.F90"
+    },
+    "horiz_interp_conserve_mod": {
+      "module": "horiz_interp_conserve_mod",
+      "path": "src/shared/horiz_interp/horiz_interp_conserve.F90"
+    },
+    "horiz_interp_spherical_mod": {
+      "module": "horiz_interp_spherical_mod",
+      "path": "src/shared/horiz_interp/horiz_interp_spherical.F90"
+    },
+    "horiz_interp_type_mod": {
+      "module": "horiz_interp_type_mod",
+      "path": "src/shared/horiz_interp/horiz_interp_type.F90"
+    },
+    "memutils_mod": {
+      "module": "memutils_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/memutils/memutils.F90"
+    },
+    "gradient_mod": {
+      "module": "gradient_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/mosaic/gradient.F90"
+    },
+    "grid_mod": {
+      "module": "grid_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/mosaic/grid.F90"
+    },
+    "mosaic_mod": {
+      "module": "mosaic_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/mosaic/mosaic.F90"
+    },
+    "mpp_mod": {
+      "module": "mpp_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    },
+    "mpp_data_mod": {
+      "module": "mpp_data_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/mpp_data.F90"
+    },
+    "mpp_domains_mod": {
+      "module": "mpp_domains_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90"
+    },
+    "mpp_io_mod": {
+      "module": "mpp_io_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90"
+    },
+    "mpp_memutils_mod": {
+      "module": "mpp_memutils_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/mpp_memutils.F90"
+    },
+    "mpp_parameter_mod": {
+      "module": "mpp_parameter_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90"
+    },
+    "mpp_pset_mod": {
+      "module": "mpp_pset_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/mpp_pset.F90"
+    },
+    "mpp_utilities_mod": {
+      "module": "mpp_utilities_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/mpp_utilities.F90"
+    },
+    "null_mpp_test": {
+      "module": "null_mpp_test",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/test_mpp.F90"
+    },
+    "null_mpp_domains_test": {
+      "module": "null_mpp_domains_test",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/test_mpp_domains.F90"
+    },
+    "null_mpp_io_test": {
+      "module": "null_mpp_io_test",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/test_mpp_io.F90"
+    },
+    "null_mpp_pset_test": {
+      "module": "null_mpp_pset_test",
+      "path": "postprocessing/plevel_interpolation/src/shared/mpp/test_mpp_pset.F90"
+    },
+    "platform_mod": {
+      "module": "platform_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/platform/platform.F90"
+    },
+    "mersennetwister_mod": {
+      "module": "MersenneTwister_mod",
+      "path": "src/shared/random_numbers/MersenneTwister.F90"
+    },
+    "random_numbers_mod": {
+      "module": "random_numbers_mod",
+      "path": "src/shared/random_numbers/random_numbers.F90"
+    },
+    "sat_vapor_pres_mod": {
+      "module": "sat_vapor_pres_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90"
+    },
+    "sat_vapor_pres_k_mod": {
+      "module": "sat_vapor_pres_k_mod",
+      "path": "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres_k.F90"
+    },
+    "time_interp_mod": {
+      "module": "time_interp_mod",
+      "path": "src/shared/time_interp/time_interp.F90"
+    },
+    "time_interp_external_mod": {
+      "module": "time_interp_external_mod",
+      "path": "src/shared/time_interp/time_interp_external.F90"
+    },
+    "get_cal_time_mod": {
+      "module": "get_cal_time_mod",
+      "path": "src/shared/time_manager/get_cal_time.F90"
+    },
+    "time_manager_mod": {
+      "module": "time_manager_mod",
+      "path": "src/shared/time_manager/time_manager.F90"
+    },
+    "gaussian_topog_mod": {
+      "module": "gaussian_topog_mod",
+      "path": "src/shared/topography/gaussian_topog.F90"
+    },
+    "topography_mod": {
+      "module": "topography_mod",
+      "path": "src/shared/topography/topography.F90"
+    },
+    "tracer_manager_mod": {
+      "module": "tracer_manager_mod",
+      "path": "src/shared/tracer_manager/tracer_manager.F90"
+    },
+    "tridiagonal_mod": {
+      "module": "tridiagonal_mod",
+      "path": "src/shared/tridiagonal/tridiagonal.F90"
+    },
+    "bgrid_change_grid_mod": {
+      "module": "bgrid_change_grid_mod",
+      "path": "postprocessing/plevel_interpolation/src/atmos_bgrid/tools/bgrid_change_grid.F90"
+    },
+    "bgrid_halo_mod": {
+      "module": "bgrid_halo_mod",
+      "path": "postprocessing/plevel_interpolation/src/atmos_bgrid/tools/bgrid_halo.F90"
+    },
+    "bgrid_horiz_mod": {
+      "module": "bgrid_horiz_mod",
+      "path": "postprocessing/plevel_interpolation/src/atmos_bgrid/tools/bgrid_horiz.F90"
+    },
+    "bgrid_vert_mod": {
+      "module": "bgrid_vert_mod",
+      "path": "postprocessing/plevel_interpolation/src/atmos_bgrid/tools/bgrid_vert.F90"
+    },
+    "moisture_convert_mod": {
+      "module": "moisture_convert_mod",
+      "path": "postprocessing/plevel_interpolation/src/postprocessing/plevel/moisture_convert.F90"
+    },
+    "pinterp_utilities_mod": {
+      "module": "pinterp_utilities_mod",
+      "path": "postprocessing/plevel_interpolation/src/postprocessing/plevel/pinterp_utilities.F90"
+    },
+    "plev_constants_mod": {
+      "module": "plev_constants_mod",
+      "path": "postprocessing/plevel_interpolation/src/postprocessing/plevel/plev_constants.F90"
+    },
+    "pressure_interp_mod": {
+      "module": "pressure_interp_mod",
+      "path": "postprocessing/plevel_interpolation/src/postprocessing/plevel/pressure_interp.F90"
+    }
+  },
+  "dependency_graph": {
+    "geos_utils/cub2cub.F90": [
+      "geos_utils/cub2latlon.F90",
+      "geos_utils/flow_proj.F90",
+      "geos_utils/ghost_cubsph.F90",
+      "geos_utils/grid_utils_mod.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90"
+    ],
+    "geos_utils/cub2latlon.F90": [
+      "geos_utils/ghost_cubsph.F90",
+      "geos_utils/grid_utils_mod.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "geos_utils/cub2latlon_driver.F90": [
+      "geos_utils/cub2latlon.F90"
+    ],
+    "geos_utils/fill_corner.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "geos_utils/flow_proj.F90": [
+      "geos_utils/fill_corner.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "geos_utils/ghost_cubsph.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "geos_utils/grid_utils_mod.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "geos_utils/CUB2CUB/cub2cub.F90": [
+      "geos_utils/cub2latlon.F90",
+      "geos_utils/flow_proj.F90",
+      "geos_utils/ghost_cubsph.F90",
+      "geos_utils/grid_utils_mod.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "geos_utils/CUB2CUB/cub2cub_driver.F90": [
+      "geos_utils/CUB2CUB/cub2cub.F90",
+      "geos_utils/cub2latlon.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "model/a2b_edge.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90"
+    ],
+    "model/boundary.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_timing.F90"
+    ],
+    "model/dyn_core.F90": [
+      "UNRESOLVED_OR_EXTERNAL::fv_ada_nudge_mod",
+      "model/a2b_edge.F90",
+      "model/boundary.F90",
+      "model/fv_update_phys.F90",
+      "model/nh_core.F90",
+      "model/sw_core.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp_core.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "tools/fv_diagnostics.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_nudge.F90",
+      "tools/fv_timing.F90",
+      "tools/test_cases.F90"
+    ],
+    "model/fv_arrays.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/platform/platform.F90",
+      "src/shared/horiz_interp/horiz_interp_type.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "model/fv_cmp.F90": [
+      "model/lin_cloud_microphys.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "tools/fv_mp_mod.F90"
+    ],
+    "model/fv_control.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/fv_diagnostics.F90",
+      "tools/fv_eta.F90",
+      "tools/fv_grid_tools.F90",
+      "tools/fv_io.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_restart.F90",
+      "tools/fv_timing.F90",
+      "tools/test_cases.F90"
+    ],
+    "model/fv_dynamics.F90": [
+      "model/boundary.F90",
+      "model/dyn_core.F90",
+      "model/fv_fill.F90",
+      "model/fv_mapz.F90",
+      "model/fv_nesting.F90",
+      "model/fv_sg.F90",
+      "model/fv_tracer2d.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/fv_diagnostics.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_nudge.F90",
+      "tools/fv_timing.F90"
+    ],
+    "model/fv_fill.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/platform/platform.F90"
+    ],
+    "model/fv_grid_utils.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90",
+      "tools/external_sst.F90",
+      "tools/fv_eta.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_timing.F90"
+    ],
+    "model/fv_mapz.F90": [
+      "model/fv_cmp.F90",
+      "model/fv_fill.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_timing.F90"
+    ],
+    "model/fv_nesting.F90": [
+      "model/boundary.F90",
+      "model/fv_mapz.F90",
+      "model/fv_sg.F90",
+      "model/sw_core.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/fv_diagnostics.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_restart.F90",
+      "tools/fv_timing.F90",
+      "tools/init_hydro.F90"
+    ],
+    "model/fv_sg.F90": [
+      "model/lin_cloud_microphys.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/fv_mp_mod.F90"
+    ],
+    "model/fv_tracer2d.F90": [
+      "model/boundary.F90",
+      "model/fv_fill.F90",
+      "model/fv_mapz.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp_core.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_timing.F90"
+    ],
+    "model/fv_update_phys.F90": [
+      "UNRESOLVED_OR_EXTERNAL::atmos_nudge_mod",
+      "UNRESOLVED_OR_EXTERNAL::fv_ada_nudge_mod",
+      "model/boundary.F90",
+      "model/fv_mapz.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/fv_climate_nudge.F90",
+      "tools/fv_diagnostics.F90",
+      "tools/fv_eta.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_nudge.F90",
+      "tools/fv_timing.F90"
+    ],
+    "model/lin_cloud_microphys.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "model/nh_core.F90": [
+      "model/nh_utils.F90",
+      "model/tp_core.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90"
+    ],
+    "model/nh_utils.F90": [
+      "model/sw_core.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp_core.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90"
+    ],
+    "model/nwp_nudge.F90": [
+      "model/fv_control.F90",
+      "model/fv_mapz.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "model/tp_core.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "tools/fv_diagnostics.F90",
+      "tools/fv_grid_tools.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_timing.F90"
+    ],
+    "model/sw_core.F90": [
+      "model/a2b_edge.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp_core.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/test_cases.F90"
+    ],
+    "model/tp_core.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "tools/fv_mp_mod.F90"
+    ],
+    "model/mapz-driver/main.F90": [
+      "model/fv_mapz.F90",
+      "model/mapz-driver/input/input_array_extents.f90",
+      "model/mapz-driver/input/input_domain_layout.f90",
+      "model/mapz-driver/input/input_flagstruct.f90",
+      "model/mapz-driver/input/input_gridstruct.f90",
+      "model/mapz-driver/input/input_scalars.f90",
+      "model/mapz-driver/output/output.f90",
+      "model/tp-core-driver/input/input_arrays.f90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "tools/external_ic.F90"
+    ],
+    "model/mapz-driver/input/input_arrays.f90": [
+      "model/mapz-driver/input/input_array_extents.f90"
+    ],
+    "model/mapz-driver/input/input_flagstruct.f90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "model/mapz-driver/input/input_gridstruct.f90": [
+      "model/mapz-driver/input/input_array_extents.f90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "model/mapz-driver/stubs/external_ic_stub.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90"
+    ],
+    "model/mapz-driver/stubs/fv_grid_utils_stub.f90": [
+      "UNRESOLVED_OR_EXTERNAL::iso_fortran_env",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "tools/fv_mp_mod.F90"
+    ],
+    "model/tp-core-driver/driver_cpu.f90": [
+      "model/tp-core-driver/input/input_arrays.f90",
+      "model/tp-core-driver/output/output_arrays.f90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp_core.F90"
+    ],
+    "model/tp-core-driver/main.f90": [
+      "model/tp-core-driver/driver_cpu.f90"
+    ],
+    "model/tp-core-driver/test.F90": [
+      "UNRESOLVED_OR_EXTERNAL::cudafor",
+      "UNRESOLVED_OR_EXTERNAL::tp_core_acc",
+      "UNRESOLVED_OR_EXTERNAL::tp_core_cpu",
+      "UNRESOLVED_OR_EXTERNAL::tp_core_cuda"
+    ],
+    "model/tp-core-driver/input/input_arrays.f90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "model/tp-core-driver/output/output_arrays.f90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "model/tp-core-driver/stubs/fv_arrays_stub.F90": [
+      "tools/fv_mp_mod.F90"
+    ],
+    "model_mpp/fv_my_mpp.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "tools/fv_mp_mod.F90"
+    ],
+    "model_mpp/fv_my_mpp_ad.F90": [
+      "model_mpp/fv_my_mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "tools/fv_mp_mod.F90"
+    ],
+    "model_mpp/fv_my_mpp_ftl.F90": [
+      "model_mpp/fv_my_mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "tools/fv_mp_mod.F90"
+    ],
+    "tools/external_ic.F90": [
+      "UNRESOLVED_OR_EXTERNAL::MAPL",
+      "UNRESOLVED_OR_EXTERNAL::amip_interp_mod",
+      "geos_utils/CUB2CUB/cub2cub.F90",
+      "geos_utils/flow_proj.F90",
+      "geos_utils/ghost_cubsph.F90",
+      "geos_utils/grid_utils_mod.F90",
+      "model/fv_mapz.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/memutils/memutils.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/fv_diagnostics.F90",
+      "tools/fv_grid_tools.F90",
+      "tools/fv_io.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_nudge.F90",
+      "tools/fv_surf_map.F90",
+      "tools/fv_timing.F90",
+      "tools/init_hydro.F90",
+      "tools/sim_nc_mod.F90"
+    ],
+    "tools/external_sst.F90": [
+      "UNRESOLVED_OR_EXTERNAL::amip_interp_mod"
+    ],
+    "tools/fv_climate_nudge.F90": [
+      "model/fv_mapz.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_interp/time_interp.F90",
+      "src/shared/time_manager/get_cal_time.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "tools/read_climate_nudge_data.F90"
+    ],
+    "tools/fv_diagnostics.F90": [
+      "model/a2b_edge.F90",
+      "model/fv_mapz.F90",
+      "model/fv_sg.F90",
+      "model/lin_cloud_microphys.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/fv_eta.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_surf_map.F90"
+    ],
+    "tools/fv_eta.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "tools/fv_mp_mod.F90"
+    ],
+    "tools/fv_grid_tools.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mosaic/mosaic.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_timing.F90",
+      "tools/sorted_index.F90"
+    ],
+    "tools/fv_io.F90": [
+      "model/fv_mapz.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/external_sst.F90",
+      "tools/fv_eta.F90",
+      "tools/fv_mp_mod.F90"
+    ],
+    "tools/fv_mp_mod.F90": [
+      "UNRESOLVED_OR_EXTERNAL::ensemble_manager_mod",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90"
+    ],
+    "tools/fv_nudge.F90": [
+      "model/fv_mapz.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "model/tp_core.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "tools/external_sst.F90",
+      "tools/fv_diagnostics.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_timing.F90",
+      "tools/sim_nc_mod.F90"
+    ],
+    "tools/fv_restart.F90": [
+      "model/boundary.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/external_ic.F90",
+      "tools/fv_diagnostics.F90",
+      "tools/fv_eta.F90",
+      "tools/fv_io.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_surf_map.F90",
+      "tools/fv_timing.F90",
+      "tools/fv_treat_da_inc.F90",
+      "tools/init_hydro.F90",
+      "tools/test_cases.F90"
+    ],
+    "tools/fv_surf_map.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_timing.F90"
+    ],
+    "tools/fv_timing.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "tools/fv_mp_mod.F90"
+    ],
+    "tools/fv_treat_da_inc.F90": [
+      "UNRESOLVED_OR_EXTERNAL::MAPL",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/sim_nc_mod.F90"
+    ],
+    "tools/init_hydro.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/fv_mp_mod.F90"
+    ],
+    "tools/read_climate_nudge_data.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90"
+    ],
+    "tools/sim_nc_mod.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "tools/sorted_index.F90": [
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90"
+    ],
+    "tools/test_cases.F90": [
+      "model/fv_sg.F90",
+      "model/tp-core-driver/stubs/fv_arrays_stub.F90",
+      "model/tp-core-driver/stubs/fv_grid_utils_stub.F90",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90",
+      "tools/fv_diagnostics.F90",
+      "tools/fv_eta.F90",
+      "tools/fv_grid_tools.F90",
+      "tools/fv_mp_mod.F90",
+      "tools/fv_surf_map.F90",
+      "tools/init_hydro.F90"
+    ],
+    "src/atmos_column/column.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_column/column_grid.F90",
+      "src/atmos_column/column_init_cond.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/model/tracer_type.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_column/column_grid.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90"
+    ],
+    "src/atmos_column/column_init_cond.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/atmos_column/column_initialize_fields.F90",
+      "src/atmos_spectral/init/vert_coordinate.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/model/tracer_type.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90"
+    ],
+    "src/atmos_column/column_initialize_fields.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_column/column_grid.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90"
+    ],
+    "src/atmos_param/betts_miller/betts_miller.f90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90"
+    ],
+    "src/atmos_param/cg_drag/cg_drag.f90": [
+      "UNRESOLVED_OR_EXTERNAL::column_diagnostics_mod",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/cloud_simple/cloud_cover_diags.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/cloud_simple/cloud_simple.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90",
+      "src/atmos_param/cloud_simple/cloud_cover_diags.F90",
+      "src/atmos_param/cloud_simple/large_scale_cloud.F90",
+      "src/atmos_param/cloud_simple/lcl.F90",
+      "src/atmos_param/cloud_simple/marine_strat_cloud.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/cloud_simple/cloud_spookie.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/cloud_simple/large_scale_cloud.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/cloud_simple/marine_strat_cloud.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90",
+      "src/atmos_param/cloud_simple/lcl.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/damping_driver/damping_driver.f90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_param/cg_drag/cg_drag.f90",
+      "src/atmos_param/mg_drag/mg_drag.f90",
+      "src/atmos_param/topo_drag/topo_drag.f90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/diffusivity/diffusivity.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_param/monin_obukhov/monin_obukhov.F90"
+    ],
+    "src/atmos_param/dry_convection/dry_convection.f90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/edt/edt.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90",
+      "src/atmos_param/monin_obukhov/monin_obukhov.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/entrain/entrain.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90",
+      "src/atmos_param/monin_obukhov/monin_obukhov.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/hs_forcing/hs_forcing.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_shared/interpolator/interpolator.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/astronomy/astronomy.f90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_param/lscale_cond/lscale_cond.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90"
+    ],
+    "src/atmos_param/mg_drag/mg_drag.f90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "src/shared/topography/topography.F90"
+    ],
+    "src/atmos_param/monin_obukhov/monin_obukhov.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/atmos_param/monin_obukhov/monin_obukhov_kernel.F90": [
+      "src/atmos_param/monin_obukhov/monin_obukhov_kernel.F90"
+    ],
+    "src/atmos_param/my25_turb/my25_turb.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_param/monin_obukhov/monin_obukhov.F90",
+      "src/shared/tridiagonal/tridiagonal.F90"
+    ],
+    "src/atmos_param/qe_moist_convection/qe_moist_convection.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90"
+    ],
+    "src/atmos_param/qflux/qflux.f90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90"
+    ],
+    "src/atmos_param/ras/moist_processes.f90": [
+      "UNRESOLVED_OR_EXTERNAL::atmos_tracer_utilities_mod",
+      "UNRESOLVED_OR_EXTERNAL::bm_massflux_mod",
+      "UNRESOLVED_OR_EXTERNAL::bm_omp_mod",
+      "UNRESOLVED_OR_EXTERNAL::cu_mo_trans_mod",
+      "UNRESOLVED_OR_EXTERNAL::diag_cloud_mod",
+      "UNRESOLVED_OR_EXTERNAL::diag_integral_mod",
+      "UNRESOLVED_OR_EXTERNAL::donner_deep_mod",
+      "UNRESOLVED_OR_EXTERNAL::dry_adj_mod",
+      "UNRESOLVED_OR_EXTERNAL::moist_conv_mod",
+      "UNRESOLVED_OR_EXTERNAL::rh_clouds_mod",
+      "UNRESOLVED_OR_EXTERNAL::simple_sat_vapor_pres_mod",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_param/betts_miller/betts_miller.f90",
+      "src/atmos_param/lscale_cond/lscale_cond.F90",
+      "src/atmos_param/qe_moist_convection/qe_moist_convection.F90",
+      "src/atmos_param/ras/ras.f90",
+      "src/atmos_param/strat_cloud/null/strat_cloud.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_param/ras/ras.f90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_param/rayleigh_bottom_drag/rayleigh_bottom_drag.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtm_radiation.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_column/column_grid.F90",
+      "src/atmos_param/rrtm_radiation/rrtm_radiation.F90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rad.nomcica.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_rad.nomcica.f90",
+      "src/atmos_shared/interpolator/interpolator.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/astronomy/astronomy.f90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_cld.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_con.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg01.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg02.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg03.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg04.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg05.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg06.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg07.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg08.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg09.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg10.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg11.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg12.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg13.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg14.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg15.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg16.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_ncpar.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_ref.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_tbl.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/mcica_random_numbers.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/mcica_random_numbers.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/mcica_subcol_gen_lw.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/mcica_random_numbers.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_cldprmc.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_cld.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_cldprop.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_cld.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_init.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_cld.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg01.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg02.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg03.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg04.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg05.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg06.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg07.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg08.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg09.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg10.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg11.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg12.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg13.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg14.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg15.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg16.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_tbl.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_setcoef.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_k_g.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg01.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg02.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg03.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg04.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg05.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg06.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg07.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg08.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg09.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg10.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg11.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg12.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg13.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg14.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg15.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg16.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rad.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/mcica_subcol_gen_lw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_cldprmc.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rtrnmc.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_setcoef.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_taumol.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rad.nomcica.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_cldprop.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rtrn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rtrnmr.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_setcoef.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_taumol.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_read_nc.f90": [
+      "UNRESOLVED_OR_EXTERNAL::netcdf",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg01.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg02.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg03.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg04.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg05.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg06.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg07.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg08.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg09.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg10.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg11.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg12.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg13.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg14.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg15.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg16.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_ncpar.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rtrn.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_tbl.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rtrnmc.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_tbl.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rtrnmr.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_tbl.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_setcoef.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_ref.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_taumol.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/parrrtm.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg01.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg02.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg03.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg04.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg05.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg06.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg07.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg08.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg09.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg10.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg11.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg12.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg13.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg14.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg15.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_kg16.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_ref.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/modules/rrlw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_aer.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_cld.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_con.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg16.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg17.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg18.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg19.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg20.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg21.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg22.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg23.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg24.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg25.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg26.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg27.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg28.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg29.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_ncpar.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_ref.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_tbl.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_wvn.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/mcica_random_numbers.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/mcica_random_numbers.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/mcica_subcol_gen_sw.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/mcica_random_numbers.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_cldprmc.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_cld.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_wvn.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_cldprop.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_cld.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_wvn.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_init.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_aer.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_cld.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg16.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg17.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg18.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg19.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg20.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg21.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg22.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg23.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg24.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg25.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg26.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg27.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg28.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg29.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_tbl.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_setcoef.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_k_g.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg16.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg17.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg18.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg19.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg20.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg21.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg22.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg23.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg24.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg25.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg26.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg27.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg28.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg29.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_rad.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_aer.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/mcica_subcol_gen_sw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_cldprmc.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_setcoef.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_spcvmc.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_rad.nomcica.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_aer.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_cldprop.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_setcoef.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_spcvrt.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_read_nc.f90": [
+      "UNRESOLVED_OR_EXTERNAL::netcdf",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg16.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg17.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg18.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg19.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg20.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg21.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg22.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg23.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg24.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg25.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg26.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg27.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg28.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg29.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_ncpar.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_reftra.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_tbl.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_setcoef.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_ref.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_spcvmc.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_tbl.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_reftra.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_taumol.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_vrtqdr.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_spcvrt.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_tbl.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_wvn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_reftra.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_taumol.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_vrtqdr.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_taumol.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parrrsw.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_con.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg16.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg17.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg18.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg19.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg20.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg21.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg22.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg23.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg24.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg25.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg26.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg27.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg28.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_kg29.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_vsn.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/rrsw_wvn.f90"
+    ],
+    "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_vrtqdr.f90": [
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/modules/parkind.f90"
+    ],
+    "src/atmos_param/sea_esf_rad/null/rad_utilities.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/shallow_conv/shallow_conv.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90"
+    ],
+    "src/atmos_param/socrates/interface/compress_spectrum.F90": [
+      "UNRESOLVED_OR_EXTERNAL::def_control",
+      "UNRESOLVED_OR_EXTERNAL::def_spectrum",
+      "UNRESOLVED_OR_EXTERNAL::gas_list_pcf",
+      "UNRESOLVED_OR_EXTERNAL::parkind1",
+      "UNRESOLVED_OR_EXTERNAL::yomhook"
+    ],
+    "src/atmos_param/socrates/interface/read_control.F90": [
+      "UNRESOLVED_OR_EXTERNAL::def_control",
+      "UNRESOLVED_OR_EXTERNAL::def_spectrum",
+      "UNRESOLVED_OR_EXTERNAL::rad_pcf",
+      "src/atmos_param/socrates/interface/socrates_config_mod.f90"
+    ],
+    "src/atmos_param/socrates/interface/set_aer.F90": [
+      "UNRESOLVED_OR_EXTERNAL::def_aer",
+      "UNRESOLVED_OR_EXTERNAL::def_control",
+      "UNRESOLVED_OR_EXTERNAL::def_dimen",
+      "UNRESOLVED_OR_EXTERNAL::def_spectrum",
+      "UNRESOLVED_OR_EXTERNAL::rad_pcf",
+      "src/atmos_param/socrates/interface/soc_constants.f90"
+    ],
+    "src/atmos_param/socrates/interface/set_atm.F90": [
+      "UNRESOLVED_OR_EXTERNAL::def_atm",
+      "UNRESOLVED_OR_EXTERNAL::def_control",
+      "UNRESOLVED_OR_EXTERNAL::def_dimen",
+      "UNRESOLVED_OR_EXTERNAL::def_spectrum",
+      "UNRESOLVED_OR_EXTERNAL::gas_list_pcf",
+      "UNRESOLVED_OR_EXTERNAL::rad_pcf",
+      "src/atmos_param/socrates/interface/soc_constants.f90",
+      "src/atmos_param/socrates/interface/socrates_config_mod.f90"
+    ],
+    "src/atmos_param/socrates/interface/set_bound.F90": [
+      "UNRESOLVED_OR_EXTERNAL::def_bound",
+      "UNRESOLVED_OR_EXTERNAL::def_control",
+      "UNRESOLVED_OR_EXTERNAL::def_dimen",
+      "UNRESOLVED_OR_EXTERNAL::def_spectrum",
+      "UNRESOLVED_OR_EXTERNAL::rad_pcf",
+      "src/atmos_param/socrates/interface/soc_constants.f90"
+    ],
+    "src/atmos_param/socrates/interface/set_cld.F90": [
+      "UNRESOLVED_OR_EXTERNAL::def_cld",
+      "UNRESOLVED_OR_EXTERNAL::def_control",
+      "UNRESOLVED_OR_EXTERNAL::def_dimen",
+      "UNRESOLVED_OR_EXTERNAL::def_spectrum",
+      "UNRESOLVED_OR_EXTERNAL::rad_pcf",
+      "src/atmos_param/socrates/interface/soc_constants.f90"
+    ],
+    "src/atmos_param/socrates/interface/set_control.F90": [
+      "UNRESOLVED_OR_EXTERNAL::def_control"
+    ],
+    "src/atmos_param/socrates/interface/set_dimen.F90": [
+      "UNRESOLVED_OR_EXTERNAL::def_control",
+      "UNRESOLVED_OR_EXTERNAL::def_dimen",
+      "UNRESOLVED_OR_EXTERNAL::def_spectrum",
+      "UNRESOLVED_OR_EXTERNAL::rad_pcf",
+      "src/atmos_param/socrates/interface/soc_constants.f90"
+    ],
+    "src/atmos_param/socrates/interface/socrates_calc.F90": [
+      "UNRESOLVED_OR_EXTERNAL::def_aer",
+      "UNRESOLVED_OR_EXTERNAL::def_atm",
+      "UNRESOLVED_OR_EXTERNAL::def_bound",
+      "UNRESOLVED_OR_EXTERNAL::def_cld",
+      "UNRESOLVED_OR_EXTERNAL::def_control",
+      "UNRESOLVED_OR_EXTERNAL::def_dimen",
+      "UNRESOLVED_OR_EXTERNAL::def_out",
+      "UNRESOLVED_OR_EXTERNAL::def_spectrum",
+      "UNRESOLVED_OR_EXTERNAL::rad_pcf",
+      "src/atmos_param/socrates/interface/set_aer.F90",
+      "src/atmos_param/socrates/interface/set_atm.F90",
+      "src/atmos_param/socrates/interface/set_bound.F90",
+      "src/atmos_param/socrates/interface/set_control.F90",
+      "src/atmos_param/socrates/interface/set_dimen.F90",
+      "src/atmos_param/socrates/interface/soc_constants.f90",
+      "src/atmos_param/socrates/interface/socrates_set_cld.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/socrates/interface/socrates_config_mod.f90": [
+      "UNRESOLVED_OR_EXTERNAL::def_control",
+      "UNRESOLVED_OR_EXTERNAL::def_spectrum",
+      "src/atmos_param/socrates/interface/soc_constants.f90"
+    ],
+    "src/atmos_param/socrates/interface/socrates_interface.F90": [
+      "UNRESOLVED_OR_EXTERNAL::def_aer",
+      "UNRESOLVED_OR_EXTERNAL::def_atm",
+      "UNRESOLVED_OR_EXTERNAL::def_bound",
+      "UNRESOLVED_OR_EXTERNAL::def_cld",
+      "UNRESOLVED_OR_EXTERNAL::def_control",
+      "UNRESOLVED_OR_EXTERNAL::def_dimen",
+      "UNRESOLVED_OR_EXTERNAL::def_out",
+      "UNRESOLVED_OR_EXTERNAL::def_spectrum",
+      "UNRESOLVED_OR_EXTERNAL::realtype_rd",
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_param/socrates/interface/compress_spectrum.F90",
+      "src/atmos_param/socrates/interface/read_control.F90",
+      "src/atmos_param/socrates/interface/soc_constants.f90",
+      "src/atmos_param/socrates/interface/socrates_calc.F90",
+      "src/atmos_param/socrates/interface/socrates_config_mod.f90",
+      "src/atmos_shared/interpolator/interpolator.F90",
+      "src/shared/astronomy/astronomy.f90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/socrates/interface/socrates_set_cld.F90": [
+      "UNRESOLVED_OR_EXTERNAL::def_cld",
+      "UNRESOLVED_OR_EXTERNAL::def_control",
+      "UNRESOLVED_OR_EXTERNAL::def_dimen",
+      "UNRESOLVED_OR_EXTERNAL::def_spectrum",
+      "UNRESOLVED_OR_EXTERNAL::rad_pcf",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_param/socrates/interface/soc_constants.f90"
+    ],
+    "src/atmos_param/stable_bl_turb/stable_bl_turb.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_param/monin_obukhov/monin_obukhov.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/strat_cloud/null/strat_cloud.F90": [
+      "src/atmos_param/sea_esf_rad/null/rad_utilities.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/topo_drag/topo_drag.f90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90"
+    ],
+    "src/atmos_param/two_stream_gray_rad/two_stream_gray_rad.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_shared/interpolator/interpolator.F90",
+      "src/shared/astronomy/astronomy.f90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_param/vert_diff/vert_diff.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_param/vert_turb_driver/vert_turb_driver.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_param/diffusivity/diffusivity.F90",
+      "src/atmos_param/edt/edt.F90",
+      "src/atmos_param/entrain/entrain.F90",
+      "src/atmos_param/my25_turb/my25_turb.F90",
+      "src/atmos_param/shallow_conv/shallow_conv.F90",
+      "src/atmos_param/stable_bl_turb/stable_bl_turb.F90",
+      "src/atmos_param/strat_cloud/null/strat_cloud.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_shared/interpolator/interpolator.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "src/atmos_shared/interpolator/interpolator.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/horiz_interp/horiz_interp.F90",
+      "src/shared/time_interp/time_interp.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_shared/vert_advection/vert_advection.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/atmos_solo/atmos_model.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/memutils/memutils.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "src/atmos_spectral_shallow/atmosphere.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_spectral/driver/solo/atmosphere.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_column/column.F90",
+      "src/atmos_column/column_grid.F90",
+      "src/atmos_param/hs_forcing/hs_forcing.F90",
+      "src/atmos_spectral/driver/solo/idealized_moist_phys.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/model/spectral_dynamics.F90",
+      "src/atmos_spectral/model/tracer_type.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_spectral/driver/solo/idealized_moist_phys.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90",
+      "src/atmos_column/column.F90",
+      "src/atmos_param/betts_miller/betts_miller.f90",
+      "src/atmos_param/cloud_simple/cloud_simple.F90",
+      "src/atmos_param/cloud_simple/cloud_spookie.F90",
+      "src/atmos_param/damping_driver/damping_driver.f90",
+      "src/atmos_param/dry_convection/dry_convection.f90",
+      "src/atmos_param/lscale_cond/lscale_cond.F90",
+      "src/atmos_param/qe_moist_convection/qe_moist_convection.F90",
+      "src/atmos_param/ras/ras.f90",
+      "src/atmos_param/rayleigh_bottom_drag/rayleigh_bottom_drag.F90",
+      "src/atmos_param/rrtm_radiation/rrtm_radiation.F90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_init.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_lw/gcm_model/src/rrtmg_lw_rad.nomcica.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_init.f90",
+      "src/atmos_param/rrtm_radiation/rrtmg_sw/gcm_model/src/rrtmg_sw_rad.nomcica.f90",
+      "src/atmos_param/socrates/interface/soc_constants.f90",
+      "src/atmos_param/socrates/interface/socrates_interface.F90",
+      "src/atmos_param/two_stream_gray_rad/two_stream_gray_rad.F90",
+      "src/atmos_param/vert_diff/vert_diff.F90",
+      "src/atmos_param/vert_turb_driver/vert_turb_driver.F90",
+      "src/atmos_spectral/driver/solo/mixed_layer.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/model/spectral_dynamics.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/coupler/surface_flux.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_spectral/driver/solo/mixed_layer.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/atmos_column/column.F90",
+      "src/atmos_column/column_grid.F90",
+      "src/atmos_param/qflux/qflux.f90",
+      "src/atmos_param/vert_diff/vert_diff.F90",
+      "src/atmos_shared/interpolator/interpolator.F90",
+      "src/atmos_spectral/model/spectral_dynamics.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_spectral/init/ic_from_external_file.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_spectral/model/tracer_type.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_spectral/init/jablonowski_2006.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_spectral/init/vert_coordinate.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/diag_manager/diag_manager.F90"
+    ],
+    "src/atmos_spectral/init/polvani_2004.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_spectral/init/vert_coordinate.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/diag_manager/diag_manager.F90"
+    ],
+    "src/atmos_spectral/init/polvani_2007.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_spectral/init/vert_coordinate.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/model/tracer_type.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_spectral/init/spectral_init_cond.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/atmos_spectral/init/ic_from_external_file.F90",
+      "src/atmos_spectral/init/spectral_initialize_fields.F90",
+      "src/atmos_spectral/init/topog_regularization.F90",
+      "src/atmos_spectral/init/vert_coordinate.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/model/tracer_type.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/topography/topography.F90"
+    ],
+    "src/atmos_spectral/init/spectral_initialize_fields.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/tools/transforms.F90"
+    ],
+    "src/atmos_spectral/init/topog_regularization.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/atmos_spectral/tools/transforms.F90"
+    ],
+    "src/atmos_spectral/init/vert_coordinate.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/atmos_spectral/model/every_step_diagnostics.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_spectral/model/fv_advection.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90"
+    ],
+    "src/atmos_spectral/model/global_integral.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/tools/transforms.F90"
+    ],
+    "src/atmos_spectral/model/implicit.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/model/matrix_invert.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/tools/transforms.F90"
+    ],
+    "src/atmos_spectral/model/leapfrog.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90"
+    ],
+    "src/atmos_spectral/model/matrix_invert.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90"
+    ],
+    "src/atmos_spectral/model/press_and_geopot.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90"
+    ],
+    "src/atmos_spectral/model/spectral_damping.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/tools/transforms.F90"
+    ],
+    "src/atmos_spectral/model/spectral_dynamics.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/atmos_shared/vert_advection/vert_advection.F90",
+      "src/atmos_spectral/init/jablonowski_2006.F90",
+      "src/atmos_spectral/init/polvani_2004.F90",
+      "src/atmos_spectral/init/polvani_2007.F90",
+      "src/atmos_spectral/init/spectral_init_cond.F90",
+      "src/atmos_spectral/model/every_step_diagnostics.F90",
+      "src/atmos_spectral/model/fv_advection.F90",
+      "src/atmos_spectral/model/global_integral.F90",
+      "src/atmos_spectral/model/implicit.F90",
+      "src/atmos_spectral/model/leapfrog.F90",
+      "src/atmos_spectral/model/press_and_geopot.F90",
+      "src/atmos_spectral/model/spectral_damping.F90",
+      "src/atmos_spectral/model/tracer_type.F90",
+      "src/atmos_spectral/model/water_borrowing.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/field_manager/field_manager.F90",
+      "src/shared/time_manager/time_manager.F90",
+      "src/shared/tracer_manager/tracer_manager.F90"
+    ],
+    "src/atmos_spectral/model/water_borrowing.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/tools/transforms.F90"
+    ],
+    "src/atmos_spectral/tools/gauss_and_legendre.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90"
+    ],
+    "src/atmos_spectral/tools/grid_fourier.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/shared/fft/fft.F90"
+    ],
+    "src/atmos_spectral/tools/spec_mpp.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90"
+    ],
+    "src/atmos_spectral/tools/spherical.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90"
+    ],
+    "src/atmos_spectral/tools/spherical_fourier.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/atmos_spectral/tools/gauss_and_legendre.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90",
+      "src/atmos_spectral/tools/spherical.F90"
+    ],
+    "src/atmos_spectral/tools/transforms.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/atmos_spectral/tools/grid_fourier.F90",
+      "src/atmos_spectral/tools/spec_mpp.F90",
+      "src/atmos_spectral/tools/spherical_fourier.F90"
+    ],
+    "src/atmos_spectral_barotropic/atmosphere.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/atmos_spectral_barotropic/barotropic_diagnostics.F90",
+      "src/atmos_spectral_barotropic/barotropic_dynamics.F90",
+      "src/atmos_spectral_barotropic/barotropic_physics.F90",
+      "src/atmos_spectral_barotropic/stirring.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_spectral_barotropic/barotropic_diagnostics.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/atmos_spectral_barotropic/barotropic_dynamics.F90",
+      "src/atmos_spectral_barotropic/barotropic_physics.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_spectral_barotropic/barotropic_dynamics.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/model/fv_advection.F90",
+      "src/atmos_spectral/model/leapfrog.F90",
+      "src/atmos_spectral/model/spectral_damping.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/atmos_spectral_barotropic/stirring.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_spectral_barotropic/barotropic_physics.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_spectral_barotropic/stirring.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_spectral_shallow/atmosphere.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/atmos_spectral_barotropic/stirring.F90",
+      "src/atmos_spectral_shallow/shallow_diagnostics.F90",
+      "src/atmos_spectral_shallow/shallow_dynamics.F90",
+      "src/atmos_spectral_shallow/shallow_physics.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_spectral_shallow/shallow_diagnostics.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/atmos_spectral_shallow/shallow_dynamics.F90",
+      "src/atmos_spectral_shallow/shallow_physics.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_spectral_shallow/shallow_dynamics.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_shared/interpolator/interpolator.F90",
+      "src/atmos_spectral/model/fv_advection.F90",
+      "src/atmos_spectral/model/leapfrog.F90",
+      "src/atmos_spectral/model/spectral_damping.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/atmos_spectral_barotropic/stirring.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/atmos_spectral_shallow/shallow_physics.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "src/atmos_spectral/tools/transforms.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/coupler/surface_flux.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90",
+      "src/atmos_param/monin_obukhov/monin_obukhov.F90"
+    ],
+    "src/shared/astronomy/astronomy.f90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/shared/axis_utils/axis_utils.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "src/shared/axis_utils/axis_utils.F90"
+    ],
+    "src/shared/constants/constants.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90"
+    ],
+    "src/shared/diag_manager/diag_axis.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "src/shared/diag_manager/diag_data.F90"
+    ],
+    "src/shared/diag_manager/diag_data.F90": [
+      "UNRESOLVED_OR_EXTERNAL::netcdf",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/shared/diag_manager/diag_grid.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90"
+    ],
+    "src/shared/diag_manager/diag_manager.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "src/shared/diag_manager/diag_axis.F90",
+      "src/shared/diag_manager/diag_data.F90",
+      "src/shared/diag_manager/diag_grid.F90",
+      "src/shared/diag_manager/diag_manager.F90",
+      "src/shared/diag_manager/diag_output.F90",
+      "src/shared/diag_manager/diag_table.F90",
+      "src/shared/diag_manager/diag_util.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/shared/diag_manager/diag_output.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "src/shared/diag_manager/diag_axis.F90",
+      "src/shared/diag_manager/diag_data.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/shared/diag_manager/diag_table.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "src/shared/diag_manager/diag_data.F90",
+      "src/shared/diag_manager/diag_util.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/shared/diag_manager/diag_util.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "src/shared/diag_manager/diag_axis.F90",
+      "src/shared/diag_manager/diag_data.F90",
+      "src/shared/diag_manager/diag_grid.F90",
+      "src/shared/diag_manager/diag_output.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/shared/fft/fft.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/platform/platform.F90",
+      "src/shared/fft/fft.F90",
+      "src/shared/fft/fft99.F90"
+    ],
+    "src/shared/fft/fft99.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/shared/field_manager/field_manager.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "src/shared/field_manager/field_manager.F90"
+    ],
+    "src/shared/field_manager/fm_util.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/field_manager/field_manager.F90"
+    ],
+    "src/shared/fms/fms.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/memutils/memutils.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90"
+    ],
+    "src/shared/fms/fms_io.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/platform/platform.F90"
+    ],
+    "src/shared/fms/test_fms_io.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90"
+    ],
+    "src/shared/horiz_interp/horiz_interp.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "src/shared/horiz_interp/horiz_interp.F90",
+      "src/shared/horiz_interp/horiz_interp_bicubic.F90",
+      "src/shared/horiz_interp/horiz_interp_bilinear.F90",
+      "src/shared/horiz_interp/horiz_interp_conserve.F90",
+      "src/shared/horiz_interp/horiz_interp_spherical.F90",
+      "src/shared/horiz_interp/horiz_interp_type.F90"
+    ],
+    "src/shared/horiz_interp/horiz_interp_bicubic.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/horiz_interp/horiz_interp_type.F90"
+    ],
+    "src/shared/horiz_interp/horiz_interp_bilinear.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/horiz_interp/horiz_interp_type.F90"
+    ],
+    "src/shared/horiz_interp/horiz_interp_conserve.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/horiz_interp/horiz_interp_type.F90"
+    ],
+    "src/shared/horiz_interp/horiz_interp_spherical.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/horiz_interp/horiz_interp_type.F90"
+    ],
+    "src/shared/horiz_interp/horiz_interp_type.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/shared/memutils/memutils.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90"
+    ],
+    "src/shared/mosaic/gradient.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/shared/mosaic/grid.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mosaic/mosaic.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90"
+    ],
+    "src/shared/mosaic/mosaic.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mosaic/mosaic.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/shared/mpp/mpp.F90": [
+      "UNRESOLVED_OR_EXTERNAL::mpi",
+      "UNRESOLVED_OR_EXTERNAL::shmem_interface",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_data.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90"
+    ],
+    "src/shared/mpp/mpp_data.F90": [
+      "UNRESOLVED_OR_EXTERNAL::mpi",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90"
+    ],
+    "src/shared/mpp/mpp_domains.F90": [
+      "UNRESOLVED_OR_EXTERNAL::mpi",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_data.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_memutils.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_pset.F90"
+    ],
+    "src/shared/mpp/mpp_io.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90"
+    ],
+    "src/shared/mpp/mpp_memutils.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/shared/mpp/mpp_pset.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/shared/mpp/mpp_utilities.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/shared/mpp/test_mpp.F90": [
+      "UNRESOLVED_OR_EXTERNAL::shmem_interface",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/shared/mpp/test_mpp_domains.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_memutils.F90"
+    ],
+    "src/shared/mpp/test_mpp_io.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90"
+    ],
+    "src/shared/mpp/test_mpp_pset.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_pset.F90"
+    ],
+    "src/shared/random_numbers/random_numbers.F90": [
+      "src/shared/random_numbers/MersenneTwister.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/shared/sat_vapor_pres/sat_vapor_pres.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres_k.F90"
+    ],
+    "src/shared/time_interp/time_interp.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/time_interp/time_interp.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/shared/time_interp/time_interp_external.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/platform/platform.F90",
+      "src/shared/axis_utils/axis_utils.F90",
+      "src/shared/horiz_interp/horiz_interp.F90",
+      "src/shared/time_interp/time_interp.F90",
+      "src/shared/time_interp/time_interp_external.F90",
+      "src/shared/time_manager/get_cal_time.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/shared/time_manager/get_cal_time.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/shared/time_manager/time_manager.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/time_manager/time_manager.F90"
+    ],
+    "src/shared/topography/gaussian_topog.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "src/shared/topography/topography.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "src/shared/horiz_interp/horiz_interp.F90",
+      "src/shared/topography/gaussian_topog.F90"
+    ],
+    "src/shared/tracer_manager/tracer_manager.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "src/shared/field_manager/field_manager.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/atmos_bgrid/tools/bgrid_change_grid.F90": [
+      "postprocessing/plevel_interpolation/src/atmos_bgrid/tools/bgrid_horiz.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/atmos_bgrid/tools/bgrid_halo.F90": [
+      "postprocessing/plevel_interpolation/src/atmos_bgrid/tools/bgrid_horiz.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/atmos_bgrid/tools/bgrid_horiz.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/atmos_bgrid/tools/bgrid_vert.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/postprocessing/plevel/moisture_convert.F90": [
+      "postprocessing/plevel_interpolation/src/postprocessing/plevel/plev_constants.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/postprocessing/plevel/pinterp_utilities.F90": [
+      "UNRESOLVED_OR_EXTERNAL::netcdf"
+    ],
+    "postprocessing/plevel_interpolation/src/postprocessing/plevel/pressure_interp.F90": [
+      "postprocessing/plevel_interpolation/src/postprocessing/plevel/moisture_convert.F90",
+      "postprocessing/plevel_interpolation/src/postprocessing/plevel/plev_constants.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/postprocessing/plevel/run_pressure_interp.F90": [
+      "UNRESOLVED_OR_EXTERNAL::netcdf",
+      "postprocessing/plevel_interpolation/src/postprocessing/plevel/pinterp_utilities.F90",
+      "postprocessing/plevel_interpolation/src/postprocessing/plevel/plev_constants.F90",
+      "postprocessing/plevel_interpolation/src/postprocessing/plevel/pressure_interp.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/fms/fms.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/memutils/memutils.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/platform/platform.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/fms/test_fms_io.F90": [
+      "postprocessing/plevel_interpolation/src/shared/fms/fms_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/memutils/memutils.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mosaic/gradient.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mosaic/grid.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mosaic/mosaic.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mosaic/mosaic.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mosaic/mosaic.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90": [
+      "UNRESOLVED_OR_EXTERNAL::mpi",
+      "UNRESOLVED_OR_EXTERNAL::shmem_interface",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_data.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mpp/mpp_data.F90": [
+      "UNRESOLVED_OR_EXTERNAL::mpi",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_data.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_memutils.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_pset.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_parameter.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mpp/mpp_memutils.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mpp/mpp_pset.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mpp/mpp_utilities.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mpp/test_mpp.F90": [
+      "UNRESOLVED_OR_EXTERNAL::shmem_interface",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mpp/test_mpp_domains.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_memutils.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mpp/test_mpp_io.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_domains.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/mpp/test_mpp_pset.F90": [
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_pset.F90"
+    ],
+    "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres.F90": [
+      "postprocessing/plevel_interpolation/src/shared/constants/constants.F90",
+      "postprocessing/plevel_interpolation/src/shared/fms/fms.F90",
+      "postprocessing/plevel_interpolation/src/shared/mpp/mpp_io.F90",
+      "postprocessing/plevel_interpolation/src/shared/sat_vapor_pres/sat_vapor_pres_k.F90"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+FROM held-suarez-isca:latest
+
+USER root
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    vim \
+    less \
+    ripgrep \
+    tree \
+    jq \
+    pkg-config \
+    cmake \
+    ninja-build \
+    python3-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+# Agent/runtime Python packages
+RUN pip3 install --upgrade pip
+
+RUN pip3 install \
+    langgraph \
+    langchain \
+    langchain-anthropic \
+    langchain-openai \
+    anthropic \
+    openai \
+    pydantic \
+    python-dotenv \
+    pyyaml \
+    rich \
+    typer \
+    networkx \
+    tree-sitter \
+    tree-sitter-fortran \
+    tree-sitter-cpp \
+    chromadb \
+    faiss-cpu
+
+# Optional: code formatting / translation helpers
+RUN pip3 install \
+    black \
+    ruff \
+    pytest \
+    jupyterlab \
+    ipykernel
+
+WORKDIR /workspace
+
+ENV AGENT_HOME=/workspace/agents
+ENV ISCA_ROOT=/isca
+ENV GFDL_BASE=/isca
+ENV GFDL_WORK=/tmp
+ENV GFDL_DATA=/data
+ENV GFDL_ENV=docker
+
+CMD ["/bin/bash"]

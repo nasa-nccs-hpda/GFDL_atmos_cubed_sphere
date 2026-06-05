@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "hybrid_experiments/held_suarez_cpp_force/build_hybrid.py", line 171, in <module>
+    exit(main())
+  File "hybrid_experiments/held_suarez_cpp_force/build_hybrid.py", line 131, in main
+    rc, out = run_cmd(mkmf_cmd, cwd=builddir, env=os.environ)
+  File "hybrid_experiments/held_suarez_cpp_force/build_hybrid.py", line 39, in run_cmd
+    proc = subprocess.run(cmd, cwd=str(cwd), env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=600)
+  File "/usr/lib64/python3.6/subprocess.py", line 423, in run
+    with Popen(*popenargs, **kwargs) as process:
+TypeError: __init__() got an unexpected keyword argument 'text'

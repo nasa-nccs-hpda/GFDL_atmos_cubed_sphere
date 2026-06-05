@@ -1,0 +1,24 @@
+repo_root: /explore/nobackup/people/jli30/SystemTesting/Isca/GFDL_atmos_cubed_sphere
+work_root: /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_isca
+data_root: /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_default
+
+target_case: exp/test_cases/held_suarez/held_suarez_test_case.py
+
+target_module_keywords:
+  - held_suarez
+  - hs_forcing
+  - forcing
+  - damping
+  - temperature
+  - relaxation
+
+translation_target: cpp
+max_debug_iterations: 3
+
+llm:
+  provider: anthropic
+  anthropic:
+    api_key_file: ~/.config/anthropic.key
+    model: claude-sonnet-4-5
+    temperature: 0.1
+    max_tokens: 8192

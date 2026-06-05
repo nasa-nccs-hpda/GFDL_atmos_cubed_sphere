@@ -1,0 +1,3 @@
+ld  -o a.out  
+ld: no input files
+make: *** [Makefile:18: a.out] Error 1
