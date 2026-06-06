@@ -1,0 +1,4 @@
+echo "Loading hybrid ubuntu-conda environment"
+
+source ${GFDL_BASE}/src/extra/env/ubuntu_conda
+export GFDL_MKMF_TEMPLATE=hybrid

@@ -9,3 +9,75 @@
 [2026-06-05T20:04:50.117341Z] Copied /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/forcing_module/libhs_forcing.a -> /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/lib
 [2026-06-05T20:04:50.130703Z] Copied mkmf template /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/src/extra/python/isca/templates/mkmf.template.hybrid -> /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/mkmf.template
 [2026-06-05T20:04:50.132874Z] RUN: /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/bin/mkmf -a /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/src -t /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/src/extra/python/isca/templates/mkmf.template.hybrid -p held_suarez.x -c -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/path_names /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/src/shared/include /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/src/shared/mpp/include (cwd=/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir)
+[2026-06-05T20:35:40.210163Z] Starting hybrid build helper
+[2026-06-05T20:35:40.222425Z] removing existing builddir /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir
+[2026-06-05T20:35:40.258481Z] Created code symlink /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code -> /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+[2026-06-05T20:35:40.261919Z] Wrote modified path_names to /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/path_names (replaced=True, overlay=extra/local_overrides/hs_forcing/hs_forcing.F90)
+[2026-06-05T20:35:40.301633Z] Copied /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/forcing_module/libhs_forcing.a -> /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/lib
+[2026-06-05T20:35:40.322944Z] Copied mkmf template /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/src/extra/python/isca/templates/mkmf.template.hybrid -> /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/mkmf.template
+[2026-06-05T20:35:40.328894Z] RUN: /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/bin/mkmf -a /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src -t /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/src/extra/python/isca/templates/mkmf.template.hybrid -p held_suarez.x -c -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/path_names /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/include /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/mpp/include (cwd=/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir)
+[2026-06-05T20:36:02.137564Z] Starting hybrid build helper
+[2026-06-05T20:36:02.158286Z] removing existing builddir /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir
+[2026-06-05T20:36:02.195934Z] Created code symlink /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code -> /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+[2026-06-05T20:36:02.197990Z] Wrote modified path_names to /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/path_names (replaced=True, overlay=extra/local_overrides/hs_forcing/hs_forcing.F90)
+[2026-06-05T20:36:02.216472Z] Copied /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/forcing_module/libhs_forcing.a -> /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/lib
+[2026-06-05T20:36:02.245081Z] Copied mkmf template /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/src/extra/python/isca/templates/mkmf.template.hybrid -> /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/mkmf.template
+[2026-06-05T20:36:02.247110Z] RUN: /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/bin/mkmf -a /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src -t /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/src/extra/python/isca/templates/mkmf.template.hybrid -p held_suarez.x -c -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/path_names /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/include /panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/mpp/include (cwd=/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir)
+[2026-06-05T20:36:03.184175Z] ................................................................................................................................ Makefile is ready.
+
+[2026-06-05T20:36:03.194818Z] RUN: make -j2 (cwd=/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir)
+[2026-06-05T20:36:03.612066Z] Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/include	/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/mpp/mpp_parameter.F90
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: Duse_libMPI: command not found
+make: [Makefile:161: mpp_parameter.o] Error 127 (ignored)
+Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/include	/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/platform/platform.F90
+cc -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE `nc-config --cflags` -D__IFC  -c -I/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/mosaic	/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/mosaic/create_xgrid.c
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: Duse_libMPI: command not found
+make: [Makefile:171: platform.o] Error 127 (ignored)
+Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/sat_vapor_pres/sat_vapor_pres_k.F90
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: Duse_libMPI: command not found
+make: [Makefile:195: sat_vapor_pres_k.o] Error 127 (ignored)
+Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/atmos_param/cloud_simple/lcl.F90
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: Duse_libMPI: command not found
+make: [Makefile:125: lcl.o] Error 127 (ignored)
+cc -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE `nc-config --cflags` -D__IFC  -c	/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/mpp/affinity.c
+/bin/sh: nc-config: command not found
+/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/mosaic/create_xgrid.c: In function ‘clip_2dx2d_great_circle’:
+/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/mosaic/create_xgrid.c:1363:9: warning: implicit declaration of function ‘isHeadNode’; did you mean ‘addNode’? [-Wimplicit-function-declaration]
+     if( isHeadNode(intersectList, firstIntersect) ) {
+         ^~~~~~~~~~
+         addNode
+Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/include -I/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/atmos_param/monin_obukhov	/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/atmos_param/monin_obukhov/monin_obukhov_kernel.F90
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: Duse_libMPI: command not found
+make: [Makefile:145: monin_obukhov_kernel.o] Error 127 (ignored)
+Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/random_numbers/MersenneTwister.F90
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: nc-config: command not found
+/bin/sh: Duse_libMPI: command not found
+make: [Makefile:15: MersenneTwister.o] Error 127 (ignored)
+cc -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DUSE_CPP_HS_FORCE `nc-config --cflags` -D__IFC  -c	/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/mpp/threadloc.c
+/bin/sh: nc-config: command not found
+/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/builddir/code/src/shared/mpp/threadloc.c:27:10: fatal error: mpi.h: No such file or directory
+ #include <mpi.h>
+          ^~~~~~~
+compilation terminated.
+make: *** [Makefile:229: threadloc.o] Error 1
+make: *** Waiting for unfinished jobs....
+
+[2026-06-05T20:36:03.614901Z] make failed; see above output

@@ -10,5 +10,5 @@ FFLAGS = $(CPPFLAGS) $(NC_LIB) -cpp -fcray-pointer \
 FC = $(F90)
 LD = $(F90)
 
-LDFLAGS = -lnetcdff -lnetcdf -lmpi  -L$(PWD)/lib -lhs_forcing
+LDFLAGS = -lnetcdff -lnetcdf -lmpi -L$(PWD)/lib -lhs_forcing -lstdc++ -lm
 CFLAGS = -D__IFC

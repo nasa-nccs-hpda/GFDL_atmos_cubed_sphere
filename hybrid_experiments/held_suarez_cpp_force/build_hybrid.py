@@ -4,7 +4,9 @@ Minimal hybrid build helper that avoids depending on the Python `isca` module.
 
 It performs the following (non-invasive):
  - Create a dedicated build directory under hybrid_experiments/held_suarez_cpp_force/builddir
- - Copy the repository `path_names` file and replace the `hs_forcing.F90` entry with the overlay
+ - Create a local `code` symlink so `code/src` matches the production build layout
+ - Copy the repository `path_names` file and replace the `hs_forcing.F90` entry with the overlay,
+   written relative to `code/src`
  - Copy `libhs_forcing.a` into `builddir/lib`
  - Copy our `mkmf.template.hybrid` into the builddir as `mkmf.template`
  - Run `bin/mkmf` (if available) then `make -j2` in the builddir
@@ -36,7 +38,7 @@ def write_log(msg):
 def run_cmd(cmd, cwd, env=None):
     write_log(f"RUN: {' '.join(cmd)} (cwd={cwd})")
     try:
-        proc = subprocess.run(cmd, cwd=str(cwd), env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=600)
+        proc = subprocess.run(cmd, cwd=str(cwd), env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, timeout=600)
         write_log(proc.stdout)
         return proc.returncode, proc.stdout
     except subprocess.SubprocessError as e:
@@ -77,6 +79,13 @@ def main():
         shutil.rmtree(builddir)
     builddir.mkdir(parents=True)
 
+    # Match the production CodeBase layout closely enough for mkmf localization:
+    # production uses <workdir>/code/src as the source root.
+    code_link = builddir / 'code'
+    code_link.symlink_to(REPO, target_is_directory=True)
+    sourcedir = code_link / 'src'
+    overlay_rel = Path('extra') / 'local_overrides' / 'hs_forcing' / 'hs_forcing.F90'
+
     # copy and modify path_names
     pn_dest = builddir / 'path_names'
     with open(path_names_src, 'r') as f:
@@ -85,17 +94,18 @@ def main():
     replaced = False
     for line in lines:
         if line.strip() == 'atmos_param/hs_forcing/hs_forcing.F90':
-            new_lines.append(str(overlay) + '\n')
+            new_lines.append(str(overlay_rel) + '\n')
             replaced = True
         else:
             new_lines.append(line)
     if not replaced:
         # try to find any line containing hs_forcing.F90
-        new_lines = [ (str(overlay) + '\n') if 'hs_forcing.F90' in l else l for l in lines ]
+        new_lines = [ (str(overlay_rel) + '\n') if 'hs_forcing.F90' in l else l for l in lines ]
 
     with open(pn_dest, 'w') as f:
         f.writelines(new_lines)
-    write_log(f'Wrote modified path_names to {pn_dest} (replaced={replaced})')
+    write_log(f'Created code symlink {code_link} -> {REPO}')
+    write_log(f'Wrote modified path_names to {pn_dest} (replaced={replaced}, overlay={overlay_rel})')
 
     # copy libhs_forcing.a
     lib_src = REPO / 'translated' / 'held_suarez' / 'cpp' / 'forcing_module' / 'libhs_forcing.a'
@@ -116,7 +126,6 @@ def main():
         write_log(f'INFO: hybrid mkmf template not found at {template_src}; continuing')
 
     # Invoke mkmf to create Makefile using the same interface as compile.sh
-    sourcedir = REPO / 'src'
     executable = 'held_suarez.x'
     # prefer hybrid template if available in repo templates
     template_repo = REPO / 'src' / 'extra' / 'python' / 'isca' / 'templates' / 'mkmf.template.hybrid'
