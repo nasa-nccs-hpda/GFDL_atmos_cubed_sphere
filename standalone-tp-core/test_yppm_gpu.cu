@@ -1,15 +1,15 @@
-// test_yppm_gpu.cu — GPU unit tests for yppm_col via CUDA kernel.
+// test_yppm_gpu.cu — GPU unit tests for the multi-column yppm launch API.
 //
-// Strategy: 1 thread per x-column; ScratchYPPM lives in thread-local
-// (register/local) memory. For NMAX=20 the scratch is ~670 bytes —
-// well within CUDA per-thread local memory limits on A100.
+// Strategy: drive the reusable fv3::yppm_gpu launch (one thread per column,
+// per-column scratch from one runtime-sized device buffer). Each test column
+// is replicated into NCOL identical columns; the launch must (a) reproduce the
+// CPU yppm_col result bit-for-bit and (b) produce identical output for every
+// replicated column, which exercises the per-thread column indexing.
 //
 // Each test:
 //   1. Fills host input arrays (same domain as test_yppm_cpp.cpp).
-//   2. Copies them to device.
-//   3. Launches a single-thread kernel that calls yppm_col<float,NMAX>.
-//   4. Copies flux output back to host.
-//   5. Compares to CPU reference produced by the same yppm_col.
+//   2. Calls run_gpu, which replicates the column and runs fv3::yppm_gpu.
+//   3. Checks analytic expectations and bit-exact agreement vs the CPU ref.
 //
 // Domain: n=20, ng=3, ifirst=ilast=1, nested=true
 //   isd=-2, ied=4, js=1, je=20, jsd=-2, jed=23, npx=2, npy=21
@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "yppm.hpp"
+#include "yppm_gpu.cuh"
 
 // ---------------------------------------------------------------------------
 // CUDA error-checking macro
@@ -84,66 +85,66 @@ static std::vector<float> cpu_ref(
 {
     std::vector<float> flux(Dom::sz_flux, 0.f);
     fv3::ScratchYPPM<float, NMAX> scratch;
-    fv3::yppm_col<float, NMAX>(
+    fv3::yppm_col<float>(
         flux.data(), q_col, cry_col,
         jord, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
-        dya_col, true, 0, 1.0f, scratch);
+        dya_col, true, 0, 1.0f, scratch.view(NMAX));
     return flux;
 }
 
 // ---------------------------------------------------------------------------
-// GPU kernel: one thread, one x-column
-// All arrays are offset-adjusted by the caller to start at index 0.
+// Number of identical columns to replicate for the multi-column launch.
+// Running several columns through the real launch API and requiring identical
+// output proves the per-thread column indexing in the kernel — not just the
+// single-column math.
 // ---------------------------------------------------------------------------
-__global__
-void yppm_kernel(
-    float*       flux_col,   // output [sz_flux]
-    const float* q_col,      // [sz_q]
-    const float* cry_col,    // [sz_cry]
-    const float* dya_col,    // [sz_dya]
-    int jord, int js, int je, int jsd, int jed,
-    int npx, int npy, bool nested, int grid_type, float lim_fac)
-{
-    fv3::ScratchYPPM<float, NMAX> scratch;
-    fv3::yppm_col<float, NMAX>(
-        flux_col, q_col, cry_col,
-        jord, js, je, jsd, jed, npx, npy,
-        dya_col, nested, grid_type, lim_fac, scratch);
-}
+static const int NCOL = 5;
 
 // ---------------------------------------------------------------------------
-// Launch helper: copies host arrays to device, runs kernel, copies back.
-// Returns host-side flux output.
+// Multi-column GPU run via the reusable launch API (fv3::yppm_gpu).
+// Replicates the single test column into NCOL columns (column-contiguous),
+// runs them all, asserts every column produced identical output, and returns
+// column 0's flux for the analytic / bit-exact comparisons.
 // ---------------------------------------------------------------------------
 static std::vector<float> run_gpu(
-    const float* h_q,    // length Dom::sz_q
-    const float* h_cry,  // length Dom::sz_cry
-    const float* h_dya,  // length Dom::sz_dya
+    const float* h_q,    // length Dom::sz_q    (== nj_q)
+    const float* h_cry,  // length Dom::sz_cry  (== nj_flux)
+    const float* h_dya,  // length Dom::sz_dya  (== nj_q)
     int jord)
 {
-    float *d_q, *d_cry, *d_dya, *d_flux;
-    CUDA_CHECK(cudaMalloc(&d_q,    Dom::sz_q    * sizeof(float)));
-    CUDA_CHECK(cudaMalloc(&d_cry,  Dom::sz_cry  * sizeof(float)));
-    CUDA_CHECK(cudaMalloc(&d_dya,  Dom::sz_dya  * sizeof(float)));
-    CUDA_CHECK(cudaMalloc(&d_flux, Dom::sz_flux * sizeof(float)));
-    CUDA_CHECK(cudaMemset(d_flux, 0, Dom::sz_flux * sizeof(float)));
+    const int nj_q    = Dom::sz_q;     // jed - jsd + 1
+    const int nj_flux = Dom::sz_flux;  // je  - js  + 2
 
-    CUDA_CHECK(cudaMemcpy(d_q,   h_q,   Dom::sz_q   * sizeof(float), cudaMemcpyHostToDevice));
-    CUDA_CHECK(cudaMemcpy(d_cry, h_cry, Dom::sz_cry * sizeof(float), cudaMemcpyHostToDevice));
-    CUDA_CHECK(cudaMemcpy(d_dya, h_dya, Dom::sz_dya * sizeof(float), cudaMemcpyHostToDevice));
+    std::vector<float> q_all   (static_cast<size_t>(NCOL) * nj_q);
+    std::vector<float> dya_all (static_cast<size_t>(NCOL) * nj_q);
+    std::vector<float> cry_all (static_cast<size_t>(NCOL) * nj_flux);
+    std::vector<float> flux_all(static_cast<size_t>(NCOL) * nj_flux, 0.f);
 
-    yppm_kernel<<<1, 1>>>(
-        d_flux, d_q, d_cry, d_dya,
-        jord, Dom::js, Dom::je, Dom::jsd, Dom::jed,
-        Dom::npx, Dom::npy, true, 0, 1.0f);
-    CUDA_CHECK(cudaGetLastError());
-    CUDA_CHECK(cudaDeviceSynchronize());
+    for (int t = 0; t < NCOL; ++t) {
+        for (int j = 0; j < nj_q; ++j) {
+            q_all  [t * nj_q + j] = h_q  [j];
+            dya_all[t * nj_q + j] = h_dya[j];
+        }
+        for (int j = 0; j < nj_flux; ++j)
+            cry_all[t * nj_flux + j] = h_cry[j];
+    }
 
-    std::vector<float> h_flux(Dom::sz_flux);
-    CUDA_CHECK(cudaMemcpy(h_flux.data(), d_flux, Dom::sz_flux * sizeof(float), cudaMemcpyDeviceToHost));
+    cudaError_t e = fv3::yppm_gpu<float>(
+        flux_all.data(), q_all.data(), cry_all.data(), dya_all.data(),
+        NCOL, jord, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
+        true, 0, 1.0f);
+    if (e != cudaSuccess) {
+        fprintf(stderr, "yppm_gpu failed: %s\n", cudaGetErrorString(e));
+        exit(1);
+    }
 
-    cudaFree(d_q); cudaFree(d_cry); cudaFree(d_dya); cudaFree(d_flux);
-    return h_flux;
+    bool all_equal = true;
+    for (int t = 1; t < NCOL; ++t)
+        for (int j = 0; j < nj_flux; ++j)
+            if (flux_all[t * nj_flux + j] != flux_all[j]) all_equal = false;
+    check("GPU: multi-column launch produces identical columns", all_equal);
+
+    return std::vector<float>(flux_all.begin(), flux_all.begin() + nj_flux);
 }
 
 // ---------------------------------------------------------------------------
