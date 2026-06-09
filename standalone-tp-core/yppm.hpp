@@ -7,16 +7,19 @@
 //   - No STL containers inside function bodies
 //
 // CPU usage (single column):
-//   ScratchYPPM<float, 20> scratch;
-//   yppm_col<float,20>(flux_col, q_col, cry_col, jord, js, je, jsd, jed,
-//                      npx, npy, dya_col, nested, grid_type, lim_fac, scratch);
+//   ScratchYPPM<float, 20> scratch;                       // stack storage
+//   yppm_col<float>(flux_col, q_col, cry_col, jord, js, je, jsd, jed,
+//                   npx, npy, dya_col, nested, grid_type, lim_fac,
+//                   scratch.view(je - js + 1));
 //
 // CPU usage (multi-column wrapper, matching Fortran yppm signature):
 //   yppm<float,20>(flux, q, cry, jord, ifirst, ilast, isd, ied, js, je,
 //                  jsd, jed, npx, npy, dya, nested, grid_type, lim_fac, scratch);
 //
-// GPU usage: call yppm_col directly from a __global__ kernel,
-//   one thread per x-column, with ScratchYPPM as a thread-local variable.
+// GPU usage: call yppm_col from a __global__ kernel, one thread per column,
+//   handing each thread a ScratchYPPMView over a slice of one device buffer
+//   (see yppm_gpu.cuh / yppm_make_scratch_view). nj = je - js + 1 sets the
+//   scratch stride, so any runtime resolution is supported.
 #pragma once
 
 // Portability macros: resolve to nothing on CPU, CUDA annotations on GPU.
@@ -90,19 +93,67 @@ YPPM_HOST_DEVICE YPPM_INLINE T ycopysign(T mag, T sgn)
 
 // ---------------------------------------------------------------------------
 // Scratch memory for one y-column of yppm.
-// NMAX must satisfy NMAX >= (je - js + 1).
-// Array sizes have a small margin beyond the theoretical minimum.
+//
+// The scratch is a set of per-column work arrays (dm, al, bl, br, b0, dq and
+// two bool masks). To support arbitrary runtime resolutions without a
+// compile-time size, the work arrays are accessed through ScratchYPPMView,
+// which holds raw pointers into caller-supplied storage:
+//   - on the CPU / in unit tests, ScratchYPPM<Real,NMAX> provides stack storage;
+//   - on the GPU, each thread is handed a slice of one device buffer.
+//
+// All arrays use a uniform per-column stride of (nj + 8) elements, where
+// nj = je - js + 1. That stride is >= the widest range any single array
+// touches (dq needs nj+5, al needs nj+3 below its base), so no two arrays
+// overlap. This replaces the previous fixed [NMAX+k] member arrays.
 // ---------------------------------------------------------------------------
+template <typename Real>
+struct ScratchYPPMView {
+    Real* dm;
+    Real* al;
+    Real* bl;
+    Real* br;
+    Real* b0;
+    Real* dq;
+    bool* smt5;
+    bool* smt6;
+};
+
+// Per-column scratch sizing (host + device). nj = je - js + 1.
+YPPM_HOST_DEVICE YPPM_INLINE int yppm_scratch_stride(int nj)     { return nj + 8; }
+YPPM_HOST_DEVICE YPPM_INLINE int yppm_scratch_real_words(int nj) { return 6 * yppm_scratch_stride(nj); }
+YPPM_HOST_DEVICE YPPM_INLINE int yppm_scratch_bool_words(int nj) { return 2 * yppm_scratch_stride(nj); }
+
+// Lay out a ScratchYPPMView over a Real buffer (>= yppm_scratch_real_words(nj))
+// and a bool buffer (>= yppm_scratch_bool_words(nj)).
+template <typename Real>
+YPPM_HOST_DEVICE YPPM_INLINE
+ScratchYPPMView<Real> yppm_make_scratch_view(Real* rbuf, bool* bbuf, int nj) {
+    const int s = yppm_scratch_stride(nj);
+    ScratchYPPMView<Real> v;
+    v.dm   = rbuf + 0 * s;
+    v.al   = rbuf + 1 * s;
+    v.bl   = rbuf + 2 * s;
+    v.br   = rbuf + 3 * s;
+    v.b0   = rbuf + 4 * s;
+    v.dq   = rbuf + 5 * s;
+    v.smt5 = bbuf + 0 * s;
+    v.smt6 = bbuf + 1 * s;
+    return v;
+}
+
+// Stack-backed scratch for CPU / unit-test use. NMAX must satisfy
+// NMAX >= (je - js + 1). Use .view(nj) (or .view(), sized to NMAX) to obtain
+// a ScratchYPPMView to pass to yppm_col.
 template <typename Real, int NMAX>
 struct ScratchYPPM {
-    Real dm   [NMAX + 6];   // j in [js-2, je+2], needs NMAX+4
-    Real al   [NMAX + 6];   // j in [js-1, je+2], needs NMAX+3
-    Real bl   [NMAX + 5];   // j in [js-1, je+1], needs NMAX+2
-    Real br   [NMAX + 5];
-    Real b0   [NMAX + 5];
-    Real dq   [NMAX + 8];   // j in [js-3, je+2], needs NMAX+5
-    bool smt5 [NMAX + 5];   // j in [js-1, je+1], needs NMAX+2
-    bool smt6 [NMAX + 5];
+    Real rbuf[6 * (NMAX + 8)];
+    bool bbuf[2 * (NMAX + 8)];
+    YPPM_HOST_DEVICE YPPM_INLINE ScratchYPPMView<Real> view(int nj) {
+        return yppm_make_scratch_view<Real>(rbuf, bbuf, nj);
+    }
+    YPPM_HOST_DEVICE YPPM_INLINE ScratchYPPMView<Real> view() {
+        return yppm_make_scratch_view<Real>(rbuf, bbuf, NMAX);
+    }
 };
 
 // ---------------------------------------------------------------------------
@@ -169,9 +220,9 @@ void pert_ppm(int im, const Real* a0, Real* al, Real* ar, int iv)
 //   cry_col[j - js],   j in [js, je+1]           (Courant number, input)
 //   dya_col[j - jsd],  j in [jsd, jed]           (grid spacing, input)
 //
-// NMAX must satisfy NMAX >= (je - js + 1).
+// s is a ScratchYPPMView laid out for nj = je - js + 1 (see yppm_make_scratch_view).
 // ---------------------------------------------------------------------------
-template <typename Real, int NMAX>
+template <typename Real>
 YPPM_HOST_DEVICE
 void yppm_col(
     Real*       flux_col,
@@ -185,7 +236,7 @@ void yppm_col(
     bool nested,
     int grid_type,
     Real lim_fac,
-    ScratchYPPM<Real, NMAX>& s)
+    const ScratchYPPMView<Real>& s)
 {
     using C = detail::Const<Real>;
 
@@ -638,11 +689,11 @@ void yppm(
         for (int j = 0; j < nj_q; ++j)
             dya_buf[j] = dya[ci + ni_cry * j];
 
-        yppm_col<Real, NMAX>(
+        yppm_col<Real>(
             flux_buf, q_buf, cry_buf,
             jord, js, je, jsd, jed, npx, npy,
             dya_buf, nested, grid_type, lim_fac,
-            scratch);
+            scratch.view(je - js + 1));
 
         // Write flux column back
         for (int j = 0; j < nj_cry; ++j)

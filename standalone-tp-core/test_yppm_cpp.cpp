@@ -270,10 +270,10 @@ static void test_cpp_constant_jord8() {
     extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
 
     fv3::ScratchYPPM<float, NMAX> scratch;
-    fv3::yppm_col<float, NMAX>(
+    fv3::yppm_col<float>(
         flux_col, q.data() + Dom::q_idx(Dom::jsd), cry_col,
         8, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
-        dya_col, true, 0, 1.0f, scratch);
+        dya_col, true, 0, 1.0f, scratch.view(NMAX));
 
     bool ok = true;
     for (int j = Dom::js; j <= Dom::je + 1; ++j)
@@ -298,10 +298,10 @@ static void test_cpp_constant_jord2() {
     extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
 
     fv3::ScratchYPPM<float, NMAX> scratch;
-    fv3::yppm_col<float, NMAX>(
+    fv3::yppm_col<float>(
         flux_col, q.data() + Dom::q_idx(Dom::jsd), cry_col,
         2, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
-        dya_col, true, 0, 1.0f, scratch);
+        dya_col, true, 0, 1.0f, scratch.view(NMAX));
 
     bool ok = true;
     for (int j = Dom::js; j <= Dom::je + 1; ++j)
@@ -329,10 +329,10 @@ static void test_cpp_linear_positive_courant() {
     extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
 
     fv3::ScratchYPPM<float, NMAX> scratch;
-    fv3::yppm_col<float, NMAX>(
+    fv3::yppm_col<float>(
         flux_col, q.data() + Dom::q_idx(Dom::jsd), cry_col,
         8, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
-        dya_col, true, 0, 1.0f, scratch);
+        dya_col, true, 0, 1.0f, scratch.view(NMAX));
 
     bool ok = true;
     for (int j = Dom::js; j <= Dom::je + 1; ++j)
@@ -360,10 +360,10 @@ static void test_cpp_linear_negative_courant() {
     extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
 
     fv3::ScratchYPPM<float, NMAX> scratch;
-    fv3::yppm_col<float, NMAX>(
+    fv3::yppm_col<float>(
         flux_col, q.data() + Dom::q_idx(Dom::jsd), cry_col,
         8, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
-        dya_col, true, 0, 1.0f, scratch);
+        dya_col, true, 0, 1.0f, scratch.view(NMAX));
 
     bool ok = true;
     for (int j = Dom::js; j <= Dom::je + 1; ++j)
@@ -393,10 +393,10 @@ static void test_cpp_monotone_bounds() {
     extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
 
     fv3::ScratchYPPM<float, NMAX> scratch;
-    fv3::yppm_col<float, NMAX>(
+    fv3::yppm_col<float>(
         flux_col_cpp, q.data() + Dom::q_idx(Dom::jsd), cry_col,
         8, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
-        dya_col, true, 0, 1.0f, scratch);
+        dya_col, true, 0, 1.0f, scratch.view(NMAX));
 
     // Correctness: no overshoot, far-field exact
     bool ok_bounds = true, ok_below = true, ok_above = true;
@@ -442,10 +442,10 @@ static void test_cpp_positive_definite() {
     extract_col(dya_col, dya, ni_cry, ci, Dom::jed - Dom::jsd + 1);
 
     fv3::ScratchYPPM<float, NMAX> scratch;
-    fv3::yppm_col<float, NMAX>(
+    fv3::yppm_col<float>(
         flux_col, q.data() + Dom::q_idx(Dom::jsd), cry_col,
         -5, Dom::js, Dom::je, Dom::jsd, Dom::jed, Dom::npx, Dom::npy,
-        dya_col, true, 0, 1.0f, scratch);
+        dya_col, true, 0, 1.0f, scratch.view(NMAX));
 
     bool ok = true;
     for (int j = Dom::js; j <= Dom::je + 1; ++j)
