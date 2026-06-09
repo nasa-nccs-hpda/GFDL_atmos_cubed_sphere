@@ -1,0 +1,86 @@
+2026-06-08 16:37:21,522 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-08 16:37:21,613 - isca - INFO - RRTM compilation disabled.
+2026-06-08 16:37:21,613 - isca - INFO - SOCRATES compilation disabled.
+2026-06-08 16:37:21,616 - isca - INFO - RRTM compilation disabled.
+2026-06-08 16:37:21,616 - isca - INFO - SOCRATES compilation disabled.
+2026-06-08 16:37:21,625 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid/run'
+2026-06-08 16:37:21,625 - isca - WARNING - Data for run 1 already exists and overwrite_data is True. Overwriting.
+2026-06-08 16:37:21,720 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid/run/input.nml'
+2026-06-08 16:37:21,726 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid/run/field_table'
+2026-06-08 16:37:21,732 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid/run/diag_table'
+2026-06-08 16:37:21,737 - isca - INFO - Running without restart file
+2026-06-08 16:37:21,742 - isca - INFO - Beginning run 1
+2026-06-08 16:37:21,744 - isca - INFO - process running as 1689627
+2026-06-08 16:37:21,745 - isca - DEBUG - Loading hybrid ubuntu-conda environment
+2026-06-08 16:37:21,745 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-08 16:37:22,531 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-08 16:37:22,531 - isca - DEBUG - &MPP_IO_NML
+2026-06-08 16:37:22,531 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-08 16:37:22,531 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-08 16:37:22,531 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-08 16:37:22,531 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-08 16:37:22,531 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-08 16:37:22,531 - isca - DEBUG - /
+2026-06-08 16:37:22,531 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-08 16:37:22,558 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-08 16:37:22,565 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-08 16:37:22,566 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-08 16:37:22,566 - isca - DEBUG - X-AXIS =  128
+2026-06-08 16:37:22,566 - isca - DEBUG - Y-AXIS =    4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4
+2026-06-08 16:37:22,569 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-08 16:37:23,405 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-08 16:37:24,207 - isca - DEBUG - Integration completed through 2000 Jan  3   0: 0: 0
+2026-06-08 16:37:25,005 - isca - DEBUG - Integration completed through 2000 Jan  4   0: 0: 0
+2026-06-08 16:37:25,806 - isca - DEBUG - Integration completed through 2000 Jan  5   0: 0: 0
+2026-06-08 16:37:26,604 - isca - DEBUG - Integration completed through 2000 Jan  6   0: 0: 0
+2026-06-08 16:37:27,402 - isca - DEBUG - Integration completed through 2000 Jan  7   0: 0: 0
+2026-06-08 16:37:28,201 - isca - DEBUG - Integration completed through 2000 Jan  8   0: 0: 0
+2026-06-08 16:37:28,999 - isca - DEBUG - Integration completed through 2000 Jan  9   0: 0: 0
+2026-06-08 16:37:29,800 - isca - DEBUG - Integration completed through 2000 Jan 10   0: 0: 0
+2026-06-08 16:37:30,598 - isca - DEBUG - Integration completed through 2000 Jan 11   0: 0: 0
+2026-06-08 16:37:31,396 - isca - DEBUG - Integration completed through 2000 Jan 12   0: 0: 0
+2026-06-08 16:37:32,194 - isca - DEBUG - Integration completed through 2000 Jan 13   0: 0: 0
+2026-06-08 16:37:32,994 - isca - DEBUG - Integration completed through 2000 Jan 14   0: 0: 0
+2026-06-08 16:37:33,795 - isca - DEBUG - Integration completed through 2000 Jan 15   0: 0: 0
+2026-06-08 16:37:34,594 - isca - DEBUG - Integration completed through 2000 Jan 16   0: 0: 0
+2026-06-08 16:37:35,398 - isca - DEBUG - Integration completed through 2000 Jan 17   0: 0: 0
+2026-06-08 16:37:36,199 - isca - DEBUG - Integration completed through 2000 Jan 18   0: 0: 0
+2026-06-08 16:37:36,999 - isca - DEBUG - Integration completed through 2000 Jan 19   0: 0: 0
+2026-06-08 16:37:37,798 - isca - DEBUG - Integration completed through 2000 Jan 20   0: 0: 0
+2026-06-08 16:37:38,598 - isca - DEBUG - Integration completed through 2000 Jan 21   0: 0: 0
+2026-06-08 16:37:39,398 - isca - DEBUG - Integration completed through 2000 Jan 22   0: 0: 0
+2026-06-08 16:37:40,200 - isca - DEBUG - Integration completed through 2000 Jan 23   0: 0: 0
+2026-06-08 16:37:41,002 - isca - DEBUG - Integration completed through 2000 Jan 24   0: 0: 0
+2026-06-08 16:37:41,805 - isca - DEBUG - Integration completed through 2000 Jan 25   0: 0: 0
+2026-06-08 16:37:42,606 - isca - DEBUG - Integration completed through 2000 Jan 26   0: 0: 0
+2026-06-08 16:37:43,408 - isca - DEBUG - Integration completed through 2000 Jan 27   0: 0: 0
+2026-06-08 16:37:44,210 - isca - DEBUG - Integration completed through 2000 Jan 28   0: 0: 0
+2026-06-08 16:37:45,012 - isca - DEBUG - Integration completed through 2000 Jan 29   0: 0: 0
+2026-06-08 16:37:45,817 - isca - DEBUG - Integration completed through 2000 Jan 30   0: 0: 0
+2026-06-08 16:37:46,618 - isca - DEBUG - Integration completed through 2000 Feb  1   0: 0: 0
+2026-06-08 16:37:46,699 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
+2026-06-08 16:37:46,836 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=       25600
+2026-06-08 16:37:46,836 - isca - DEBUG - 
+2026-06-08 16:37:46,836 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-08 16:37:46,836 - isca - DEBUG - 
+2026-06-08 16:37:46,836 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-08 16:37:46,836 - isca - DEBUG - Total runtime                        24.305562     24.305563     24.305563      0.000000  1.000     0     0    15
+2026-06-08 16:37:46,837 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-08 16:37:47,004 - isca - INFO - Run 1 complete
+2026-06-08 16:37:47,079 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-08 16:37:48,264 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid/restarts/res0001.tar.gz
+2026-06-08 16:37:48,268 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid/run0001/input.nml'
+2026-06-08 16:37:48,272 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid/run0001/field_table'
+2026-06-08 16:37:48,279 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid/run0001/diag_table'
+2026-06-08 16:37:48,344 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid/run'
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_hybrid
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/held_suarez_hybrid.x
+Days = 30
+dt_atmos = 600
+num_cores = 16
+production_diag = True

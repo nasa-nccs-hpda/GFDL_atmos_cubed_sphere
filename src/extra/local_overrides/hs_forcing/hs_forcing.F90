@@ -34,6 +34,9 @@ use   interpolator_mod, only: interpolate_type, interpolator_init, &
                               CONSTANT, INTERP_WEIGHTED_P
 
 use      astronomy_mod, only: diurnal_exoplanet, astronomy_init, obliq, ecc
+#ifdef USE_CPP_HS_FORCE
+use hs_forcing_c_interface, only: hs_forcing_driver_c_wrapper
+#endif
 #ifdef COLUMN_MODEL
 use       spec_mpp_mod, only: grid_domain, get_grid_domain 
 #else
@@ -149,16 +152,17 @@ subroutine hs_forcing ( is, ie, js, je, dt, Time, lon, lat, p_half, p_full, &
    integer, intent(in),    dimension(:,:)  , optional :: kbot
 !-----------------------------------------------------------------------
 
-#ifndef USE_CPP_HS_FORCE
-! Original Fortran implementation (kept unchanged)
-
    real, dimension(size(t,1),size(t,2))           :: ps, diss_heat, h_trop
    real, dimension(size(t,1),size(t,2),size(t,3)) :: ttnd, utnd, vtnd, teq, pmass
    real, dimension(size(r,1),size(r,2),size(r,3)) :: rst, rtnd
-   integer :: i, j, k, kb, n, num_tracers
+   integer :: i, j, k, kb, n, num_tracers, ierr
    logical :: used
    real    :: flux, sink, value
    character(len=128) :: scheme, params
+   real, allocatable :: lon1d(:), lat1d(:)
+
+#ifndef USE_CPP_HS_FORCE
+! Original Fortran implementation (kept unchanged)
 
 !-----------------------------------------------------------------------
      if (no_forcing) return
@@ -261,9 +265,21 @@ subroutine hs_forcing ( is, ie, js, je, dt, Time, lon, lat, p_half, p_full, &
 #else
 ! When USE_CPP_HS_FORCE is defined, delegate core forcing to the validated
 ! C++ implementation via the Fortran C interface `hs_forcing_c_interface`.
-  use hs_forcing_c_interface, only: hs_forcing_driver_c_wrapper
-  integer :: ierr
-  real, allocatable :: lon1d(:), lat1d(:)
+
+  if (no_forcing) return
+
+  if (.not.module_is_initialized) call error_mesg ('hs_forcing','hs_forcing_init has not been called', FATAL)
+
+  if (present(kbot)) then
+      do j=1,size(p_half,2)
+      do i=1,size(p_half,1)
+         kb = kbot(i,j)
+         ps(i,j) = p_half(i,j,kb+1)
+      enddo
+      enddo
+  else
+      ps(:,:) = p_half(:,:,size(p_half,3))
+  endif
 
   ! Build 1D lon/lat arrays from 2D inputs (assumes grid is lon varying fastest)
   allocate(lon1d(size(lon,1)))
@@ -356,7 +372,7 @@ subroutine hs_forcing_init ( axes, Time, lonb, latb, lat )
 	print *, 'SPINNING UP HEAT CAPACITY'
 	! spin up the surface temps with heat capacity
 	print *, 'Depth:', ml_depth
-  	dg = 250        ! starting temperature for surface
+  	tg = 250        ! starting temperature for surface
 	spin_count = 0
 	step_days = 1
 	do

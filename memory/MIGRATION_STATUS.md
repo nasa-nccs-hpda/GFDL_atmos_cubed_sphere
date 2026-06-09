@@ -2,6 +2,19 @@
 
 Tracking the Fortran-to-C++ translation progress for Held-Suarez physics kernels.
 
+## Latest Integration Status
+
+### Held-Suarez forcing module hybrid integration
+
+- C++ forcing module validated against standalone Fortran baseline.
+- C API validated through Fortran `iso_c_binding` wrapper.
+- Native Isca overlay strategy implemented without modifying production Fortran source.
+- Hybrid executable generated:
+  `held_suarez_hybrid.x`.
+- 1-day smoke run succeeded and wrote model output.
+- 30-day hybrid run succeeded and wrote `atmos_monthly.nc` plus restart archive.
+- Next step: compare 30-day all-Fortran vs hybrid outputs and/or apply this workflow to the next Held-Suarez module.
+
 ## Completed Translations
 
 | Routine | Status | Test Result | Accuracy | Fortran Baseline | C++ Translation |

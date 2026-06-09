@@ -1,0 +1,99 @@
+2026-06-08 15:43:07,342 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-08 15:43:07,382 - isca - INFO - RRTM compilation disabled.
+2026-06-08 15:43:07,382 - isca - INFO - SOCRATES compilation disabled.
+2026-06-08 15:43:07,398 - isca - INFO - Writing path_names to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/path_names'
+2026-06-08 15:43:07,408 - isca - INFO - Running compiler
+2026-06-08 15:43:07,410 - isca - INFO - Loading hybrid ubuntu-conda environment
+2026-06-08 15:43:07,410 - isca - INFO - Loading basic ubuntu-conda environment
+2026-06-08 15:43:07,412 - isca - INFO - /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/path_names
+2026-06-08 15:43:07,761 - isca - INFO - ................................................................................................................................. Makefile is ready.
+2026-06-08 15:43:07,779 - isca - INFO - mpifort `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/topo_drag/topo_drag.f90
+2026-06-08 15:43:07,873 - isca - INFO - mpicc -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags` -D__IFC  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mosaic	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mosaic/gradient_c2l.c
+2026-06-08 15:43:07,933 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/test_mpp_domains.F90
+2026-06-08 15:43:07,991 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/fms/test_fms_io.F90
+2026-06-08 15:43:08,062 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mosaic/mosaic.F90
+2026-06-08 15:43:08,370 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mosaic/grid.F90
+2026-06-08 15:43:09,175 - isca - INFO - mpicc -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags` -D__IFC  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/threadloc.c
+2026-06-08 15:43:09,223 - isca - INFO - mpifort `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/cg_drag/cg_drag.f90
+2026-06-08 15:43:09,248 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/cg_drag/cg_drag.f90:327:0:[m[K
+2026-06-08 15:43:09,248 - isca - INFO - 327 | #endif SKIP
+2026-06-08 15:43:09,248 - isca - INFO - |
+2026-06-08 15:43:09,248 - isca - WARNING - [01;35m[KWarning:[m[K extra tokens at end of #endif directive
+2026-06-08 15:43:09,763 - isca - INFO - mpicc -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags` -D__IFC  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mosaic	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mosaic/read_mosaic.c
+2026-06-08 15:43:09,795 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mosaic/read_mosaic.c:[m[K In function ‘[01m[Kread_mosaic_grid_data[m[K’:
+2026-06-08 15:43:09,795 - isca - WARNING - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mosaic/read_mosaic.c:807:25:[m[K [01;35m[Kwarning: [m[K‘[01m[K%s[m[K’ directive writing up to 254 bytes into a region of size between 0 and 254 [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-overflow=-Wformat-overflow=]8;;[m[K]
+2026-06-08 15:43:09,795 - isca - INFO - 807 |   sprintf(tilefile, "%s/[01;35m[K%s[m[K", dir, [32m[Kgridfile[m[K);
+2026-06-08 15:43:09,795 - isca - INFO - |                         [01;35m[K^~[m[K        [32m[K~~~~~~~~[m[K
+2026-06-08 15:43:09,795 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mosaic/read_mosaic.c:807:3:[m[K [01;36m[Knote: [m[K‘[01m[Ksprintf[m[K’ output between 2 and 510 bytes into a destination of size 255
+2026-06-08 15:43:09,795 - isca - INFO - 807 |   [01;36m[Ksprintf(tilefile, "%s/%s", dir, gridfile)[m[K;
+2026-06-08 15:43:09,795 - isca - INFO - |   [01;36m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+2026-06-08 15:43:09,828 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/test_mpp_pset.F90
+2026-06-08 15:43:09,919 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/extra/local_overrides/hs_forcing	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/extra/local_overrides/hs_forcing/hs_forcing.F90
+2026-06-08 15:43:09,987 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/extra/local_overrides/hs_forcing/hs_forcing.F90:375:5:[m[K
+2026-06-08 15:43:09,987 - isca - INFO - 375 |         dg = 250        ! starting temperature for surface
+2026-06-08 15:43:09,987 - isca - INFO - |          [01;31m[K1[m[K
+2026-06-08 15:43:09,987 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Kdg[m[K’ at [01;31m[K(1)[m[K has no IMPLICIT type; did you mean ‘[01m[Ktg[m[K’?
+2026-06-08 15:43:09,996 - isca - INFO - make: *** [Makefile:109: hs_forcing.o] Error 1
+2026-06-08 15:43:09,996 - isca - INFO - ERROR: mkmf failed for held_suarez_hybrid.x
+Exception in thread background thread for pid 1985630:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 1642, in wrap
+    fn(*rgs, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 2649, in background_thread
+    handle_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 2340, in fn
+    return self.command.handle_command_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 823, in handle_command_exit_code
+    raise exc
+sh.ErrorReturnCode_1: 
+
+  RAN: /usr/bin/bash /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/compile.sh
+
+  STDOUT:
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/path_names
+................................................................................................................................. Makefile is ready.
+mpifort `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_par... (7680 more, please see e.stdout)
+
+  STDERR:
+
+Building hybrid Held-Suarez via CodeBase.compile()
+Traceback (most recent call last):
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 169, in <module>
+    main()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 165, in main
+    print("Generated:", build_hybrid())
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 131, in build_hybrid
+    cb.compile()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 100, in compile
+    return super(HeldSuarezHybridCodeBase, self).compile(*args, **kwargs)
+  File "/isca/src/extra/python/isca/helpers.py", line 38, in _useworkdir
+    return fn(*args, **kwargs)
+  File "/isca/src/extra/python/isca/helpers.py", line 22, in _destructive
+    return fn(*args, **kwargs)
+  File "/isca/src/extra/python/isca/codebase.py", line 280, in compile
+    for line in sh.bash(P(self.builddir, 'compile.sh'), _iter=True, _err_to_out=True):
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 879, in __next__
+    self.wait()
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 796, in wait
+    self.handle_command_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 823, in handle_command_exit_code
+    raise exc
+sh.ErrorReturnCode_1: 
+
+  RAN: /usr/bin/bash /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/compile.sh
+
+  STDOUT:
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/path_names
+................................................................................................................................. Makefile is ready.
+mpifort `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_par... (7680 more, please see e.stdout)
+
+  STDERR:
+

@@ -1,0 +1,16 @@
+2026-06-08 16:23:02,286 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-08 16:23:02,510 - isca - INFO - RRTM compilation disabled.
+2026-06-08 16:23:02,510 - isca - INFO - SOCRATES compilation disabled.
+2026-06-08 16:23:02,513 - isca - INFO - RRTM compilation disabled.
+2026-06-08 16:23:02,513 - isca - INFO - SOCRATES compilation disabled.
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_hybrid
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/held_suarez_hybrid.x
+Days = 1
+dt_atmos = 600
+num_cores = 16
+production_diag = False

@@ -1,0 +1,647 @@
+2026-06-08 15:19:58,108 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-08 15:19:58,145 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere'
+2026-06-08 15:19:58,153 - isca - INFO - Linking /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code to /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+2026-06-08 15:19:58,158 - isca - INFO - RRTM compilation disabled.
+2026-06-08 15:19:58,159 - isca - INFO - SOCRATES compilation disabled.
+2026-06-08 15:19:58,191 - isca - INFO - Writing path_names to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/path_names'
+2026-06-08 15:19:58,201 - isca - INFO - Running compiler
+2026-06-08 15:19:58,203 - isca - INFO - Loading hybrid ubuntu-conda environment
+2026-06-08 15:19:58,203 - isca - INFO - Loading basic ubuntu-conda environment
+2026-06-08 15:19:58,205 - isca - INFO - Compiling postprocessing tools
+2026-06-08 15:19:58,207 - isca - INFO - Loading hybrid ubuntu-conda environment
+2026-06-08 15:19:58,207 - isca - INFO - Loading basic ubuntu-conda environment
+2026-06-08 15:19:58,238 - isca - INFO - [01m[Kmppnccombine.c:[m[K In function ‘[01m[Kmain[m[K’:
+2026-06-08 15:19:58,238 - isca - WARNING - [01m[Kmppnccombine.c:162:4:[m[K [01;35m[Kwarning: [m[Kformat not a string literal and no format arguments [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-security-Wformat-security]8;;[m[K]
+2026-06-08 15:19:58,238 - isca - INFO - 162 |    [01;35m[Ksprintf[m[K(outfilename,argv[outputarg]); outlen=strlen(outfilename);
+2026-06-08 15:19:58,238 - isca - INFO - |    [01;35m[K^~~~~~~[m[K
+2026-06-08 15:19:58,332 - isca - WARNING - [01m[Kmppnccombine.c:245:39:[m[K [01;35m[Kwarning: [m[K‘[01m[K%04d[m[K’ directive writing between 4 and 11 bytes into a region of size between 0 and 2047 [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-overflow=-Wformat-overflow=]8;;[m[K]
+2026-06-08 15:19:58,332 - isca - INFO - 245 |                sprintf(infilename,"%s.[01;35m[K%04d[m[K",outfilename,a);
+2026-06-08 15:19:58,332 - isca - INFO - |                                       [01;35m[K^~~~[m[K
+2026-06-08 15:19:58,332 - isca - INFO - In file included from [01m[K/usr/include/stdio.h:894[m[K,
+2026-06-08 15:19:58,332 - isca - INFO - from [01m[Kmppnccombine.c:41[m[K:
+2026-06-08 15:19:58,332 - isca - INFO - [01m[K/usr/include/aarch64-linux-gnu/bits/stdio2.h:38:10:[m[K [01;36m[Knote: [m[K‘[01m[K__builtin___sprintf_chk[m[K’ output between 6 and 2060 bytes into a destination of size 2048
+2026-06-08 15:19:58,332 - isca - INFO - 38 |   return [01;36m[K__builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,[m[K
+2026-06-08 15:19:58,332 - isca - INFO - |          [01;36m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+2026-06-08 15:19:58,332 - isca - INFO - 39 | [01;36m[K                                  __glibc_objsize (__s), __fmt,[m[K
+2026-06-08 15:19:58,332 - isca - INFO - |                                   [01;36m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+2026-06-08 15:19:58,332 - isca - INFO - 40 | [01;36m[K                                  __va_arg_pack ())[m[K;
+2026-06-08 15:19:58,332 - isca - INFO - |                                   [01;36m[K~~~~~~~~~~~~~~~~~[m[K
+2026-06-08 15:19:58,332 - isca - WARNING - [01m[Kmppnccombine.c:214:38:[m[K [01;35m[Kwarning: [m[K‘[01m[K%04d[m[K’ directive writing between 4 and 11 bytes into a region of size between 0 and 2047 [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-overflow=-Wformat-overflow=]8;;[m[K]
+2026-06-08 15:19:58,333 - isca - INFO - 214 |               sprintf(infilename,"%s.[01;35m[K%04d[m[K",outfilename,a);
+2026-06-08 15:19:58,333 - isca - INFO - |                                      [01;35m[K^~~~[m[K
+2026-06-08 15:19:58,333 - isca - INFO - In file included from [01m[K/usr/include/stdio.h:894[m[K,
+2026-06-08 15:19:58,333 - isca - INFO - from [01m[Kmppnccombine.c:41[m[K:
+2026-06-08 15:19:58,333 - isca - INFO - [01m[K/usr/include/aarch64-linux-gnu/bits/stdio2.h:38:10:[m[K [01;36m[Knote: [m[K‘[01m[K__builtin___sprintf_chk[m[K’ output between 6 and 2060 bytes into a destination of size 2048
+2026-06-08 15:19:58,333 - isca - INFO - 38 |   return [01;36m[K__builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,[m[K
+2026-06-08 15:19:58,333 - isca - INFO - |          [01;36m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+2026-06-08 15:19:58,333 - isca - INFO - 39 | [01;36m[K                                  __glibc_objsize (__s), __fmt,[m[K
+2026-06-08 15:19:58,333 - isca - INFO - |                                   [01;36m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+2026-06-08 15:19:58,333 - isca - INFO - 40 | [01;36m[K                                  __va_arg_pack ())[m[K;
+2026-06-08 15:19:58,333 - isca - INFO - |                                   [01;36m[K~~~~~~~~~~~~~~~~~[m[K
+2026-06-08 15:19:58,333 - isca - WARNING - [01m[Kmppnccombine.c:315:39:[m[K [01;35m[Kwarning: [m[K‘[01m[K%04d[m[K’ directive writing between 4 and 11 bytes into a region of size between 0 and 2047 [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-overflow=-Wformat-overflow=]8;;[m[K]
+2026-06-08 15:19:58,333 - isca - INFO - 315 |                sprintf(infilename,"%s.[01;35m[K%04d[m[K",outfilename,a);
+2026-06-08 15:19:58,333 - isca - INFO - |                                       [01;35m[K^~~~[m[K
+2026-06-08 15:19:58,333 - isca - INFO - In file included from [01m[K/usr/include/stdio.h:894[m[K,
+2026-06-08 15:19:58,333 - isca - INFO - from [01m[Kmppnccombine.c:41[m[K:
+2026-06-08 15:19:58,333 - isca - INFO - [01m[K/usr/include/aarch64-linux-gnu/bits/stdio2.h:38:10:[m[K [01;36m[Knote: [m[K‘[01m[K__builtin___sprintf_chk[m[K’ output between 6 and 2060 bytes into a destination of size 2048
+2026-06-08 15:19:58,333 - isca - INFO - 38 |   return [01;36m[K__builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,[m[K
+2026-06-08 15:19:58,333 - isca - INFO - |          [01;36m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+2026-06-08 15:19:58,333 - isca - INFO - 39 | [01;36m[K                                  __glibc_objsize (__s), __fmt,[m[K
+2026-06-08 15:19:58,333 - isca - INFO - |                                   [01;36m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+2026-06-08 15:19:58,333 - isca - INFO - 40 | [01;36m[K                                  __va_arg_pack ())[m[K;
+2026-06-08 15:19:58,333 - isca - INFO - |                                   [01;36m[K~~~~~~~~~~~~~~~~~[m[K
+2026-06-08 15:19:58,466 - isca - INFO - /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/path_names
+2026-06-08 15:19:58,808 - isca - INFO - ................................................................................................................................. Makefile is ready.
+2026-06-08 15:19:58,816 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/mpp_parameter.F90
+2026-06-08 15:19:58,863 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/mpp_parameter.F90:115:42:[m[K
+2026-06-08 15:19:58,863 - isca - INFO - 115 |   integer(LONG_KIND), parameter :: DOMAIN_ID_BASE=Z'0000000100000000' ! Workaround for 64bit init problem
+2026-06-08 15:19:58,863 - isca - INFO - |                                          [01;35m[K1[m[K
+2026-06-08 15:19:58,864 - isca - WARNING - [01;35m[KWarning:[m[K BOZ literal constant at [01;35m[K(1)[m[K is neither a data-stmt-constant nor an actual argument to INT, REAL, DBLE, or CMPLX intrinsic function
+2026-06-08 15:19:58,887 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/mpp_data.F90
+2026-06-08 15:19:58,999 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/mpp.F90
+2026-06-08 15:19:59,073 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_comm.inc:326:0:[m[K
+2026-06-08 15:19:59,073 - isca - INFO - 326 | #define MPP_GATHER_1DV_ mpp_gather_real4_1dv
+2026-06-08 15:19:59,073 - isca - INFO - |
+2026-06-08 15:19:59,073 - isca - WARNING - [01;35m[KWarning:[m[K "MPP_GATHER_1DV_" redefined
+2026-06-08 15:19:59,073 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_comm.inc:319:0:[m[K
+2026-06-08 15:19:59,073 - isca - INFO - 319 | #define MPP_GATHER_1DV_ mpp_gather_int4_1dv
+2026-06-08 15:19:59,073 - isca - INFO - |
+2026-06-08 15:19:59,073 - isca - INFO - [01;36m[Knote:[m[K this is the location of the previous definition
+2026-06-08 15:19:59,073 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_comm.inc:333:0:[m[K
+2026-06-08 15:19:59,073 - isca - INFO - 333 | #define MPP_GATHER_1DV_ mpp_gather_real8_1dv
+2026-06-08 15:19:59,073 - isca - INFO - |
+2026-06-08 15:19:59,073 - isca - WARNING - [01;35m[KWarning:[m[K "MPP_GATHER_1DV_" redefined
+2026-06-08 15:19:59,073 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_comm.inc:326:0:[m[K
+2026-06-08 15:19:59,073 - isca - INFO - 326 | #define MPP_GATHER_1DV_ mpp_gather_real4_1dv
+2026-06-08 15:19:59,073 - isca - INFO - |
+2026-06-08 15:19:59,073 - isca - INFO - [01;36m[Knote:[m[K this is the location of the previous definition
+2026-06-08 15:19:59,257 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_sum_mpi.h:42:26-26:[m[K
+2026-06-08 15:19:59,257 - isca - INFO - 42 |       call MPI_ALLREDUCE( a, work, length, MPI_TYPE_, MPI_SUM, peset(n)%id, error )
+2026-06-08 15:19:59,257 - isca - INFO - |                          [01;35m[K1[m[K
+2026-06-08 15:19:59,257 - isca - WARNING - [01;35m[KWarning:[m[K Type mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (INTEGER(8)/INTEGER(4)).
+2026-06-08 15:19:59,257 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_reduce_mpi.h:35:26:[m[K
+2026-06-08 15:19:59,257 - isca - INFO - 35 |       call MPI_ALLREDUCE( a, work, 1, MPI_TYPE_, MPI_REDUCE_, peset(n)%id, error )
+2026-06-08 15:19:59,257 - isca - INFO - |                          [01;35m[K1[m[K
+2026-06-08 15:19:59,257 - isca - WARNING - [01;35m[KWarning:[m[K Rank mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (rank-1 and scalar)
+2026-06-08 15:19:59,257 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_reduce_mpi.h:35:26:[m[K
+2026-06-08 15:19:59,257 - isca - INFO - 35 |       call MPI_ALLREDUCE( a, work, 1, MPI_TYPE_, MPI_REDUCE_, peset(n)%id, error )
+2026-06-08 15:19:59,257 - isca - INFO - |                          [01;35m[K1[m[K
+2026-06-08 15:19:59,257 - isca - WARNING - [01;35m[KWarning:[m[K Rank mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (rank-1 and scalar)
+2026-06-08 15:19:59,257 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_transmit_mpi.h:197:43-43:[m[K
+2026-06-08 15:19:59,258 - isca - INFO - 197 |       if( mpp_npes().GT.1 )call MPI_BCAST( data, length, MPI_TYPE_, from_rank, peset(n)%id, error )
+2026-06-08 15:19:59,258 - isca - INFO - |                                           [01;35m[K1[m[K
+2026-06-08 15:19:59,258 - isca - WARNING - [01;35m[KWarning:[m[K Type mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (LOGICAL(8)/LOGICAL(4)).
+2026-06-08 15:19:59,258 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_transmit_mpi.h:85:29-29:[m[K
+2026-06-08 15:19:59,258 - isca - INFO - 85 |              call MPI_ISEND( put_data, put_len, MPI_TYPE_, to_pe, comm_tag, mpp_comm_private, send_request, error)
+2026-06-08 15:19:59,258 - isca - INFO - |                             [01;35m[K1[m[K
+2026-06-08 15:19:59,258 - isca - WARNING - [01;35m[KWarning:[m[K Type mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (LOGICAL(8)/LOGICAL(4)).
+2026-06-08 15:19:59,258 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_transmit_mpi.h:118:28-28:[m[K
+2026-06-08 15:19:59,258 - isca - INFO - 118 |              call MPI_RECV( get_data, get_len, MPI_TYPE_, from_pe, comm_tag, mpp_comm_private, stat, error )
+2026-06-08 15:19:59,258 - isca - INFO - |                            [01;35m[K1[m[K
+2026-06-08 15:19:59,258 - isca - WARNING - [01;35m[KWarning:[m[K Type mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (LOGICAL(8)/LOGICAL(4)).
+2026-06-08 15:19:59,258 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_transmit_mpi.h:129:32-32:[m[K
+2026-06-08 15:19:59,258 - isca - INFO - 129 |                 call MPI_IRECV( get_data, get_len, MPI_TYPE_, from_pe, comm_tag, mpp_comm_private, &
+2026-06-08 15:19:59,258 - isca - INFO - |                                [01;35m[K1[m[K
+2026-06-08 15:19:59,258 - isca - WARNING - [01;35m[KWarning:[m[K Type mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (LOGICAL(8)/LOGICAL(4)).
+2026-06-08 15:20:02,897 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/mpp_memutils.F90
+2026-06-08 15:20:02,991 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/mpp_pset.F90
+2026-06-08 15:20:03,235 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/mpp_domains.F90
+2026-06-08 15:20:03,380 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/mpp_domains.F90:502:38:[m[K
+2026-06-08 15:20:03,380 - isca - INFO - 502 |   integer(LONG_KIND), parameter :: ADDR2_BASE=Z'0000000000010000'
+2026-06-08 15:20:03,380 - isca - INFO - |                                      [01;35m[K1[m[K
+2026-06-08 15:20:03,380 - isca - WARNING - [01;35m[KWarning:[m[K BOZ literal constant at [01;35m[K(1)[m[K is neither a data-stmt-constant nor an actual argument to INT, REAL, DBLE, or CMPLX intrinsic function
+2026-06-08 15:20:03,380 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/mpp_domains.F90:527:35:[m[K
+2026-06-08 15:20:03,380 - isca - INFO - 527 |   integer(LONG_KIND), parameter :: GT_BASE=Z'0000000000000100'  ! Workaround for 64bit int init problem
+2026-06-08 15:20:03,380 - isca - INFO - |                                   [01;35m[K1[m[K
+2026-06-08 15:20:03,380 - isca - WARNING - [01;35m[KWarning:[m[K BOZ literal constant at [01;35m[K(1)[m[K is neither a data-stmt-constant nor an actual argument to INT, REAL, DBLE, or CMPLX intrinsic function
+2026-06-08 15:20:03,380 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/mpp_domains.F90:530:35:[m[K
+2026-06-08 15:20:03,380 - isca - INFO - 530 |   integer(LONG_KIND), parameter :: KE_BASE=Z'0001000000000000'  ! Workaround for 64bit int init problem
+2026-06-08 15:20:03,380 - isca - INFO - |                                   [01;35m[K1[m[K
+2026-06-08 15:20:03,380 - isca - WARNING - [01;35m[KWarning:[m[K BOZ literal constant at [01;35m[K(1)[m[K is neither a data-stmt-constant nor an actual argument to INT, REAL, DBLE, or CMPLX intrinsic function
+2026-06-08 15:20:03,677 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_do_global_field.h:123:21:[m[K
+2026-06-08 15:20:03,677 - isca - INFO - 123 |             global = 0
+2026-06-08 15:20:03,677 - isca - INFO - |                     [01;35m[K1[m[K
+2026-06-08 15:20:03,677 - isca - WARNING - [01;35m[KWarning:[m[K Extension: Conversion from INTEGER(4) to LOGICAL(4) at [01;35m[K(1)[m[K
+2026-06-08 15:20:03,678 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_do_global_field.h:123:21:[m[K
+2026-06-08 15:20:03,678 - isca - INFO - 123 |             global = 0
+2026-06-08 15:20:03,678 - isca - INFO - |                     [01;35m[K1[m[K
+2026-06-08 15:20:03,678 - isca - WARNING - [01;35m[KWarning:[m[K Extension: Conversion from INTEGER(4) to LOGICAL(8) at [01;35m[K(1)[m[K
+2026-06-08 15:20:29,387 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/mpp_io.F90
+2026-06-08 15:20:29,502 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_io_write.inc:1119:79:[m[K
+2026-06-08 15:20:29,502 - isca - INFO - 1119 |               error = NF_DEF_VAR( mpp_file(unit)%ncid, axis%name, NF_FLOAT, 1, axis%did, axis%id )
+2026-06-08 15:20:29,502 - isca - INFO - |                                                                               [01;35m[K1[m[K
+2026-06-08 15:20:29,503 - isca - INFO - ......
+2026-06-08 15:20:29,503 - isca - INFO - 1226 |                   error = NF_DEF_VAR( mpp_file(unit)%ncid, field%name, NF_DOUBLE, size(field%axes(:)), axis_id, field%id )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                                       [32m[K2[m[K
+2026-06-08 15:20:29,503 - isca - WARNING - [01;35m[KWarning:[m[K Rank mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (rank-1 and scalar)
+2026-06-08 15:20:29,503 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_io_write.inc:1124:80:[m[K
+2026-06-08 15:20:29,503 - isca - INFO - 1124 |               error = NF_DEF_VAR( mpp_file(unit)%ncid, axis%name, NF_DOUBLE, 1, axis%did, axis%id )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                [01;35m[K1[m[K
+2026-06-08 15:20:29,503 - isca - INFO - ......
+2026-06-08 15:20:29,503 - isca - INFO - 1226 |                   error = NF_DEF_VAR( mpp_file(unit)%ncid, field%name, NF_DOUBLE, size(field%axes(:)), axis_id, field%id )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                                       [32m[K2[m[K
+2026-06-08 15:20:29,503 - isca - WARNING - [01;35m[KWarning:[m[K Rank mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (rank-1 and scalar)
+2026-06-08 15:20:29,503 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_io_write.inc:334:83:[m[K
+2026-06-08 15:20:29,503 - isca - INFO - 334 |                  error = NF_DEF_VAR( mpp_file(unit)%ncid, axis%name, NF_DOUBLE, 1, axis%did, axis%id )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                   [01;35m[K1[m[K
+2026-06-08 15:20:29,503 - isca - INFO - ......
+2026-06-08 15:20:29,503 - isca - INFO - 1226 |                   error = NF_DEF_VAR( mpp_file(unit)%ncid, field%name, NF_DOUBLE, size(field%axes(:)), axis_id, field%id )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                                       [32m[K2[m[K
+2026-06-08 15:20:29,503 - isca - WARNING - [01;35m[KWarning:[m[K Rank mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (rank-1 and scalar)
+2026-06-08 15:20:29,503 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_io_write.inc:336:82:[m[K
+2026-06-08 15:20:29,503 - isca - INFO - 336 |                  error = NF_DEF_VAR( mpp_file(unit)%ncid, axis%name, NF_FLOAT, 1, axis%did, axis%id )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                  [01;35m[K1[m[K
+2026-06-08 15:20:29,503 - isca - INFO - ......
+2026-06-08 15:20:29,503 - isca - INFO - 1226 |                   error = NF_DEF_VAR( mpp_file(unit)%ncid, field%name, NF_DOUBLE, size(field%axes(:)), axis_id, field%id )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                                       [32m[K2[m[K
+2026-06-08 15:20:29,503 - isca - WARNING - [01;35m[KWarning:[m[K Rank mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (rank-1 and scalar)
+2026-06-08 15:20:29,503 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_io_write.inc:345:83:[m[K
+2026-06-08 15:20:29,503 - isca - INFO - 345 |                  error = NF_DEF_VAR( mpp_file(unit)%ncid, axis%name, NF_DOUBLE, 1, axis%did, axis%id )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                   [01;35m[K1[m[K
+2026-06-08 15:20:29,503 - isca - INFO - ......
+2026-06-08 15:20:29,503 - isca - INFO - 1226 |                   error = NF_DEF_VAR( mpp_file(unit)%ncid, field%name, NF_DOUBLE, size(field%axes(:)), axis_id, field%id )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                                       [32m[K2[m[K
+2026-06-08 15:20:29,503 - isca - WARNING - [01;35m[KWarning:[m[K Rank mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (rank-1 and scalar)
+2026-06-08 15:20:29,503 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_io_write.inc:347:82:[m[K
+2026-06-08 15:20:29,503 - isca - INFO - 347 |                  error = NF_DEF_VAR( mpp_file(unit)%ncid, axis%name, NF_FLOAT, 1, axis%did, axis%id )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                  [01;35m[K1[m[K
+2026-06-08 15:20:29,503 - isca - INFO - ......
+2026-06-08 15:20:29,503 - isca - INFO - 1226 |                   error = NF_DEF_VAR( mpp_file(unit)%ncid, field%name, NF_DOUBLE, size(field%axes(:)), axis_id, field%id )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                                       [32m[K2[m[K
+2026-06-08 15:20:29,503 - isca - WARNING - [01;35m[KWarning:[m[K Rank mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (rank-1 and scalar)
+2026-06-08 15:20:29,503 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/include/mpp_io_read.inc:101:91:[m[K
+2026-06-08 15:20:29,503 - isca - INFO - 95 |                   error = NF_GET_VARA_REAL  ( mpp_file(unit)%ncid, field%id, start, axsiz, data  )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                           [32m[K2[m[K
+2026-06-08 15:20:29,503 - isca - INFO - ......
+2026-06-08 15:20:29,503 - isca - INFO - 101 |                   error = NF_GET_VARA_REAL  ( mpp_file(unit)%ncid, field%id, start, axsiz, rvals  )
+2026-06-08 15:20:29,503 - isca - INFO - |                                                                                           [01;35m[K1[m[K
+2026-06-08 15:20:29,503 - isca - WARNING - [01;35m[KWarning:[m[K Type mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (REAL(4)/REAL(8)).
+2026-06-08 15:20:33,017 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/platform/platform.F90
+2026-06-08 15:20:33,089 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/fms	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/fms/fms_io.F90
+2026-06-08 15:20:36,161 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/memutils/memutils.F90
+2026-06-08 15:20:36,286 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/fms/fms.F90
+2026-06-08 15:20:36,509 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/tools/spec_mpp.F90
+2026-06-08 15:20:36,648 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/field_manager	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/field_manager/field_manager.F90
+2026-06-08 15:20:37,820 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/constants/constants.F90
+2026-06-08 15:20:37,920 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/time_manager/time_manager.F90
+2026-06-08 15:20:38,542 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/diag_manager/diag_data.F90
+2026-06-08 15:20:38,664 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/diag_manager/diag_axis.F90
+2026-06-08 15:20:39,006 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/diag_manager/diag_output.F90
+2026-06-08 15:20:39,286 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/diag_manager/diag_grid.F90
+2026-06-08 15:20:39,654 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/diag_manager/diag_util.F90
+2026-06-08 15:20:40,629 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/diag_manager/diag_table.F90
+2026-06-08 15:20:40,849 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/diag_manager/diag_manager.F90
+2026-06-08 15:20:42,885 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/rayleigh_bottom_drag/rayleigh_bottom_drag.F90
+2026-06-08 15:20:43,272 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/cloud_simple/lcl.F90
+2026-06-08 15:20:43,423 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/sat_vapor_pres/sat_vapor_pres_k.F90
+2026-06-08 15:20:44,353 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/sat_vapor_pres/sat_vapor_pres.F90
+2026-06-08 15:20:45,132 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/../translated/held_suarez/cpp/forcing_module/fortran/hs_forcing_c_interface.F90
+2026-06-08 15:20:45,266 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/tools/spherical.F90
+2026-06-08 15:20:46,006 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/tools/gauss_and_legendre.F90
+2026-06-08 15:20:46,105 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/tools/spherical_fourier.F90
+2026-06-08 15:20:46,498 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/fft/fft99.F90
+2026-06-08 15:20:46,801 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/fft/fft.F90
+2026-06-08 15:20:47,038 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/tools/grid_fourier.F90
+2026-06-08 15:20:47,251 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/tools/transforms.F90
+2026-06-08 15:20:48,100 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/tridiagonal/tridiagonal.F90
+2026-06-08 15:20:48,309 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/monin_obukhov/monin_obukhov.F90
+2026-06-08 15:20:48,368 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/monin_obukhov/monin_obukhov.F90:889:24:[m[K
+2026-06-08 15:20:48,368 - isca - INFO - 889 |           & ni, nj, nk, z, u_star, b_star, k_m, k_h, ier)
+2026-06-08 15:20:48,368 - isca - INFO - |                        [01;35m[K1[m[K
+2026-06-08 15:20:48,368 - isca - INFO - ......
+2026-06-08 15:20:48,368 - isca - INFO - 910 |           & ni, nj, nk, z, u_star, b_star, k_m, k_h, ier)
+2026-06-08 15:20:48,368 - isca - INFO - |                        [32m[K2[m[K
+2026-06-08 15:20:48,368 - isca - WARNING - [01;35m[KWarning:[m[K Rank mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (rank-1 and scalar)
+2026-06-08 15:20:48,368 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/monin_obukhov/monin_obukhov.F90:296:27:[m[K
+2026-06-08 15:20:48,368 - isca - INFO - 296 |           & ni, nj, nk, z, u_star, b_star, k_m, k_h, ier)
+2026-06-08 15:20:48,368 - isca - INFO - |                           [01;35m[K1[m[K
+2026-06-08 15:20:48,368 - isca - INFO - ......
+2026-06-08 15:20:48,368 - isca - INFO - 910 |           & ni, nj, nk, z, u_star, b_star, k_m, k_h, ier)
+2026-06-08 15:20:48,368 - isca - INFO - |                           [32m[K2[m[K
+2026-06-08 15:20:48,368 - isca - WARNING - [01;35m[KWarning:[m[K Rank mismatch between actual argument at [01;35m[K(1)[m[K and actual argument at [32m[K(2)[m[K (scalar and rank-2)
+2026-06-08 15:20:49,168 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/my25_turb/my25_turb.F90
+2026-06-08 15:20:50,474 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/diffusivity/diffusivity.F90
+2026-06-08 15:20:51,376 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/edt/edt.F90
+2026-06-08 15:20:55,482 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/sea_esf_rad/null/rad_utilities.F90
+2026-06-08 15:20:56,138 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/strat_cloud/null/strat_cloud.F90
+2026-06-08 15:20:56,366 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/shallow_conv/shallow_conv.F90
+2026-06-08 15:20:57,003 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/stable_bl_turb/stable_bl_turb.F90
+2026-06-08 15:20:57,712 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/entrain/entrain.F90
+2026-06-08 15:20:59,044 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/tracer_manager/tracer_manager.F90
+2026-06-08 15:20:59,519 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/vert_turb_driver/vert_turb_driver.F90
+2026-06-08 15:21:01,878 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/time_manager/get_cal_time.F90
+2026-06-08 15:21:02,066 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/time_interp/time_interp.F90
+2026-06-08 15:21:02,310 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/axis_utils/axis_utils.F90
+2026-06-08 15:21:02,690 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/horiz_interp/horiz_interp_type.F90
+2026-06-08 15:21:02,879 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/horiz_interp/horiz_interp_conserve.F90
+2026-06-08 15:21:03,831 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/horiz_interp/horiz_interp_bilinear.F90
+2026-06-08 15:21:04,227 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/horiz_interp/horiz_interp_bicubic.F90
+2026-06-08 15:21:04,665 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/horiz_interp/horiz_interp_spherical.F90
+2026-06-08 15:21:05,112 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/horiz_interp/horiz_interp.F90
+2026-06-08 15:21:06,001 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/time_interp/time_interp_external.F90
+2026-06-08 15:21:06,979 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/cloud_simple/large_scale_cloud.F90
+2026-06-08 15:21:07,459 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/cloud_simple/cloud_spookie.F90
+2026-06-08 15:21:07,724 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/init/vert_coordinate.F90
+2026-06-08 15:21:07,878 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/model/press_and_geopot.F90
+2026-06-08 15:21:08,418 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/init/polvani_2004.F90
+2026-06-08 15:21:09,005 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/topography/gaussian_topog.F90
+2026-06-08 15:21:09,145 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/topography/topography.F90
+2026-06-08 15:21:09,653 - isca - INFO - mpifort `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/mg_drag/mg_drag.f90
+2026-06-08 15:21:10,776 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/cloud_simple/cloud_cover_diags.F90
+2026-06-08 15:21:11,311 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/field_manager/fm_util.F90
+2026-06-08 15:21:12,498 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/init/spectral_initialize_fields.F90
+2026-06-08 15:21:12,763 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/model/tracer_type.F90
+2026-06-08 15:21:12,846 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/init/ic_from_external_file.F90
+2026-06-08 15:21:13,185 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/init/topog_regularization.F90
+2026-06-08 15:21:13,609 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/init/spectral_init_cond.F90
+2026-06-08 15:21:14,190 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/mpp/test_mpp.F90
+2026-06-08 15:21:14,289 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/cloud_simple/marine_strat_cloud.F90
+2026-06-08 15:21:15,225 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_param/cloud_simple/cloud_simple.F90
+2026-06-08 15:21:15,671 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_shared/vert_advection/vert_advection.F90
+2026-06-08 15:21:16,282 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/model/matrix_invert.F90
+2026-06-08 15:21:16,408 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/model/implicit.F90
+2026-06-08 15:21:17,049 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/model/spectral_damping.F90
+2026-06-08 15:21:17,419 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/model/leapfrog.F90
+2026-06-08 15:21:17,737 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/model/fv_advection.F90
+2026-06-08 15:21:18,526 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/model/water_borrowing.F90
+2026-06-08 15:21:18,643 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/model/global_integral.F90
+2026-06-08 15:21:18,741 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/model/every_step_diagnostics.F90
+2026-06-08 15:21:19,071 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/init/polvani_2007.F90
+2026-06-08 15:21:20,331 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/init/jablonowski_2006.F90
+2026-06-08 15:21:20,819 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_spectral/model/spectral_dynamics.F90
+2026-06-08 15:21:25,886 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/include	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/atmos_shared/interpolator/interpolator.F90
+2026-06-08 15:21:28,173 - isca - INFO - mpifort `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/shared/astronomy/astronomy.f90
+2026-06-08 15:21:28,870 - isca - INFO - mpifort -Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 -DRRTM_NO_COMPILE -DSOC_NO_COMPILE -DUSE_CPP_HS_FORCE `nc-config --cflags`  `nc-config --cflags` `nc-config --flibs` -cpp -fcray-pointer -O2 -ffree-line-length-none -fno-range-check -fdefault-real-8 -fdefault-double-8 -fallow-invalid-boz -fallow-argument-mismatch  -c -I/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/extra/local_overrides/hs_forcing	/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/extra/local_overrides/hs_forcing/hs_forcing.F90
+2026-06-08 15:21:28,923 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/extra/local_overrides/hs_forcing/hs_forcing.F90:264:63:[m[K
+2026-06-08 15:21:28,923 - isca - INFO - 149 |    integer, intent(in),    dimension(:,:)  , optional :: kbot
+2026-06-08 15:21:28,923 - isca - INFO - |                                                             [32m[K2[m[K
+2026-06-08 15:21:28,923 - isca - INFO - ......
+2026-06-08 15:21:28,923 - isca - INFO - 264 |   use hs_forcing_c_interface, only: hs_forcing_driver_c_wrapper
+2026-06-08 15:21:28,923 - isca - INFO - |                                                               [01;31m[K1[m[K
+2026-06-08 15:21:28,923 - isca - INFO - [01;31m[KError:[m[K USE statement at [01;31m[K(1)[m[K cannot follow data declaration statement at [32m[K(2)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:262:29:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - ......
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Procedure ‘[01m[Knewtonian_damping[m[K’ at [01;31m[K(1)[m[K is already defined at [32m[K(2)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:264:43:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:265:51:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:266:56:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:267:47:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:268:53:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:272:31:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Kt[m[K’ is used before it is typed at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:276:28:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Kt[m[K’ is used before it is typed at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:277:28:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Kt[m[K’ is used before it is typed at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:278:20:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:280:25:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:281:30:[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,929 - isca - INFO - [01m[Khs_forcing_rest.inc:296:56:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected block IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:297:51:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected CALL statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:298:9:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:299:38:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:300:16:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:301:18:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:303:25:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:307:50:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected block IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:308:26:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:309:26:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:310:29:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:311:12:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:312:12:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:313:63:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected ELSE IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:318:72:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected ELSE IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:319:71:[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01;31m[KError:[m[K Unexpected CALL statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,930 - isca - INFO - [01m[Khs_forcing_rest.inc:325:73:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Unexpected ELSE IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:326:71:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Unexpected CALL statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:331:10:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Unexpected ELSE statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:333:99:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Unexpected CALL statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:334:9:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:338:20:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Syntax error in argument list at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:341:15:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K ELSEWHERE statement at [01;31m[K(1)[m[K not enclosed in WHERE block
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:343:9:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:345:9:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:347:22:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:349:9:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:351:29:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Unexpected block IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:352:25:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01m[Khs_forcing_rest.inc:353:25:[m[K
+2026-06-08 15:21:28,931 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:354:9:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:358:4:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:362:29:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - ......
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Procedure ‘[01m[Krayleigh_damping[m[K’ at [01;31m[K(1)[m[K is already defined at [32m[K(2)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:364:43:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:365:41:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:366:59:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:367:47:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:368:53:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:372:21:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Ku[m[K’ is used before it is typed at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:374:16:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:375:17:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:376:21:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Ku[m[K’ is used before it is typed at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:377:20:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:382:38:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected block IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:383:54:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected CALL statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:384:9:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:386:33:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:387:17:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:389:25:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:390:39:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected block IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:391:26:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:392:25:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Syntax error in argument list at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:393:25:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Syntax error in argument list at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:396:12:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01m[Khs_forcing_rest.inc:397:10:[m[K
+2026-06-08 15:21:28,932 - isca - INFO - [01;31m[KError:[m[K Unexpected ELSE statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:401:23:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Syntax error in argument list at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:405:18:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K ELSEWHERE statement at [01;31m[K(1)[m[K not enclosed in WHERE block
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:408:12:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:410:9:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:411:9:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:413:29:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Unexpected block IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:414:26:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:415:26:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:416:9:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:420:4:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:424:31:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - ......
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Procedure ‘[01m[Ktracer_source_sink[m[K’ at [01;31m[K(1)[m[K is already defined at [32m[K(2)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:427:62:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:428:37:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:429:45:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:431:27:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Kr[m[K’ is used before it is typed at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:432:27:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Kr[m[K’ is used before it is typed at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:434:25:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:435:22:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01m[Khs_forcing_rest.inc:438:18:[m[K
+2026-06-08 15:21:28,933 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:439:71:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected simple IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:440:38:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected simple IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:446:26:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected block IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:447:22:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:448:22:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:449:23:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:450:59:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:451:41:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:452:9:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:453:9:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:454:7:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected ELSE statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:455:23:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:458:6:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:465:4:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:469:25:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - ......
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Procedure ‘[01m[Klocal_heating[m[K’ at [01;31m[K(1)[m[K is already defined at [32m[K(2)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:471:43:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:472:44:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:473:51:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:474:45:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:475:45:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:476:42:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:478:18:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:479:34:[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01;31m[KError:[m[K Unexpected data declaration statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,934 - isca - INFO - [01m[Khs_forcing_rest.inc:480:21:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Klon[m[K’ is used before it is typed at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:481:21:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Klat[m[K’ is used before it is typed at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:482:21:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Kp_half[m[K’ is used before it is typed at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:483:21:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:485:3:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:489:50:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected block IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:490:83:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected CALL statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:491:53:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected ELSE IF statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:492:21:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:493:21:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:494:24:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:496:35:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:497:39:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:498:62:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:499:62:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:500:26:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected DO statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:501:71:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:502:67:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected assignment statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:503:8:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:504:6:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:505:6:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:506:4:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected ELSE statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01m[Khs_forcing_rest.inc:507:126:[m[K
+2026-06-08 15:21:28,935 - isca - INFO - [01;31m[KError:[m[K Unexpected CALL statement in CONTAINS section at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,936 - isca - INFO - [01m[Khs_forcing_rest.inc:508:3:[m[K
+2026-06-08 15:21:28,936 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,936 - isca - INFO - [01m[Khs_forcing_rest.inc:510:3:[m[K
+2026-06-08 15:21:28,936 - isca - INFO - [01;31m[KError:[m[K Expecting END MODULE statement at [01;31m[K(1)[m[K
+2026-06-08 15:21:28,936 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/extra/local_overrides/hs_forcing/hs_forcing.F90:359:5:[m[K
+2026-06-08 15:21:28,936 - isca - INFO - 359 |         dg = 250        ! starting temperature for surface
+2026-06-08 15:21:28,936 - isca - INFO - |          [01;31m[K1[m[K
+2026-06-08 15:21:28,936 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Kdg[m[K’ at [01;31m[K(1)[m[K has no IMPLICIT type; did you mean ‘[01m[Ktg[m[K’?
+2026-06-08 15:21:28,936 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/extra/local_overrides/hs_forcing/hs_forcing.F90:271:6:[m[K
+2026-06-08 15:21:28,936 - isca - INFO - 271 |   do i = 1, size(lon,1)
+2026-06-08 15:21:28,936 - isca - INFO - |      [01;31m[K1[m[K
+2026-06-08 15:21:28,936 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Ki[m[K’ at [01;31m[K(1)[m[K has no IMPLICIT type; did you mean ‘[01m[Kie[m[K’?
+2026-06-08 15:21:28,936 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/extra/local_overrides/hs_forcing/hs_forcing.F90:274:6:[m[K
+2026-06-08 15:21:28,936 - isca - INFO - 274 |   do j = 1, size(lon,2)
+2026-06-08 15:21:28,936 - isca - INFO - |      [01;31m[K1[m[K
+2026-06-08 15:21:28,936 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Kj[m[K’ at [01;31m[K(1)[m[K has no IMPLICIT type; did you mean ‘[01m[Kjs[m[K’?
+2026-06-08 15:21:28,936 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/extra/local_overrides/hs_forcing/hs_forcing.F90:279:23:[m[K
+2026-06-08 15:21:28,936 - isca - INFO - 279 |        lon1d, lat1d, ps, p_full, u, v, t, udt, vdt, tdt, teq, ierr)
+2026-06-08 15:21:28,936 - isca - INFO - |                       [01;31m[K1[m[K
+2026-06-08 15:21:28,936 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Kps[m[K’ at [01;31m[K(1)[m[K has no IMPLICIT type; did you mean ‘[01m[Kjs[m[K’?
+2026-06-08 15:21:28,936 - isca - INFO - [01m[K/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/extra/local_overrides/hs_forcing/hs_forcing.F90:279:60:[m[K
+2026-06-08 15:21:28,936 - isca - INFO - 279 |        lon1d, lat1d, ps, p_full, u, v, t, udt, vdt, tdt, teq, ierr)
+2026-06-08 15:21:28,936 - isca - INFO - |                                                            [01;31m[K1[m[K
+2026-06-08 15:21:28,937 - isca - INFO - [01;31m[KError:[m[K Symbol ‘[01m[Kteq[m[K’ at [01;31m[K(1)[m[K has no IMPLICIT type
+2026-06-08 15:21:28,944 - isca - INFO - make: *** [Makefile:109: hs_forcing.o] Error 1
+2026-06-08 15:21:28,944 - isca - INFO - ERROR: mkmf failed for held_suarez_hybrid.x
+Exception in thread background thread for pid 1974143:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 1642, in wrap
+    fn(*rgs, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 2649, in background_thread
+    handle_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 2340, in fn
+    return self.command.handle_command_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 823, in handle_command_exit_code
+    raise exc
+sh.ErrorReturnCode_1: 
+
+  RAN: /usr/bin/bash /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/compile.sh
+
+  STDOUT:
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Compiling postprocessing tools
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+[01m[Kmppnccombine.c:[m[K In function ‘[01m[Kmain[m[K’:
+[01m[Kmppnccombine.c:162:4:[m[K [01;35m[Kwarning: [m[Kformat not a string literal and no format arguments [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-security-Wformat-security]8;;[m[K]
+  162 |    [01;35m[Ksprintf[m[K(outfilename,argv[outputarg]); outlen=strlen(outfilename);
+      |    [01;35m[K^~~~~~~[m[K
+[01m[Kmppnccombine.c:245:39:[m[K [01;35m[Kwarning: [m[K‘[01m[K%04d[m[K’ directive writing between 4 and 11... (91037 more, please see e.stdout)
+
+  STDERR:
+
+Building hybrid Held-Suarez via CodeBase.compile()
+Traceback (most recent call last):
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 169, in <module>
+    main()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 165, in main
+    print("Generated:", build_hybrid())
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 131, in build_hybrid
+    cb.compile()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 100, in compile
+    return super(HeldSuarezHybridCodeBase, self).compile(*args, **kwargs)
+  File "/isca/src/extra/python/isca/helpers.py", line 38, in _useworkdir
+    return fn(*args, **kwargs)
+  File "/isca/src/extra/python/isca/helpers.py", line 22, in _destructive
+    return fn(*args, **kwargs)
+  File "/isca/src/extra/python/isca/codebase.py", line 280, in compile
+    for line in sh.bash(P(self.builddir, 'compile.sh'), _iter=True, _err_to_out=True):
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 879, in __next__
+    self.wait()
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 796, in wait
+    self.handle_command_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh.py", line 823, in handle_command_exit_code
+    raise exc
+sh.ErrorReturnCode_1: 
+
+  RAN: /usr/bin/bash /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/compile.sh
+
+  STDOUT:
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Compiling postprocessing tools
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+[01m[Kmppnccombine.c:[m[K In function ‘[01m[Kmain[m[K’:
+[01m[Kmppnccombine.c:162:4:[m[K [01;35m[Kwarning: [m[Kformat not a string literal and no format arguments [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-security-Wformat-security]8;;[m[K]
+  162 |    [01;35m[Ksprintf[m[K(outfilename,argv[outputarg]); outlen=strlen(outfilename);
+      |    [01;35m[K^~~~~~~[m[K
+[01m[Kmppnccombine.c:245:39:[m[K [01;35m[Kwarning: [m[K‘[01m[K%04d[m[K’ directive writing between 4 and 11... (91037 more, please see e.stdout)
+
+  STDERR:
+

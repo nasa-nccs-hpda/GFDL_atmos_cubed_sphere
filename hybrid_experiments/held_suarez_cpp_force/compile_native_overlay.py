@@ -29,9 +29,8 @@ HS_FORCE_INTERFACE = (
     "../translated/held_suarez/cpp/forcing_module/fortran/"
     "hs_forcing_c_interface.F90"
 )
-HS_FORCE_LIBRARY = (
-    "../translated/held_suarez/cpp/forcing_module/libhs_forcing.a"
-)
+HS_FORCE_LIBRARY_DIR = "../translated/held_suarez/cpp/forcing_module"
+HS_FORCE_LIBRARY = HS_FORCE_LIBRARY_DIR + "/libhs_forcing.a"
 
 
 def use_gfdl_base_templates(codebase):
@@ -79,9 +78,33 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
 
     def prepare_hybrid_library(self):
         mkdir(self.builddir)
+        lib_workdir = Path(self.srcdir) / HS_FORCE_LIBRARY_DIR
         lib_src = Path(self.srcdir) / HS_FORCE_LIBRARY
         lib_dest_dir = Path(self.builddir) / "lib"
         lib_dest_dir.mkdir(parents=True, exist_ok=True)
+
+        if not lib_workdir.is_dir():
+            raise RuntimeError("Hybrid forcing library source dir not found: %s" % lib_workdir)
+
+        cxx = os.environ.get("CXX", "g++")
+        ar = os.environ.get("AR", "ar")
+        print("Building hybrid forcing C++ library")
+        print("  workdir:", lib_workdir)
+        print("  CXX:", shutil.which(cxx) or cxx)
+        print("  AR:", shutil.which(ar) or ar)
+        try:
+            target = subprocess.check_output(
+                [cxx, "-dumpmachine"], text=True
+            ).strip()
+            print("  CXX target:", target)
+        except (OSError, subprocess.CalledProcessError):
+            print("  CXX target: unavailable")
+
+        subprocess.check_call(["make", "clean"], cwd=str(lib_workdir))
+        subprocess.check_call(
+            ["make", "CXX=%s" % cxx, "AR=%s" % ar, "lib"],
+            cwd=str(lib_workdir),
+        )
 
         if not lib_src.exists():
             raise RuntimeError("Hybrid forcing library not found: %s" % lib_src)
