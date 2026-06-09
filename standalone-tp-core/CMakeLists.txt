@@ -72,23 +72,31 @@ target_tp_core_flags(test_yppm_cpp)
 
 add_test(NAME test_yppm_cpp COMMAND test_yppm_cpp)
 
-# ---- GPU unit tests (optional — only when nvcc is available) ----
+# ---- GPU targets (optional — only when nvcc is available) ----
+# The launch API (yppm_gpu.cuh) is header-only, so each .cu just includes it;
+# no separate CUDA library target is needed.
 include(CheckLanguage)
 check_language(CUDA)
 if(CMAKE_CUDA_COMPILER)
   enable_language(CUDA)
-  add_executable(test_yppm_gpu test_yppm_gpu.cu)
-  set_target_properties(test_yppm_gpu PROPERTIES
-    CUDA_STANDARD 14
-    CUDA_STANDARD_REQUIRED ON)
-  # A100 = sm_80; override with -DCMAKE_CUDA_ARCHITECTURES=<arch> as needed.
-  if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-    set_target_properties(test_yppm_gpu PROPERTIES CUDA_ARCHITECTURES 80)
-  endif()
-  # GCC 7.x is officially unsupported by newer nvcc; suppress the warning.
-  target_compile_options(test_yppm_gpu PRIVATE
-    $<$<COMPILE_LANGUAGE:CUDA>:--allow-unsupported-compiler>)
+
+  add_executable(test_yppm_gpu      test_yppm_gpu.cu)    # multi-column unit test
+  add_executable(tp-core-driver-gpu driver_yppm_gpu.cu)  # command-line benchmark
+
+  foreach(gpu_tgt test_yppm_gpu tp-core-driver-gpu)
+    set_target_properties(${gpu_tgt} PROPERTIES
+      CUDA_STANDARD 14
+      CUDA_STANDARD_REQUIRED ON)
+    # A100 = sm_80; override with -DCMAKE_CUDA_ARCHITECTURES=<arch> as needed.
+    if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+      set_target_properties(${gpu_tgt} PROPERTIES CUDA_ARCHITECTURES 80)
+    endif()
+    # GCC 7.x is officially unsupported by newer nvcc; suppress the warning.
+    target_compile_options(${gpu_tgt} PRIVATE
+      $<$<COMPILE_LANGUAGE:CUDA>:--allow-unsupported-compiler>)
+  endforeach()
+
   add_test(NAME test_yppm_gpu COMMAND test_yppm_gpu)
 else()
-  message(STATUS "CUDA compiler not found — skipping test_yppm_gpu")
+  message(STATUS "CUDA compiler not found — skipping GPU targets (test_yppm_gpu, tp-core-driver-gpu)")
 endif()
