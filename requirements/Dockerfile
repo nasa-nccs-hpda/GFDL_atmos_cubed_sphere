@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM nvidia/cuda:12.4.1-devel-ubuntu22.04
 
 ENV GFDL_WORK /tmp
 ENV GFDL_BASE /isca

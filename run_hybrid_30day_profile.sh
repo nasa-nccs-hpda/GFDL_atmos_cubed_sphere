@@ -24,10 +24,11 @@ export OMPI_MCA_btl_vader_single_copy_mechanism=none
 cd ${GFDL_BASE}
 mkdir -p logs
 
-HS_PROFILE=1 /usr/bin/time -p \
-  python3 hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py \
-    --days 30 \
-    --production-diag \
-    --overwrite \
-  2>&1 | tee logs/hybrid_hs_profile_30day.log
+{
+  time env HS_PROFILE=1 \
+    python3 hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py \
+      --days 30 \
+      --production-diag \
+      --overwrite
+} 2>&1 | tee logs/hybrid_hs_profile_30day.log
 "

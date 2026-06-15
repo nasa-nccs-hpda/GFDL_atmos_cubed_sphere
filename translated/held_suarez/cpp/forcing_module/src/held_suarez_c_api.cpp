@@ -9,6 +9,36 @@
 #include "../include/held_suarez_c_api.h"
 #include "../include/held_suarez_forcing.hpp"
 
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
+#ifdef USE_CUDA_HS_FORCE
+#include "../../../cuda/forcing_module/hs_forcing_cuda.h"
+#endif
+
+namespace {
+
+enum class Backend {
+    Cpu,
+    Cuda,
+    Invalid
+};
+
+Backend requested_backend()
+{
+    const char* env = std::getenv("HS_FORCE_BACKEND");
+    if (env == nullptr || env[0] == '\0' || std::strcmp(env, "cpu") == 0) {
+        return Backend::Cpu;
+    }
+    if (std::strcmp(env, "cuda") == 0) {
+        return Backend::Cuda;
+    }
+    return Backend::Invalid;
+}
+
+} // namespace
+
 // ============================================================================
 // Main Driver Function
 // ============================================================================
@@ -116,6 +146,38 @@ int hs_forcing_driver_c(
     config.do_conserve_energy = do_conserve_energy;
     config.equilibrium_option = equilibrium_option;
     config.stratosphere_option = stratosphere_option;
+
+    const Backend backend = requested_backend();
+    if (backend == Backend::Invalid) {
+        const char* env = std::getenv("HS_FORCE_BACKEND");
+        std::fprintf(stderr,
+                     "HS forcing backend error: invalid HS_FORCE_BACKEND='%s'. Use 'cpu' or 'cuda'.\n",
+                     env != nullptr ? env : "");
+        return HS_ERROR_INVALID_CONFIG;
+    }
+
+    if (backend == Backend::Cuda) {
+#ifdef USE_CUDA_HS_FORCE
+        return hs_forcing::cuda_backend::hs_forcing_driver_cuda(
+            nlon, nlat, nlev,
+            current_time, dt,
+            lon, lat,
+            ps, p_full, p_half,
+            u, v, t,
+            um, vm,
+            zfull, tg_prev,
+            config,
+            udt, vdt, tdt, teq,
+            h_trop, tg_new,
+            mask
+        );
+#else
+        std::fprintf(stderr,
+                     "HS forcing backend error: HS_FORCE_BACKEND=cuda requested, "
+                     "but libhs_forcing was built without USE_CUDA_HS_FORCE=1.\n");
+        return HS_ERROR_INVALID_CONFIG;
+#endif
+    }
 
     // Call C++ driver
     hs_forcing::hs_forcing_driver(

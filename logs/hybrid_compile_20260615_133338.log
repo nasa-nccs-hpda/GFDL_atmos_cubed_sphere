@@ -1,0 +1,42 @@
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+=== Inside container ===
+aarch64
+python3= /usr/bin/python3
+mpifort= /usr/bin/mpifort
+mpicc= /usr/bin/mpicc
+nc-config= /usr/bin/nc-config
+nf-config= /usr/bin/nf-config
+USE_CUDA_HS_FORCE= 1
+NVCC=
+=== Compile hybrid Held-Suarez ===
+2026-06-15 13:33:38,625 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-15 13:33:38,664 - isca - INFO - RRTM compilation disabled.
+2026-06-15 13:33:38,664 - isca - INFO - SOCRATES compilation disabled.
+rm -rf build libhs_forcing.a bin
+mkdir -p build
+g++ -O2 -std=c++17 -Iinclude -DUSE_CUDA_HS_FORCE -I../../cuda/forcing_module -c src/held_suarez_c_api.cpp -o build/held_suarez_c_api.o
+nvcc -O2 -std=c++17 -Iinclude -I../../cuda/forcing_module -c ../../cuda/forcing_module/hs_forcing_cuda.cu -o build/hs_forcing_cuda.o
+make: nvcc: No such file or directory
+make: *** [Makefile:36: build/hs_forcing_cuda.o] Error 127
+Building hybrid Held-Suarez via CodeBase.compile()
+Building hybrid forcing C++ library
+  workdir: /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/../translated/held_suarez/cpp/forcing_module
+  CXX: /usr/bin/g++
+  AR: /usr/bin/ar
+  USE_CUDA_HS_FORCE: 1
+  NVCC: nvcc
+  CXX target: aarch64-linux-gnu
+Traceback (most recent call last):
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 199, in <module>
+    main()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 195, in main
+    print("Generated:", build_hybrid())
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 161, in build_hybrid
+    cb.compile()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 127, in compile
+    self.prepare_hybrid_library()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 113, in prepare_hybrid_library
+    subprocess.check_call(make_cmd, cwd=str(lib_workdir))
+  File "/usr/lib/python3.10/subprocess.py", line 369, in check_call
+    raise CalledProcessError(retcode, cmd)
+subprocess.CalledProcessError: Command '['make', 'CXX=g++', 'AR=ar', 'USE_CUDA_HS_FORCE=1', 'NVCC=nvcc', 'lib']' returned non-zero exit status 2.

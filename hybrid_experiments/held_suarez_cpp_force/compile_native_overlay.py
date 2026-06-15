@@ -82,16 +82,28 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
         lib_src = Path(self.srcdir) / HS_FORCE_LIBRARY
         lib_dest_dir = Path(self.builddir) / "lib"
         lib_dest_dir.mkdir(parents=True, exist_ok=True)
+        use_cuda = os.environ.get("USE_CUDA_HS_FORCE") == "1"
 
         if not lib_workdir.is_dir():
             raise RuntimeError("Hybrid forcing library source dir not found: %s" % lib_workdir)
 
         cxx = os.environ.get("CXX", "g++")
         ar = os.environ.get("AR", "ar")
+        nvcc = os.environ.get("NVCC", "nvcc")
         print("Building hybrid forcing C++ library")
         print("  workdir:", lib_workdir)
         print("  CXX:", shutil.which(cxx) or cxx)
         print("  AR:", shutil.which(ar) or ar)
+        print("  USE_CUDA_HS_FORCE:", "1" if use_cuda else "0")
+        if use_cuda:
+            print("  NVCC:", shutil.which(nvcc) or nvcc)
+            if shutil.which(nvcc) is None and not Path(nvcc).exists():
+                raise RuntimeError(
+                    "USE_CUDA_HS_FORCE=1 was requested, but NVCC was not found. "
+                    "Set NVCC to a valid CUDA compiler path or use a container "
+                    "with nvcc available. Example: "
+                    "USE_CUDA_HS_FORCE=1 NVCC=/path/to/nvcc ./run_compile_hybrid.sh"
+                )
         try:
             target = subprocess.check_output(
                 [cxx, "-dumpmachine"], text=True
@@ -101,10 +113,11 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
             print("  CXX target: unavailable")
 
         subprocess.check_call(["make", "clean"], cwd=str(lib_workdir))
-        subprocess.check_call(
-            ["make", "CXX=%s" % cxx, "AR=%s" % ar, "lib"],
-            cwd=str(lib_workdir),
-        )
+        make_cmd = ["make", "CXX=%s" % cxx, "AR=%s" % ar]
+        if use_cuda:
+            make_cmd.extend(["USE_CUDA_HS_FORCE=1", "NVCC=%s" % nvcc])
+        make_cmd.append("lib")
+        subprocess.check_call(make_cmd, cwd=str(lib_workdir))
 
         if not lib_src.exists():
             raise RuntimeError("Hybrid forcing library not found: %s" % lib_src)
@@ -119,7 +132,8 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
             )
         self.configure_overlay()
         self.prepare_hybrid_library()
-        with temporary_env("GFDL_MKMF_TEMPLATE", "hybrid"):
+        template = "hybrid_cuda" if os.environ.get("USE_CUDA_HS_FORCE") == "1" else "hybrid"
+        with temporary_env("GFDL_MKMF_TEMPLATE", template):
             return super(HeldSuarezHybridCodeBase, self).compile(*args, **kwargs)
 
 
