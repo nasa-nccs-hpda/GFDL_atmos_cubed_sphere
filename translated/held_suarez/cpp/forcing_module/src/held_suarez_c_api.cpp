@@ -64,6 +64,10 @@ int hs_forcing_driver_c(
     double* tg_new,
     const double* mask)
 {
+    hs_forcing::profile::ScopedTimer c_interface_timer(
+        hs_forcing::profile::Region::CInterface,
+        static_cast<unsigned long long>(nlon) * nlat * nlev);
+
     // Validate required inputs
     if (nlon <= 0 || nlat <= 0 || nlev <= 0) {
         return HS_ERROR_INVALID_DIMS;

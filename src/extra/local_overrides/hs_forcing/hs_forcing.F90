@@ -35,7 +35,7 @@ use   interpolator_mod, only: interpolate_type, interpolator_init, &
 
 use      astronomy_mod, only: diurnal_exoplanet, astronomy_init, obliq, ecc
 #ifdef USE_CPP_HS_FORCE
-use hs_forcing_c_interface, only: hs_forcing_driver_c_wrapper
+use hs_forcing_c_interface, only: hs_forcing_driver_c_wrapper, hs_forcing_profile_print
 #endif
 #ifdef COLUMN_MODEL
 use       spec_mpp_mod, only: grid_domain, get_grid_domain 
@@ -530,6 +530,10 @@ subroutine hs_forcing_end
    call write_data(trim('RESTART/hs_forcing.res'), 'tg_prev', tg_prev, grid_domain)
    deallocate (tg_prev)
  endif
+
+#ifdef USE_CPP_HS_FORCE
+ call hs_forcing_profile_print()
+#endif
 
  module_is_initialized = .false.
 

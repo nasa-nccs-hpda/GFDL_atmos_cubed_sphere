@@ -6,6 +6,7 @@ module hs_forcing_c_interface
 
   ! Public interface and constants
   public :: hs_forcing_driver_c_wrapper
+  public :: hs_forcing_profile_print
   public :: HS_SUCCESS, HS_ERROR_NULL_POINTER, HS_ERROR_INVALID_DIMS
   public :: HS_EQUILIBRIUM_HELD_SUAREZ, HS_EQUILIBRIUM_TOP_DOWN
   public :: HS_STRATOSPHERE_DEFAULT
@@ -26,6 +27,11 @@ module hs_forcing_c_interface
   integer(c_int), parameter :: HS_STRATOSPHERE_C_ABOVE_TP = 1
   integer(c_int), parameter :: HS_STRATOSPHERE_HS_LIKE = 2
   integer(c_int), parameter :: HS_STRATOSPHERE_EXTEND_TP = 3
+
+  logical :: hs_profile_checked = .false.
+  logical :: hs_profile_enabled = .false.
+  integer :: hs_profile_calls = 0
+  real(c_double) :: hs_profile_seconds = 0.0_c_double
 
   ! C function interfaces
   interface
@@ -104,6 +110,9 @@ contains
     integer(c_int) :: status
     real(c_double), allocatable, target :: lon2d(:,:), lat2d(:,:)
     integer :: i, j
+    integer :: clock_start, clock_stop, clock_rate
+
+    if (hs_forcing_profile_is_enabled()) call system_clock(clock_start, clock_rate)
 
     ! Get defaults (provide variables for all OUT args)
     call hs_get_defaults_c(t_zero, t_strat, delh, delv, eps, P00, kappa, &
@@ -132,10 +141,50 @@ contains
       0_c_int, HS_EQUILIBRIUM_HELD_SUAREZ, HS_STRATOSPHERE_DEFAULT, &
       c_loc(udt), c_loc(vdt), c_loc(tdt), c_loc(teq), c_null_ptr, c_null_ptr, c_null_ptr)
 
+    if (hs_profile_enabled) then
+      call system_clock(clock_stop)
+      hs_profile_calls = hs_profile_calls + 1
+      if (clock_rate > 0) then
+        hs_profile_seconds = hs_profile_seconds + &
+          real(clock_stop - clock_start, c_double) / real(clock_rate, c_double)
+      end if
+    end if
+
     deallocate(lon2d)
     deallocate(lat2d)
 
     ierr = int(status)
   end subroutine hs_forcing_driver_c_wrapper
+
+  logical function hs_forcing_profile_is_enabled()
+    character(len=32) :: env
+    integer :: status
+
+    if (.not. hs_profile_checked) then
+      call get_environment_variable('HS_PROFILE', env, status=status)
+      hs_profile_enabled = status == 0 .and. len_trim(env) > 0 .and. trim(env) /= '0'
+      hs_profile_checked = .true.
+    end if
+
+    hs_forcing_profile_is_enabled = hs_profile_enabled
+  end function hs_forcing_profile_is_enabled
+
+  subroutine hs_forcing_profile_print()
+    real(c_double) :: average
+
+    if (.not. hs_forcing_profile_is_enabled()) return
+
+    if (hs_profile_calls > 0) then
+      average = hs_profile_seconds / real(hs_profile_calls, c_double)
+    else
+      average = 0.0_c_double
+    end if
+
+    write(*,'(a)') 'HS_PROFILE Fortran wrapper profile summary'
+    write(*,'(a)') 'region,calls,total_seconds,avg_seconds'
+    write(*,'(a,",",i0,",",es16.8,",",es16.8)') &
+      'fortran_iso_c_wrapper', hs_profile_calls, hs_profile_seconds, average
+    write(*,'(a)') 'HS_PROFILE end Fortran wrapper profile summary'
+  end subroutine hs_forcing_profile_print
 
 end module hs_forcing_c_interface
