@@ -1,4 +1,11 @@
-#!/bin/bash
+export HS_FORCE_BACKEND=cpu
+
+python3 hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py \
+  --exp-name held_suarez_hybrid_cpu \
+  --days 30 \
+  --production-diag \
+  --overwrite \
+  2>&1 | tee logs/hybrid_cpu_30day.lg#!/bin/bash
 set -euo pipefail
 
 CONTAINER=/lscratch/jli30/isca-sandbox
@@ -24,9 +31,12 @@ export OMPI_MCA_btl_vader_single_copy_mechanism=none
 cd ${GFDL_BASE}
 mkdir -p logs
 
+export HS_FORCE_BACKEND=cpu
+
 python3 hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py \
+  --exp-name held_suarez_hybrid_cpu \
   --days 30 \
   --production-diag \
   --overwrite \
-  2>&1 | tee logs/hybrid_run_30day.log
+  2>&1 | tee logs/hybrid_cpu_30day.log
 "

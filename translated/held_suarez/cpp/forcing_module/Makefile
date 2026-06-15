@@ -2,6 +2,8 @@ CXX = g++
 CXXFLAGS = -O2 -std=c++17 -Iinclude
 NVCC ?= nvcc
 NVCCFLAGS ?= -O2 -std=c++17 -Iinclude -I../../cuda/forcing_module
+CUDA_HOME ?= /usr/local/cuda
+CUDA_LIBDIR ?= $(CUDA_HOME)/lib64
 AR = ar
 ARFLAGS = rcs
 
@@ -19,7 +21,7 @@ CUDA_TEST_BIN = $(BIN_DIR)/validate_hs_forcing_cuda
 ifeq ($(USE_CUDA_HS_FORCE),1)
 CXXFLAGS += -DUSE_CUDA_HS_FORCE -I../../cuda/forcing_module
 OBJ += $(CUDA_OBJ)
-LDFLAGS += -lcudart
+LDFLAGS += -L$(CUDA_LIBDIR) -lcudart
 endif
 
 all: lib test

@@ -8,6 +8,9 @@ export GFDL_WORK=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
 export GFDL_DATA=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
 export USE_CUDA_HS_FORCE=${USE_CUDA_HS_FORCE:-0}
 export NVCC=${NVCC:-nvcc}
+if [ "${USE_CUDA_HS_FORCE}" = "1" ]; then
+  export GFDL_MKMF_TEMPLATE=hybrid_cuda
+fi
 
 mkdir -p "${GFDL_BASE}/logs"
 LOG="${GFDL_BASE}/logs/hybrid_compile_$(date +%Y%m%d_%H%M%S).log"
@@ -26,6 +29,9 @@ export GFDL_DATA=${GFDL_DATA}
 export GFDL_ENV=hybrid
 export USE_CUDA_HS_FORCE=${USE_CUDA_HS_FORCE}
 export NVCC=${NVCC}
+if [ "\${USE_CUDA_HS_FORCE}" = "1" ]; then
+  export GFDL_MKMF_TEMPLATE=hybrid_cuda
+fi
 
 export OMPI_MCA_rmaps_base_oversubscribe=1
 export OMPI_MCA_btl_vader_single_copy_mechanism=none
@@ -39,6 +45,7 @@ echo 'mpicc=' \$(command -v mpicc || true)
 echo 'nc-config=' \$(command -v nc-config || true)
 echo 'nf-config=' \$(command -v nf-config || true)
 echo 'USE_CUDA_HS_FORCE=' \${USE_CUDA_HS_FORCE}
+echo 'GFDL_MKMF_TEMPLATE=' \${GFDL_MKMF_TEMPLATE:-}
 echo 'NVCC=' \$(command -v \${NVCC} || true)
 
 cd ${GFDL_BASE}

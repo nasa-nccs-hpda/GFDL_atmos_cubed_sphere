@@ -1,0 +1,6 @@
+CUDA forcing validation grid: 8 x 4 x 5
+udt: max_abs=7.453890e-20 rms=1.178563e-20 mismatches=0 tolerance=1.000000e-12
+vdt: max_abs=8.470329e-21 rms=1.894023e-21 mismatches=0 tolerance=1.000000e-12
+tdt: max_abs=8.470329e-21 rms=1.365800e-21 mismatches=0 tolerance=1.000000e-12
+teq: max_abs=0.000000e+00 rms=0.000000e+00 mismatches=0 tolerance=1.000000e-12
+CUDA forcing validation status: PASS

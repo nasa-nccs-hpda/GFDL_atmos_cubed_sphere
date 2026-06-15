@@ -40,9 +40,16 @@ Changed existing forcing module:
     `USE_CUDA_HS_FORCE=1`.
   - Selects the CUDA hybrid mkmf template for the final model link.
 - `src/extra/python/isca/templates/mkmf.template.hybrid_cuda`
-  - Adds `-lcudart` for CUDA-enabled hybrid executable linking.
+  - Adds `/usr/local/cuda/lib64` and `-lcudart` for CUDA-enabled hybrid
+    executable linking.
+- `src/extra/env/hybrid`
+  - Preserves a preselected `GFDL_MKMF_TEMPLATE`, allowing CUDA builds to use
+    `mkmf.template.hybrid_cuda` while CPU builds continue to default to
+    `mkmf.template.hybrid`.
 - `run_compile_hybrid.sh`
   - Propagates `USE_CUDA_HS_FORCE` and `NVCC` into the container build.
+  - Selects `GFDL_MKMF_TEMPLATE=hybrid_cuda` when
+    `USE_CUDA_HS_FORCE=1`.
 
 Added hybrid CUDA run wrappers:
 
@@ -179,10 +186,63 @@ HS_FORCE_BACKEND=cuda python3 hybrid_experiments/held_suarez_cpp_force/run_hybri
   --overwrite
 ```
 
-## Local Verification Status
+## Current CUDA Build Status
 
-This shell does not have `nvcc`, so the CUDA-enabled build and CUDA validation
-were not run here.
+The updated container now has `nvcc`.  The CUDA-enabled forcing library build
+progressed past CUDA compilation:
+
+```text
+g++ ... -DUSE_CUDA_HS_FORCE ... -c src/held_suarez_c_api.cpp
+nvcc ... -c ../../cuda/forcing_module/hs_forcing_cuda.cu
+ar rcs libhs_forcing.a build/held_suarez_c_api.o build/hs_forcing_cuda.o
+```
+
+The next failure was at the final model link.  `libhs_forcing.a` contained CUDA
+runtime references, but the generated model Makefile still included
+`mkmf.template.hybrid`, so the final `mpifort` link did not include
+`-lcudart`.
+
+Representative unresolved symbols:
+
+```text
+undefined reference to `cudaMalloc'
+undefined reference to `cudaMemcpy'
+undefined reference to `cudaLaunchKernel'
+undefined reference to `cudaDeviceSynchronize'
+undefined reference to `__cudaRegisterFatBinary'
+```
+
+Fix prepared:
+
+- `src/extra/env/hybrid` now preserves `GFDL_MKMF_TEMPLATE=hybrid_cuda` when
+  the CUDA build wrapper sets it.
+- `run_compile_hybrid.sh` sets and prints `GFDL_MKMF_TEMPLATE=hybrid_cuda`
+  when `USE_CUDA_HS_FORCE=1`.
+- `mkmf.template.hybrid_cuda` now links with
+  `-L/usr/local/cuda/lib64 -lcudart`.
+
+Next command to run inside the updated container environment:
+
+```bash
+USE_CUDA_HS_FORCE=1 ./run_compile_hybrid.sh
+```
+
+Expected next success condition:
+
+- The generated Makefile includes `mkmf.template.hybrid_cuda`.
+- The final link resolves CUDA runtime symbols.
+- `held_suarez_hybrid.x` is generated.
+
+Possible next failure condition:
+
+- If `libcudart` depends on additional system libraries in this container, the
+  final link may need extra CUDA runtime dependencies such as `-ldl`,
+  `-pthread`, or `-lrt`.
+
+## Local CPU Verification Status
+
+This shell still does not have `nvcc`, so CUDA-enabled validation was not run
+from this environment.
 
 Verified locally:
 

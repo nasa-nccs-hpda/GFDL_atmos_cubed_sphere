@@ -2,6 +2,8 @@
 CPPFLAGS = `nc-config --cflags`
 NC_INC=`nc-config --fflags`
 NC_LIB=`nc-config --flibs`
+CUDA_HOME ?= /usr/local/cuda
+CUDA_LIBDIR ?= $(CUDA_HOME)/lib64
 
 FFLAGS = $(CPPFLAGS) $(NC_LIB) -cpp -fcray-pointer \
 	-O2 -ffree-line-length-none -fno-range-check \
@@ -10,5 +12,5 @@ FFLAGS = $(CPPFLAGS) $(NC_LIB) -cpp -fcray-pointer \
 FC = $(F90)
 LD = $(F90)
 
-LDFLAGS = -lnetcdff -lnetcdf -lmpi -L$(PWD)/lib -lhs_forcing -lstdc++ -lcudart -lm
+LDFLAGS = -lnetcdff -lnetcdf -lmpi -L$(PWD)/lib -lhs_forcing -lstdc++ -L$(CUDA_LIBDIR) -lcudart -lm
 CFLAGS = -D__IFC

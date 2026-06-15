@@ -1,4 +1,6 @@
 echo "Loading hybrid ubuntu-conda environment"
 
+_GFDL_HYBRID_MKMF_TEMPLATE=${GFDL_MKMF_TEMPLATE:-hybrid}
 source ${GFDL_BASE}/src/extra/env/ubuntu_conda
-export GFDL_MKMF_TEMPLATE=hybrid
+export GFDL_MKMF_TEMPLATE=${_GFDL_HYBRID_MKMF_TEMPLATE}
+unset _GFDL_HYBRID_MKMF_TEMPLATE

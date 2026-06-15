@@ -1,0 +1,87 @@
+2026-06-15 16:28:01,663 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-15 16:28:01,750 - isca - INFO - RRTM compilation disabled.
+2026-06-15 16:28:01,750 - isca - INFO - SOCRATES compilation disabled.
+2026-06-15 16:28:01,753 - isca - INFO - RRTM compilation disabled.
+2026-06-15 16:28:01,753 - isca - INFO - SOCRATES compilation disabled.
+2026-06-15 16:28:01,753 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu'
+2026-06-15 16:28:01,779 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-06-15 16:28:01,788 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu/run'
+2026-06-15 16:28:01,860 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu/run/input.nml'
+2026-06-15 16:28:01,864 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu/run/field_table'
+2026-06-15 16:28:01,891 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu/run/diag_table'
+2026-06-15 16:28:01,896 - isca - INFO - Running without restart file
+2026-06-15 16:28:01,912 - isca - INFO - Beginning run 1
+2026-06-15 16:28:01,914 - isca - INFO - process running as 427346
+2026-06-15 16:28:01,915 - isca - DEBUG - Loading hybrid ubuntu-conda environment
+2026-06-15 16:28:01,915 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-15 16:28:02,696 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-15 16:28:02,696 - isca - DEBUG - &MPP_IO_NML
+2026-06-15 16:28:02,696 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-15 16:28:02,696 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-15 16:28:02,696 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-15 16:28:02,696 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-15 16:28:02,696 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-15 16:28:02,696 - isca - DEBUG - /
+2026-06-15 16:28:02,696 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-15 16:28:02,729 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-15 16:28:02,735 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-15 16:28:02,735 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-15 16:28:02,735 - isca - DEBUG - X-AXIS =  128
+2026-06-15 16:28:02,735 - isca - DEBUG - Y-AXIS =    4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4
+2026-06-15 16:28:02,739 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-15 16:28:03,560 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-15 16:28:04,368 - isca - DEBUG - Integration completed through 2000 Jan  3   0: 0: 0
+2026-06-15 16:28:05,175 - isca - DEBUG - Integration completed through 2000 Jan  4   0: 0: 0
+2026-06-15 16:28:05,982 - isca - DEBUG - Integration completed through 2000 Jan  5   0: 0: 0
+2026-06-15 16:28:06,789 - isca - DEBUG - Integration completed through 2000 Jan  6   0: 0: 0
+2026-06-15 16:28:07,596 - isca - DEBUG - Integration completed through 2000 Jan  7   0: 0: 0
+2026-06-15 16:28:08,404 - isca - DEBUG - Integration completed through 2000 Jan  8   0: 0: 0
+2026-06-15 16:28:09,213 - isca - DEBUG - Integration completed through 2000 Jan  9   0: 0: 0
+2026-06-15 16:28:10,019 - isca - DEBUG - Integration completed through 2000 Jan 10   0: 0: 0
+2026-06-15 16:28:10,827 - isca - DEBUG - Integration completed through 2000 Jan 11   0: 0: 0
+2026-06-15 16:28:11,635 - isca - DEBUG - Integration completed through 2000 Jan 12   0: 0: 0
+2026-06-15 16:28:12,444 - isca - DEBUG - Integration completed through 2000 Jan 13   0: 0: 0
+2026-06-15 16:28:13,251 - isca - DEBUG - Integration completed through 2000 Jan 14   0: 0: 0
+2026-06-15 16:28:14,060 - isca - DEBUG - Integration completed through 2000 Jan 15   0: 0: 0
+2026-06-15 16:28:14,869 - isca - DEBUG - Integration completed through 2000 Jan 16   0: 0: 0
+2026-06-15 16:28:15,678 - isca - DEBUG - Integration completed through 2000 Jan 17   0: 0: 0
+2026-06-15 16:28:16,487 - isca - DEBUG - Integration completed through 2000 Jan 18   0: 0: 0
+2026-06-15 16:28:17,295 - isca - DEBUG - Integration completed through 2000 Jan 19   0: 0: 0
+2026-06-15 16:28:18,107 - isca - DEBUG - Integration completed through 2000 Jan 20   0: 0: 0
+2026-06-15 16:28:18,920 - isca - DEBUG - Integration completed through 2000 Jan 21   0: 0: 0
+2026-06-15 16:28:19,732 - isca - DEBUG - Integration completed through 2000 Jan 22   0: 0: 0
+2026-06-15 16:28:20,543 - isca - DEBUG - Integration completed through 2000 Jan 23   0: 0: 0
+2026-06-15 16:28:21,355 - isca - DEBUG - Integration completed through 2000 Jan 24   0: 0: 0
+2026-06-15 16:28:22,166 - isca - DEBUG - Integration completed through 2000 Jan 25   0: 0: 0
+2026-06-15 16:28:22,977 - isca - DEBUG - Integration completed through 2000 Jan 26   0: 0: 0
+2026-06-15 16:28:23,786 - isca - DEBUG - Integration completed through 2000 Jan 27   0: 0: 0
+2026-06-15 16:28:24,596 - isca - DEBUG - Integration completed through 2000 Jan 28   0: 0: 0
+2026-06-15 16:28:25,405 - isca - DEBUG - Integration completed through 2000 Jan 29   0: 0: 0
+2026-06-15 16:28:26,215 - isca - DEBUG - Integration completed through 2000 Jan 30   0: 0: 0
+2026-06-15 16:28:27,024 - isca - DEBUG - Integration completed through 2000 Feb  1   0: 0: 0
+2026-06-15 16:28:27,106 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
+2026-06-15 16:28:27,217 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=       25600
+2026-06-15 16:28:27,217 - isca - DEBUG - 
+2026-06-15 16:28:27,217 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-15 16:28:27,217 - isca - DEBUG - 
+2026-06-15 16:28:27,217 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-15 16:28:27,217 - isca - DEBUG - Total runtime                        24.521340     24.521410     24.521345      0.000017  1.000     0     0    15
+2026-06-15 16:28:27,217 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-15 16:28:27,473 - isca - INFO - Run 1 complete
+2026-06-15 16:28:27,548 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-15 16:28:28,737 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cpu/restarts/res0001.tar.gz
+2026-06-15 16:28:28,741 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cpu/run0001/input.nml'
+2026-06-15 16:28:28,746 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cpu/run0001/field_table'
+2026-06-15 16:28:28,752 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cpu/run0001/diag_table'
+2026-06-15 16:28:28,810 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu/run'
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_hybrid_cpu
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cpu
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/held_suarez_hybrid.x
+Days = 30
+dt_atmos = 600
+num_cores = 16
+production_diag = True
