@@ -72,6 +72,20 @@ target_tp_core_flags(test_yppm_cpp)
 
 add_test(NAME test_yppm_cpp COMMAND test_yppm_cpp)
 
+add_executable(test_xppm_cpp
+  ${stub_srcs}
+  ../model/tp_core.F90
+  xppm_c_binding.f90
+  test_xppm_cpp.cpp
+)
+set_target_properties(test_xppm_cpp PROPERTIES
+  Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/mod/test_xppm_cpp
+  CXX_STANDARD 11
+  CXX_STANDARD_REQUIRED ON)
+target_tp_core_flags(test_xppm_cpp)
+
+add_test(NAME test_xppm_cpp COMMAND test_xppm_cpp)
+
 # ---- GPU targets (optional — only when nvcc is available) ----
 # The launch API (yppm_gpu.cuh) is header-only, so each .cu just includes it;
 # no separate CUDA library target is needed.
@@ -80,10 +94,12 @@ check_language(CUDA)
 if(CMAKE_CUDA_COMPILER)
   enable_language(CUDA)
 
-  add_executable(test_yppm_gpu      test_yppm_gpu.cu)    # multi-column unit test
-  add_executable(tp-core-driver-gpu driver_yppm_gpu.cu)  # command-line benchmark
+  add_executable(test_yppm_gpu        test_yppm_gpu.cu)    # multi-column unit test
+  add_executable(tp-core-driver-gpu   driver_yppm_gpu.cu)  # yppm command-line benchmark
+  add_executable(test_xppm_gpu        test_xppm_gpu.cu)    # multi-row unit test
+  add_executable(tp-core-driver-gpu-x driver_xppm_gpu.cu)  # xppm command-line benchmark
 
-  foreach(gpu_tgt test_yppm_gpu tp-core-driver-gpu)
+  foreach(gpu_tgt test_yppm_gpu tp-core-driver-gpu test_xppm_gpu tp-core-driver-gpu-x)
     set_target_properties(${gpu_tgt} PROPERTIES
       CUDA_STANDARD 14
       CUDA_STANDARD_REQUIRED ON)
@@ -97,6 +113,7 @@ if(CMAKE_CUDA_COMPILER)
   endforeach()
 
   add_test(NAME test_yppm_gpu COMMAND test_yppm_gpu)
+  add_test(NAME test_xppm_gpu COMMAND test_xppm_gpu)
 else()
-  message(STATUS "CUDA compiler not found — skipping GPU targets (test_yppm_gpu, tp-core-driver-gpu)")
+  message(STATUS "CUDA compiler not found — skipping GPU targets (test_yppm_gpu, tp-core-driver-gpu, test_xppm_gpu, tp-core-driver-gpu-x)")
 endif()
