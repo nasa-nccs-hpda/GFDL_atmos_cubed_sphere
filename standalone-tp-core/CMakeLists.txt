@@ -93,6 +93,25 @@ foreach(cpu_tgt yppm-driver-cpu xppm-driver-cpu)
   set_target_properties(${cpu_tgt} PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED ON)
 endforeach()
 
+# ---- Original-Fortran benchmark drivers (call tp_core_mod yppm/xppm directly) ----
+add_executable(yppm-driver-fortran
+  ${stub_srcs}
+  ../model/tp_core.F90
+  driver_yppm_fortran.f90
+)
+set_target_properties(yppm-driver-fortran PROPERTIES
+  Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/mod/yppm_driver_fortran)
+target_tp_core_flags(yppm-driver-fortran)
+
+add_executable(xppm-driver-fortran
+  ${stub_srcs}
+  ../model/tp_core.F90
+  driver_xppm_fortran.f90
+)
+set_target_properties(xppm-driver-fortran PROPERTIES
+  Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/mod/xppm_driver_fortran)
+target_tp_core_flags(xppm-driver-fortran)
+
 # ---- GPU targets (optional — only when nvcc is available) ----
 # The launch API (yppm_gpu.cuh) is header-only, so each .cu just includes it;
 # no separate CUDA library target is needed.
