@@ -86,6 +86,13 @@ target_tp_core_flags(test_xppm_cpp)
 
 add_test(NAME test_xppm_cpp COMMAND test_xppm_cpp)
 
+# ---- CPU benchmark drivers (header-only C++; same workload as the GPU drivers) ----
+add_executable(yppm-driver-cpu driver_yppm_cpu.cc)
+add_executable(xppm-driver-cpu driver_xppm_cpu.cc)
+foreach(cpu_tgt yppm-driver-cpu xppm-driver-cpu)
+  set_target_properties(${cpu_tgt} PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED ON)
+endforeach()
+
 # ---- GPU targets (optional — only when nvcc is available) ----
 # The launch API (yppm_gpu.cuh) is header-only, so each .cu just includes it;
 # no separate CUDA library target is needed.
