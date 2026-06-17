@@ -1,0 +1,90 @@
+2026-06-16 12:27:56,860 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-16 12:27:56,945 - isca - INFO - RRTM compilation disabled.
+2026-06-16 12:27:56,945 - isca - INFO - SOCRATES compilation disabled.
+2026-06-16 12:27:56,948 - isca - INFO - RRTM compilation disabled.
+2026-06-16 12:27:56,948 - isca - INFO - SOCRATES compilation disabled.
+2026-06-16 12:27:56,949 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection'
+2026-06-16 12:27:56,956 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-06-16 12:27:56,960 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection/run'
+2026-06-16 12:27:57,078 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection/run/input.nml'
+2026-06-16 12:27:57,082 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection/run/field_table'
+2026-06-16 12:27:57,087 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection/run/diag_table'
+2026-06-16 12:27:57,091 - isca - INFO - Running without restart file
+2026-06-16 12:27:57,096 - isca - INFO - Beginning run 1
+2026-06-16 12:27:57,098 - isca - INFO - process running as 905076
+2026-06-16 12:27:57,098 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-16 12:27:57,839 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-16 12:27:57,839 - isca - DEBUG - &MPP_IO_NML
+2026-06-16 12:27:57,839 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-16 12:27:57,839 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-16 12:27:57,839 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-16 12:27:57,839 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-16 12:27:57,839 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-16 12:27:57,839 - isca - DEBUG - /
+2026-06-16 12:27:57,839 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-16 12:27:57,848 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-16 12:27:57,854 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-16 12:27:57,855 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-16 12:27:57,855 - isca - DEBUG - X-AXIS =  128
+2026-06-16 12:27:57,855 - isca - DEBUG - Y-AXIS =    4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4
+2026-06-16 12:27:57,858 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-16 12:27:58,674 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-16 12:27:59,484 - isca - DEBUG - Integration completed through 2000 Jan  3   0: 0: 0
+2026-06-16 12:28:00,293 - isca - DEBUG - Integration completed through 2000 Jan  4   0: 0: 0
+2026-06-16 12:28:01,103 - isca - DEBUG - Integration completed through 2000 Jan  5   0: 0: 0
+2026-06-16 12:28:01,912 - isca - DEBUG - Integration completed through 2000 Jan  6   0: 0: 0
+2026-06-16 12:28:02,727 - isca - DEBUG - Integration completed through 2000 Jan  7   0: 0: 0
+2026-06-16 12:28:03,538 - isca - DEBUG - Integration completed through 2000 Jan  8   0: 0: 0
+2026-06-16 12:28:04,348 - isca - DEBUG - Integration completed through 2000 Jan  9   0: 0: 0
+2026-06-16 12:28:05,158 - isca - DEBUG - Integration completed through 2000 Jan 10   0: 0: 0
+2026-06-16 12:28:05,968 - isca - DEBUG - Integration completed through 2000 Jan 11   0: 0: 0
+2026-06-16 12:28:06,777 - isca - DEBUG - Integration completed through 2000 Jan 12   0: 0: 0
+2026-06-16 12:28:07,585 - isca - DEBUG - Integration completed through 2000 Jan 13   0: 0: 0
+2026-06-16 12:28:08,394 - isca - DEBUG - Integration completed through 2000 Jan 14   0: 0: 0
+2026-06-16 12:28:09,206 - isca - DEBUG - Integration completed through 2000 Jan 15   0: 0: 0
+2026-06-16 12:28:10,012 - isca - DEBUG - Integration completed through 2000 Jan 16   0: 0: 0
+2026-06-16 12:28:10,819 - isca - DEBUG - Integration completed through 2000 Jan 17   0: 0: 0
+2026-06-16 12:28:11,624 - isca - DEBUG - Integration completed through 2000 Jan 18   0: 0: 0
+2026-06-16 12:28:12,431 - isca - DEBUG - Integration completed through 2000 Jan 19   0: 0: 0
+2026-06-16 12:28:13,238 - isca - DEBUG - Integration completed through 2000 Jan 20   0: 0: 0
+2026-06-16 12:28:14,045 - isca - DEBUG - Integration completed through 2000 Jan 21   0: 0: 0
+2026-06-16 12:28:14,855 - isca - DEBUG - Integration completed through 2000 Jan 22   0: 0: 0
+2026-06-16 12:28:15,666 - isca - DEBUG - Integration completed through 2000 Jan 23   0: 0: 0
+2026-06-16 12:28:16,478 - isca - DEBUG - Integration completed through 2000 Jan 24   0: 0: 0
+2026-06-16 12:28:17,290 - isca - DEBUG - Integration completed through 2000 Jan 25   0: 0: 0
+2026-06-16 12:28:18,101 - isca - DEBUG - Integration completed through 2000 Jan 26   0: 0: 0
+2026-06-16 12:28:18,912 - isca - DEBUG - Integration completed through 2000 Jan 27   0: 0: 0
+2026-06-16 12:28:19,721 - isca - DEBUG - Integration completed through 2000 Jan 28   0: 0: 0
+2026-06-16 12:28:20,530 - isca - DEBUG - Integration completed through 2000 Jan 29   0: 0: 0
+2026-06-16 12:28:21,337 - isca - DEBUG - Integration completed through 2000 Jan 30   0: 0: 0
+2026-06-16 12:28:22,144 - isca - DEBUG - Integration completed through 2000 Feb  1   0: 0: 0
+2026-06-16 12:28:22,233 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
+2026-06-16 12:28:22,359 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=       25600
+2026-06-16 12:28:22,359 - isca - DEBUG - 
+2026-06-16 12:28:22,359 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-16 12:28:22,359 - isca - DEBUG - 
+2026-06-16 12:28:22,359 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-16 12:28:22,359 - isca - DEBUG - Total runtime                        24.520749     24.520750     24.520750      0.000000  1.000     0     0    15
+2026-06-16 12:28:22,359 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-16 12:28:22,559 - isca - INFO - Run 1 complete
+2026-06-16 12:28:22,658 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-16 12:28:23,939 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_vert_advection/restarts/res0001.tar.gz
+2026-06-16 12:28:23,943 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_vert_advection/run0001/input.nml'
+2026-06-16 12:28:23,951 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_vert_advection/run0001/field_table'
+2026-06-16 12:28:23,957 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_vert_advection/run0001/diag_table'
+2026-06-16 12:28:24,020 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection/run'
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_profile_vert_advection
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_vert_advection
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_profile_vert_advection/held_suarez_profile_vert_advection.x
+Days = 30
+dt_atmos = 600
+num_cores = 16
+production_diag = True
+
+real	0m27.199s
+user	6m28.170s
+sys	0m6.522s

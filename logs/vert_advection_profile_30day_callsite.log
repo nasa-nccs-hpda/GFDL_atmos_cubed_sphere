@@ -1,0 +1,94 @@
+2026-06-16 15:24:32,980 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-16 15:24:33,099 - isca - INFO - RRTM compilation disabled.
+2026-06-16 15:24:33,099 - isca - INFO - SOCRATES compilation disabled.
+2026-06-16 15:24:33,102 - isca - INFO - RRTM compilation disabled.
+2026-06-16 15:24:33,102 - isca - INFO - SOCRATES compilation disabled.
+2026-06-16 15:24:33,104 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection_callsite'
+2026-06-16 15:24:33,114 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-06-16 15:24:33,118 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection_callsite/run'
+2026-06-16 15:24:33,545 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection_callsite/run/input.nml'
+2026-06-16 15:24:33,549 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection_callsite/run/field_table'
+2026-06-16 15:24:33,556 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection_callsite/run/diag_table'
+2026-06-16 15:24:33,560 - isca - INFO - Running without restart file
+2026-06-16 15:24:33,565 - isca - INFO - Beginning run 1
+2026-06-16 15:24:33,567 - isca - INFO - process running as 1941975
+2026-06-16 15:24:33,567 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-16 15:24:34,297 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-16 15:24:34,297 - isca - DEBUG - &MPP_IO_NML
+2026-06-16 15:24:34,297 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-16 15:24:34,297 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-16 15:24:34,297 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-16 15:24:34,297 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-16 15:24:34,297 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-16 15:24:34,297 - isca - DEBUG - /
+2026-06-16 15:24:34,297 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-16 15:24:34,314 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-16 15:24:34,322 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-16 15:24:34,322 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-16 15:24:34,322 - isca - DEBUG - X-AXIS =  128
+2026-06-16 15:24:34,322 - isca - DEBUG - Y-AXIS =    4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4
+2026-06-16 15:24:34,333 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-16 15:24:37,776 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-16 15:24:41,199 - isca - DEBUG - Integration completed through 2000 Jan  3   0: 0: 0
+2026-06-16 15:24:44,621 - isca - DEBUG - Integration completed through 2000 Jan  4   0: 0: 0
+2026-06-16 15:24:47,856 - isca - DEBUG - Integration completed through 2000 Jan  5   0: 0: 0
+2026-06-16 15:24:51,027 - isca - DEBUG - Integration completed through 2000 Jan  6   0: 0: 0
+2026-06-16 15:24:54,207 - isca - DEBUG - Integration completed through 2000 Jan  7   0: 0: 0
+2026-06-16 15:24:57,385 - isca - DEBUG - Integration completed through 2000 Jan  8   0: 0: 0
+2026-06-16 15:25:00,554 - isca - DEBUG - Integration completed through 2000 Jan  9   0: 0: 0
+2026-06-16 15:25:03,729 - isca - DEBUG - Integration completed through 2000 Jan 10   0: 0: 0
+2026-06-16 15:25:06,915 - isca - DEBUG - Integration completed through 2000 Jan 11   0: 0: 0
+2026-06-16 15:25:10,081 - isca - DEBUG - Integration completed through 2000 Jan 12   0: 0: 0
+2026-06-16 15:25:13,253 - isca - DEBUG - Integration completed through 2000 Jan 13   0: 0: 0
+2026-06-16 15:25:16,439 - isca - DEBUG - Integration completed through 2000 Jan 14   0: 0: 0
+2026-06-16 15:25:19,614 - isca - DEBUG - Integration completed through 2000 Jan 15   0: 0: 0
+2026-06-16 15:25:22,798 - isca - DEBUG - Integration completed through 2000 Jan 16   0: 0: 0
+2026-06-16 15:25:25,972 - isca - DEBUG - Integration completed through 2000 Jan 17   0: 0: 0
+2026-06-16 15:25:29,167 - isca - DEBUG - Integration completed through 2000 Jan 18   0: 0: 0
+2026-06-16 15:25:32,366 - isca - DEBUG - Integration completed through 2000 Jan 19   0: 0: 0
+2026-06-16 15:25:35,559 - isca - DEBUG - Integration completed through 2000 Jan 20   0: 0: 0
+2026-06-16 15:25:38,774 - isca - DEBUG - Integration completed through 2000 Jan 21   0: 0: 0
+2026-06-16 15:25:41,982 - isca - DEBUG - Integration completed through 2000 Jan 22   0: 0: 0
+2026-06-16 15:25:45,200 - isca - DEBUG - Integration completed through 2000 Jan 23   0: 0: 0
+2026-06-16 15:25:48,408 - isca - DEBUG - Integration completed through 2000 Jan 24   0: 0: 0
+2026-06-16 15:25:51,581 - isca - DEBUG - Integration completed through 2000 Jan 25   0: 0: 0
+2026-06-16 15:25:54,615 - isca - DEBUG - Integration completed through 2000 Jan 26   0: 0: 0
+2026-06-16 15:25:57,642 - isca - DEBUG - Integration completed through 2000 Jan 27   0: 0: 0
+2026-06-16 15:26:00,675 - isca - DEBUG - Integration completed through 2000 Jan 28   0: 0: 0
+2026-06-16 15:26:03,715 - isca - DEBUG - Integration completed through 2000 Jan 29   0: 0: 0
+2026-06-16 15:26:06,757 - isca - DEBUG - Integration completed through 2000 Jan 30   0: 0: 0
+2026-06-16 15:26:09,783 - isca - DEBUG - Integration completed through 2000 Feb  1   0: 0: 0
+2026-06-16 15:26:09,785 - isca - DEBUG - PROFILE_VERT_ADVECTION_CALLSITE field=u calls_max=        4320  time_max=  0.13200000000000009       avg_max=   3.0555555555555574E-005
+2026-06-16 15:26:09,785 - isca - DEBUG - PROFILE_VERT_ADVECTION_CALLSITE field=v calls_max=        4320  time_max=  0.11700000000000009       avg_max=   2.7083333333333356E-005
+2026-06-16 15:26:09,785 - isca - DEBUG - PROFILE_VERT_ADVECTION_CALLSITE field=t calls_max=        4320  time_max=   9.9000000000000074E-002  avg_max=   2.2916666666666684E-005
+2026-06-16 15:26:09,785 - isca - DEBUG - PROFILE_VERT_ADVECTION_CALLSITE total calls_max=       12960  time_max=  0.32700000000000023       avg_max=   2.5231481481481498E-005
+2026-06-16 15:26:09,851 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
+2026-06-16 15:26:10,019 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=       25600
+2026-06-16 15:26:10,019 - isca - DEBUG - 
+2026-06-16 15:26:10,019 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-16 15:26:10,019 - isca - DEBUG - 
+2026-06-16 15:26:10,019 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-16 15:26:10,019 - isca - DEBUG - Total runtime                        95.722956     95.723106     95.723039      0.000045  1.000     0     0    15
+2026-06-16 15:26:10,019 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-16 15:26:10,186 - isca - INFO - Run 1 complete
+2026-06-16 15:26:10,321 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-16 15:26:11,691 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_vert_advection_callsite/restarts/res0001.tar.gz
+2026-06-16 15:26:11,695 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_vert_advection_callsite/run0001/input.nml'
+2026-06-16 15:26:11,699 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_vert_advection_callsite/run0001/field_table'
+2026-06-16 15:26:11,705 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_vert_advection_callsite/run0001/diag_table'
+2026-06-16 15:26:11,821 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection_callsite/run'
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_profile_vert_advection_callsite
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_vert_advection_callsite
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_vert_advection_callsite/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_profile_vert_advection/held_suarez_profile_vert_advection.x
+Days = 30
+dt_atmos = 600
+num_cores = 16
+production_diag = True
+
+real	1m38.883s
+user	8m50.780s
+sys	7m8.547s

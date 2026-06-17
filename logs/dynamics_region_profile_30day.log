@@ -1,0 +1,97 @@
+2026-06-16 15:42:48,755 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-16 15:42:48,842 - isca - INFO - RRTM compilation disabled.
+2026-06-16 15:42:48,842 - isca - INFO - SOCRATES compilation disabled.
+2026-06-16 15:42:48,845 - isca - INFO - RRTM compilation disabled.
+2026-06-16 15:42:48,845 - isca - INFO - SOCRATES compilation disabled.
+2026-06-16 15:42:48,846 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_dynamics_regions'
+2026-06-16 15:42:48,853 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-06-16 15:42:48,860 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_dynamics_regions/run'
+2026-06-16 15:42:48,962 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_dynamics_regions/run/input.nml'
+2026-06-16 15:42:48,967 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_dynamics_regions/run/field_table'
+2026-06-16 15:42:48,973 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_dynamics_regions/run/diag_table'
+2026-06-16 15:42:48,977 - isca - INFO - Running without restart file
+2026-06-16 15:42:48,983 - isca - INFO - Beginning run 1
+2026-06-16 15:42:48,985 - isca - INFO - process running as 1952728
+2026-06-16 15:42:48,985 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-16 15:42:49,758 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-16 15:42:49,758 - isca - DEBUG - &MPP_IO_NML
+2026-06-16 15:42:49,758 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-16 15:42:49,758 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-16 15:42:49,758 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-16 15:42:49,758 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-16 15:42:49,758 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-16 15:42:49,758 - isca - DEBUG - /
+2026-06-16 15:42:49,758 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-16 15:42:49,769 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-16 15:42:49,779 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-16 15:42:49,780 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-16 15:42:49,780 - isca - DEBUG - X-AXIS =  128
+2026-06-16 15:42:49,780 - isca - DEBUG - Y-AXIS =    4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4
+2026-06-16 15:42:49,794 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-16 15:42:53,016 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-16 15:42:56,218 - isca - DEBUG - Integration completed through 2000 Jan  3   0: 0: 0
+2026-06-16 15:42:59,423 - isca - DEBUG - Integration completed through 2000 Jan  4   0: 0: 0
+2026-06-16 15:43:02,615 - isca - DEBUG - Integration completed through 2000 Jan  5   0: 0: 0
+2026-06-16 15:43:05,827 - isca - DEBUG - Integration completed through 2000 Jan  6   0: 0: 0
+2026-06-16 15:43:09,042 - isca - DEBUG - Integration completed through 2000 Jan  7   0: 0: 0
+2026-06-16 15:43:12,234 - isca - DEBUG - Integration completed through 2000 Jan  8   0: 0: 0
+2026-06-16 15:43:15,400 - isca - DEBUG - Integration completed through 2000 Jan  9   0: 0: 0
+2026-06-16 15:43:17,764 - isca - DEBUG - Integration completed through 2000 Jan 10   0: 0: 0
+2026-06-16 15:43:20,116 - isca - DEBUG - Integration completed through 2000 Jan 11   0: 0: 0
+2026-06-16 15:43:22,457 - isca - DEBUG - Integration completed through 2000 Jan 12   0: 0: 0
+2026-06-16 15:43:24,805 - isca - DEBUG - Integration completed through 2000 Jan 13   0: 0: 0
+2026-06-16 15:43:27,167 - isca - DEBUG - Integration completed through 2000 Jan 14   0: 0: 0
+2026-06-16 15:43:29,515 - isca - DEBUG - Integration completed through 2000 Jan 15   0: 0: 0
+2026-06-16 15:43:31,849 - isca - DEBUG - Integration completed through 2000 Jan 16   0: 0: 0
+2026-06-16 15:43:34,190 - isca - DEBUG - Integration completed through 2000 Jan 17   0: 0: 0
+2026-06-16 15:43:36,533 - isca - DEBUG - Integration completed through 2000 Jan 18   0: 0: 0
+2026-06-16 15:43:38,903 - isca - DEBUG - Integration completed through 2000 Jan 19   0: 0: 0
+2026-06-16 15:43:41,263 - isca - DEBUG - Integration completed through 2000 Jan 20   0: 0: 0
+2026-06-16 15:43:43,606 - isca - DEBUG - Integration completed through 2000 Jan 21   0: 0: 0
+2026-06-16 15:43:45,964 - isca - DEBUG - Integration completed through 2000 Jan 22   0: 0: 0
+2026-06-16 15:43:48,485 - isca - DEBUG - Integration completed through 2000 Jan 23   0: 0: 0
+2026-06-16 15:43:51,621 - isca - DEBUG - Integration completed through 2000 Jan 24   0: 0: 0
+2026-06-16 15:43:54,767 - isca - DEBUG - Integration completed through 2000 Jan 25   0: 0: 0
+2026-06-16 15:43:57,896 - isca - DEBUG - Integration completed through 2000 Jan 26   0: 0: 0
+2026-06-16 15:44:01,035 - isca - DEBUG - Integration completed through 2000 Jan 27   0: 0: 0
+2026-06-16 15:44:04,193 - isca - DEBUG - Integration completed through 2000 Jan 28   0: 0: 0
+2026-06-16 15:44:07,331 - isca - DEBUG - Integration completed through 2000 Jan 29   0: 0: 0
+2026-06-16 15:44:10,467 - isca - DEBUG - Integration completed through 2000 Jan 30   0: 0: 0
+2026-06-16 15:44:13,601 - isca - DEBUG - Integration completed through 2000 Feb  1   0: 0: 0
+2026-06-16 15:44:13,602 - isca - DEBUG - PROFILE_DYNAMICS_REGION name=spectral_dynamics_step calls_max=        4320  time_max=   80.321000000001476       avg_max=   1.8592824074074414E-002
+2026-06-16 15:44:13,602 - isca - DEBUG - PROFILE_DYNAMICS_REGION name=press_geopot calls_max=        4320  time_max=   4.0509999999996973       avg_max=   9.3773148148141141E-004
+2026-06-16 15:44:13,602 - isca - DEBUG - PROFILE_DYNAMICS_REGION name=transforms calls_max=       21600  time_max=   32.748000000003351       avg_max=   1.5161111111112663E-003
+2026-06-16 15:44:13,602 - isca - DEBUG - PROFILE_DYNAMICS_REGION name=advection calls_max=        4320  time_max=   6.6589999999998071       avg_max=   1.5414351851851405E-003
+2026-06-16 15:44:13,602 - isca - DEBUG - PROFILE_DYNAMICS_REGION name=damping calls_max=        4320  time_max=   1.0739999999999925       avg_max=   2.4861111111110939E-004
+2026-06-16 15:44:13,602 - isca - DEBUG - PROFILE_DYNAMICS_REGION name=leapfrog_update calls_max=        4320  time_max=  0.19200000000000014       avg_max=   4.4444444444444480E-005
+2026-06-16 15:44:13,602 - isca - DEBUG - PROFILE_DYNAMICS_REGION name=tracer_correction_diagnostics calls_max=        4320  time_max=   27.401000000000685       avg_max=   6.3428240740742324E-003
+2026-06-16 15:44:13,698 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
+2026-06-16 15:44:13,900 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=       25600
+2026-06-16 15:44:13,900 - isca - DEBUG - 
+2026-06-16 15:44:13,900 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-16 15:44:13,900 - isca - DEBUG - 
+2026-06-16 15:44:13,900 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-16 15:44:13,900 - isca - DEBUG - Total runtime                        84.143081     84.143257     84.143189      0.000060  1.000     0     0    15
+2026-06-16 15:44:13,901 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-16 15:44:14,180 - isca - INFO - Run 1 complete
+2026-06-16 15:44:14,255 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-16 15:44:15,579 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_dynamics_regions/restarts/res0001.tar.gz
+2026-06-16 15:44:15,584 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_dynamics_regions/run0001/input.nml'
+2026-06-16 15:44:15,587 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_dynamics_regions/run0001/field_table'
+2026-06-16 15:44:15,594 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_dynamics_regions/run0001/diag_table'
+2026-06-16 15:44:15,648 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_dynamics_regions/run'
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_profile_dynamics_regions
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_dynamics_regions
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_dynamics_regions/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_profile_dynamics_regions/held_suarez_profile_dynamics_regions.x
+Days = 30
+dt_atmos = 600
+num_cores = 16
+production_diag = True
+
+real	1m26.932s
+user	8m25.085s
+sys	5m38.437s

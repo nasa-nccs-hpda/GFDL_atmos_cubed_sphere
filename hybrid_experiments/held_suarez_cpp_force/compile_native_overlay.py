@@ -22,6 +22,12 @@ from isca.helpers import P, mkdir
 
 ORIGINAL_HS_FORCE = "atmos_param/hs_forcing/hs_forcing.F90"
 OVERLAY_HS_FORCE = "extra/local_overrides/hs_forcing/hs_forcing.F90"
+ORIGINAL_SPECTRAL_DYNAMICS = "atmos_spectral/model/spectral_dynamics.F90"
+OVERLAY_SPECTRAL_DYNAMICS = (
+    "extra/local_overrides/spectral_dynamics/spectral_dynamics.F90"
+)
+ORIGINAL_VERT_ADVECTION = "atmos_shared/vert_advection/vert_advection.F90"
+OVERLAY_VERT_ADVECTION = "extra/local_overrides/vert_advection/vert_advection.F90"
 
 # Relative to the normal Isca source root (<code>/src).  The repository has
 # translated/ at the same level as src/.
@@ -137,6 +143,142 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
             return super(HeldSuarezHybridCodeBase, self).compile(*args, **kwargs)
 
 
+class HeldSuarezFourInOneProfileCodeBase(DryCodeBase):
+    """Held-Suarez executable with timing around spectral_dynamics::four_in_one."""
+
+    executable_name = "held_suarez_profile_four_in_one.x"
+
+    def configure_overlay(self):
+        paths = self.read_path_names(
+            P(self.srcdir, "extra", "model", self.name, "path_names")
+        )
+
+        replaced = 0
+        overlay_paths = []
+        for path in paths:
+            if path == ORIGINAL_SPECTRAL_DYNAMICS:
+                overlay_paths.append(OVERLAY_SPECTRAL_DYNAMICS)
+                replaced += 1
+            else:
+                overlay_paths.append(path)
+
+        if replaced != 1:
+            raise RuntimeError(
+                "Expected exactly one %s entry in dry path_names, found %d"
+                % (ORIGINAL_SPECTRAL_DYNAMICS, replaced)
+            )
+
+        self.path_names = overlay_paths
+        if "-DPROFILE_FOUR_IN_ONE" not in self.compile_flags:
+            self.compile_flags.append("-DPROFILE_FOUR_IN_ONE")
+
+    def compile(self, *args, **kwargs):
+        self.configure_overlay()
+        return super(HeldSuarezFourInOneProfileCodeBase, self).compile(*args, **kwargs)
+
+
+class HeldSuarezVertAdvectionProfileCodeBase(DryCodeBase):
+    """Held-Suarez executable with timing around vert_advection call sites."""
+
+    executable_name = "held_suarez_profile_vert_advection.x"
+
+    def configure_overlay(self):
+        paths = self.read_path_names(
+            P(self.srcdir, "extra", "model", self.name, "path_names")
+        )
+
+        replaced = 0
+        overlay_paths = []
+        for path in paths:
+            if path == ORIGINAL_SPECTRAL_DYNAMICS:
+                overlay_paths.append(OVERLAY_SPECTRAL_DYNAMICS)
+                replaced += 1
+            else:
+                overlay_paths.append(path)
+
+        if replaced != 1:
+            raise RuntimeError(
+                "Expected exactly one %s entry in dry path_names, found %d"
+                % (ORIGINAL_SPECTRAL_DYNAMICS, replaced)
+            )
+
+        self.path_names = overlay_paths
+        if "-DPROFILE_VERT_ADVECTION" not in self.compile_flags:
+            self.compile_flags.append("-DPROFILE_VERT_ADVECTION")
+
+    def compile(self, *args, **kwargs):
+        self.configure_overlay()
+        return super(HeldSuarezVertAdvectionProfileCodeBase, self).compile(*args, **kwargs)
+
+
+class HeldSuarezDynamicsRegionsProfileCodeBase(DryCodeBase):
+    """Held-Suarez executable with coarse spectral dynamics region timers."""
+
+    executable_name = "held_suarez_profile_dynamics_regions.x"
+
+    def configure_overlay(self):
+        paths = self.read_path_names(
+            P(self.srcdir, "extra", "model", self.name, "path_names")
+        )
+
+        replaced = 0
+        overlay_paths = []
+        for path in paths:
+            if path == ORIGINAL_SPECTRAL_DYNAMICS:
+                overlay_paths.append(OVERLAY_SPECTRAL_DYNAMICS)
+                replaced += 1
+            else:
+                overlay_paths.append(path)
+
+        if replaced != 1:
+            raise RuntimeError(
+                "Expected exactly one %s entry in dry path_names, found %d"
+                % (ORIGINAL_SPECTRAL_DYNAMICS, replaced)
+            )
+
+        self.path_names = overlay_paths
+        if "-DPROFILE_DYNAMICS_REGIONS" not in self.compile_flags:
+            self.compile_flags.append("-DPROFILE_DYNAMICS_REGIONS")
+
+    def compile(self, *args, **kwargs):
+        self.configure_overlay()
+        return super(HeldSuarezDynamicsRegionsProfileCodeBase, self).compile(*args, **kwargs)
+
+
+class HeldSuarezDynamicsDeepProfileCodeBase(DryCodeBase):
+    """Held-Suarez executable with second-level spectral dynamics timers."""
+
+    executable_name = "held_suarez_profile_dynamics_deep.x"
+
+    def configure_overlay(self):
+        paths = self.read_path_names(
+            P(self.srcdir, "extra", "model", self.name, "path_names")
+        )
+
+        replaced = 0
+        overlay_paths = []
+        for path in paths:
+            if path == ORIGINAL_SPECTRAL_DYNAMICS:
+                overlay_paths.append(OVERLAY_SPECTRAL_DYNAMICS)
+                replaced += 1
+            else:
+                overlay_paths.append(path)
+
+        if replaced != 1:
+            raise RuntimeError(
+                "Expected exactly one %s entry in dry path_names, found %d"
+                % (ORIGINAL_SPECTRAL_DYNAMICS, replaced)
+            )
+
+        self.path_names = overlay_paths
+        if "-DPROFILE_DYNAMICS_DEEP" not in self.compile_flags:
+            self.compile_flags.append("-DPROFILE_DYNAMICS_DEEP")
+
+    def compile(self, *args, **kwargs):
+        self.configure_overlay()
+        return super(HeldSuarezDynamicsDeepProfileCodeBase, self).compile(*args, **kwargs)
+
+
 @contextmanager
 def temporary_env(name, value):
     old_value = os.environ.get(name)
@@ -169,13 +311,49 @@ def build_hybrid():
     return cb.executable_fullpath
 
 
+def build_profile_four_in_one():
+    cb = HeldSuarezFourInOneProfileCodeBase.from_directory(GFDL_BASE)
+    use_gfdl_base_templates(cb)
+    cb.compile()
+    return cb.executable_fullpath
+
+
+def build_profile_vert_advection():
+    cb = HeldSuarezVertAdvectionProfileCodeBase.from_directory(GFDL_BASE)
+    use_gfdl_base_templates(cb)
+    cb.compile()
+    return cb.executable_fullpath
+
+
+def build_profile_dynamics_regions():
+    cb = HeldSuarezDynamicsRegionsProfileCodeBase.from_directory(GFDL_BASE)
+    use_gfdl_base_templates(cb)
+    cb.compile()
+    return cb.executable_fullpath
+
+
+def build_profile_dynamics_deep():
+    cb = HeldSuarezDynamicsDeepProfileCodeBase.from_directory(GFDL_BASE)
+    use_gfdl_base_templates(cb)
+    cb.compile()
+    return cb.executable_fullpath
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Build Held-Suarez native Isca overlay variants."
     )
     parser.add_argument(
         "target",
-        choices=("fortran", "hybrid", "both"),
+        choices=(
+            "fortran",
+            "hybrid",
+            "profile_four_in_one",
+            "profile_vert_advection",
+            "profile_dynamics_regions",
+            "profile_dynamics_deep",
+            "both",
+        ),
         nargs="?",
         default="hybrid",
         help="Executable variant to build.",
@@ -200,6 +378,22 @@ def main():
     if args.target in ("hybrid", "both"):
         print("Building hybrid Held-Suarez via CodeBase.compile()")
         print("Generated:", build_hybrid())
+
+    if args.target == "profile_four_in_one":
+        print("Building Held-Suarez four_in_one profile via CodeBase.compile()")
+        print("Generated:", build_profile_four_in_one())
+
+    if args.target == "profile_vert_advection":
+        print("Building Held-Suarez vert_advection profile via CodeBase.compile()")
+        print("Generated:", build_profile_vert_advection())
+
+    if args.target == "profile_dynamics_regions":
+        print("Building Held-Suarez dynamics-region profile via CodeBase.compile()")
+        print("Generated:", build_profile_dynamics_regions())
+
+    if args.target == "profile_dynamics_deep":
+        print("Building Held-Suarez deep dynamics profile via CodeBase.compile()")
+        print("Generated:", build_profile_dynamics_deep())
 
 
 if __name__ == "__main__":

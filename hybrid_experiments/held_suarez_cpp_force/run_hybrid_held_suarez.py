@@ -28,9 +28,9 @@ def make_experiment(args):
     from isca import DryCodeBase, Experiment, GFDL_BASE
 
     class HeldSuarezHybridRuntimeCodeBase(DryCodeBase):
-        """Dry codebase wrapper that selects the hybrid executable."""
+        """Dry codebase wrapper that selects a prebuilt executable."""
 
-        executable_name = "held_suarez_hybrid.x"
+        executable_name = args.executable_name
 
     original = load_original_case()
 
@@ -71,6 +71,11 @@ def main():
         "--exp-name",
         default=DEFAULT_EXP_NAME,
         help="Experiment/output directory name under $GFDL_DATA.",
+    )
+    parser.add_argument(
+        "--executable-name",
+        default="held_suarez_hybrid.x",
+        help="Prebuilt executable name in the selected CodeBase build directory.",
     )
     parser.add_argument(
         "--days",

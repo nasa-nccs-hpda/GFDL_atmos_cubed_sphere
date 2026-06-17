@@ -1,0 +1,91 @@
+2026-06-16 11:53:38,359 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-16 11:53:38,457 - isca - INFO - RRTM compilation disabled.
+2026-06-16 11:53:38,457 - isca - INFO - SOCRATES compilation disabled.
+2026-06-16 11:53:38,460 - isca - INFO - RRTM compilation disabled.
+2026-06-16 11:53:38,460 - isca - INFO - SOCRATES compilation disabled.
+2026-06-16 11:53:38,463 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_four_in_one'
+2026-06-16 11:53:38,475 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-06-16 11:53:38,480 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_four_in_one/run'
+2026-06-16 11:53:39,238 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_four_in_one/run/input.nml'
+2026-06-16 11:53:39,242 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_four_in_one/run/field_table'
+2026-06-16 11:53:39,249 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_four_in_one/run/diag_table'
+2026-06-16 11:53:39,253 - isca - INFO - Running without restart file
+2026-06-16 11:53:39,259 - isca - INFO - Beginning run 1
+2026-06-16 11:53:39,261 - isca - INFO - process running as 888294
+2026-06-16 11:53:39,261 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-16 11:53:40,114 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-16 11:53:40,114 - isca - DEBUG - &MPP_IO_NML
+2026-06-16 11:53:40,114 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-16 11:53:40,114 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-16 11:53:40,114 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-16 11:53:40,114 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-16 11:53:40,114 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-16 11:53:40,114 - isca - DEBUG - /
+2026-06-16 11:53:40,114 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-16 11:53:40,132 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-16 11:53:40,138 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-16 11:53:40,139 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-16 11:53:40,139 - isca - DEBUG - X-AXIS =  128
+2026-06-16 11:53:40,139 - isca - DEBUG - Y-AXIS =    4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4
+2026-06-16 11:53:40,142 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-16 11:53:40,966 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-16 11:53:41,764 - isca - DEBUG - Integration completed through 2000 Jan  3   0: 0: 0
+2026-06-16 11:53:42,564 - isca - DEBUG - Integration completed through 2000 Jan  4   0: 0: 0
+2026-06-16 11:53:43,365 - isca - DEBUG - Integration completed through 2000 Jan  5   0: 0: 0
+2026-06-16 11:53:44,166 - isca - DEBUG - Integration completed through 2000 Jan  6   0: 0: 0
+2026-06-16 11:53:44,968 - isca - DEBUG - Integration completed through 2000 Jan  7   0: 0: 0
+2026-06-16 11:53:45,769 - isca - DEBUG - Integration completed through 2000 Jan  8   0: 0: 0
+2026-06-16 11:53:46,571 - isca - DEBUG - Integration completed through 2000 Jan  9   0: 0: 0
+2026-06-16 11:53:47,373 - isca - DEBUG - Integration completed through 2000 Jan 10   0: 0: 0
+2026-06-16 11:53:48,174 - isca - DEBUG - Integration completed through 2000 Jan 11   0: 0: 0
+2026-06-16 11:53:48,980 - isca - DEBUG - Integration completed through 2000 Jan 12   0: 0: 0
+2026-06-16 11:53:49,784 - isca - DEBUG - Integration completed through 2000 Jan 13   0: 0: 0
+2026-06-16 11:53:50,584 - isca - DEBUG - Integration completed through 2000 Jan 14   0: 0: 0
+2026-06-16 11:53:51,384 - isca - DEBUG - Integration completed through 2000 Jan 15   0: 0: 0
+2026-06-16 11:53:52,184 - isca - DEBUG - Integration completed through 2000 Jan 16   0: 0: 0
+2026-06-16 11:53:52,985 - isca - DEBUG - Integration completed through 2000 Jan 17   0: 0: 0
+2026-06-16 11:53:53,786 - isca - DEBUG - Integration completed through 2000 Jan 18   0: 0: 0
+2026-06-16 11:53:54,587 - isca - DEBUG - Integration completed through 2000 Jan 19   0: 0: 0
+2026-06-16 11:53:55,389 - isca - DEBUG - Integration completed through 2000 Jan 20   0: 0: 0
+2026-06-16 11:53:56,191 - isca - DEBUG - Integration completed through 2000 Jan 21   0: 0: 0
+2026-06-16 11:53:56,992 - isca - DEBUG - Integration completed through 2000 Jan 22   0: 0: 0
+2026-06-16 11:53:57,794 - isca - DEBUG - Integration completed through 2000 Jan 23   0: 0: 0
+2026-06-16 11:53:58,596 - isca - DEBUG - Integration completed through 2000 Jan 24   0: 0: 0
+2026-06-16 11:53:59,400 - isca - DEBUG - Integration completed through 2000 Jan 25   0: 0: 0
+2026-06-16 11:54:00,203 - isca - DEBUG - Integration completed through 2000 Jan 26   0: 0: 0
+2026-06-16 11:54:01,004 - isca - DEBUG - Integration completed through 2000 Jan 27   0: 0: 0
+2026-06-16 11:54:01,804 - isca - DEBUG - Integration completed through 2000 Jan 28   0: 0: 0
+2026-06-16 11:54:02,606 - isca - DEBUG - Integration completed through 2000 Jan 29   0: 0: 0
+2026-06-16 11:54:03,408 - isca - DEBUG - Integration completed through 2000 Jan 30   0: 0: 0
+2026-06-16 11:54:04,209 - isca - DEBUG - Integration completed through 2000 Feb  1   0: 0: 0
+2026-06-16 11:54:04,209 - isca - DEBUG - PROFILE_FOUR_IN_ONE calls_max=        4320  seconds_max=  0.63200000000000045       avg_seconds_per_call_max=   1.4629629629629641E-004
+2026-06-16 11:54:04,324 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
+2026-06-16 11:54:04,460 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=       25600
+2026-06-16 11:54:04,460 - isca - DEBUG - 
+2026-06-16 11:54:04,460 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-16 11:54:04,460 - isca - DEBUG - 
+2026-06-16 11:54:04,460 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-16 11:54:04,461 - isca - DEBUG - Total runtime                        24.346626     24.346627     24.346627      0.000000  1.000     0     0    15
+2026-06-16 11:54:04,461 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-16 11:54:04,619 - isca - INFO - Run 1 complete
+2026-06-16 11:54:04,691 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-16 11:54:06,034 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_four_in_one/restarts/res0001.tar.gz
+2026-06-16 11:54:06,038 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_four_in_one/run0001/input.nml'
+2026-06-16 11:54:06,042 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_four_in_one/run0001/field_table'
+2026-06-16 11:54:06,048 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_four_in_one/run0001/diag_table'
+2026-06-16 11:54:06,114 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_four_in_one/run'
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_profile_four_in_one
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_profile_four_in_one
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_profile_four_in_one/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_profile_four_in_one/held_suarez_profile_four_in_one.x
+Days = 30
+dt_atmos = 600
+num_cores = 16
+production_diag = True
+
+real	0m27.931s
+user	6m23.586s
+sys	0m7.664s
