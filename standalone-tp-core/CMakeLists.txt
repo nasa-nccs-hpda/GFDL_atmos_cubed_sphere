@@ -86,10 +86,25 @@ target_tp_core_flags(test_xppm_cpp)
 
 add_test(NAME test_xppm_cpp COMMAND test_xppm_cpp)
 
+add_executable(test_fv_tp_2d_cpp
+  ${stub_srcs}
+  ../model/tp_core.F90
+  fv_tp_2d_c_binding.f90
+  test_fv_tp_2d_cpp.cpp
+)
+set_target_properties(test_fv_tp_2d_cpp PROPERTIES
+  Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/mod/test_fv_tp_2d_cpp
+  CXX_STANDARD 11
+  CXX_STANDARD_REQUIRED ON)
+target_tp_core_flags(test_fv_tp_2d_cpp)
+
+add_test(NAME test_fv_tp_2d_cpp COMMAND test_fv_tp_2d_cpp)
+
 # ---- CPU benchmark drivers (header-only C++; same workload as the GPU drivers) ----
-add_executable(yppm-driver-cpu driver_yppm_cpu.cc)
-add_executable(xppm-driver-cpu driver_xppm_cpu.cc)
-foreach(cpu_tgt yppm-driver-cpu xppm-driver-cpu)
+add_executable(yppm-driver-cpu     driver_yppm_cpu.cc)
+add_executable(xppm-driver-cpu     driver_xppm_cpu.cc)
+add_executable(fv-tp-2d-driver-cpu driver_fv_tp_2d_cpu.cc)
+foreach(cpu_tgt yppm-driver-cpu xppm-driver-cpu fv-tp-2d-driver-cpu)
   set_target_properties(${cpu_tgt} PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED ON)
 endforeach()
 
@@ -120,12 +135,15 @@ check_language(CUDA)
 if(CMAKE_CUDA_COMPILER)
   enable_language(CUDA)
 
-  add_executable(test_yppm_gpu        test_yppm_gpu.cu)    # multi-column unit test
-  add_executable(tp-core-driver-gpu   driver_yppm_gpu.cu)  # yppm command-line benchmark
-  add_executable(test_xppm_gpu        test_xppm_gpu.cu)    # multi-row unit test
-  add_executable(tp-core-driver-gpu-x driver_xppm_gpu.cu)  # xppm command-line benchmark
+  add_executable(test_yppm_gpu         test_yppm_gpu.cu)      # multi-column unit test
+  add_executable(tp-core-driver-gpu    driver_yppm_gpu.cu)    # yppm command-line benchmark
+  add_executable(test_xppm_gpu         test_xppm_gpu.cu)      # multi-row unit test
+  add_executable(tp-core-driver-gpu-x  driver_xppm_gpu.cu)    # xppm command-line benchmark
+  add_executable(test_fv_tp_2d_gpu     test_fv_tp_2d_gpu.cu)  # fv_tp_2d GPU-vs-CPU test
+  add_executable(fv-tp-2d-driver-gpu   driver_fv_tp_2d_gpu.cu)# fv_tp_2d command-line benchmark
 
-  foreach(gpu_tgt test_yppm_gpu tp-core-driver-gpu test_xppm_gpu tp-core-driver-gpu-x)
+  foreach(gpu_tgt test_yppm_gpu tp-core-driver-gpu test_xppm_gpu tp-core-driver-gpu-x
+                  test_fv_tp_2d_gpu fv-tp-2d-driver-gpu)
     set_target_properties(${gpu_tgt} PROPERTIES
       CUDA_STANDARD 14
       CUDA_STANDARD_REQUIRED ON)
@@ -138,8 +156,9 @@ if(CMAKE_CUDA_COMPILER)
       $<$<COMPILE_LANGUAGE:CUDA>:--allow-unsupported-compiler>)
   endforeach()
 
-  add_test(NAME test_yppm_gpu COMMAND test_yppm_gpu)
-  add_test(NAME test_xppm_gpu COMMAND test_xppm_gpu)
+  add_test(NAME test_yppm_gpu     COMMAND test_yppm_gpu)
+  add_test(NAME test_xppm_gpu     COMMAND test_xppm_gpu)
+  add_test(NAME test_fv_tp_2d_gpu COMMAND test_fv_tp_2d_gpu)
 else()
-  message(STATUS "CUDA compiler not found — skipping GPU targets (test_yppm_gpu, tp-core-driver-gpu, test_xppm_gpu, tp-core-driver-gpu-x)")
+  message(STATUS "CUDA compiler not found — skipping GPU targets")
 endif()
