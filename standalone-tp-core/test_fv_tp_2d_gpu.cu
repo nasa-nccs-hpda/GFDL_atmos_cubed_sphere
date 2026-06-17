@@ -49,22 +49,34 @@ int main() {
         for (int i = isd; i <= ied; ++i)
             q0[fv3::idx2(i,j,isd,jsd,niq)] = std::sin(PI*float(i*j)/float((npx-1)*(npy-1)));
 
+    const int NB = 4;   // batched tiles; every tile must match the single-tile CPU result
     const int hords[] = {5, 6, 8, 9, 10, 12, 13};
     for (int k = 0; k < (int)(sizeof(hords)/sizeof(hords[0])); ++k) {
         const int hord = hords[k];
-        std::vector<float> q_c = q0, q_g = q0;
-        std::vector<float> fx_c(sz_fx,0.f), fy_c(sz_fy,0.f), fx_g(sz_fx,0.f), fy_g(sz_fy,0.f);
 
+        // CPU single-tile reference.
+        std::vector<float> q_c = q0;
+        std::vector<float> fx_c(sz_fx,0.f), fy_c(sz_fy,0.f);
         fv3::fv_tp_2d_cpu<float>(
             q_c.data(), crx.data(), cry.data(), xfx.data(), yfx.data(),
             ra_x.data(), ra_y.data(), area.data(), dxa.data(), dya.data(),
             fx_c.data(), fy_c.data(), is,ie,js,je,isd,ied,jsd,jed, npx,npy, hord, lim_fac,
             false, 0, true,true,true,true);
 
+        // NB replicated tiles (uniform fields; q replicated per tile).
+        std::vector<float> q_g((size_t)NB*sz_q);
+        std::vector<float> crxB((size_t)NB*sz_crx,0.5f), xfxB((size_t)NB*sz_crx,0.5f);
+        std::vector<float> cryB((size_t)NB*sz_cry,0.5f), yfxB((size_t)NB*sz_cry,0.5f);
+        std::vector<float> raxB((size_t)NB*sz_rax,1.0f), rayB((size_t)NB*sz_ray,1.0f);
+        std::vector<float> areaB((size_t)NB*sz_q,1.0f), dxaB((size_t)NB*sz_q,1.0f), dyaB((size_t)NB*sz_q,1.0f);
+        std::vector<float> fx_g((size_t)NB*sz_fx,0.f), fy_g((size_t)NB*sz_fy,0.f);
+        for (int b = 0; b < NB; ++b)
+            for (size_t t = 0; t < sz_q; ++t) q_g[(size_t)b*sz_q + t] = q0[t];
+
         cudaError_t e = fv3::fv_tp_2d_gpu<float>(
-            q_g.data(), crx.data(), cry.data(), xfx.data(), yfx.data(),
-            ra_x.data(), ra_y.data(), area.data(), dxa.data(), dya.data(),
-            fx_g.data(), fy_g.data(), is,ie,js,je,isd,ied,jsd,jed, npx,npy, hord, lim_fac,
+            q_g.data(), crxB.data(), cryB.data(), xfxB.data(), yfxB.data(),
+            raxB.data(), rayB.data(), areaB.data(), dxaB.data(), dyaB.data(),
+            fx_g.data(), fy_g.data(), NB, is,ie,js,je,isd,ied,jsd,jed, npx,npy, hord, lim_fac,
             false, 0, true,true,true,true);
         if (e != cudaSuccess) {
             std::fprintf(stderr, "fv_tp_2d_gpu failed: %s\n", cudaGetErrorString(e));
@@ -72,11 +84,14 @@ int main() {
         }
 
         float mdx = 0.f, mdy = 0.f;
-        for (size_t t = 0; t < sz_fx; ++t) mdx = std::max(mdx, std::abs(fx_c[t]-fx_g[t]));
-        for (size_t t = 0; t < sz_fy; ++t) mdy = std::max(mdy, std::abs(fy_c[t]-fy_g[t]));
+        for (int b = 0; b < NB; ++b) {
+            for (size_t t = 0; t < sz_fx; ++t) mdx = std::max(mdx, std::abs(fx_c[t]-fx_g[(size_t)b*sz_fx+t]));
+            for (size_t t = 0; t < sz_fy; ++t) mdy = std::max(mdy, std::abs(fy_c[t]-fy_g[(size_t)b*sz_fy+t]));
+        }
         char buf[160];
         std::snprintf(buf, sizeof buf,
-            "GPU vs CPU fv_tp_2d [hord=%d]: max|fx|=%.2e max|fy|=%.2e < 1e-4", hord, mdx, mdy);
+            "GPU vs CPU fv_tp_2d [hord=%d, %d tiles]: max|fx|=%.2e max|fy|=%.2e < 1e-4",
+            hord, NB, mdx, mdy);
         check(buf, mdx < 1.e-4f && mdy < 1.e-4f);
     }
 
