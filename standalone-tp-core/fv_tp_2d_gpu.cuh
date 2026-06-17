@@ -124,7 +124,7 @@ __global__ void xppm_batch_kernel(
     xppm_col<Real>(flux_line, q_line, c_line, iord, is, ie, isd, ied, npx, npy,
                    dxa_line, nested_i != 0, grid_type, lim_fac, s);
 
-    for (int i = is; i <= ie+1; ++i) fb[idx2(i,j,f_jlo,is,f_ni)] = flux_line[i-is];
+    for (int i = is; i <= ie+1; ++i) fb[idx2(i,j,is,f_jlo,f_ni)] = flux_line[i-is];
 }
 
 // ---------------------------------------------------------------------------
