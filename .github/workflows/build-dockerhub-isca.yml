@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - hs-dev-jl
+    paths:
+      - 'requirements/Dockerfile'     # Only runs if the Dockerfile changes
   workflow_dispatch:
 
 jobs:
