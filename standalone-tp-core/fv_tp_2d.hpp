@@ -101,7 +101,11 @@ void fv_tp_2d_cpu(
     int isd, int ied, int jsd, int jed,
     int npx, int npy, int hord, Real lim_fac,
     bool nested, int grid_type,
-    bool sw, bool se, bool nw, bool ne)
+    bool sw, bool se, bool nw, bool ne,
+    // Mass-flux combine variant (tracer transport): when use_mass, the flux
+    // average multiplies by mfx/mfy instead of xfx/yfx. mfx is (is:ie+1,js:je),
+    // mfy is (is:ie,js:je+1). The q_i/q_j cross terms always use xfx/yfx.
+    bool use_mass = false, const Real* mfx = nullptr, const Real* mfy = nullptr)
 {
     const int ord_in = (hord == 10) ? 8 : hord;
     const int ord_ou = hord;
@@ -199,15 +203,21 @@ void fv_tp_2d_cpu(
         for (int j = js; j <= je+1; ++j) fy[idx2(i,j,is,js,nirax)] = fl[j-js];
     }
 
-    // ---- flux averaging (non-mass branch) ----
+    // ---- flux averaging: *xfx/*yfx (non-mass) or *mfx/*mfy (mass) ----
     for (int j = js; j <= je; ++j)
-        for (int i = is; i <= ie+1; ++i)
+        for (int i = is; i <= ie+1; ++i) {
+            const Real wx = use_mass ? mfx[idx2(i,j,is,js,nicrx)]
+                                     : xfx[idx2(i,j,is,jsd,nicrx)];
             fx[idx2(i,j,is,js,nicrx)] = fv_avg_flux<Real>(
-                fx[idx2(i,j,is,js,nicrx)], fx2[idx2(i,j,is,jsd,nicrx)], xfx[idx2(i,j,is,jsd,nicrx)]);
+                fx[idx2(i,j,is,js,nicrx)], fx2[idx2(i,j,is,jsd,nicrx)], wx);
+        }
     for (int j = js; j <= je+1; ++j)
-        for (int i = is; i <= ie; ++i)
+        for (int i = is; i <= ie; ++i) {
+            const Real wy = use_mass ? mfy[idx2(i,j,is,js,nirax)]
+                                     : yfx[idx2(i,j,isd,js,niq)];
             fy[idx2(i,j,is,js,nirax)] = fv_avg_flux<Real>(
-                fy[idx2(i,j,is,js,nirax)], fy2[idx2(i,j,isd,js,niq)], yfx[idx2(i,j,isd,js,niq)]);
+                fy[idx2(i,j,is,js,nirax)], fy2[idx2(i,j,isd,js,niq)], wy);
+        }
 }
 
 } // namespace fv3

@@ -180,7 +180,8 @@ template <typename Real>
 __global__ void combine_fx_batch_kernel(
     Real* fx, const Real* fx2, const Real* xfx,
     int is, int js, int jsd, int nicrx, int ie, int je,
-    int TFX, int TCRX, int nbatch)
+    int TFX, int TCRX, int nbatch,
+    int use_mass, const Real* mfx)   // mfx is (is:ie+1,js:je), tile = TFX
 {
     const int ni = ie - is + 2;
     const int per = ni * (je - js + 1);
@@ -191,16 +192,19 @@ __global__ void combine_fx_batch_kernel(
     const int i = is + (loc % ni);
     const int j = js + (loc / ni);
     Real* fxb = fx + (size_t)b*TFX;
-    const Real* f2=fx2+(size_t)b*TCRX; const Real* xb=xfx+(size_t)b*TCRX;
+    const Real* f2=fx2+(size_t)b*TCRX;
+    const Real wx = use_mass ? (mfx + (size_t)b*TFX)[idx2(i,j,is,js,nicrx)]
+                             : (xfx + (size_t)b*TCRX)[idx2(i,j,is,jsd,nicrx)];
     fxb[idx2(i,j,is,js,nicrx)] = fv_avg_flux<Real>(
-        fxb[idx2(i,j,is,js,nicrx)], f2[idx2(i,j,is,jsd,nicrx)], xb[idx2(i,j,is,jsd,nicrx)]);
+        fxb[idx2(i,j,is,js,nicrx)], f2[idx2(i,j,is,jsd,nicrx)], wx);
 }
 
 template <typename Real>
 __global__ void combine_fy_batch_kernel(
     Real* fy, const Real* fy2, const Real* yfx,
     int is, int isd, int js, int niq, int nirax, int ie, int je,
-    int TFY, int TCRY, int nbatch)
+    int TFY, int TCRY, int nbatch,
+    int use_mass, const Real* mfy)   // mfy is (is:ie,js:je+1), tile = TFY
 {
     const int ni = ie - is + 1;
     const int per = ni * (je - js + 2);
@@ -211,9 +215,11 @@ __global__ void combine_fy_batch_kernel(
     const int i = is + (loc % ni);
     const int j = js + (loc / ni);
     Real* fyb = fy + (size_t)b*TFY;
-    const Real* f2=fy2+(size_t)b*TCRY; const Real* yb=yfx+(size_t)b*TCRY;
+    const Real* f2=fy2+(size_t)b*TCRY;
+    const Real wy = use_mass ? (mfy + (size_t)b*TFY)[idx2(i,j,is,js,nirax)]
+                             : (yfx + (size_t)b*TCRY)[idx2(i,j,isd,js,niq)];
     fyb[idx2(i,j,is,js,nirax)] = fv_avg_flux<Real>(
-        fyb[idx2(i,j,is,js,nirax)], f2[idx2(i,j,isd,js,niq)], yb[idx2(i,j,isd,js,niq)]);
+        fyb[idx2(i,j,is,js,nirax)], f2[idx2(i,j,isd,js,niq)], wy);
 }
 
 // ---------------------------------------------------------------------------
@@ -277,6 +283,9 @@ inline cudaError_t fv_tp_2d_gpu_launch(
     int is, int ie, int js, int je, int isd, int ied, int jsd, int jed,
     int npx, int npy, int hord, Real lim_fac,
     bool nested, int grid_type, bool sw, bool se, bool nw, bool ne,
+    // Mass-flux combine variant (tracer transport): when use_mass, the flux
+    // average uses mfx/mfy (each nbatch tiles, shapes (is:ie+1,js:je)/(is:ie,js:je+1)).
+    bool use_mass = false, const Real* d_mfx = nullptr, const Real* d_mfy = nullptr,
     int tpb = 128, cudaStream_t stream = 0)
 {
     const int ord_in = (hord == 10) ? 8 : hord;
@@ -334,9 +343,11 @@ inline cudaError_t fv_tp_2d_gpu_launch(
 
     // 9. combine
     combine_fx_batch_kernel<Real><<<nblk((long)nicrx*(je-js+1)*nbatch),tpb,0,stream>>>(
-        d_fx, d_fx2, d_xfx, is, js, jsd, nicrx, ie, je, T.TFX, T.TCRX, nbatch);
+        d_fx, d_fx2, d_xfx, is, js, jsd, nicrx, ie, je, T.TFX, T.TCRX, nbatch,
+        use_mass ? 1 : 0, d_mfx);
     combine_fy_batch_kernel<Real><<<nblk((long)nirax*(je-js+2)*nbatch),tpb,0,stream>>>(
-        d_fy, d_fy2, d_yfx, is, isd, js, niq, nirax, ie, je, T.TFY, T.TCRY, nbatch);
+        d_fy, d_fy2, d_yfx, is, isd, js, niq, nirax, ie, je, T.TFY, T.TCRY, nbatch,
+        use_mass ? 1 : 0, d_mfy);
 
     return cudaGetLastError();
 }
