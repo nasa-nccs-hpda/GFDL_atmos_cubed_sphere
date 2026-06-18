@@ -100,11 +100,26 @@ target_tp_core_flags(test_fv_tp_2d_cpp)
 
 add_test(NAME test_fv_tp_2d_cpp COMMAND test_fv_tp_2d_cpp)
 
+add_executable(test_tracer_2d_cpp
+  ${stub_srcs}
+  ../model/tp_core.F90
+  tracer_2d_core_c_binding.f90
+  test_tracer_2d_cpp.cpp
+)
+set_target_properties(test_tracer_2d_cpp PROPERTIES
+  Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/mod/test_tracer_2d_cpp
+  CXX_STANDARD 11
+  CXX_STANDARD_REQUIRED ON)
+target_tp_core_flags(test_tracer_2d_cpp)
+
+add_test(NAME test_tracer_2d_cpp COMMAND test_tracer_2d_cpp)
+
 # ---- CPU benchmark drivers (header-only C++; same workload as the GPU drivers) ----
-add_executable(yppm-driver-cpu     driver_yppm_cpu.cc)
-add_executable(xppm-driver-cpu     driver_xppm_cpu.cc)
-add_executable(fv-tp-2d-driver-cpu driver_fv_tp_2d_cpu.cc)
-foreach(cpu_tgt yppm-driver-cpu xppm-driver-cpu fv-tp-2d-driver-cpu)
+add_executable(yppm-driver-cpu      driver_yppm_cpu.cc)
+add_executable(xppm-driver-cpu      driver_xppm_cpu.cc)
+add_executable(fv-tp-2d-driver-cpu  driver_fv_tp_2d_cpu.cc)
+add_executable(tracer-2d-driver-cpu driver_tracer_2d_cpu.cc)
+foreach(cpu_tgt yppm-driver-cpu xppm-driver-cpu fv-tp-2d-driver-cpu tracer-2d-driver-cpu)
   set_target_properties(${cpu_tgt} PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED ON)
 endforeach()
 
@@ -141,9 +156,12 @@ if(CMAKE_CUDA_COMPILER)
   add_executable(tp-core-driver-gpu-x  driver_xppm_gpu.cu)    # xppm command-line benchmark
   add_executable(test_fv_tp_2d_gpu     test_fv_tp_2d_gpu.cu)  # fv_tp_2d GPU-vs-CPU test
   add_executable(fv-tp-2d-driver-gpu   driver_fv_tp_2d_gpu.cu)# fv_tp_2d command-line benchmark
+  add_executable(test_tracer_2d_gpu    test_tracer_2d_gpu.cu) # tracer_2d GPU-vs-CPU test
+  add_executable(tracer-2d-driver-gpu  driver_tracer_2d_gpu.cu)# tracer_2d command-line benchmark
 
   foreach(gpu_tgt test_yppm_gpu tp-core-driver-gpu test_xppm_gpu tp-core-driver-gpu-x
-                  test_fv_tp_2d_gpu fv-tp-2d-driver-gpu)
+                  test_fv_tp_2d_gpu fv-tp-2d-driver-gpu
+                  test_tracer_2d_gpu tracer-2d-driver-gpu)
     set_target_properties(${gpu_tgt} PROPERTIES
       CUDA_STANDARD 14
       CUDA_STANDARD_REQUIRED ON)
@@ -159,6 +177,7 @@ if(CMAKE_CUDA_COMPILER)
   add_test(NAME test_yppm_gpu     COMMAND test_yppm_gpu)
   add_test(NAME test_xppm_gpu     COMMAND test_xppm_gpu)
   add_test(NAME test_fv_tp_2d_gpu COMMAND test_fv_tp_2d_gpu)
+  add_test(NAME test_tracer_2d_gpu COMMAND test_tracer_2d_gpu)
 else()
   message(STATUS "CUDA compiler not found — skipping GPU targets")
 endif()
