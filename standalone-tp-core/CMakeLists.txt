@@ -178,6 +178,22 @@ if(CMAKE_CUDA_COMPILER)
   add_test(NAME test_xppm_gpu     COMMAND test_xppm_gpu)
   add_test(NAME test_fv_tp_2d_gpu COMMAND test_fv_tp_2d_gpu)
   add_test(NAME test_tracer_2d_gpu COMMAND test_tracer_2d_gpu)
+
+  # ---- Device halo-exchange primitive (needs CUDA-aware MPI) ----
+  # Run with: srun -n <N> ./test_halo_exchange   (not a ctest — needs mpirun/srun).
+  find_package(MPI QUIET)
+  if(MPI_CXX_FOUND)
+    add_executable(test_halo_exchange test_halo_exchange.cu)
+    set_target_properties(test_halo_exchange PROPERTIES CUDA_STANDARD 14 CUDA_STANDARD_REQUIRED ON)
+    if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+      set_target_properties(test_halo_exchange PROPERTIES CUDA_ARCHITECTURES 80)
+    endif()
+    target_compile_options(test_halo_exchange PRIVATE
+      $<$<COMPILE_LANGUAGE:CUDA>:--allow-unsupported-compiler>)
+    target_link_libraries(test_halo_exchange PRIVATE MPI::MPI_CXX)
+  else()
+    message(STATUS "MPI not found — skipping test_halo_exchange")
+  endif()
 else()
   message(STATUS "CUDA compiler not found — skipping GPU targets")
 endif()
