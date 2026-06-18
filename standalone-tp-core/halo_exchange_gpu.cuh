@@ -75,4 +75,79 @@ inline void halo_exchange_x(
     cudaStreamSynchronize(stream);
 }
 
+// ===========================================================================
+// Batched variants for a field of B tiles (e.g. B = npz*nq tracers x levels),
+// each tile a 2-D array (1-ng:nx+ng, 1-ng:ny+ng), column-major, stride TQ,
+// ni = nx+2*ng, nj = ny+2*ng. q(i,j) within a tile is at (i-1+ng) + ni*(j-1+ng).
+// ===========================================================================
+
+// Pack ng columns (starting at col0) over interior rows j=1..ny, all B tiles,
+// into one contiguous buffer: buf[(b*ng + c)*ny + jj].
+template <typename Real>
+__global__ void halo_pack_batched(const Real* q, Real* buf, int B, long TQ,
+                                  int ni, int ng, int ny, int col0) {
+    const long idx = (long)blockIdx.x * blockDim.x + threadIdx.x;
+    const long n = (long)B * ng * ny;
+    if (idx >= n) return;
+    const int b  = idx / ((long)ng * ny);
+    const int r  = idx % ((long)ng * ny);
+    const int c  = r / ny, jj = r % ny;                 // column 0..ng-1, interior row 0..ny-1
+    buf[idx] = q[(size_t)b*TQ + (col0 + c - 1 + ng) + (size_t)ni*(jj + ng)];
+}
+
+template <typename Real>
+__global__ void halo_unpack_batched(Real* q, const Real* buf, int B, long TQ,
+                                    int ni, int ng, int ny, int halo0) {
+    const long idx = (long)blockIdx.x * blockDim.x + threadIdx.x;
+    const long n = (long)B * ng * ny;
+    if (idx >= n) return;
+    const int b  = idx / ((long)ng * ny);
+    const int r  = idx % ((long)ng * ny);
+    const int c  = r / ny, jj = r % ny;
+    q[(size_t)b*TQ + (halo0 + c - 1 + ng) + (size_t)ni*(jj + ng)] = buf[idx];
+}
+
+// Local periodic fill of the j-halo over the FULL i-extent (incl i-halo), all
+// tiles. Run AFTER the i-exchange so corner cells are filled correctly.
+template <typename Real>
+__global__ void halo_periodic_y_batched(Real* q, int B, long TQ, int ni, int ng, int ny) {
+    const long idx = (long)blockIdx.x * blockDim.x + threadIdx.x;
+    const long n = (long)B * ni * ng;
+    if (idx >= n) return;
+    const int b  = idx / ((long)ni * ng);
+    const int r  = idx % ((long)ni * ng);
+    const int ii = r / ng, c = r % ng;                  // array column 0..ni-1, halo offset 0..ng-1
+    Real* qb = q + (size_t)b*TQ;
+    qb[ii + (size_t)ni*(c)]            = qb[ii + (size_t)ni*(ny + c)];   // south halo <- north interior
+    qb[ii + (size_t)ni*(ny + ng + c)]  = qb[ii + (size_t)ni*(ng + c)];   // north halo <- south interior
+}
+
+// Batched i-direction halo exchange over B tiles (one MPI message per neighbor).
+template <typename Real>
+inline void halo_exchange_x_batched(
+    Real* d_q, int B, long TQ, int nx, int ny, int ng,
+    Real* d_w_send, Real* d_e_send, Real* d_w_recv, Real* d_e_recv,
+    int left, int right, MPI_Comm comm, MPI_Datatype dt,
+    int tpb = 128, cudaStream_t stream = 0)
+{
+    const int ni  = nx + 2 * ng;
+    const long cnt = (long)B * ng * ny;
+    const int nb  = (int)((cnt + tpb - 1) / tpb);
+
+    halo_pack_batched<Real><<<nb, tpb, 0, stream>>>(d_q, d_w_send, B, TQ, ni, ng, ny, 1);
+    halo_pack_batched<Real><<<nb, tpb, 0, stream>>>(d_q, d_e_send, B, TQ, ni, ng, ny, nx - ng + 1);
+    cudaStreamSynchronize(stream);
+
+    MPI_Request req[4];
+    MPI_Irecv(d_w_recv, (int)cnt, dt, left,  0, comm, &req[0]);
+    MPI_Irecv(d_e_recv, (int)cnt, dt, right, 1, comm, &req[1]);
+    MPI_Isend(d_e_send, (int)cnt, dt, right, 0, comm, &req[2]);
+    MPI_Isend(d_w_send, (int)cnt, dt, left,  1, comm, &req[3]);
+    MPI_Waitall(4, req, MPI_STATUSES_IGNORE);
+
+    halo_unpack_batched<Real><<<nb, tpb, 0, stream>>>(d_q, d_w_recv, B, TQ, ni, ng, ny, 1 - ng);
+    halo_unpack_batched<Real><<<nb, tpb, 0, stream>>>(d_q, d_e_recv, B, TQ, ni, ng, ny, nx + 1);
+    cudaStreamSynchronize(stream);
+}
+
 } // namespace fv3

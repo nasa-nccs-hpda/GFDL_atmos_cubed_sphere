@@ -183,16 +183,19 @@ if(CMAKE_CUDA_COMPILER)
   # Run with: srun -n <N> ./test_halo_exchange   (not a ctest — needs mpirun/srun).
   find_package(MPI QUIET)
   if(MPI_CXX_FOUND)
-    add_executable(test_halo_exchange test_halo_exchange.cu)
-    set_target_properties(test_halo_exchange PROPERTIES CUDA_STANDARD 14 CUDA_STANDARD_REQUIRED ON)
-    if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-      set_target_properties(test_halo_exchange PROPERTIES CUDA_ARCHITECTURES 80)
-    endif()
-    target_compile_options(test_halo_exchange PRIVATE
-      $<$<COMPILE_LANGUAGE:CUDA>:--allow-unsupported-compiler>)
-    target_link_libraries(test_halo_exchange PRIVATE MPI::MPI_CXX)
+    add_executable(test_halo_exchange    test_halo_exchange.cu)    # device-MPI halo primitive test
+    add_executable(tracer-2d-driver-mpi  driver_tracer_2d_mpi.cu)  # multi-rank/multi-GPU tracer transport
+    foreach(mpi_tgt test_halo_exchange tracer-2d-driver-mpi)
+      set_target_properties(${mpi_tgt} PROPERTIES CUDA_STANDARD 14 CUDA_STANDARD_REQUIRED ON)
+      if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+        set_target_properties(${mpi_tgt} PROPERTIES CUDA_ARCHITECTURES 80)
+      endif()
+      target_compile_options(${mpi_tgt} PRIVATE
+        $<$<COMPILE_LANGUAGE:CUDA>:--allow-unsupported-compiler>)
+      target_link_libraries(${mpi_tgt} PRIVATE MPI::MPI_CXX)
+    endforeach()
   else()
-    message(STATUS "MPI not found — skipping test_halo_exchange")
+    message(STATUS "MPI not found — skipping test_halo_exchange / tracer-2d-driver-mpi")
   endif()
 else()
   message(STATUS "CUDA compiler not found — skipping GPU targets")
