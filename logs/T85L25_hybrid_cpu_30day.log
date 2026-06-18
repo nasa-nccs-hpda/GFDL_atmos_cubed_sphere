@@ -1,0 +1,365 @@
+=== T85L25 CPU C++ hybrid forcing 30-day run ===
+start_timestamp=2026-06-17T21:36:14-04:00
+CONTAINER=/lscratch/jli30/isca-sandbox
+GFDL_BASE=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+T85_OVERWRITE=0
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+2026-06-17 21:36:14,442 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-17 21:36:14,490 - isca - INFO - RRTM compilation disabled.
+2026-06-17 21:36:14,490 - isca - INFO - SOCRATES compilation disabled.
+2026-06-17 21:36:14,494 - isca - INFO - RRTM compilation disabled.
+2026-06-17 21:36:14,494 - isca - INFO - SOCRATES compilation disabled.
+2026-06-17 21:36:14,497 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu_T85L25'
+2026-06-17 21:36:14,523 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-06-17 21:36:14,527 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu_T85L25/run'
+2026-06-17 21:36:14,961 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu_T85L25/run/input.nml'
+2026-06-17 21:36:14,965 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu_T85L25/run/field_table'
+2026-06-17 21:36:14,972 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu_T85L25/run/diag_table'
+2026-06-17 21:36:14,982 - isca - INFO - Running without restart file
+2026-06-17 21:36:14,989 - isca - INFO - Beginning run 1
+2026-06-17 21:36:14,991 - isca - INFO - process running as 285923
+2026-06-17 21:36:14,993 - isca - DEBUG - Loading hybrid ubuntu-conda environment
+2026-06-17 21:36:14,993 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-17 21:36:16,078 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-17 21:36:16,078 - isca - DEBUG - &MPP_IO_NML
+2026-06-17 21:36:16,078 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-17 21:36:16,078 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-17 21:36:16,078 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-17 21:36:16,078 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-17 21:36:16,078 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-17 21:36:16,078 - isca - DEBUG - /
+2026-06-17 21:36:16,078 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-17 21:36:16,090 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-17 21:36:16,097 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-17 21:36:16,097 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-17 21:36:16,097 - isca - DEBUG - X-AXIS =  256
+2026-06-17 21:36:16,097 - isca - DEBUG - Y-AXIS =    8   8   8   8   8   8   8   8   8   8   8   8   8   8   8   8
+2026-06-17 21:36:16,110 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-17 21:36:22,790 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-17 21:36:29,453 - isca - DEBUG - Integration completed through 2000 Jan  3   0: 0: 0
+2026-06-17 21:36:36,118 - isca - DEBUG - Integration completed through 2000 Jan  4   0: 0: 0
+2026-06-17 21:36:42,781 - isca - DEBUG - Integration completed through 2000 Jan  5   0: 0: 0
+2026-06-17 21:36:49,450 - isca - DEBUG - Integration completed through 2000 Jan  6   0: 0: 0
+2026-06-17 21:36:56,112 - isca - DEBUG - Integration completed through 2000 Jan  7   0: 0: 0
+2026-06-17 21:37:02,778 - isca - DEBUG - Integration completed through 2000 Jan  8   0: 0: 0
+2026-06-17 21:37:09,443 - isca - DEBUG - Integration completed through 2000 Jan  9   0: 0: 0
+2026-06-17 21:37:16,112 - isca - DEBUG - Integration completed through 2000 Jan 10   0: 0: 0
+2026-06-17 21:37:22,781 - isca - DEBUG - Integration completed through 2000 Jan 11   0: 0: 0
+2026-06-17 21:37:29,450 - isca - DEBUG - Integration completed through 2000 Jan 12   0: 0: 0
+2026-06-17 21:37:36,121 - isca - DEBUG - Integration completed through 2000 Jan 13   0: 0: 0
+2026-06-17 21:37:42,795 - isca - DEBUG - Integration completed through 2000 Jan 14   0: 0: 0
+2026-06-17 21:37:49,465 - isca - DEBUG - Integration completed through 2000 Jan 15   0: 0: 0
+2026-06-17 21:37:56,135 - isca - DEBUG - Integration completed through 2000 Jan 16   0: 0: 0
+2026-06-17 21:38:02,809 - isca - DEBUG - Integration completed through 2000 Jan 17   0: 0: 0
+2026-06-17 21:38:09,482 - isca - DEBUG - Integration completed through 2000 Jan 18   0: 0: 0
+2026-06-17 21:38:16,163 - isca - DEBUG - Integration completed through 2000 Jan 19   0: 0: 0
+2026-06-17 21:38:22,842 - isca - DEBUG - Integration completed through 2000 Jan 20   0: 0: 0
+2026-06-17 21:38:29,517 - isca - DEBUG - Integration completed through 2000 Jan 21   0: 0: 0
+2026-06-17 21:38:36,194 - isca - DEBUG - Integration completed through 2000 Jan 22   0: 0: 0
+2026-06-17 21:38:42,874 - isca - DEBUG - Integration completed through 2000 Jan 23   0: 0: 0
+2026-06-17 21:38:49,551 - isca - DEBUG - Integration completed through 2000 Jan 24   0: 0: 0
+2026-06-17 21:38:56,228 - isca - DEBUG - Integration completed through 2000 Jan 25   0: 0: 0
+2026-06-17 21:39:02,907 - isca - DEBUG - Integration completed through 2000 Jan 26   0: 0: 0
+2026-06-17 21:39:09,582 - isca - DEBUG - Integration completed through 2000 Jan 27   0: 0: 0
+2026-06-17 21:39:16,261 - isca - DEBUG - Integration completed through 2000 Jan 28   0: 0: 0
+2026-06-17 21:39:22,934 - isca - DEBUG - Integration completed through 2000 Jan 29   0: 0: 0
+2026-06-17 21:39:29,611 - isca - DEBUG - Integration completed through 2000 Jan 30   0: 0: 0
+2026-06-17 21:39:36,284 - isca - DEBUG - Integration completed through 2000 Feb  1   0: 0: 0
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.58500000E+00,  9.93634259E-04
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.61500000E+00,  9.97106481E-04
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.56400000E+00,  9.91203704E-04
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.69200000E+00,  1.00601852E-03
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.67200000E+00,  1.00370370E-03
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.70400000E+00,  1.00740741E-03
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.65400000E+00,  1.00162037E-03
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.70200000E+00,  1.00717593E-03
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.75900000E+00,  1.01377315E-03
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.62800000E+00,  9.98611111E-04
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.59100000E+00,  9.94328704E-04
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.61400000E+00,  9.96990741E-04
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.65200000E+00,  1.00138889E-03
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,285 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.76300000E+00,  1.01423611E-03
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,285 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,286 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.68700000E+00,  1.00543981E-03
+2026-06-17 21:39:36,286 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,286 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 21:39:36,286 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 21:39:36,286 - isca - DEBUG - fortran_iso_c_wrapper,8640,  8.60500000E+00,  9.95949074E-04
+2026-06-17 21:39:36,286 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 21:39:36,356 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     819200.
+2026-06-17 21:39:36,553 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=      102400
+2026-06-17 21:39:36,553 - isca - DEBUG - 
+2026-06-17 21:39:36,553 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-17 21:39:36,553 - isca - DEBUG - 
+2026-06-17 21:39:36,553 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-17 21:39:36,553 - isca - DEBUG - Total runtime                       200.475186    200.475187    200.475186      0.000000  1.000     0     0    15
+2026-06-17 21:39:36,554 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,631 - isca - DEBUG - c_interface_entry,8640,8.739947634e+00,1.011568013e-03,442368000,1.975718776e-08,1.002412
+2026-06-17 21:39:36,631 - isca - DEBUG - cpp_forcing_driver,8640,8.718913565e+00,1.009133514e-03,442368000,1.970963895e-08,1.000000
+2026-06-17 21:39:36,631 - isca - DEBUG - rayleigh_damping,8640,7.082383980e-01,8.197203681e-05,442368000,1.601016344e-09,0.081230
+2026-06-17 21:39:36,631 - isca - DEBUG - newtonian_lat_precompute,8640,1.115026340e-01,1.290539745e-05,17694720,6.301463600e-09,0.012789
+2026-06-17 21:39:36,631 - isca - DEBUG - newtonian_vertical,8640,6.968011502e+00,8.064828127e-04,442368000,1.575161744e-08,0.799183
+2026-06-17 21:39:36,631 - isca - DEBUG - accumulate_wind,8640,4.205128990e-01,4.867047442e-05,442368000,9.505952035e-10,0.048230
+2026-06-17 21:39:36,631 - isca - DEBUG - accumulate_temperature,8640,2.889371390e-01,3.344179850e-05,442368000,6.531601269e-10,0.033139
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,631 - isca - DEBUG - c_interface_entry,8640,8.668895063e+00,1.003344336e-03,442368000,1.959656906e-08,1.002264
+2026-06-17 21:39:36,631 - isca - DEBUG - cpp_forcing_driver,8640,8.649308810e+00,1.001077409e-03,442368000,1.955229314e-08,1.000000
+2026-06-17 21:39:36,631 - isca - DEBUG - rayleigh_damping,8640,7.004416640e-01,8.106963704e-05,442368000,1.583391348e-09,0.080982
+2026-06-17 21:39:36,631 - isca - DEBUG - newtonian_lat_precompute,8640,1.122599580e-01,1.299305069e-05,17694720,6.344263034e-09,0.012979
+2026-06-17 21:39:36,631 - isca - DEBUG - newtonian_vertical,8640,6.939016383e+00,8.031268962e-04,442368000,1.568607219e-08,0.802263
+2026-06-17 21:39:36,631 - isca - DEBUG - accumulate_wind,8640,3.915824110e-01,4.532203831e-05,442368000,8.851960607e-10,0.045273
+2026-06-17 21:39:36,631 - isca - DEBUG - accumulate_temperature,8640,2.903106210e-01,3.360076632e-05,442368000,6.562649672e-10,0.033565
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,631 - isca - DEBUG - c_interface_entry,8640,8.658994661e+00,1.002198456e-03,442368000,1.957418860e-08,1.002566
+2026-06-17 21:39:36,631 - isca - DEBUG - cpp_forcing_driver,8640,8.636832816e+00,9.996334278e-04,442368000,1.952409039e-08,1.000000
+2026-06-17 21:39:36,631 - isca - DEBUG - rayleigh_damping,8640,7.020497990e-01,8.125576377e-05,442368000,1.587026636e-09,0.081286
+2026-06-17 21:39:36,631 - isca - DEBUG - newtonian_lat_precompute,8640,1.097829750e-01,1.270636285e-05,17694720,6.204278734e-09,0.012711
+2026-06-17 21:39:36,631 - isca - DEBUG - newtonian_vertical,8640,6.928509506e+00,8.019108225e-04,442368000,1.566232075e-08,0.802205
+2026-06-17 21:39:36,631 - isca - DEBUG - accumulate_wind,8640,3.883378100e-01,4.494650579e-05,442368000,8.778614412e-10,0.044963
+2026-06-17 21:39:36,631 - isca - DEBUG - accumulate_temperature,8640,2.801625080e-01,3.242621620e-05,442368000,6.333245352e-10,0.032438
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,631 - isca - DEBUG - c_interface_entry,8640,8.576636791e+00,9.926662953e-04,442368000,1.938801358e-08,1.002452
+2026-06-17 21:39:36,631 - isca - DEBUG - cpp_forcing_driver,8640,8.555657093e+00,9.902380895e-04,442368000,1.934058768e-08,1.000000
+2026-06-17 21:39:36,631 - isca - DEBUG - rayleigh_damping,8640,6.999754550e-01,8.101567766e-05,442368000,1.582337454e-09,0.081814
+2026-06-17 21:39:36,631 - isca - DEBUG - newtonian_lat_precompute,8640,1.070237720e-01,1.238701065e-05,17694720,6.048345043e-09,0.012509
+2026-06-17 21:39:36,631 - isca - DEBUG - newtonian_vertical,8640,6.883736612e+00,7.967287745e-04,442368000,1.556110888e-08,0.804583
+2026-06-17 21:39:36,631 - isca - DEBUG - accumulate_wind,8640,3.470279160e-01,4.016526806e-05,442368000,7.844778917e-10,0.040561
+2026-06-17 21:39:36,631 - isca - DEBUG - accumulate_temperature,8640,2.727671160e-01,3.157026806e-05,442368000,6.166067980e-10,0.031881
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,631 - isca - DEBUG - c_interface_entry,8640,8.636442786e+00,9.995882854e-04,442368000,1.952320870e-08,1.002227
+2026-06-17 21:39:36,631 - isca - DEBUG - cpp_forcing_driver,8640,8.617254472e+00,9.973674157e-04,442368000,1.947983234e-08,1.000000
+2026-06-17 21:39:36,631 - isca - DEBUG - rayleigh_damping,8640,6.987407700e-01,8.087277431e-05,442368000,1.579546373e-09,0.081086
+2026-06-17 21:39:36,631 - isca - DEBUG - newtonian_lat_precompute,8640,1.167376210e-01,1.351129873e-05,17694720,6.597313831e-09,0.013547
+2026-06-17 21:39:36,631 - isca - DEBUG - newtonian_vertical,8640,6.937721259e+00,8.029769976e-04,442368000,1.568314448e-08,0.805096
+2026-06-17 21:39:36,631 - isca - DEBUG - accumulate_wind,8640,3.579476360e-01,4.142912454e-05,442368000,8.091625886e-10,0.041538
+2026-06-17 21:39:36,631 - isca - DEBUG - accumulate_temperature,8640,2.861900050e-01,3.312384317e-05,442368000,6.469500619e-10,0.033211
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,631 - isca - DEBUG - 
+2026-06-17 21:39:36,631 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,631 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,631 - isca - DEBUG - c_interface_entry,8640,8.671427857e+00,1.003637483e-03,442368000,1.960229460e-08,1.002524
+2026-06-17 21:39:36,631 - isca - DEBUG - cpp_forcing_driver,8640,8.649598240e+00,1.001110907e-03,442368000,1.955294741e-08,1.000000
+2026-06-17 21:39:36,631 - isca - DEBUG - rayleigh_damping,8640,7.039986300e-01,8.148132292e-05,442368000,1.591432088e-09,0.081391
+2026-06-17 21:39:36,631 - isca - DEBUG - newtonian_lat_precompute,8640,1.149896540e-01,1.330898773e-05,17694720,6.498529166e-09,0.013294
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_vertical,8640,6.932030512e+00,8.023183463e-04,442368000,1.567028020e-08,0.801428
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_wind,8640,4.030449390e-01,4.664871979e-05,442368000,9.111078084e-10,0.046597
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_temperature,8640,2.716029510e-01,3.143552674e-05,442368000,6.139751316e-10,0.031401
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,632 - isca - DEBUG - c_interface_entry,8640,8.687830441e+00,1.005535931e-03,442368000,1.963937365e-08,1.002499
+2026-06-17 21:39:36,632 - isca - DEBUG - cpp_forcing_driver,8640,8.666174870e+00,1.003029499e-03,442368000,1.959041990e-08,1.000000
+2026-06-17 21:39:36,632 - isca - DEBUG - rayleigh_damping,8640,7.052674720e-01,8.162817963e-05,442368000,1.594300383e-09,0.081382
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_lat_precompute,8640,1.117998710e-01,1.293979988e-05,17694720,6.318261662e-09,0.012901
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_vertical,8640,6.956676369e+00,8.051708760e-04,442368000,1.572599367e-08,0.802739
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_wind,8640,3.724826950e-01,4.311142303e-05,442368000,8.420199811e-10,0.042981
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_temperature,8640,2.935094400e-01,3.397100000e-05,442368000,6.634960937e-10,0.033868
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,632 - isca - DEBUG - c_interface_entry,8640,8.728979400e+00,1.010298542e-03,442368000,1.973239339e-08,1.002494
+2026-06-17 21:39:36,632 - isca - DEBUG - cpp_forcing_driver,8640,8.707265848e+00,1.007785399e-03,442368000,1.968330858e-08,1.000000
+2026-06-17 21:39:36,632 - isca - DEBUG - rayleigh_damping,8640,7.008533640e-01,8.111728750e-05,442368000,1.584322021e-09,0.080491
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_lat_precompute,8640,1.094572440e-01,1.266866250e-05,17694720,6.185870361e-09,0.012571
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_vertical,8640,6.986616813e+00,8.086362052e-04,442368000,1.579367588e-08,0.802389
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_wind,8640,4.036363380e-01,4.671716875e-05,442368000,9.124447021e-10,0.046356
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_temperature,8640,2.856094710e-01,3.305665174e-05,442368000,6.456377292e-10,0.032801
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - c_interface_entry,8640,8.586474603e+00,9.938049309e-04,442368000,1.941025256e-08,1.002286
+2026-06-17 21:39:36,632 - isca - DEBUG - cpp_forcing_driver,8640,8.566893083e+00,9.915385513e-04,442368000,1.936598733e-08,1.000000
+2026-06-17 21:39:36,632 - isca - DEBUG - rayleigh_damping,8640,7.079270610e-01,8.193600243e-05,442368000,1.600312547e-09,0.082635
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_lat_precompute,8640,1.165984170e-01,1.349518715e-05,17694720,6.589446852e-09,0.013610
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_vertical,8640,6.875959457e+00,7.958286409e-04,442368000,1.554352814e-08,0.802620
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_wind,8640,3.790554810e-01,4.387216215e-05,442368000,8.568781670e-10,0.044247
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_temperature,8640,2.624725230e-01,3.037876424e-05,442368000,5.933352390e-10,0.030638
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,632 - isca - DEBUG - c_interface_entry,8640,8.678169049e+00,1.004417714e-03,442368000,1.961753348e-08,1.002634
+2026-06-17 21:39:36,632 - isca - DEBUG - cpp_forcing_driver,8640,8.655367272e+00,1.001778619e-03,442368000,1.956598866e-08,1.000000
+2026-06-17 21:39:36,632 - isca - DEBUG - rayleigh_damping,8640,7.039811080e-01,8.147929491e-05,442368000,1.591392479e-09,0.081335
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_lat_precompute,8640,1.065652840e-01,1.233394491e-05,17694720,6.022434037e-09,0.012312
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_vertical,8640,6.947027384e+00,8.040540954e-04,442368000,1.570418155e-08,0.802627
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_wind,8640,3.899223270e-01,4.512989896e-05,442368000,8.814433390e-10,0.045050
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_temperature,8640,2.852781280e-01,3.301830185e-05,442368000,6.448887080e-10,0.032960
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - c_interface_entry,8640,8.562708982e+00,9.910542803e-04,442368000,1.935652891e-08,1.002497
+2026-06-17 21:39:36,632 - isca - DEBUG - cpp_forcing_driver,8640,8.541382880e+00,9.885859815e-04,442368000,1.930831995e-08,1.000000
+2026-06-17 21:39:36,632 - isca - DEBUG - rayleigh_damping,8640,7.071585830e-01,8.184705822e-05,442368000,1.598575356e-09,0.082792
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_lat_precompute,8640,1.177488850e-01,1.362834317e-05,17694720,6.654464439e-09,0.013786
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_vertical,8640,6.864132739e+00,7.944598078e-04,442368000,1.551679312e-08,0.803632
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_wind,8640,3.695536170e-01,4.277240938e-05,442368000,8.353986206e-10,0.043266
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_temperature,8640,2.490980150e-01,2.883078877e-05,442368000,5.631013432e-10,0.029164
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,632 - isca - DEBUG - c_interface_entry,8640,8.585108627e+00,9.936468318e-04,442368000,1.940716468e-08,1.002428
+2026-06-17 21:39:36,632 - isca - DEBUG - cpp_forcing_driver,8640,8.564314885e+00,9.912401487e-04,442368000,1.936015915e-08,1.000000
+2026-06-17 21:39:36,632 - isca - DEBUG - rayleigh_damping,8640,6.989934270e-01,8.090201701e-05,442368000,1.580117520e-09,0.081617
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_lat_precompute,8640,1.065390920e-01,1.233091343e-05,17694720,6.020953821e-09,0.012440
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_vertical,8640,6.913042628e+00,8.001206745e-04,442368000,1.562735692e-08,0.807192
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_wind,8640,3.413138640e-01,3.950391944e-05,442368000,7.715609266e-10,0.039853
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_temperature,8640,2.744114610e-01,3.176058576e-05,442368000,6.203239407e-10,0.032041
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,632 - isca - DEBUG - c_interface_entry,8640,8.640902824e+00,1.000104494e-03,442368000,1.953329089e-08,1.002582
+2026-06-17 21:39:36,632 - isca - DEBUG - cpp_forcing_driver,8640,8.618648765e+00,9.975287922e-04,442368000,1.948298422e-08,1.000000
+2026-06-17 21:39:36,632 - isca - DEBUG - rayleigh_damping,8640,7.047133270e-01,8.156404248e-05,442368000,1.593047705e-09,0.081766
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_lat_precompute,8640,9.348305300e-02,1.081979780e-05,17694720,5.283104395e-09,0.010847
+2026-06-17 21:39:36,632 - isca - DEBUG - newtonian_vertical,8640,6.938702671e+00,8.030905869e-04,442368000,1.568536303e-08,0.805080
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_wind,8640,4.029707290e-01,4.664013067e-05,442368000,9.109400522e-10,0.046756
+2026-06-17 21:39:36,632 - isca - DEBUG - accumulate_temperature,8640,2.573207610e-01,2.978249549e-05,442368000,5.816893650e-10,0.029856
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - 
+2026-06-17 21:39:36,632 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,632 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,632 - isca - DEBUG - c_interface_entry,8640,8.581281341e+00,9.932038589e-04,442368000,1.939851287e-08,1.002669
+2026-06-17 21:39:36,633 - isca - DEBUG - 
+2026-06-17 21:39:36,633 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,633 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,633 - isca - DEBUG - c_interface_entry,8640,8.600775469e+00,9.954601237e-04,442368000,1.944258054e-08,1.002647
+2026-06-17 21:39:36,633 - isca - DEBUG - cpp_forcing_driver,8640,8.578065854e+00,9.928316961e-04,442368000,1.939124406e-08,1.000000
+2026-06-17 21:39:36,633 - isca - DEBUG - rayleigh_damping,8640,7.054508390e-01,8.164940266e-05,442368000,1.594714896e-09,0.082239
+2026-06-17 21:39:36,633 - isca - DEBUG - newtonian_lat_precompute,8640,9.301995700e-02,1.076619873e-05,17694720,5.256932972e-09,0.010844
+2026-06-17 21:39:36,633 - isca - DEBUG - newtonian_vertical,8640,6.910077986e+00,7.997775447e-04,442368000,1.562065517e-08,0.805552
+2026-06-17 21:39:36,633 - isca - DEBUG - accumulate_wind,8640,3.879514970e-01,4.490179363e-05,442368000,8.769881569e-10,0.045226
+2026-06-17 21:39:36,633 - isca - DEBUG - accumulate_temperature,8640,2.513959250e-01,2.909675058e-05,442368000,5.682959097e-10,0.029307
+2026-06-17 21:39:36,633 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,633 - isca - DEBUG - 
+2026-06-17 21:39:36,633 - isca - DEBUG - cpp_forcing_driver,8640,8.558438636e+00,9.905600273e-04,442368000,1.934687553e-08,1.000000
+2026-06-17 21:39:36,633 - isca - DEBUG - rayleigh_damping,8640,7.013064490e-01,8.116972789e-05,442368000,1.585346248e-09,0.081943
+2026-06-17 21:39:36,633 - isca - DEBUG - newtonian_lat_precompute,8640,1.084422360e-01,1.255118472e-05,17694720,6.128508165e-09,0.012671
+2026-06-17 21:39:36,633 - isca - DEBUG - newtonian_vertical,8640,6.884780903e+00,7.968496416e-04,442368000,1.556346956e-08,0.804444
+2026-06-17 21:39:36,633 - isca - DEBUG - accumulate_wind,8640,3.586865010e-01,4.151464132e-05,442368000,8.108328383e-10,0.041910
+2026-06-17 21:39:36,633 - isca - DEBUG - accumulate_temperature,8640,2.650071440e-01,3.067212315e-05,442368000,5.990649052e-10,0.030964
+2026-06-17 21:39:36,633 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,633 - isca - DEBUG - 
+2026-06-17 21:39:36,633 - isca - DEBUG - 
+2026-06-17 21:39:36,633 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 21:39:36,633 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 21:39:36,633 - isca - DEBUG - c_interface_entry,8640,8.553086166e+00,9.899405285e-04,442368000,1.933477595e-08,1.002472
+2026-06-17 21:39:36,633 - isca - DEBUG - cpp_forcing_driver,8640,8.531991007e+00,9.874989591e-04,442368000,1.928708905e-08,1.000000
+2026-06-17 21:39:36,633 - isca - DEBUG - rayleigh_damping,8640,7.028323540e-01,8.134633727e-05,442368000,1.588795650e-09,0.082376
+2026-06-17 21:39:36,633 - isca - DEBUG - newtonian_lat_precompute,8640,1.211965650e-01,1.402738021e-05,17694720,6.849306742e-09,0.014205
+2026-06-17 21:39:36,633 - isca - DEBUG - newtonian_vertical,8640,6.846672706e+00,7.924389706e-04,442368000,1.547732364e-08,0.802471
+2026-06-17 21:39:36,633 - isca - DEBUG - accumulate_wind,8640,3.901415140e-01,4.515526782e-05,442368000,8.819388247e-10,0.045727
+2026-06-17 21:39:36,633 - isca - DEBUG - accumulate_temperature,8640,2.442501340e-01,2.826969144e-05,442368000,5.521424108e-10,0.028628
+2026-06-17 21:39:36,633 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 21:39:36,633 - isca - DEBUG - 
+2026-06-17 21:39:36,792 - isca - INFO - Run 1 complete
+2026-06-17 21:39:36,899 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-17 21:39:41,886 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cpu_T85L25/restarts/res0001.tar.gz
+2026-06-17 21:39:41,892 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cpu_T85L25/run0001/input.nml'
+2026-06-17 21:39:41,896 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cpu_T85L25/run0001/field_table'
+2026-06-17 21:39:41,902 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cpu_T85L25/run0001/diag_table'
+2026-06-17 21:39:41,949 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu_T85L25/run'
+Experiment = held_suarez_hybrid_cpu_T85L25
+Backend = cpu_cpp_hybrid
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/held_suarez_hybrid.x
+Resolution = T85
+Levels = 25
+Days = 30
+dt_atmos = 300
+num_cores = 16
+production_diag = True
+overwrite = False
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+Codebase dir = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+GFDL_ENV = hybrid
+HS_FORCE_BACKEND = cpu
+HS_PROFILE = 1
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cpu_T85L25
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_hybrid_cpu_T85L25/run
+
+real	3m27.580s
+user	50m29.809s
+sys	3m2.059s
+end_timestamp=2026-06-17T21:39:41-04:00
+Log written to /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/logs/T85L25_hybrid_cpu_30day.log

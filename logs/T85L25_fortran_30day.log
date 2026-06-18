@@ -1,0 +1,108 @@
+=== T85L25 all-Fortran 30-day run ===
+start_timestamp=2026-06-17T21:32:40-04:00
+CONTAINER=/lscratch/jli30/isca-sandbox
+GFDL_BASE=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+T85_OVERWRITE=0
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+2026-06-17 21:32:40,206 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-17 21:32:40,314 - isca - INFO - RRTM compilation disabled.
+2026-06-17 21:32:40,314 - isca - INFO - SOCRATES compilation disabled.
+2026-06-17 21:32:40,322 - isca - INFO - RRTM compilation disabled.
+2026-06-17 21:32:40,322 - isca - INFO - SOCRATES compilation disabled.
+2026-06-17 21:32:40,327 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_T85L25'
+2026-06-17 21:32:40,339 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-06-17 21:32:40,343 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_T85L25/run'
+2026-06-17 21:32:40,564 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_T85L25/run/input.nml'
+2026-06-17 21:32:40,568 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_T85L25/run/field_table'
+2026-06-17 21:32:40,574 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_T85L25/run/diag_table'
+2026-06-17 21:32:40,578 - isca - INFO - Running without restart file
+2026-06-17 21:32:40,583 - isca - INFO - Beginning run 1
+2026-06-17 21:32:40,585 - isca - INFO - process running as 284442
+2026-06-17 21:32:40,600 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-17 21:32:41,458 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-17 21:32:41,458 - isca - DEBUG - &MPP_IO_NML
+2026-06-17 21:32:41,458 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-17 21:32:41,458 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-17 21:32:41,458 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-17 21:32:41,458 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-17 21:32:41,458 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-17 21:32:41,458 - isca - DEBUG - /
+2026-06-17 21:32:41,458 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-17 21:32:41,482 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-17 21:32:41,488 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-17 21:32:41,489 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-17 21:32:41,489 - isca - DEBUG - X-AXIS =  256
+2026-06-17 21:32:41,489 - isca - DEBUG - Y-AXIS =    8   8   8   8   8   8   8   8   8   8   8   8   8   8   8   8
+2026-06-17 21:32:41,503 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-17 21:32:48,479 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-17 21:32:55,414 - isca - DEBUG - Integration completed through 2000 Jan  3   0: 0: 0
+2026-06-17 21:33:02,322 - isca - DEBUG - Integration completed through 2000 Jan  4   0: 0: 0
+2026-06-17 21:33:09,215 - isca - DEBUG - Integration completed through 2000 Jan  5   0: 0: 0
+2026-06-17 21:33:16,119 - isca - DEBUG - Integration completed through 2000 Jan  6   0: 0: 0
+2026-06-17 21:33:23,012 - isca - DEBUG - Integration completed through 2000 Jan  7   0: 0: 0
+2026-06-17 21:33:29,911 - isca - DEBUG - Integration completed through 2000 Jan  8   0: 0: 0
+2026-06-17 21:33:36,802 - isca - DEBUG - Integration completed through 2000 Jan  9   0: 0: 0
+2026-06-17 21:33:43,660 - isca - DEBUG - Integration completed through 2000 Jan 10   0: 0: 0
+2026-06-17 21:33:50,513 - isca - DEBUG - Integration completed through 2000 Jan 11   0: 0: 0
+2026-06-17 21:33:57,377 - isca - DEBUG - Integration completed through 2000 Jan 12   0: 0: 0
+2026-06-17 21:34:04,240 - isca - DEBUG - Integration completed through 2000 Jan 13   0: 0: 0
+2026-06-17 21:34:11,107 - isca - DEBUG - Integration completed through 2000 Jan 14   0: 0: 0
+2026-06-17 21:34:17,975 - isca - DEBUG - Integration completed through 2000 Jan 15   0: 0: 0
+2026-06-17 21:34:24,839 - isca - DEBUG - Integration completed through 2000 Jan 16   0: 0: 0
+2026-06-17 21:34:31,711 - isca - DEBUG - Integration completed through 2000 Jan 17   0: 0: 0
+2026-06-17 21:34:38,585 - isca - DEBUG - Integration completed through 2000 Jan 18   0: 0: 0
+2026-06-17 21:34:45,460 - isca - DEBUG - Integration completed through 2000 Jan 19   0: 0: 0
+2026-06-17 21:34:52,338 - isca - DEBUG - Integration completed through 2000 Jan 20   0: 0: 0
+2026-06-17 21:34:59,216 - isca - DEBUG - Integration completed through 2000 Jan 21   0: 0: 0
+2026-06-17 21:35:06,086 - isca - DEBUG - Integration completed through 2000 Jan 22   0: 0: 0
+2026-06-17 21:35:12,958 - isca - DEBUG - Integration completed through 2000 Jan 23   0: 0: 0
+2026-06-17 21:35:19,835 - isca - DEBUG - Integration completed through 2000 Jan 24   0: 0: 0
+2026-06-17 21:35:26,703 - isca - DEBUG - Integration completed through 2000 Jan 25   0: 0: 0
+2026-06-17 21:35:33,576 - isca - DEBUG - Integration completed through 2000 Jan 26   0: 0: 0
+2026-06-17 21:35:40,453 - isca - DEBUG - Integration completed through 2000 Jan 27   0: 0: 0
+2026-06-17 21:35:47,327 - isca - DEBUG - Integration completed through 2000 Jan 28   0: 0: 0
+2026-06-17 21:35:54,207 - isca - DEBUG - Integration completed through 2000 Jan 29   0: 0: 0
+2026-06-17 21:36:01,083 - isca - DEBUG - Integration completed through 2000 Jan 30   0: 0: 0
+2026-06-17 21:36:07,966 - isca - DEBUG - Integration completed through 2000 Feb  1   0: 0: 0
+2026-06-17 21:36:08,052 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     819200.
+2026-06-17 21:36:08,218 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=      102400
+2026-06-17 21:36:08,219 - isca - DEBUG - 
+2026-06-17 21:36:08,219 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-17 21:36:08,219 - isca - DEBUG - 
+2026-06-17 21:36:08,219 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-17 21:36:08,219 - isca - DEBUG - Total runtime                       206.761356    206.761357    206.761356      0.000000  1.000     0     0    15
+2026-06-17 21:36:08,219 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-17 21:36:08,403 - isca - INFO - Run 1 complete
+2026-06-17 21:36:08,545 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-17 21:36:14,051 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_T85L25/restarts/res0001.tar.gz
+2026-06-17 21:36:14,056 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_T85L25/run0001/input.nml'
+2026-06-17 21:36:14,060 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_T85L25/run0001/field_table'
+2026-06-17 21:36:14,066 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_T85L25/run0001/diag_table'
+2026-06-17 21:36:14,311 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_T85L25/run'
+Experiment = held_suarez_fortran_T85L25
+Backend = original_fortran
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_isca/build/held_suarez/held_suarez.x
+Resolution = T85
+Levels = 25
+Days = 30
+dt_atmos = 300
+num_cores = 16
+production_diag = True
+overwrite = False
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+Codebase dir = /isca
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+GFDL_ENV = ubuntu_conda
+HS_FORCE_BACKEND = 
+HS_PROFILE = 0
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_T85L25
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_T85L25/run
+
+real	3m34.209s
+user	51m49.911s
+sys	3m23.236s
+end_timestamp=2026-06-17T21:36:14-04:00
+Log written to /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/logs/T85L25_fortran_30day.log

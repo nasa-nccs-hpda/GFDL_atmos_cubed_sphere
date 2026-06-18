@@ -30,7 +30,7 @@ docs/T85L25_forcing_performance_experiment_plan.md
 
 | Variant | Build Command | Executable | Build Status | Build Log |
 |---|---|---|---|---|
-| all-Fortran | `GFDL_ENV=ubuntu_conda python3 ... compile_native_overlay.py fortran` | `held_suarez_fortran.x` | TBD | `logs/T85L25_build_fortran.log` |
+| all-Fortran | verify stock `/isca` build | `held_suarez.x` | TBD | `logs/T85L25_build_fortran.log` |
 | CPU C++ hybrid | `USE_CUDA_HS_FORCE=0 ./run_compile_hybrid.sh` | `held_suarez_hybrid.x` | TBD | `logs/T85L25_build_hybrid_cpu.log` |
 | CUDA hybrid | `USE_CUDA_HS_FORCE=1 ./run_compile_hybrid.sh` | `held_suarez_hybrid.x` | TBD | `logs/T85L25_build_hybrid_cuda.log` |
 
@@ -91,9 +91,9 @@ The comparison script can also compare all numeric fields with `--all-fields`.
 
 | Variant | Output File | Exists | Size | Notes |
 |---|---|---|---:|---|
-| all-Fortran | `$GFDL_DATA/held_suarez_T85L25_fortran/run0001/atmos_monthly.nc` | TBD | TBD | TBD |
-| CPU C++ hybrid | `$GFDL_DATA/held_suarez_T85L25_hybrid_cpu/run0001/atmos_monthly.nc` | TBD | TBD | TBD |
-| CUDA hybrid | `$GFDL_DATA/held_suarez_T85L25_hybrid_cuda/run0001/atmos_monthly.nc` | TBD | TBD | TBD |
+| all-Fortran | `$GFDL_DATA/held_suarez_fortran_T85L25/run0001/atmos_monthly.nc` | TBD | TBD | TBD |
+| CPU C++ hybrid | `$GFDL_DATA/held_suarez_hybrid_cpu_T85L25/run0001/atmos_monthly.nc` | TBD | TBD | TBD |
+| CUDA hybrid | `$GFDL_DATA/held_suarez_hybrid_cuda_T85L25/run0001/atmos_monthly.nc` | TBD | TBD | TBD |
 
 ## HS_PROFILE Extraction
 

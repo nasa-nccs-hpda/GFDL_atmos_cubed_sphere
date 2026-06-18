@@ -60,6 +60,14 @@ if [[ "${BUILD_EXECUTABLES}" == "1" ]]; then
   build_target profile_vert_advection
 fi
 
+run_with_time() {
+  if [[ -x /usr/bin/time ]]; then
+    /usr/bin/time -p "$@"
+  else
+    time "$@"
+  fi
+}
+
 run_case() {
   local res="$1"
   local levels="$2"
@@ -79,7 +87,7 @@ run_case() {
   echo "=== Running ${label}; executable=${executable}; days=${DAYS}; dt=${dt}; log=${log} ==="
 
   HS_PROFILE="${hs_profile}" HS_FORCE_BACKEND="${hs_backend}" \
-  /usr/bin/time -p python3 - "${exp_name}" "${executable}" "${res}" "${levels}" "${dt}" "${DAYS}" "${NUM_CORES}" "${OVERWRITE}" "${PRODUCTION_DIAG}" <<'PY' 2>&1 | tee "${log}"
+  run_with_time python3 - "${exp_name}" "${executable}" "${res}" "${levels}" "${dt}" "${DAYS}" "${NUM_CORES}" "${OVERWRITE}" "${PRODUCTION_DIAG}" <<'PY' 2>&1 | tee "${log}"
 import sys
 import os
 from pathlib import Path

@@ -1,0 +1,380 @@
+{
+  "reader": "xarray:auto",
+  "files": {
+    "fortran": "/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_T85L25/run0001/atmos_monthly.nc",
+    "cpu_hybrid": "/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cpu_T85L25/run0001/atmos_monthly.nc",
+    "cuda_hybrid": "/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_hybrid_cuda_T85L25/run0001/atmos_monthly.nc"
+  },
+  "field_mapping": {
+    "temperature": "temp",
+    "ucomp": "ucomp",
+    "vcomp": "vcomp",
+    "ps": "ps"
+  },
+  "forcing_related_fields": [],
+  "comparisons": [
+    {
+      "name": "Fortran vs CPU hybrid",
+      "baseline_dims": {
+        "time": 1,
+        "lat": 128,
+        "lon": 256,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 257,
+        "latb": 129
+      },
+      "candidate_dims": {
+        "time": 1,
+        "lat": 128,
+        "lon": 256,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 257,
+        "latb": 129
+      },
+      "dimension_match": true,
+      "variables": {
+        "temp": {
+          "pass": false,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            128,
+            256
+          ],
+          "finite_values": 819200,
+          "baseline_mean": 251.65447998046875,
+          "candidate_mean": 251.6503143310547,
+          "mean_difference": -0.0041656494140625,
+          "max_abs_error": 2.42779541015625,
+          "rmse": 0.1455779642573222,
+          "max_relative_error": 0.008506293408572674,
+          "relative_l2_error": 0.0005780073702521684,
+          "mean_abs_error": 0.06104175001382828
+        },
+        "ucomp": {
+          "pass": false,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            128,
+            256
+          ],
+          "finite_values": 819200,
+          "baseline_mean": 3.5313000679016113,
+          "candidate_mean": 3.526857614517212,
+          "mean_difference": -0.004442453384399414,
+          "max_abs_error": 4.133450031280518,
+          "rmse": 0.32357140915696775,
+          "max_relative_error": 50354.0078125,
+          "relative_l2_error": 0.07017466139958403,
+          "mean_abs_error": 0.1534128338098526
+        },
+        "vcomp": {
+          "pass": false,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            128,
+            256
+          ],
+          "finite_values": 819200,
+          "baseline_mean": 0.0001277019764529541,
+          "candidate_mean": 4.7621502744732425e-05,
+          "mean_difference": -8.008047007024288e-05,
+          "max_abs_error": 4.982633113861084,
+          "rmse": 0.39329429322939236,
+          "max_relative_error": 503955.03125,
+          "relative_l2_error": 1.028825645578716,
+          "mean_abs_error": 0.1902441382408142
+        },
+        "ps": {
+          "pass": false,
+          "dims": [
+            "time",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            128,
+            256
+          ],
+          "finite_values": 32768,
+          "baseline_mean": 100347.375,
+          "candidate_mean": 100347.28125,
+          "mean_difference": -0.09375,
+          "max_abs_error": 247.9140625,
+          "rmse": 38.110765144797014,
+          "max_relative_error": 0.002479683142155409,
+          "relative_l2_error": 0.00037977699815231586,
+          "mean_abs_error": 21.0397891998291
+        }
+      },
+      "missing": {}
+    },
+    {
+      "name": "Fortran vs CUDA hybrid",
+      "baseline_dims": {
+        "time": 1,
+        "lat": 128,
+        "lon": 256,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 257,
+        "latb": 129
+      },
+      "candidate_dims": {
+        "time": 1,
+        "lat": 128,
+        "lon": 256,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 257,
+        "latb": 129
+      },
+      "dimension_match": true,
+      "variables": {
+        "temp": {
+          "pass": false,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            128,
+            256
+          ],
+          "finite_values": 819200,
+          "baseline_mean": 251.65447998046875,
+          "candidate_mean": 251.65029907226562,
+          "mean_difference": -0.004180908203125,
+          "max_abs_error": 2.427764892578125,
+          "rmse": 0.1455802928975639,
+          "max_relative_error": 0.008506186306476593,
+          "relative_l2_error": 0.0005780166159593003,
+          "mean_abs_error": 0.06104418635368347
+        },
+        "ucomp": {
+          "pass": false,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            128,
+            256
+          ],
+          "finite_values": 819200,
+          "baseline_mean": 3.5313000679016113,
+          "candidate_mean": 3.5268566608428955,
+          "mean_difference": -0.00444340705871582,
+          "max_abs_error": 4.13344669342041,
+          "rmse": 0.32355183639845264,
+          "max_relative_error": 50329.171875,
+          "relative_l2_error": 0.07017041655080387,
+          "mean_abs_error": 0.15340140461921692
+        },
+        "vcomp": {
+          "pass": false,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            128,
+            256
+          ],
+          "finite_values": 819200,
+          "baseline_mean": 0.0001277019764529541,
+          "candidate_mean": 4.76194909424521e-05,
+          "mean_difference": -8.008248551050201e-05,
+          "max_abs_error": 4.982376575469971,
+          "rmse": 0.39328262353110877,
+          "max_relative_error": 491820.0,
+          "relative_l2_error": 1.0287951186041908,
+          "mean_abs_error": 0.1902320683002472
+        },
+        "ps": {
+          "pass": false,
+          "dims": [
+            "time",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            128,
+            256
+          ],
+          "finite_values": 32768,
+          "baseline_mean": 100347.375,
+          "candidate_mean": 100347.28125,
+          "mean_difference": -0.09375,
+          "max_abs_error": 247.9140625,
+          "rmse": 38.1101789839342,
+          "max_relative_error": 0.002479683142155409,
+          "relative_l2_error": 0.00037977115700973924,
+          "mean_abs_error": 21.03960418701172
+        }
+      },
+      "missing": {}
+    },
+    {
+      "name": "CPU hybrid vs CUDA hybrid",
+      "baseline_dims": {
+        "time": 1,
+        "lat": 128,
+        "lon": 256,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 257,
+        "latb": 129
+      },
+      "candidate_dims": {
+        "time": 1,
+        "lat": 128,
+        "lon": 256,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 257,
+        "latb": 129
+      },
+      "dimension_match": true,
+      "variables": {
+        "temp": {
+          "pass": false,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            128,
+            256
+          ],
+          "finite_values": 819200,
+          "baseline_mean": 251.6503143310547,
+          "candidate_mean": 251.65029907226562,
+          "mean_difference": -1.52587890625e-05,
+          "max_abs_error": 0.01763916015625,
+          "rmse": 0.0003805303182532955,
+          "max_relative_error": 6.29620990366675e-05,
+          "relative_l2_error": 1.5108967759030907e-06,
+          "mean_abs_error": 8.412288298131898e-05
+        },
+        "ucomp": {
+          "pass": false,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            128,
+            256
+          ],
+          "finite_values": 819200,
+          "baseline_mean": 3.526857614517212,
+          "candidate_mean": 3.5268566608428955,
+          "mean_difference": -9.5367431640625e-07,
+          "max_abs_error": 0.17983698844909668,
+          "rmse": 0.0023412676304258354,
+          "max_relative_error": 460.86883544921875,
+          "relative_l2_error": 0.0005086038403267697,
+          "mean_abs_error": 0.0003748753806576133
+        },
+        "vcomp": {
+          "pass": false,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            128,
+            256
+          ],
+          "finite_values": 819200,
+          "baseline_mean": 4.7621502744732425e-05,
+          "candidate_mean": 4.76194909424521e-05,
+          "mean_difference": -2.0118022803217173e-09,
+          "max_abs_error": 0.211041659116745,
+          "rmse": 0.00261618009423396,
+          "max_relative_error": 13299.4208984375,
+          "relative_l2_error": 0.006935491909733668,
+          "mean_abs_error": 0.00040382836596108973
+        },
+        "ps": {
+          "pass": false,
+          "dims": [
+            "time",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            128,
+            256
+          ],
+          "finite_values": 32768,
+          "baseline_mean": 100347.28125,
+          "candidate_mean": 100347.28125,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.3203125,
+          "rmse": 0.023492272273152693,
+          "max_relative_error": 3.229224148526555e-06,
+          "relative_l2_error": 2.3410269447031818e-07,
+          "mean_abs_error": 0.011096000671386719
+        }
+      },
+      "missing": {}
+    }
+  ]
+}

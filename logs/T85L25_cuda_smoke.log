@@ -1,0 +1,292 @@
+=== T85L25 CUDA forcing smoke test ===
+Wed Jun 17 17:45:13 EDT 2026
+ROOT_DIR=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+=== Environment ===
+GFDL_BASE=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+GFDL_ENV=hybrid
+USE_CUDA_HS_FORCE=1
+GFDL_MKMF_TEMPLATE=hybrid_cuda
+HS_FORCE_BACKEND=cuda
+HS_PROFILE=1
+python3=/usr/bin/python3
+mpifort=/usr/bin/mpifort
+nvcc=/usr/local/cuda/bin/nvcc
+nc-config=/usr/bin/nc-config
+nvidia-smi=/usr/bin/nvidia-smi
+Wed Jun 17 17:45:13 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GH200 480GB             On  |   00000009:01:00.0 Off |                    0 |
+| N/A   22C    P0             86W /  700W |       0MiB /  97871MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+=== Preflight checks ===
+2026-06-17 17:45:13,980 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+nvidia-smi -L output:
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-e4d00548-d2b6-2f8a-ebfb-be0cb1c21765)
+=== Build CUDA-enabled hybrid executable ===
+2026-06-17 17:45:14,107 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-17 17:45:14,145 - isca - INFO - RRTM compilation disabled.
+2026-06-17 17:45:14,145 - isca - INFO - SOCRATES compilation disabled.
+rm -rf build libhs_forcing.a bin
+mkdir -p build
+g++ -O2 -std=c++17 -Iinclude -DUSE_CUDA_HS_FORCE -I../../cuda/forcing_module -c src/held_suarez_c_api.cpp -o build/held_suarez_c_api.o
+nvcc -O2 -std=c++17 -Iinclude -I../../cuda/forcing_module -c ../../cuda/forcing_module/hs_forcing_cuda.cu -o build/hs_forcing_cuda.o
+ar rcs libhs_forcing.a build/held_suarez_c_api.o build/hs_forcing_cuda.o
+2026-06-17 17:45:15,888 - isca - INFO - Writing path_names to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/path_names'
+2026-06-17 17:45:15,929 - isca - INFO - Running compiler
+2026-06-17 17:45:15,931 - isca - INFO - Loading hybrid ubuntu-conda environment
+2026-06-17 17:45:15,931 - isca - INFO - Loading basic ubuntu-conda environment
+2026-06-17 17:45:15,933 - isca - INFO - /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/path_names
+2026-06-17 17:45:16,274 - isca - INFO - ................................................................................................................................. Makefile is ready.
+2026-06-17 17:45:16,322 - isca - INFO - make: Nothing to be done for 'all'.
+2026-06-17 17:45:16,368 - isca - INFO - make: 'held_suarez_hybrid.x' is up to date.
+2026-06-17 17:45:16,369 - isca - INFO - Compilation complete.
+Building hybrid Held-Suarez via CodeBase.compile()
+Building hybrid forcing C++ library
+  workdir: /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/../translated/held_suarez/cpp/forcing_module
+  CXX: /usr/bin/g++
+  AR: /usr/bin/ar
+  USE_CUDA_HS_FORCE: 1
+  NVCC: /usr/local/cuda/bin/nvcc
+  CXX target: aarch64-linux-gnu
+Generated: /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/held_suarez_hybrid.x
+=== Run 1-day T85L25 CUDA hybrid smoke test ===
+2026-06-17 17:45:16,436 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-17 17:45:16,487 - isca - INFO - RRTM compilation disabled.
+2026-06-17 17:45:16,487 - isca - INFO - SOCRATES compilation disabled.
+2026-06-17 17:45:16,491 - isca - INFO - RRTM compilation disabled.
+2026-06-17 17:45:16,491 - isca - INFO - SOCRATES compilation disabled.
+2026-06-17 17:45:16,502 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_T85L25_cuda_smoke/run'
+2026-06-17 17:45:16,578 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_T85L25_cuda_smoke/run/input.nml'
+2026-06-17 17:45:16,581 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_T85L25_cuda_smoke/run/field_table'
+2026-06-17 17:45:16,603 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_T85L25_cuda_smoke/run/diag_table'
+2026-06-17 17:45:16,607 - isca - INFO - Running without restart file
+2026-06-17 17:45:16,611 - isca - INFO - Beginning run 1
+2026-06-17 17:45:16,614 - isca - INFO - process running as 195501
+2026-06-17 17:45:16,614 - isca - DEBUG - Loading hybrid ubuntu-conda environment
+2026-06-17 17:45:16,614 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-17 17:45:17,402 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-17 17:45:17,402 - isca - DEBUG - &MPP_IO_NML
+2026-06-17 17:45:17,402 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-17 17:45:17,402 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-17 17:45:17,402 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-17 17:45:17,402 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-17 17:45:17,402 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-17 17:45:17,402 - isca - DEBUG - /
+2026-06-17 17:45:17,402 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-17 17:45:17,429 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-17 17:45:17,435 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-17 17:45:17,436 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-17 17:45:17,436 - isca - DEBUG - X-AXIS =  256
+2026-06-17 17:45:17,436 - isca - DEBUG - Y-AXIS =    8   8   8   8   8   8   8   8   8   8   8   8   8   8   8   8
+2026-06-17 17:45:17,450 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-17 17:45:30,299 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,300 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.77900000E+00,  1.65937500E-02
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,300 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.63300000E+00,  1.60868056E-02
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,300 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.77700000E+00,  1.65868056E-02
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,300 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.73900000E+00,  1.64548611E-02
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,300 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.70700000E+00,  1.63437500E-02
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,300 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.55800000E+00,  1.58263889E-02
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,300 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.68700000E+00,  1.62743056E-02
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,300 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.75700000E+00,  1.65173611E-02
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,300 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.51500000E+00,  1.56770833E-02
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,300 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.74600000E+00,  1.64791667E-02
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,300 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,300 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.67200000E+00,  1.62222222E-02
+2026-06-17 17:45:30,300 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,301 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,301 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,301 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.77400000E+00,  1.65763889E-02
+2026-06-17 17:45:30,301 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,301 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,301 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,301 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.73300000E+00,  1.64340278E-02
+2026-06-17 17:45:30,301 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,301 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,301 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,301 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.75800000E+00,  1.65208333E-02
+2026-06-17 17:45:30,301 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,301 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,301 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,301 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.67400000E+00,  1.62291667E-02
+2026-06-17 17:45:30,301 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,301 - isca - DEBUG - HS_PROFILE Fortran wrapper profile summary
+2026-06-17 17:45:30,301 - isca - DEBUG - region,calls,total_seconds,avg_seconds
+2026-06-17 17:45:30,301 - isca - DEBUG - fortran_iso_c_wrapper,288,  4.86000000E+00,  1.68750000E-02
+2026-06-17 17:45:30,301 - isca - DEBUG - HS_PROFILE end Fortran wrapper profile summary
+2026-06-17 17:45:30,401 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     819200.
+2026-06-17 17:45:30,585 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=      102400
+2026-06-17 17:45:30,585 - isca - DEBUG - 
+2026-06-17 17:45:30,585 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-17 17:45:30,585 - isca - DEBUG - 
+2026-06-17 17:45:30,585 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-17 17:45:30,585 - isca - DEBUG - Total runtime                        13.182971     13.182972     13.182972      0.000000  1.000     0     0    15
+2026-06-17 17:45:30,585 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-17 17:45:30,646 - isca - DEBUG - 
+2026-06-17 17:45:30,646 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,646 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,646 - isca - DEBUG - c_interface_entry,288,4.770647887e+00,1.656474961e-02,14745600,3.235302658e-07,0.000000
+2026-06-17 17:45:30,646 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,646 - isca - DEBUG - 
+2026-06-17 17:45:30,646 - isca - DEBUG - 
+2026-06-17 17:45:30,646 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,646 - isca - DEBUG - 
+2026-06-17 17:45:30,646 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,646 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,646 - isca - DEBUG - c_interface_entry,288,4.705488763e+00,1.633850265e-02,14745600,3.191113799e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.729675871e+00,1.642248566e-02,14745600,3.207516731e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.688804458e+00,1.628057103e-02,14745600,3.179799030e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.731738776e+00,1.642964853e-02,14745600,3.208915728e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.865383012e+00,1.689369101e-02,14745600,3.299549026e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.552140009e+00,1.580604170e-02,14745600,3.087117519e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.624849903e+00,1.605850661e-02,14745600,3.136427072e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.520379670e+00,1.569576274e-02,14745600,3.065578661e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.764796685e+00,1.654443293e-02,14745600,3.231334557e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.759240430e+00,1.652514038e-02,14745600,3.227566481e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.670723686e+00,1.621779058e-02,14745600,3.167537222e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.748618887e+00,1.648826002e-02,14745600,3.220363286e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.673346818e+00,1.622689867e-02,14745600,3.169316147e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.778233083e+00,1.659108709e-02,14745600,3.240446698e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:30,647 - isca - DEBUG - region,calls,total_seconds,avg_seconds,cells,seconds_per_cell,fraction_of_cpp_driver
+2026-06-17 17:45:30,647 - isca - DEBUG - c_interface_entry,288,4.762271945e+00,1.653566648e-02,14745600,3.229622359e-07,0.000000
+2026-06-17 17:45:30,647 - isca - DEBUG - HS_PROFILE end C++ forcing profile summary
+2026-06-17 17:45:30,647 - isca - DEBUG - 
+2026-06-17 17:45:31,550 - isca - INFO - Run 1 complete
+2026-06-17 17:45:31,638 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-17 17:45:44,400 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_T85L25_cuda_smoke/restarts/res0001.tar.gz
+2026-06-17 17:45:44,406 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_T85L25_cuda_smoke/run0001/input.nml'
+2026-06-17 17:45:44,410 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_T85L25_cuda_smoke/run0001/field_table'
+2026-06-17 17:45:44,417 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_T85L25_cuda_smoke/run0001/diag_table'
+2026-06-17 17:45:44,467 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_T85L25_cuda_smoke/run'
+Experiment = held_suarez_T85L25_cuda_smoke
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_hybrid/held_suarez_hybrid.x
+Resolution = T85
+Levels = 25
+Days = 1
+dt_atmos = 300
+num_cores = 16
+HS_FORCE_BACKEND = cuda
+HS_PROFILE = 1
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_T85L25_cuda_smoke
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_T85L25_cuda_smoke/run
+
+real	0m28.101s
+user	2m50.893s
+sys	0m33.002s
+=== Smoke test complete ===
+Wed Jun 17 17:45:44 EDT 2026
+Log written to logs/T85L25_cuda_smoke.log

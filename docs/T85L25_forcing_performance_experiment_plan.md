@@ -123,7 +123,7 @@ The code intentionally does not silently fall back to CPU if
 All executables are generated under the Isca work tree:
 
 ```text
-$GFDL_WORK/codebase/<source-token>/build/held_suarez_fortran/held_suarez_fortran.x
+$GFDL_WORK/codebase/_isca/build/held_suarez/held_suarez.x
 $GFDL_WORK/codebase/<source-token>/build/held_suarez_hybrid/held_suarez_hybrid.x
 ```
 
@@ -145,18 +145,146 @@ This plan uses option 1 for simplicity.
 Run inside the Isca Apptainer container or use the existing container wrapper
 where shown.
 
+## Smoke Test First
+
+Before any 30-day T85L25 performance run, first verify that the CUDA-enabled
+hybrid executable builds and that a short T85L25 CUDA run starts, writes output,
+and prints `HS_PROFILE` timing.
+
+Smoke-test scripts:
+
+```text
+run_T85L25_cuda_smoke.sh
+scripts/run_T85L25_cuda_smoke.sh
+```
+
+Use the root wrapper from the H100/GPU host allocation:
+
+```bash
+./run_T85L25_cuda_smoke.sh
+```
+
+The root wrapper enters the Isca Apptainer container with `--nv`, sets the
+Isca runtime environment, then runs the container-side script.  This is the
+recommended command from the repository root.
+
+If you are already inside the Isca container on a GPU-visible node, run:
+
+```bash
+scripts/run_T85L25_cuda_smoke.sh
+```
+
+Equivalent manual container entry:
+
+```bash
+apptainer exec --nv \
+  --bind /explore/nobackup/people/jli30:/explore/nobackup/people/jli30 \
+  /lscratch/jli30/isca-sandbox \
+  bash
+```
+
+Then inside the container:
+
+```bash
+export GFDL_BASE=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+export GFDL_WORK=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+export GFDL_DATA=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+export GFDL_ENV=hybrid
+export OMPI_MCA_rmaps_base_oversubscribe=1
+export OMPI_MCA_btl_vader_single_copy_mechanism=none
+cd ${GFDL_BASE}
+scripts/run_T85L25_cuda_smoke.sh
+```
+
+The script does all of the following:
+
+```text
+USE_CUDA_HS_FORCE=1
+GFDL_ENV=hybrid
+GFDL_MKMF_TEMPLATE=hybrid_cuda
+HS_FORCE_BACKEND=cuda
+HS_PROFILE=1
+resolution = T85
+num_levels = 25
+dt_atmos = 300
+days = 1
+num_cores = 16
+```
+
+Log:
+
+```text
+logs/T85L25_cuda_smoke.log
+```
+
+Expected output directory:
+
+```text
+$GFDL_DATA/held_suarez_T85L25_cuda_smoke/
+```
+
+Expected success markers:
+
+```text
+Generated: .../held_suarez_hybrid.x
+Resolution = T85
+Levels = 25
+dt_atmos = 300
+HS_FORCE_BACKEND = cuda
+HS_PROFILE Fortran wrapper profile summary
+HS_PROFILE C++ forcing profile summary
+Run 1 complete
+```
+
+If this smoke test fails, do not start the 30-day comparison.  Diagnose the
+first build, link, CUDA runtime, or model-startup error from
+`logs/T85L25_cuda_smoke.log`.
+
+Preflight failure means the script is not running in the correct execution
+environment.  Required checks include:
+
+```text
+mpifort available
+nc-config available
+nvcc available
+python can import isca and jinja2
+nvidia-smi -L reports at least one line beginning with `GPU `
+```
+
+If the log shows missing `mpifort`, missing `nvcc`, missing `nc-config`,
+`ModuleNotFoundError: No module named 'jinja2'`, or `No devices were found`,
+then rerun from an allocated H100/GPU node through the root wrapper:
+
+```bash
+./run_T85L25_cuda_smoke.sh
+```
+
+If the build succeeds but the run aborts with:
+
+```text
+HS CUDA backend error: cudaGetDeviceCount failed: no CUDA-capable device is detected
+```
+
+then the executable is CUDA-enabled, but the container cannot see a GPU.  This
+is not a model-code or link failure.  Re-run on a GPU-visible allocation and
+confirm the smoke log contains a line like:
+
+```text
+nvidia-smi -L output:
+GPU 0: ...
+```
+
 ### A. Build all-Fortran baseline
 
 ```bash
-GFDL_ENV=ubuntu_conda \
-python3 hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py fortran \
+ls -lh ${GFDL_WORK}/codebase/_isca/build/held_suarez/held_suarez.x \
   2>&1 | tee logs/T85L25_build_fortran.log
 ```
 
 Expected executable:
 
 ```text
-$GFDL_WORK/codebase/<source-token>/build/held_suarez_fortran/held_suarez_fortran.x
+$GFDL_WORK/codebase/_isca/build/held_suarez/held_suarez.x
 ```
 
 ### B. Build CPU C++ hybrid forcing
@@ -197,9 +325,25 @@ NVCC= /path/to/nvcc
 
 ## Run Commands
 
-The following commands use a small inline runner so that all three variants use
-the same T85L25 namelist settings while selecting different prebuilt
-executables.
+Preferred production run scripts:
+
+```bash
+scripts/run_T85L25_fortran_30day.sh
+scripts/run_T85L25_cpu_hybrid_30day.sh
+scripts/run_T85L25_cuda_hybrid_30day.sh
+```
+
+Sequential wrapper:
+
+```bash
+scripts/run_T85L25_all.sh
+```
+
+These scripts use `scripts/run_T85L25_case.py`, preserve existing output by
+default, and only overwrite `run0001` when `T85_OVERWRITE=1` is exported.
+
+The inline runner below is retained as a reference for the underlying Isca
+experiment mechanics. Prefer the checked-in scripts above for production runs.
 
 Common settings:
 
@@ -219,9 +363,11 @@ Define the reusable runner once:
 run_t85_case() {
   local exp_name="$1"
   local executable_name="$2"
-  /usr/bin/time -p python3 - "${exp_name}" "${executable_name}" \
+  local codebase_dir="${3:-${GFDL_BASE}}"
+  time python3 - "${exp_name}" "${executable_name}" "${codebase_dir}" \
     "${SCALING_RES}" "${SCALING_LEVELS}" "${SCALING_DT}" "${SCALING_DAYS}" "${SCALING_CORES}" <<'PY'
 import sys
+import os
 from pathlib import Path
 
 repo_root = Path.cwd()
@@ -230,15 +376,15 @@ sys.path.insert(0, str(repo_root / "exp" / "test_cases" / "held_suarez"))
 import held_suarez_test_case as original
 from isca import DryCodeBase, Experiment, GFDL_BASE
 
-exp_name, executable_name = sys.argv[1], sys.argv[2]
-resolution, levels = sys.argv[3], int(sys.argv[4])
-dt_atmos, days, num_cores = int(sys.argv[5]), int(sys.argv[6]), int(sys.argv[7])
+exp_name, executable_name, codebase_dir = sys.argv[1], sys.argv[2], sys.argv[3]
+resolution, levels = sys.argv[4], int(sys.argv[5])
+dt_atmos, days, num_cores = int(sys.argv[6]), int(sys.argv[7]), int(sys.argv[8])
 
 class RuntimeCodeBase(DryCodeBase):
     pass
 
 RuntimeCodeBase.executable_name = executable_name
-cb = RuntimeCodeBase.from_directory(GFDL_BASE)
+cb = RuntimeCodeBase.from_directory(codebase_dir)
 exp = Experiment(exp_name, codebase=cb)
 exp.namelist = original.namelist.copy()
 exp.diag_table = original.diag.copy()
@@ -253,7 +399,8 @@ print("Days =", days)
 print("dt_atmos =", dt_atmos)
 print("num_cores =", num_cores)
 print("Data dir =", exp.datadir)
-exp.run(1, num_cores=num_cores, use_restart=False, overwrite_data=True)
+overwrite = bool(int(os.environ.get("T85_OVERWRITE", "0")))
+exp.run(1, num_cores=num_cores, use_restart=False, overwrite_data=overwrite)
 PY
 }
 ```
@@ -262,14 +409,14 @@ PY
 
 ```bash
 HS_PROFILE=0 HS_FORCE_BACKEND= \
-run_t85_case held_suarez_T85L25_fortran held_suarez_fortran.x \
+run_t85_case held_suarez_fortran_T85L25 held_suarez.x /isca \
   2>&1 | tee logs/T85L25_fortran_30day.log
 ```
 
 Expected output:
 
 ```text
-$GFDL_DATA/held_suarez_T85L25_fortran/run0001/atmos_monthly.nc
+$GFDL_DATA/held_suarez_fortran_T85L25/run0001/atmos_monthly.nc
 ```
 
 ### B. Run CPU C++ hybrid forcing
@@ -278,14 +425,14 @@ Run this before rebuilding the hybrid executable with CUDA support:
 
 ```bash
 HS_PROFILE=1 HS_FORCE_BACKEND=cpu \
-run_t85_case held_suarez_T85L25_hybrid_cpu held_suarez_hybrid.x \
+run_t85_case held_suarez_hybrid_cpu_T85L25 held_suarez_hybrid.x \
   2>&1 | tee logs/T85L25_hybrid_cpu_30day.log
 ```
 
 Expected output:
 
 ```text
-$GFDL_DATA/held_suarez_T85L25_hybrid_cpu/run0001/atmos_monthly.nc
+$GFDL_DATA/held_suarez_hybrid_cpu_T85L25/run0001/atmos_monthly.nc
 logs/T85L25_hybrid_cpu_30day.log
 ```
 
@@ -302,14 +449,14 @@ First rebuild the hybrid executable with `USE_CUDA_HS_FORCE=1`, then run:
 
 ```bash
 HS_PROFILE=1 HS_FORCE_BACKEND=cuda \
-run_t85_case held_suarez_T85L25_hybrid_cuda held_suarez_hybrid.x \
+run_t85_case held_suarez_hybrid_cuda_T85L25 held_suarez_hybrid.x \
   2>&1 | tee logs/T85L25_hybrid_cuda_30day.log
 ```
 
 Expected output:
 
 ```text
-$GFDL_DATA/held_suarez_T85L25_hybrid_cuda/run0001/atmos_monthly.nc
+$GFDL_DATA/held_suarez_hybrid_cuda_T85L25/run0001/atmos_monthly.nc
 logs/T85L25_hybrid_cuda_30day.log
 ```
 
@@ -317,7 +464,7 @@ logs/T85L25_hybrid_cuda_30day.log
 
 For each run, extract:
 
-- shell `real`, `user`, `sys` from `/usr/bin/time -p`;
+- shell `real`, `user`, `sys` from the shell `time` output;
 - model MPP runtime from the Isca/FMS runtime summary;
 - forcing runtime from `HS_PROFILE` blocks for CPU and CUDA hybrid runs.
 
@@ -344,12 +491,43 @@ forcing_fraction = forcing_module_runtime / model_mpp_runtime
 
 ## Numerical Comparison Workflow
 
+Preferred forcing validation report:
+
+```bash
+export GFDL_DATA=${GFDL_DATA:-/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data}
+mkdir -p logs tests/reports
+
+python3 tests/validate_T85L25_forcing_outputs.py \
+  --fortran-exp held_suarez_fortran_T85L25 \
+  --cpu-exp held_suarez_hybrid_cpu_T85L25 \
+  --cuda-exp held_suarez_hybrid_cuda_T85L25 \
+  --filename atmos_monthly.nc \
+  --fields temperature ucomp vcomp ps \
+  --markdown-out tests/reports/T85L25_forcing_validation_report.md \
+  --json-out tests/reports/T85L25_forcing_validation_report.json \
+  2>&1 | tee logs/T85L25_forcing_validation.log
+```
+
+This command compares `atmos_monthly.nc` for:
+
+```text
+Fortran vs CPU hybrid
+Fortran vs CUDA hybrid
+CPU hybrid vs CUDA hybrid
+```
+
+It computes max absolute error, RMSE, max pointwise relative error, relative
+L2 error, and a variable-by-variable summary for `temp`, `ucomp`, `vcomp`,
+`ps`, plus any forcing-related diagnostics present in the NetCDF files.
+
+The pairwise JSON-only commands below are retained as a lower-level fallback.
+
 Compare all-Fortran vs CPU hybrid:
 
 ```bash
 python3 tests/compare_hybrid_outputs.py \
-  --baseline-exp held_suarez_T85L25_fortran \
-  --candidate-exp held_suarez_T85L25_hybrid_cpu \
+  --baseline-exp held_suarez_fortran_T85L25 \
+  --candidate-exp held_suarez_hybrid_cpu_T85L25 \
   --run 1 \
   --filename atmos_monthly.nc \
   --all-fields \
@@ -361,8 +539,8 @@ Compare all-Fortran vs CUDA hybrid:
 
 ```bash
 python3 tests/compare_hybrid_outputs.py \
-  --baseline-exp held_suarez_T85L25_fortran \
-  --candidate-exp held_suarez_T85L25_hybrid_cuda \
+  --baseline-exp held_suarez_fortran_T85L25 \
+  --candidate-exp held_suarez_hybrid_cuda_T85L25 \
   --run 1 \
   --filename atmos_monthly.nc \
   --all-fields \
@@ -374,8 +552,8 @@ Compare CPU hybrid vs CUDA hybrid:
 
 ```bash
 python3 tests/compare_hybrid_outputs.py \
-  --baseline-exp held_suarez_T85L25_hybrid_cpu \
-  --candidate-exp held_suarez_T85L25_hybrid_cuda \
+  --baseline-exp held_suarez_hybrid_cpu_T85L25 \
+  --candidate-exp held_suarez_hybrid_cuda_T85L25 \
   --run 1 \
   --filename atmos_monthly.nc \
   --all-fields \
@@ -400,9 +578,9 @@ logs/T85L25_compare_hybrid_cpu_vs_hybrid_cuda.log
 ## Expected Output Locations
 
 ```text
-$GFDL_DATA/held_suarez_T85L25_fortran/run0001/atmos_monthly.nc
-$GFDL_DATA/held_suarez_T85L25_hybrid_cpu/run0001/atmos_monthly.nc
-$GFDL_DATA/held_suarez_T85L25_hybrid_cuda/run0001/atmos_monthly.nc
+$GFDL_DATA/held_suarez_fortran_T85L25/run0001/atmos_monthly.nc
+$GFDL_DATA/held_suarez_hybrid_cpu_T85L25/run0001/atmos_monthly.nc
+$GFDL_DATA/held_suarez_hybrid_cuda_T85L25/run0001/atmos_monthly.nc
 ```
 
 Comparison reports:
