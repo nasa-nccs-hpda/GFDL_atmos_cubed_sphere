@@ -1,0 +1,150 @@
+=== Held-Suarez persistent CUDA FV kernels: 1-day smoke ===
+start_timestamp=2026-06-19T12:20:21-04:00
+CONTAINER=/lscratch/jli30/isca-sandbox
+GFDL_BASE=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+executable=held_suarez_fv_kernels_cuda.x
+experiment=held_suarez_fv_kernels_cuda_persistent_1day
+FV_KERNELS_CUDA_MODE=persistent
+FV_KERNELS_PROFILE=1
+FV_KERNELS_OVERWRITE=0
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+container_arch=aarch64
+gpu_status:
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-0ccd678d-b6de-62db-248a-7172ba48f25a)
+2026-06-19 12:20:21,635 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-19 12:20:21,735 - isca - INFO - RRTM compilation disabled.
+2026-06-19 12:20:21,735 - isca - INFO - SOCRATES compilation disabled.
+2026-06-19 12:20:21,738 - isca - INFO - RRTM compilation disabled.
+2026-06-19 12:20:21,738 - isca - INFO - SOCRATES compilation disabled.
+2026-06-19 12:20:21,741 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_persistent_1day'
+2026-06-19 12:20:21,767 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-06-19 12:20:21,773 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_persistent_1day/run'
+2026-06-19 12:20:22,297 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_persistent_1day/run/input.nml'
+2026-06-19 12:20:22,303 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_persistent_1day/run/field_table'
+2026-06-19 12:20:22,312 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_persistent_1day/run/diag_table'
+2026-06-19 12:20:22,318 - isca - INFO - Running without restart file
+2026-06-19 12:20:22,326 - isca - INFO - Beginning run 1
+2026-06-19 12:20:22,328 - isca - INFO - process running as 1385199
+2026-06-19 12:20:22,328 - isca - DEBUG - Loading hybrid ubuntu-conda environment
+2026-06-19 12:20:22,329 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-19 12:20:23,119 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-19 12:20:23,119 - isca - DEBUG - &MPP_IO_NML
+2026-06-19 12:20:23,119 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-19 12:20:23,119 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-19 12:20:23,119 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-19 12:20:23,119 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-19 12:20:23,119 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-19 12:20:23,119 - isca - DEBUG - /
+2026-06-19 12:20:23,119 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-19 12:20:23,132 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-19 12:20:23,140 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-19 12:20:23,141 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-19 12:20:23,141 - isca - DEBUG - X-AXIS =  128
+2026-06-19 12:20:23,141 - isca - DEBUG - Y-AXIS =    4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4
+2026-06-19 12:20:23,144 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-19 12:20:29,164 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-19 12:20:29,173 - isca - DEBUG - NOTE from PE    0: Potential error in diag_manager_end: ps NOT available, check if output interval > runlength. Netcdf fill_values are written
+2026-06-19 12:20:29,233 - isca - DEBUG - NOTE from PE    0: Potential error in diag_manager_end: ucomp NOT available, check if output interval > runlength. Netcdf fill_values are written
+2026-06-19 12:20:29,233 - isca - DEBUG - NOTE from PE    0: Potential error in diag_manager_end: vcomp NOT available, check if output interval > runlength. Netcdf fill_values are written
+2026-06-19 12:20:29,233 - isca - DEBUG - NOTE from PE    0: Potential error in diag_manager_end: temp NOT available, check if output interval > runlength. Netcdf fill_values are written
+2026-06-19 12:20:29,233 - isca - DEBUG - NOTE from PE    0: Potential error in diag_manager_end: vor NOT available, check if output interval > runlength. Netcdf fill_values are written
+2026-06-19 12:20:29,233 - isca - DEBUG - NOTE from PE    0: Potential error in diag_manager_end: div NOT available, check if output interval > runlength. Netcdf fill_values are written
+2026-06-19 12:20:29,248 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
+2026-06-19 12:20:29,337 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=       25600
+2026-06-19 12:20:29,337 - isca - DEBUG - 
+2026-06-19 12:20:29,337 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-19 12:20:29,337 - isca - DEBUG - 
+2026-06-19 12:20:29,337 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-19 12:20:29,337 - isca - DEBUG - Total runtime                         6.218618      6.218708      6.218625      0.000021  1.000     0     0    15
+2026-06-19 12:20:29,338 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=10 name=semi_x_3d calls=144 time=2.332696892 avg=1.619928397e-02
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=10 name=vanleer_x_3d calls=144 time=0.467938920 avg=3.249575833e-03
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=10 name=vanleer_sphere_3d calls=144 time=1.908744498 avg=1.325517013e-02
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=10 calls=432 allocation=1.372594265 h2d=1.886027396 kernel=0.946161345 sync=0.945402939 d2h=0.004921833 free=0.000524130 total=4.709181366
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=3 name=semi_x_3d calls=144 time=2.373653769 avg=1.648370673e-02
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=3 name=vanleer_x_3d calls=144 time=0.628958344 avg=4.367766278e-03
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=3 name=vanleer_sphere_3d calls=144 time=1.909073304 avg=1.325745350e-02
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=3 calls=432 allocation=1.412410434 h2d=2.101775860 kernel=0.954135744 sync=0.953120459 d2h=0.004793387 free=0.000756066 total=4.911499849
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=13 name=semi_x_3d calls=144 time=2.365566772 avg=1.642754703e-02
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=13 name=vanleer_x_3d calls=144 time=0.587107292 avg=4.077133972e-03
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=13 name=vanleer_sphere_3d calls=144 time=1.909497202 avg=1.326039724e-02
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=13 calls=432 allocation=1.392010029 h2d=2.084749663 kernel=0.955526655 sync=0.954120981 d2h=0.004602249 free=0.000873154 total=4.861986402
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=0 name=semi_x_3d calls=144 time=2.404150427 avg=1.669548908e-02
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=0 name=vanleer_x_3d calls=144 time=0.611739624 avg=4.248191833e-03
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=0 name=vanleer_sphere_3d calls=144 time=1.908006736 avg=1.325004678e-02
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=0 calls=432 allocation=1.334104945 h2d=2.098983239 kernel=0.946085984 sync=0.947314357 d2h=0.004825100 free=0.001383748 total=4.923688243
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=5 name=semi_x_3d calls=144 time=2.420234347 avg=1.680718297e-02
+2026-06-19 12:20:29,409 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=5 name=vanleer_x_3d calls=144 time=0.579471633 avg=4.024108562e-03
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=5 name=vanleer_sphere_3d calls=144 time=1.909701978 avg=1.326181929e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=5 calls=432 allocation=1.357259087 h2d=2.093520645 kernel=0.961756640 sync=0.959539178 d2h=0.004677769 free=0.000981091 total=4.909211797
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=2 name=semi_x_3d calls=144 time=2.225102459 avg=1.545210041e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=2 name=vanleer_x_3d calls=144 time=0.509301066 avg=3.536812958e-03
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=2 name=vanleer_sphere_3d calls=144 time=1.908419702 avg=1.325291460e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=2 calls=432 allocation=1.423581985 h2d=1.873000033 kernel=0.939829441 sync=0.939151343 d2h=0.004646735 free=0.000823042 total=4.642620731
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=9 name=semi_x_3d calls=144 time=2.437622352 avg=1.692793300e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=9 name=vanleer_x_3d calls=144 time=0.597285154 avg=4.147813569e-03
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=9 name=vanleer_sphere_3d calls=144 time=1.909981585 avg=1.326376101e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=9 calls=432 allocation=1.388048194 h2d=2.131225154 kernel=0.962119457 sync=0.960351366 d2h=0.004892844 free=0.000899170 total=4.944703554
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=1 name=semi_x_3d calls=144 time=2.213196222 avg=1.536941821e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=1 name=vanleer_x_3d calls=144 time=0.438124148 avg=3.042528806e-03
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=1 name=vanleer_sphere_3d calls=144 time=1.907986450 avg=1.324990590e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=1 calls=432 allocation=1.404411085 h2d=1.767941184 kernel=0.936156862 sync=0.934715000 d2h=0.005535475 free=0.001311876 total=4.559092324
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=6 name=semi_x_3d calls=144 time=2.389123157 avg=1.659113303e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=6 name=vanleer_x_3d calls=144 time=0.552814857 avg=3.838992063e-03
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=6 name=vanleer_sphere_3d calls=144 time=1.908677013 avg=1.325470148e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=6 calls=432 allocation=1.414614888 h2d=2.042119231 kernel=0.955362336 sync=0.954971679 d2h=0.004914092 free=0.001401892 total=4.850429779
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=15 name=semi_x_3d calls=144 time=2.291112171 avg=1.591050119e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=15 name=vanleer_x_3d calls=144 time=0.630133970 avg=4.375930347e-03
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=15 name=vanleer_sphere_3d calls=144 time=1.908729846 avg=1.325506838e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=15 calls=432 allocation=1.377496293 h2d=2.028282441 kernel=0.946714880 sync=0.945367301 d2h=0.004621161 free=0.001523428 total=4.829767987
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=11 name=semi_x_3d calls=144 time=2.377105201 avg=1.650767501e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=11 name=vanleer_x_3d calls=144 time=0.585257315 avg=4.064286910e-03
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=11 name=vanleer_sphere_3d calls=144 time=1.908879217 avg=1.325610567e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=11 calls=432 allocation=1.457958653 h2d=2.043303056 kernel=0.950549025 sync=0.949836111 d2h=0.005002258 free=0.001521060 total=4.871031621
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=8 name=semi_x_3d calls=144 time=2.391930532 avg=1.661062869e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=8 name=vanleer_x_3d calls=144 time=0.521889526 avg=3.624232819e-03
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=8 name=vanleer_sphere_3d calls=144 time=1.909355988 avg=1.325941658e-02
+2026-06-19 12:20:29,410 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=8 calls=432 allocation=1.451893292 h2d=1.994078939 kernel=0.952755840 sync=0.951748588 d2h=0.004817363 free=0.001712645 total=4.822993485
+2026-06-19 12:20:29,430 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=4 name=semi_x_3d calls=144 time=2.273857983 avg=1.579068044e-02
+2026-06-19 12:20:29,430 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=4 name=vanleer_x_3d calls=144 time=0.435916496 avg=3.027197889e-03
+2026-06-19 12:20:29,430 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=4 name=vanleer_sphere_3d calls=144 time=1.908503668 avg=1.325349769e-02
+2026-06-19 12:20:29,430 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=4 calls=432 allocation=1.399470176 h2d=1.818210198 kernel=0.944819100 sync=0.943361532 d2h=0.004832882 free=0.021459418 total=4.618068547
+2026-06-19 12:20:29,431 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=14 name=semi_x_3d calls=144 time=2.164067516 avg=1.502824664e-02
+2026-06-19 12:20:29,431 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=14 name=vanleer_x_3d calls=144 time=0.429529301 avg=2.982842368e-03
+2026-06-19 12:20:29,431 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=14 name=vanleer_sphere_3d calls=144 time=1.907675734 avg=1.324774815e-02
+2026-06-19 12:20:29,431 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=14 calls=432 allocation=1.300937465 h2d=1.772678240 kernel=0.937983104 sync=0.937586773 d2h=0.004759399 free=0.022143163 total=4.501086663
+2026-06-19 12:20:29,431 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=7 name=semi_x_3d calls=144 time=2.352397037 avg=1.633609053e-02
+2026-06-19 12:20:29,431 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=7 name=vanleer_x_3d calls=144 time=0.555069259 avg=3.854647632e-03
+2026-06-19 12:20:29,431 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=7 name=vanleer_sphere_3d calls=144 time=1.909147731 avg=1.325797035e-02
+2026-06-19 12:20:29,431 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=7 calls=432 allocation=1.370210194 h2d=2.010486338 kernel=0.949781473 sync=0.948943644 d2h=0.005170959 free=0.022265244 total=4.816417643
+2026-06-19 12:20:29,432 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=12 name=semi_x_3d calls=144 time=2.324635371 avg=1.614330119e-02
+2026-06-19 12:20:29,432 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=12 name=vanleer_x_3d calls=144 time=0.516767780 avg=3.588665139e-03
+2026-06-19 12:20:29,432 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_persistent rank=12 name=vanleer_sphere_3d calls=144 time=1.909085271 avg=1.325753660e-02
+2026-06-19 12:20:29,432 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_persistent rank=12 calls=432 allocation=1.378001096 h2d=1.952620160 kernel=0.946459169 sync=0.946273959 d2h=0.004664014 free=0.021566458 total=4.750287269
+2026-06-19 12:20:30,344 - isca - INFO - Run 1 complete
+2026-06-19 12:20:30,428 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-19 12:20:32,913 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_kernels_cuda_persistent_1day/restarts/res0001.tar.gz
+2026-06-19 12:20:32,917 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_kernels_cuda_persistent_1day/run0001/input.nml'
+2026-06-19 12:20:32,924 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_kernels_cuda_persistent_1day/run0001/field_table'
+2026-06-19 12:20:32,931 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_kernels_cuda_persistent_1day/run0001/diag_table'
+2026-06-19 12:20:33,007 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_persistent_1day/run'
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_fv_kernels_cuda_persistent_1day
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_kernels_cuda_persistent_1day
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_persistent_1day/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_fv_kernels_cuda/held_suarez_fv_kernels_cuda.x
+Days = 1
+dt_atmos = 600
+num_cores = 16
+production_diag = True
+
+real	0m11.446s
+user	1m7.521s
+sys	0m17.484s
+end_timestamp=2026-06-19T12:20:33-04:00
+output=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_kernels_cuda_persistent_1day/run0001
+log=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/logs/fv_kernels_cuda_persistent_1day.log

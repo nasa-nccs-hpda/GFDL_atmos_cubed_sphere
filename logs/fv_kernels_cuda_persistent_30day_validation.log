@@ -1,0 +1,6 @@
+=== Persistent CUDA vs Fortran and CPU C++ ===
+Wrote JSON report: tests/reports/fv_kernels_persistent_30day_vs_cpu_validation.json
+Wrote Markdown report: tests/reports/fv_kernels_persistent_30day_vs_cpu_validation.md
+=== Persistent CUDA vs stateless CUDA ===
+Wrote JSON report: tests/reports/fv_kernels_persistent_30day_vs_stateless_validation.json
+Wrote Markdown report: tests/reports/fv_kernels_persistent_30day_vs_stateless_validation.md

@@ -1,0 +1,22 @@
+make clean
+make[1]: Entering directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'
+rm -rf build bin outputs libfv_advection_kernels.a
+make[1]: Leaving directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'
+make USE_CUDA_FV_ADVECTION_KERNELS=1 cuda_check_impl
+make[1]: Entering directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'
+mkdir -p build
+g++ -O2 -std=c++17 -Wall -Wextra -Iinclude -DUSE_CUDA_FV_ADVECTION_KERNELS -I../../../cuda/fv_advection/kernels -c src/fv_advection_kernels.cpp -o build/fv_advection_kernels.o
+/usr/local/cuda/bin/nvcc -O2 -std=c++17 -Iinclude -I../../../cuda/fv_advection/kernels -c ../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu -o build/fv_advection_kernels_cuda.o
+ar rcs libfv_advection_kernels.a build/fv_advection_kernels.o build/fv_advection_kernels_cuda.o
+mkdir -p bin
+/usr/local/cuda/bin/nvcc -O2 -std=c++17 -Iinclude -I../../../cuda/fv_advection/kernels ../../../cuda/fv_advection/kernels/validate_fv_advection_kernels_cuda.cpp -L. -lfv_advection_kernels -o bin/validate_fv_advection_kernels_cuda
+./bin/validate_fv_advection_kernels_cuda ../../../../../tests/fortran_baseline/fv_advection_kernels outputs ../../../../../tests/reports/fv_advection_kernels_cuda_compare_report.json 1e-12 1e-12
+semi_x_dq: pass=true count=120 max_abs=0.000000e+00 max_rel=0.000000e+00 rmse=0.000000e+00 mismatches=0
+slope_x: pass=true count=120 max_abs=0.000000e+00 max_rel=0.000000e+00 rmse=0.000000e+00 mismatches=0
+integer_flux_x: pass=true count=120 max_abs=0.000000e+00 max_rel=0.000000e+00 rmse=0.000000e+00 mismatches=0
+vanleer_x_dq_dt: pass=true count=120 max_abs=0.000000e+00 max_rel=0.000000e+00 rmse=0.000000e+00 mismatches=0
+slope_sphere: pass=true count=168 max_abs=0.000000e+00 max_rel=0.000000e+00 rmse=0.000000e+00 mismatches=0
+vanleer_sphere_dq_dt: pass=true count=120 max_abs=0.000000e+00 max_rel=0.000000e+00 rmse=0.000000e+00 mismatches=0
+Wrote JSON report: ../../../../../tests/reports/fv_advection_kernels_cuda_compare_report.json
+overall status: PASS
+make[1]: Leaving directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'

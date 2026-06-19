@@ -1,0 +1,16 @@
+/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/tests/validate_T85L25_forcing_outputs.py:132: RuntimeWarning: overflow encountered in square
+  rel_l2 = float(math.sqrt(float(np_module.mean(diff**2))) / max(base_rms, rel_eps))
+/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/tests/validate_T85L25_forcing_outputs.py:135: RuntimeWarning: overflow encountered in square
+  rmse = float(math.sqrt(float(np_module.mean(diff**2))))
+/panfs/ccds02/app/modules/miniforge/platform/aarch64/rocky/9.4/24.9.2/envs/Deps/lib/python3.13/site-packages/numpy/_core/_methods.py:134: RuntimeWarning: overflow encountered in reduce
+  ret = umr_sum(arr, axis, dtype, out, keepdims, where=where)
+/panfs/ccds02/app/modules/miniforge/platform/aarch64/rocky/9.4/24.9.2/envs/Deps/lib/python3.13/site-packages/numpy/_core/fromnumeric.py:86: RuntimeWarning: overflow encountered in reduce
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/tests/validate_T85L25_forcing_outputs.py:130: RuntimeWarning: overflow encountered in divide
+  rel = abs_diff / denom
+/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/tests/validate_T85L25_forcing_outputs.py:131: RuntimeWarning: overflow encountered in square
+  base_rms = math.sqrt(float(np_module.mean(b**2)))
+/panfs/ccds02/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/tests/validate_T85L25_forcing_outputs.py:146: RuntimeWarning: invalid value encountered in scalar subtract
+  "mean_difference": float(np_module.nanmean(cand) - np_module.nanmean(base)),
+Wrote JSON report: tests/reports/fv_advection_kernels_resident_1day_model_validation.json
+Wrote Markdown report: tests/reports/fv_advection_kernels_resident_1day_model_validation.md

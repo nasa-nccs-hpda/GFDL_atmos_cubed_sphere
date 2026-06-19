@@ -1,0 +1,38 @@
+rm -rf build inputs outputs run_on_baseline
+make -C .. clean
+make[1]: Entering directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'
+rm -rf build bin outputs libfv_advection_kernels.a
+make[1]: Leaving directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'
+make -C .. USE_CUDA_FV_ADVECTION_KERNELS=1 lib
+make[1]: Entering directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'
+mkdir -p build
+g++ -O2 -std=c++17 -Wall -Wextra -Iinclude -DUSE_CUDA_FV_ADVECTION_KERNELS -I../../../cuda/fv_advection/kernels -c src/fv_advection_kernels.cpp -o build/fv_advection_kernels.o
+/usr/local/cuda/bin/nvcc -O2 -std=c++17 -Iinclude -I../../../cuda/fv_advection/kernels -c ../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu -o build/fv_advection_kernels_cuda.o
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(131): warning #177-D: function "fv_advection_kernels::cuda_backend::<unnamed>::PhaseCall::active" was declared but never referenced
+      bool active() const { return active_; }
+           ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+ar rcs libfv_advection_kernels.a build/fv_advection_kernels.o build/fv_advection_kernels_cuda.o
+make[1]: Leaving directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'
+mkdir -p build
+mpifort -O2 -std=f2008 -Wall -fcheck=bounds -cpp -ffree-line-length-none -DUSE_CUDA_FV_ADVECTION_KERNELS -c fv_advection_kernels_c_interface.F90 -o build/fv_advection_kernels_c_interface.o -Jbuild
+mpifort -O2 -std=f2008 -Wall -fcheck=bounds -cpp -ffree-line-length-none -DUSE_CUDA_FV_ADVECTION_KERNELS -c run_on_baseline.F90 -o build/run_on_baseline.o -Jbuild
+mpifort -O2 -std=f2008 -Wall -fcheck=bounds -cpp -ffree-line-length-none -DUSE_CUDA_FV_ADVECTION_KERNELS build/fv_advection_kernels_c_interface.o build/run_on_baseline.o -o run_on_baseline -L.. -L/usr/local/cuda/lib64 -lfv_advection_kernels -lstdc++ -lcudart
+mkdir -p inputs
+mkdir -p outputs
+cp ../../../../../../tests/fortran_baseline/fv_advection_kernels/inputs/*.bin inputs/
+cp ../../../../../../tests/fortran_baseline/fv_advection_kernels/inputs/params.txt inputs/
+FV_ADVECTION_KERNELS_BACKEND=cuda FV_KERNELS_CUDA_MODE=persistent ./run_on_baseline
+fv_advection kernel Fortran C-wrapper fixture complete. backend=cuda
+dims nx/ny/js/je/nz=8 8 2 6 3  dt=   1.500
+python3 ../compare_outputs.py ../../../../../../tests/fortran_baseline/fv_advection_kernels/outputs outputs ../../../../../../tests/reports/fv_advection_kernels_fortran_cuda_persistent_c_compare_report.json 1e-12 fortran_cuda_c
+Wrote JSON report: ../../../../../../tests/reports/fv_advection_kernels_fortran_cuda_persistent_c_compare_report.json
+overall status: PASS
+semi_x_dq: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0
+slope_x: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0
+integer_flux_x: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0
+vanleer_x_dq_dt: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0
+slope_sphere: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0
+vanleer_sphere_dq_dt: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0

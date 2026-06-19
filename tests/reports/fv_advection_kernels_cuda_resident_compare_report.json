@@ -1,0 +1,81 @@
+{
+  "kernel_bundle": "fv_advection_kernels",
+  "backend": "cuda",
+  "atol": 9.9999999999999998e-13,
+  "rtol": 9.9999999999999998e-13,
+  "overall_pass": true,
+  "results": [
+    {
+      "name": "semi_x_dq",
+      "pass": true,
+      "count": 120,
+      "max_abs_error": 0,
+      "max_rel_error": 0,
+      "rmse": 0,
+      "mismatches_above_tolerance": 0
+    },
+    {
+      "name": "slope_x",
+      "pass": true,
+      "count": 120,
+      "max_abs_error": 0,
+      "max_rel_error": 0,
+      "rmse": 0,
+      "mismatches_above_tolerance": 0
+    },
+    {
+      "name": "integer_flux_x",
+      "pass": true,
+      "count": 120,
+      "max_abs_error": 0,
+      "max_rel_error": 0,
+      "rmse": 0,
+      "mismatches_above_tolerance": 0
+    },
+    {
+      "name": "vanleer_x_dq_dt",
+      "pass": true,
+      "count": 120,
+      "max_abs_error": 0,
+      "max_rel_error": 0,
+      "rmse": 0,
+      "mismatches_above_tolerance": 0
+    },
+    {
+      "name": "slope_sphere",
+      "pass": true,
+      "count": 168,
+      "max_abs_error": 0,
+      "max_rel_error": 0,
+      "rmse": 0,
+      "mismatches_above_tolerance": 0
+    },
+    {
+      "name": "vanleer_sphere_dq_dt",
+      "pass": true,
+      "count": 120,
+      "max_abs_error": 0,
+      "max_rel_error": 0,
+      "rmse": 0,
+      "mismatches_above_tolerance": 0
+    },
+    {
+      "name": "resident_q1",
+      "pass": true,
+      "count": 120,
+      "max_abs_error": 0,
+      "max_rel_error": 0,
+      "rmse": 0,
+      "mismatches_above_tolerance": 0
+    },
+    {
+      "name": "resident_combined_dq_dt",
+      "pass": true,
+      "count": 120,
+      "max_abs_error": 0,
+      "max_rel_error": 0,
+      "rmse": 0,
+      "mismatches_above_tolerance": 0
+    }
+  ]
+}

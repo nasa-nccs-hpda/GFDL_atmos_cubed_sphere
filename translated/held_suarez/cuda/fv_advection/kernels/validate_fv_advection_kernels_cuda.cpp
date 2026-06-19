@@ -314,6 +314,10 @@ int main(int argc, char** argv) {
         std::vector<double> vanleer_x_dq_dt(x_count, 0.013);
         std::vector<double> slope_sphere_out(slope_sphere_count, -999.0);
         std::vector<double> vanleer_sphere_dq_dt(x_count, -0.021);
+        std::vector<double> resident_q1(x_count, -999.0);
+        std::vector<double> resident_q1_expected(x_count, -999.0);
+        std::vector<double> resident_dq_dt(x_count, 0.013);
+        std::vector<double> resident_dq_dt_expected(x_count, 0.013);
 
         require_success(fv_advection_kernels::cuda_backend::semi_x_3d_cuda(
                             p.nx, active_ny, p.nz, p.dt, p.dx, c.data(),
@@ -344,6 +348,36 @@ int main(int argc, char** argv) {
                             q_sphere.data(), vanleer_sphere_dq_dt.data()),
                         "vanleer_sphere_3d_cuda");
 
+        if (fv_advection_kernels::cuda_backend::resident_boundary_enabled()) {
+            fv_advection_kernels::semi_x_3d(
+                p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), ua.data(),
+                q_x.data(), resident_q1_expected.data());
+            for (std::size_t i = 0; i < x_count; ++i) {
+                resident_q1_expected[i] += q_x[i];
+            }
+            require_success(
+                fv_advection_kernels::cuda_backend::resident_advection_begin(
+                    p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), ua.data(),
+                    q_x.data(), resident_q1.data()),
+                "resident_advection_begin");
+
+            fv_advection_kernels::vanleer_x_3d(
+                p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), p.monotone,
+                uc.data(), q_x.data(), resident_dq_dt_expected.data());
+            fv_advection_kernels::vanleer_sphere_3d(
+                p.nx, active_ny, p.nz, p.dt, p.monotone, p.js == 1,
+                p.je == p.ny, c.data(), cc.data(), dy.data(), dy_plus.data(),
+                dy_minus.data(), vc.data(), q_sphere.data(),
+                resident_dq_dt_expected.data());
+            require_success(
+                fv_advection_kernels::cuda_backend::resident_advection_finish(
+                    p.nx, active_ny, p.nz, p.dt, p.dx, p.monotone,
+                    p.js == 1, p.je == p.ny, c.data(), cc.data(), dy.data(),
+                    dy_plus.data(), dy_minus.data(), uc.data(), vc.data(),
+                    q_sphere.data(), q_x.data(), resident_dq_dt.data()),
+                "resident_advection_finish");
+        }
+
         write_binary(join_path(out_dir, "output_semi_x_dq_cuda.bin"), semi_x_dq);
         write_binary(join_path(out_dir, "output_slope_x_cuda.bin"), slope_x_out);
         write_binary(join_path(out_dir, "output_integer_flux_x_cuda.bin"),
@@ -354,6 +388,10 @@ int main(int argc, char** argv) {
                      slope_sphere_out);
         write_binary(join_path(out_dir, "output_vanleer_sphere_dq_dt_cuda.bin"),
                      vanleer_sphere_dq_dt);
+        if (fv_advection_kernels::cuda_backend::resident_boundary_enabled()) {
+            write_binary(join_path(out_dir, "output_resident_q1_cuda.bin"), resident_q1);
+            write_binary(join_path(out_dir, "output_resident_dq_dt_cuda.bin"), resident_dq_dt);
+        }
 
         std::vector<std::pair<std::string, CompareResult>> results;
         results.push_back({"semi_x_dq",
@@ -386,6 +424,14 @@ int main(int argc, char** argv) {
                                               join_path(reference_dir, "output_vanleer_sphere_dq_dt.bin"),
                                               x_count),
                                           vanleer_sphere_dq_dt, atol, rtol)});
+        if (fv_advection_kernels::cuda_backend::resident_boundary_enabled()) {
+            results.push_back({"resident_q1",
+                               compare_arrays(resident_q1_expected, resident_q1,
+                                              atol, rtol)});
+            results.push_back({"resident_combined_dq_dt",
+                               compare_arrays(resident_dq_dt_expected,
+                                              resident_dq_dt, atol, rtol)});
+        }
 
         bool overall_pass = true;
         for (const auto& item : results) {

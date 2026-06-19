@@ -2,11 +2,13 @@ FC ?= gfortran
 FFLAGS ?= -O2 -std=f2008 -Wall -fcheck=bounds -cpp -ffree-line-length-none
 
 BACKEND ?= cpu
+CUDA_MODE ?= stateless
 CUDA_HOME ?= /usr/local/cuda
 CUDA_LIBDIR ?= $(CUDA_HOME)/lib64
 BASELINE_DIR ?= ../../../../../../tests/fortran_baseline/fv_advection_kernels
 REPORT ?= ../../../../../../tests/reports/fv_advection_kernels_fortran_c_compare_report.json
 CUDA_REPORT ?= ../../../../../../tests/reports/fv_advection_kernels_fortran_cuda_c_compare_report.json
+CUDA_PERSISTENT_REPORT ?= ../../../../../../tests/reports/fv_advection_kernels_fortran_cuda_persistent_c_compare_report.json
 COMPARE_TOL ?= 1e-12
 
 PARENT_DIR = ..
@@ -22,7 +24,11 @@ ifeq ($(BACKEND),cuda)
 FFLAGS += -DUSE_CUDA_FV_ADVECTION_KERNELS
 LDFLAGS ?= -L$(PARENT_DIR) -L$(CUDA_LIBDIR) -lfv_advection_kernels -lstdc++ -lcudart
 COMPARE_SUFFIX = fortran_cuda_c
+ifeq ($(CUDA_MODE),persistent)
+COMPARE_REPORT = $(CUDA_PERSISTENT_REPORT)
+else
 COMPARE_REPORT = $(CUDA_REPORT)
+endif
 else
 LDFLAGS ?= -L$(PARENT_DIR) -lfv_advection_kernels -lstdc++
 COMPARE_SUFFIX = fortran_c
@@ -56,7 +62,7 @@ endif
 run: $(RUN_BIN) inputs outputs
 	cp $(BASELINE_DIR)/inputs/*.bin inputs/
 	cp $(BASELINE_DIR)/inputs/params.txt inputs/
-	FV_ADVECTION_KERNELS_BACKEND=$(BACKEND) ./$(RUN_BIN)
+	FV_ADVECTION_KERNELS_BACKEND=$(BACKEND) FV_KERNELS_CUDA_MODE=$(CUDA_MODE) ./$(RUN_BIN)
 
 compare:
 	python3 ../compare_outputs.py $(BASELINE_DIR)/outputs outputs $(COMPARE_REPORT) $(COMPARE_TOL) $(COMPARE_SUFFIX)

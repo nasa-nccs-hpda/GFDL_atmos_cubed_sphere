@@ -70,6 +70,39 @@ int vanleer_sphere_3d_cuda(
     const double* q,
     double* dq_dt);
 
+bool resident_boundary_enabled();
+
+int resident_advection_begin(
+    int nx,
+    int ny,
+    int nz,
+    double half_dt,
+    double dx,
+    const double* c,
+    const double* ua,
+    const double* q,
+    double* q1_interior);
+
+int resident_advection_finish(
+    int nx,
+    int ny,
+    int nz,
+    double dt,
+    double dx,
+    bool monotone,
+    bool is_south_boundary,
+    bool is_north_boundary,
+    const double* c,
+    const double* cc,
+    const double* dy,
+    const double* dy_plus,
+    const double* dy_minus,
+    const double* uc,
+    const double* vc,
+    const double* q1,
+    const double* q2,
+    double* dq_dt);
+
 }  // namespace cuda_backend
 }  // namespace fv_advection_kernels
 
@@ -142,6 +175,40 @@ extern "C" int fv_vanleer_sphere_3d_cuda_c(
     const double* dy_minus,
     const double* vc,
     const double* q,
+    double* dq_dt);
+
+extern "C" int fv_advection_resident_enabled_cuda_c();
+
+extern "C" int fv_advection_resident_begin_cuda_c(
+    int nx,
+    int js,
+    int je,
+    int nz,
+    double half_dt,
+    double dx,
+    const double* c,
+    const double* ua,
+    const double* q,
+    double* q1_interior);
+
+extern "C" int fv_advection_resident_finish_cuda_c(
+    int nx,
+    int ny_total,
+    int js,
+    int je,
+    int nz,
+    double dt,
+    double dx,
+    int monotone,
+    const double* c,
+    const double* cc,
+    const double* dy,
+    const double* dy_plus,
+    const double* dy_minus,
+    const double* uc,
+    const double* vc,
+    const double* q1,
+    const double* q2,
     double* dq_dt);
 
 #endif  // FV_ADVECTION_KERNELS_CUDA_H

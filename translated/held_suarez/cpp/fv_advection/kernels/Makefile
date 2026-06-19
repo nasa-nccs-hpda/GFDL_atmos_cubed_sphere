@@ -6,6 +6,8 @@ NVCCFLAGS ?= -O2 -std=c++17 -Iinclude -I../../../cuda/fv_advection/kernels
 BASELINE_DIR ?= ../../../../../tests/fortran_baseline/fv_advection_kernels
 REPORT ?= ../../../../../tests/reports/fv_advection_kernels_cpp_compare_report.json
 CUDA_REPORT ?= ../../../../../tests/reports/fv_advection_kernels_cuda_compare_report.json
+CUDA_PERSISTENT_REPORT ?= ../../../../../tests/reports/fv_advection_kernels_cuda_persistent_compare_report.json
+CUDA_RESIDENT_REPORT ?= ../../../../../tests/reports/fv_advection_kernels_cuda_resident_compare_report.json
 COMPARE_TOL ?= 1e-12
 
 LIB = libfv_advection_kernels.a
@@ -22,7 +24,9 @@ OBJ += $(CUDA_OBJ)
 CXXFLAGS += -DUSE_CUDA_FV_ADVECTION_KERNELS -I../../../cuda/fv_advection/kernels
 endif
 
-.PHONY: all lib run compare check cuda_check cuda_check_impl clean
+.PHONY: all lib run compare check cuda_check cuda_check_impl \
+	cuda_persistent_check cuda_persistent_check_impl \
+	cuda_resident_check cuda_resident_check_impl clean
 
 all: lib $(DRIVER)
 
@@ -57,6 +61,22 @@ $(CUDA_DRIVER): $(LIB) $(CUDA_VALIDATE_SRC) ../../../cuda/fv_advection/kernels/f
 
 cuda_check_impl: $(CUDA_DRIVER)
 	./$(CUDA_DRIVER) $(BASELINE_DIR) outputs $(CUDA_REPORT) $(COMPARE_TOL) $(COMPARE_TOL)
+
+cuda_persistent_check:
+	$(MAKE) clean
+	$(MAKE) USE_CUDA_FV_ADVECTION_KERNELS=1 cuda_persistent_check_impl
+
+cuda_persistent_check_impl: $(CUDA_DRIVER)
+	FV_KERNELS_CUDA_MODE=persistent ./$(CUDA_DRIVER) \
+		$(BASELINE_DIR) outputs $(CUDA_PERSISTENT_REPORT) $(COMPARE_TOL) $(COMPARE_TOL)
+
+cuda_resident_check:
+	$(MAKE) clean
+	$(MAKE) USE_CUDA_FV_ADVECTION_KERNELS=1 cuda_resident_check_impl
+
+cuda_resident_check_impl: $(CUDA_DRIVER)
+	FV_KERNELS_CUDA_MODE=resident ./$(CUDA_DRIVER) \
+		$(BASELINE_DIR) outputs $(CUDA_RESIDENT_REPORT) $(COMPARE_TOL) $(COMPARE_TOL)
 
 build bin:
 	mkdir -p $@
