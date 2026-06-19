@@ -1,0 +1,36 @@
+rm -rf build inputs outputs run_on_baseline
+make -C .. clean
+make[1]: Entering directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'
+rm -rf build bin outputs libfv_advection_kernels.a
+make[1]: Leaving directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'
+make -C .. lib
+make[1]: Entering directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'
+mkdir -p build
+g++ -O2 -std=c++17 -Wall -Wextra -Iinclude -c src/fv_advection_kernels.cpp -o build/fv_advection_kernels.o
+ar rcs libfv_advection_kernels.a build/fv_advection_kernels.o
+make[1]: Leaving directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/kernels'
+mkdir -p build
+mpifort -O2 -std=f2008 -Wall -fcheck=bounds -cpp -ffree-line-length-none -c fv_advection_kernels_c_interface.F90 -o build/fv_advection_kernels_c_interface.o -Jbuild
+mpifort -O2 -std=f2008 -Wall -fcheck=bounds -cpp -ffree-line-length-none -c run_on_baseline.F90 -o build/run_on_baseline.o -Jbuild
+run_on_baseline.F90:102:28:
+
+  102 |   subroutine require_success(ierr, name)
+      |                            ^
+Warning: 'require_success' defined but not used [-Wunused-function]
+mpifort -O2 -std=f2008 -Wall -fcheck=bounds -cpp -ffree-line-length-none build/fv_advection_kernels_c_interface.o build/run_on_baseline.o -o run_on_baseline -L.. -lfv_advection_kernels -lstdc++
+mkdir -p inputs
+mkdir -p outputs
+cp ../../../../../../tests/fortran_baseline/fv_advection_kernels/inputs/*.bin inputs/
+cp ../../../../../../tests/fortran_baseline/fv_advection_kernels/inputs/params.txt inputs/
+FV_ADVECTION_KERNELS_BACKEND=cpu ./run_on_baseline
+fv_advection kernel Fortran C-wrapper fixture complete. backend=cpu
+dims nx/ny/js/je/nz=8 8 2 6 3  dt=   1.500
+python3 ../compare_outputs.py ../../../../../../tests/fortran_baseline/fv_advection_kernels/outputs outputs ../../../../../../tests/reports/fv_advection_kernels_fortran_c_compare_report.json 1e-12 fortran_c
+Wrote JSON report: ../../../../../../tests/reports/fv_advection_kernels_fortran_c_compare_report.json
+overall status: PASS
+semi_x_dq: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0
+slope_x: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0
+integer_flux_x: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0
+vanleer_x_dq_dt: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0
+slope_sphere: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0
+vanleer_sphere_dq_dt: PASS max_abs=0.000000e+00 rmse=0.000000e+00 mismatches=0

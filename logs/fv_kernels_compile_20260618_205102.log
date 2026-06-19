@@ -1,0 +1,38 @@
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+=== Inside container ===
+aarch64
+python3= /usr/bin/python3
+mpifort= /usr/bin/mpifort
+mpicc= /usr/bin/mpicc
+nc-config= /usr/bin/nc-config
+nf-config= /usr/bin/nf-config
+g++= /usr/bin/g++
+nvcc= /usr/local/cuda/bin/nvcc
+USE_CUDA_FV_ADVECTION_KERNELS= 0
+GFDL_MKMF_TEMPLATE= fv_kernels_hybrid
+TARGET= fv_kernels
+=== Compile Held-Suarez fv_advection kernel-bundle overlay ===
+2026-06-18 20:51:02,530 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-18 20:51:02,571 - isca - INFO - RRTM compilation disabled.
+2026-06-18 20:51:02,571 - isca - INFO - SOCRATES compilation disabled.
+rm -rf build bin outputs libfv_advection_kernels.a
+mkdir -p build
+g++ -O2 -std=c++17 -Wall -Wextra -Iinclude -c src/fv_advection_kernels.cpp -o build/fv_advection_kernels.o
+ar rcs libfv_advection_kernels.a build/fv_advection_kernels.o
+2026-06-18 20:51:03,162 - isca - INFO - Writing path_names to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_fv_kernels/path_names'
+2026-06-18 20:51:03,189 - isca - INFO - Running compiler
+2026-06-18 20:51:03,191 - isca - INFO - Loading hybrid ubuntu-conda environment
+2026-06-18 20:51:03,191 - isca - INFO - Loading basic ubuntu-conda environment
+2026-06-18 20:51:03,193 - isca - INFO - /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_fv_kernels/path_names
+2026-06-18 20:51:03,552 - isca - INFO - ................................................................................................................................. Makefile is ready.
+2026-06-18 20:51:03,600 - isca - INFO - make: Nothing to be done for 'all'.
+2026-06-18 20:51:03,648 - isca - INFO - make: 'held_suarez_fv_kernels.x' is up to date.
+2026-06-18 20:51:03,648 - isca - INFO - Compilation complete.
+Building Held-Suarez fv_advection kernel bundle C++ overlay via CodeBase.compile()
+Building fv_advection kernels C++/CUDA library
+  workdir: /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/../translated/held_suarez/cpp/fv_advection/kernels
+  CXX: /usr/bin/g++
+  AR: /usr/bin/ar
+  USE_CUDA_FV_ADVECTION_KERNELS: 0
+  CXX target: aarch64-linux-gnu
+Generated: /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_fv_kernels/held_suarez_fv_kernels.x

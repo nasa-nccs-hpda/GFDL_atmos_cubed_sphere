@@ -1,0 +1,44 @@
+rm -rf build inputs outputs run_on_baseline
+make -C .. clean
+make[1]: Entering directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/semi_y_3d'
+rm -rf build bin outputs libsemi_y_3d.a
+make[1]: Leaving directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/semi_y_3d'
+make -C .. USE_CUDA_SEMI_Y_3D=1 lib
+make[1]: Entering directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/semi_y_3d'
+mkdir -p build
+g++ -O2 -std=c++17 -Wall -Wextra -Iinclude -DUSE_CUDA_SEMI_Y_3D -I../../../cuda/fv_advection/semi_y_3d -c src/semi_y_3d.cpp -o build/semi_y_3d.o
+nvcc -O2 -std=c++17 -Iinclude -I../../../cuda/fv_advection/semi_y_3d -c ../../../cuda/fv_advection/semi_y_3d/semi_y_3d_cuda.cu -o build/semi_y_3d_cuda.o
+ar rcs libsemi_y_3d.a build/semi_y_3d.o build/semi_y_3d_cuda.o
+make[1]: Leaving directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/semi_y_3d'
+mkdir -p build
+mpifort -O2 -std=f2008 -Wall -fcheck=bounds -cpp -DUSE_CUDA_SEMI_Y_3D -c semi_y_3d_c_interface.F90 -o build/semi_y_3d_c_interface.o -Jbuild
+mpifort -O2 -std=f2008 -Wall -fcheck=bounds -cpp -DUSE_CUDA_SEMI_Y_3D -c run_on_baseline.F90 -o build/run_on_baseline.o -Jbuild
+mpifort -O2 -std=f2008 -Wall -fcheck=bounds -cpp -DUSE_CUDA_SEMI_Y_3D build/semi_y_3d_c_interface.o build/run_on_baseline.o -o run_on_baseline -L.. -L/usr/local/cuda/lib64 -lsemi_y_3d -lstdc++ -lcudart
+mkdir -p inputs
+mkdir -p outputs
+cp ../../../../../../tests/fortran_baseline/semi_y_3d/inputs/*.bin inputs/
+SEMI_Y_3D_BACKEND=cuda ./run_on_baseline
+semi_y_3d Fortran C-wrapper fixture complete. backend=cuda
+dims nx/js/je/nz=8 2 6 3  qx_jlo=0 qx_jhi=8 dt=  37.500
+dq min= -2.8056122449E+01 max=  1.6985294118E+01
+python3 ../compare_outputs.py ../../../../../../tests/fortran_baseline/semi_y_3d/outputs outputs ../../../../../../tests/reports/semi_y_3d_fortran_cuda_c_compare_report.json output_dq_fortran_cuda_c.bin
+{
+  "kernel": "semi_y_3d",
+  "reference": "../../../../../../tests/fortran_baseline/semi_y_3d/outputs/output_dq.bin",
+  "candidate": "outputs/output_dq_fortran_cuda_c.bin",
+  "variables": {
+    "dq": {
+      "pass": true,
+      "count": 120,
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0,
+      "rmse": 0.0,
+      "mismatches_above_tolerance": 0,
+      "atol": 1e-13,
+      "rtol": 1e-13,
+      "mismatch_rule": "abs_error > atol and rel_error > rtol",
+      "effective_mismatch_tolerance_note": 1e-13
+    }
+  },
+  "overall_pass": true
+}

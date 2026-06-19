@@ -1,0 +1,27 @@
+{
+  "kernel": "semi_y_3d",
+  "backend": "cuda",
+  "reference": "../../../../../tests/fortran_baseline/semi_y_3d/outputs/output_dq.bin",
+  "candidate": "outputs/output_dq_cuda.bin",
+  "comparisons": {
+    "fortran_vs_cuda": {
+      "pass": true,
+      "count": 120,
+      "max_abs_error": 0,
+      "max_rel_error": 0,
+      "rmse": 0,
+      "mismatches_above_tolerance": 0
+    },
+    "cpu_cpp_vs_cuda": {
+      "pass": true,
+      "count": 120,
+      "max_abs_error": 0,
+      "max_rel_error": 0,
+      "rmse": 0,
+      "mismatches_above_tolerance": 0
+    }
+  },
+  "atol": 1e-13,
+  "rtol": 1e-13,
+  "overall_pass": true
+}

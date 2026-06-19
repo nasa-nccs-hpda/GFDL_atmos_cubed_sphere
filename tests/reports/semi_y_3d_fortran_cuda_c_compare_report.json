@@ -1,0 +1,20 @@
+{
+  "kernel": "semi_y_3d",
+  "reference": "../../../../../../tests/fortran_baseline/semi_y_3d/outputs/output_dq.bin",
+  "candidate": "outputs/output_dq_fortran_cuda_c.bin",
+  "variables": {
+    "dq": {
+      "pass": true,
+      "count": 120,
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0,
+      "rmse": 0.0,
+      "mismatches_above_tolerance": 0,
+      "atol": 1e-13,
+      "rtol": 1e-13,
+      "mismatch_rule": "abs_error > atol and rel_error > rtol",
+      "effective_mismatch_tolerance_note": 1e-13
+    }
+  },
+  "overall_pass": true
+}

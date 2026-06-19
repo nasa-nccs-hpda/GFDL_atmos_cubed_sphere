@@ -260,7 +260,45 @@ memory/T85L25_FORCING_PERFORMANCE_CHECKPOINT.md
 
 ## Current State
 
-Fortran baseline harness exists:
+The first selected finite-volume local kernel, `semi_y_3d`, has completed the
+full staged workflow through 30-day model validation.
+
+Validated ladder:
+
+```text
+Fortran baseline fixture
+-> CPU C++ kernel
+-> CUDA kernel
+-> Fortran ISO_C_BINDING -> C++ kernel
+-> Fortran ISO_C_BINDING -> CUDA kernel
+-> native Isca fv_advection overlay, CPU C++ backend
+-> native Isca fv_advection overlay, CUDA backend
+-> 1-day model validation
+-> 30-day model validation
+```
+
+Key reports:
+
+```text
+tests/reports/semi_y_3d_cpp_compare_report.json
+tests/reports/semi_y_3d_cuda_compare_report.json
+tests/reports/semi_y_3d_fortran_c_compare_report.json
+tests/reports/semi_y_3d_fortran_cuda_c_compare_report.json
+tests/reports/semi_y_3d_1day_model_validation_report.md
+tests/reports/semi_y_3d_30day_model_validation_report.md
+docs/semi_y_3d_native_overlay_integration_report.md
+```
+
+30-day model validation result:
+
+```text
+Fortran vs CPU overlay:  max_abs_error=0, rmse=0
+Fortran vs CUDA overlay: max_abs_error=0, rmse=0
+CPU overlay vs CUDA:     max_abs_error=0, rmse=0
+Compared fields: ps, temp, ucomp, vcomp
+```
+
+Fortran baseline harness:
 
 ```text
 tests/fortran_baseline/semi_y_3d/
@@ -282,36 +320,23 @@ Important:
 - The harness uses a test-only copy of the routine body and minimal module
   state.
 - Production source was not modified.
-- The host shell did not have a Fortran compiler, so the harness was not run
-  there.
+- Native model integration uses an overlay:
+  `src/extra/local_overrides/fv_advection/fv_advection.F90`.
 
 ## Next Milestone
 
-Run baseline harness inside the Isca container:
-
-```bash
-cd tests/fortran_baseline/semi_y_3d
-make FC=mpifort
-./test_semi_y_3d
-```
-
-Expected outputs:
+Select the next finite-volume local kernel from:
 
 ```text
-tests/fortran_baseline/semi_y_3d/inputs/*.bin
-tests/fortran_baseline/semi_y_3d/outputs/output_dq.bin
+semi_x_3d
+slope_sphere
+slope_x
+vanleer_sphere_3d
+vanleer_x_3d
 ```
 
-After baseline succeeds:
-
-```text
-Fortran baseline
--> C++ implementation
--> comparison
--> C API
--> Fortran wrapper
--> hybrid integration
-```
+Then create its standalone Fortran baseline fixture and repeat the
+`semi_y_3d` staged workflow.
 
 ## Risks
 
@@ -330,6 +355,7 @@ Fortran baseline
 If resuming modernization:
 
 1. Read this checkpoint.
-2. Read `docs/translation_spec_semi_y_3d.md`.
-3. Verify baseline harness.
-4. Start C++ translation only after baseline outputs exist.
+2. Read `docs/semi_y_3d_native_overlay_integration_report.md`.
+3. Read `docs/fv_advection_kernel_modernization_plan.md`.
+4. Select the next FV local kernel and create its baseline harness before
+   starting C++ translation.

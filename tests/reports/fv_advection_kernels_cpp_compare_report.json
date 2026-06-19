@@ -1,0 +1,67 @@
+{
+  "candidate_outputs_dir": "outputs",
+  "reference_outputs_dir": "../../../../../tests/fortran_baseline/fv_advection_kernels/outputs",
+  "results": [
+    {
+      "count": 120,
+      "max_abs_error": 2.842170943040401e-14,
+      "mismatch_count": 0,
+      "name": "semi_x_dq",
+      "rmse": 1.3229585764680433e-14,
+      "status": "PASS",
+      "tolerance": 1e-12
+    },
+    {
+      "count": 120,
+      "max_abs_error": 0.0,
+      "mismatch_count": 0,
+      "name": "slope_x",
+      "rmse": 0.0,
+      "status": "PASS",
+      "tolerance": 1e-12
+    },
+    {
+      "count": 120,
+      "max_abs_error": 0.0,
+      "mismatch_count": 0,
+      "name": "integer_flux_x",
+      "rmse": 0.0,
+      "status": "PASS",
+      "tolerance": 1e-12
+    },
+    {
+      "count": 120,
+      "max_abs_error": 2.2737367544323206e-13,
+      "mismatch_count": 0,
+      "name": "vanleer_x_dq_dt",
+      "rmse": 2.528840130374332e-14,
+      "status": "PASS",
+      "tolerance": 1e-12
+    },
+    {
+      "count": 168,
+      "max_abs_error": 6.938893903907228e-18,
+      "mismatch_count": 0,
+      "name": "slope_sphere",
+      "rmse": 1.815450978688167e-18,
+      "status": "PASS",
+      "tolerance": 1e-12
+    },
+    {
+      "count": 120,
+      "max_abs_error": 0.0,
+      "mismatch_count": 0,
+      "name": "vanleer_sphere_dq_dt",
+      "rmse": 0.0,
+      "status": "PASS",
+      "tolerance": 1e-12
+    },
+    {
+      "count": 120,
+      "mismatch_count": 0,
+      "name": "find_cell_x_ii",
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS"
+}

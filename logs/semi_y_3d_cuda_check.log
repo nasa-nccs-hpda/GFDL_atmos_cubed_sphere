@@ -1,0 +1,17 @@
+make clean
+make[1]: Entering directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/semi_y_3d'
+rm -rf build bin outputs libsemi_y_3d.a
+make[1]: Leaving directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/semi_y_3d'
+make USE_CUDA_SEMI_Y_3D=1 cuda_check_impl
+make[1]: Entering directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/semi_y_3d'
+mkdir -p build
+g++ -O2 -std=c++17 -Wall -Wextra -Iinclude -DUSE_CUDA_SEMI_Y_3D -I../../../cuda/fv_advection/semi_y_3d -c src/semi_y_3d.cpp -o build/semi_y_3d.o
+nvcc -O2 -std=c++17 -Iinclude -I../../../cuda/fv_advection/semi_y_3d -c ../../../cuda/fv_advection/semi_y_3d/semi_y_3d_cuda.cu -o build/semi_y_3d_cuda.o
+ar rcs libsemi_y_3d.a build/semi_y_3d.o build/semi_y_3d_cuda.o
+mkdir -p bin
+nvcc -O2 -std=c++17 -Iinclude -I../../../cuda/fv_advection/semi_y_3d ../../../cuda/fv_advection/semi_y_3d/validate_semi_y_3d_cuda.cpp -L. -lsemi_y_3d -o bin/validate_semi_y_3d_cuda
+./bin/validate_semi_y_3d_cuda ../../../../../tests/fortran_baseline/semi_y_3d outputs ../../../../../tests/reports/semi_y_3d_cuda_compare_report.json 1e-13 1e-13
+fortran_vs_cuda: pass=true count=120 max_abs=0.000000e+00 max_rel=0.000000e+00 rmse=0.000000e+00 mismatches=0 atol=1.000000e-13 rtol=1.000000e-13
+cpu_cpp_vs_cuda: pass=true count=120 max_abs=0.000000e+00 max_rel=0.000000e+00 rmse=0.000000e+00 mismatches=0 atol=1.000000e-13 rtol=1.000000e-13
+semi_y_3d CUDA validation status: PASS
+make[1]: Leaving directory '/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/translated/held_suarez/cpp/fv_advection/semi_y_3d'

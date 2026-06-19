@@ -4,6 +4,30 @@ Tracking the Fortran-to-C++ translation progress for Held-Suarez physics kernels
 
 ## Latest Integration Status
 
+### `semi_y_3d` finite-volume kernel modernization
+
+- Fortran baseline fixture generated and validated.
+- CPU C++ `semi_y_3d` kernel validated exactly.
+- CUDA `semi_y_3d` kernel validated exactly.
+- Fortran `iso_c_binding` wrapper to CPU C++ validated exactly.
+- Fortran `iso_c_binding` wrapper to CUDA validated exactly.
+- Native Isca `fv_advection.F90` overlay implemented without modifying
+  production source.
+- CPU overlay executable generated:
+  `held_suarez_fv_semi_y_3d.x`.
+- CUDA overlay executable generated:
+  `held_suarez_fv_semi_y_3d_cuda.x`.
+- 1-day CPU/CUDA overlay smoke runs succeeded.
+- 1-day model output comparison against all-Fortran baseline matched exactly.
+- 30-day CPU/CUDA overlay runs succeeded.
+- 30-day model output comparison against all-Fortran baseline matched exactly
+  for `ps`, `temp`, `ucomp`, and `vcomp`.
+- Key report:
+  `tests/reports/semi_y_3d_30day_model_validation_report.md`.
+- Next step: select the next finite-volume local kernel, likely from
+  `semi_x_3d`, `slope_sphere`, `slope_x`, `vanleer_sphere_3d`, or
+  `vanleer_x_3d`.
+
 ### Held-Suarez forcing module hybrid integration
 
 - C++ forcing module validated against standalone Fortran baseline.

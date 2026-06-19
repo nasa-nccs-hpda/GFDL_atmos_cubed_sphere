@@ -1,0 +1,380 @@
+{
+  "reader": "xarray:auto",
+  "files": {
+    "fortran": "/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_1day_baseline/run0001/atmos_monthly.nc",
+    "cpu_hybrid": "/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_semi_y_3d_smoke/run0001/atmos_monthly.nc",
+    "cuda_hybrid": "/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_semi_y_3d_cuda_smoke/run0001/atmos_monthly.nc"
+  },
+  "field_mapping": {
+    "temperature": "temp",
+    "ucomp": "ucomp",
+    "vcomp": "vcomp",
+    "ps": "ps"
+  },
+  "forcing_related_fields": [],
+  "comparisons": [
+    {
+      "name": "Fortran vs CPU hybrid",
+      "baseline_dims": {
+        "time": 1,
+        "lat": 64,
+        "lon": 128,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 129,
+        "latb": 65
+      },
+      "candidate_dims": {
+        "time": 1,
+        "lat": 64,
+        "lon": 128,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 129,
+        "latb": 65
+      },
+      "dimension_match": true,
+      "variables": {
+        "temp": {
+          "pass": true,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            64,
+            128
+          ],
+          "finite_values": 204800,
+          "baseline_mean": 263.530517578125,
+          "candidate_mean": 263.530517578125,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "ucomp": {
+          "pass": true,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            64,
+            128
+          ],
+          "finite_values": 204800,
+          "baseline_mean": 0.1563308835029602,
+          "candidate_mean": 0.1563308835029602,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "vcomp": {
+          "pass": true,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            64,
+            128
+          ],
+          "finite_values": 204800,
+          "baseline_mean": 3.2099335385282757e-06,
+          "candidate_mean": 3.2099335385282757e-06,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "ps": {
+          "pass": true,
+          "dims": [
+            "time",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            64,
+            128
+          ],
+          "finite_values": 8192,
+          "baseline_mean": 100026.5859375,
+          "candidate_mean": 100026.5859375,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        }
+      },
+      "missing": {}
+    },
+    {
+      "name": "Fortran vs CUDA hybrid",
+      "baseline_dims": {
+        "time": 1,
+        "lat": 64,
+        "lon": 128,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 129,
+        "latb": 65
+      },
+      "candidate_dims": {
+        "time": 1,
+        "lat": 64,
+        "lon": 128,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 129,
+        "latb": 65
+      },
+      "dimension_match": true,
+      "variables": {
+        "temp": {
+          "pass": true,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            64,
+            128
+          ],
+          "finite_values": 204800,
+          "baseline_mean": 263.530517578125,
+          "candidate_mean": 263.530517578125,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "ucomp": {
+          "pass": true,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            64,
+            128
+          ],
+          "finite_values": 204800,
+          "baseline_mean": 0.1563308835029602,
+          "candidate_mean": 0.1563308835029602,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "vcomp": {
+          "pass": true,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            64,
+            128
+          ],
+          "finite_values": 204800,
+          "baseline_mean": 3.2099335385282757e-06,
+          "candidate_mean": 3.2099335385282757e-06,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "ps": {
+          "pass": true,
+          "dims": [
+            "time",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            64,
+            128
+          ],
+          "finite_values": 8192,
+          "baseline_mean": 100026.5859375,
+          "candidate_mean": 100026.5859375,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        }
+      },
+      "missing": {}
+    },
+    {
+      "name": "CPU hybrid vs CUDA hybrid",
+      "baseline_dims": {
+        "time": 1,
+        "lat": 64,
+        "lon": 128,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 129,
+        "latb": 65
+      },
+      "candidate_dims": {
+        "time": 1,
+        "lat": 64,
+        "lon": 128,
+        "phalf": 26,
+        "pfull": 25,
+        "nv": 2,
+        "lonb": 129,
+        "latb": 65
+      },
+      "dimension_match": true,
+      "variables": {
+        "temp": {
+          "pass": true,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            64,
+            128
+          ],
+          "finite_values": 204800,
+          "baseline_mean": 263.530517578125,
+          "candidate_mean": 263.530517578125,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "ucomp": {
+          "pass": true,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            64,
+            128
+          ],
+          "finite_values": 204800,
+          "baseline_mean": 0.1563308835029602,
+          "candidate_mean": 0.1563308835029602,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "vcomp": {
+          "pass": true,
+          "dims": [
+            "time",
+            "pfull",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            25,
+            64,
+            128
+          ],
+          "finite_values": 204800,
+          "baseline_mean": 3.2099335385282757e-06,
+          "candidate_mean": 3.2099335385282757e-06,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "ps": {
+          "pass": true,
+          "dims": [
+            "time",
+            "lat",
+            "lon"
+          ],
+          "shape": [
+            1,
+            64,
+            128
+          ],
+          "finite_values": 8192,
+          "baseline_mean": 100026.5859375,
+          "candidate_mean": 100026.5859375,
+          "mean_difference": 0.0,
+          "max_abs_error": 0.0,
+          "rmse": 0.0,
+          "max_relative_error": 0.0,
+          "relative_l2_error": 0.0,
+          "mean_abs_error": 0.0
+        }
+      },
+      "missing": {}
+    }
+  ]
+}

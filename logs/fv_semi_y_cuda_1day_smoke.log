@@ -1,0 +1,59 @@
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+2026-06-18 13:50:07,378 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-18 13:50:07,463 - isca - INFO - RRTM compilation disabled.
+2026-06-18 13:50:07,463 - isca - INFO - SOCRATES compilation disabled.
+2026-06-18 13:50:07,467 - isca - INFO - RRTM compilation disabled.
+2026-06-18 13:50:07,467 - isca - INFO - SOCRATES compilation disabled.
+2026-06-18 13:50:07,467 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_semi_y_3d_cuda_smoke'
+2026-06-18 13:50:07,476 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-06-18 13:50:07,481 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_semi_y_3d_cuda_smoke/run'
+2026-06-18 13:50:07,550 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_semi_y_3d_cuda_smoke/run/input.nml'
+2026-06-18 13:50:07,554 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_semi_y_3d_cuda_smoke/run/field_table'
+2026-06-18 13:50:07,560 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_semi_y_3d_cuda_smoke/run/diag_table'
+2026-06-18 13:50:07,564 - isca - INFO - Running without restart file
+2026-06-18 13:50:07,569 - isca - INFO - Beginning run 1
+2026-06-18 13:50:07,571 - isca - INFO - process running as 685031
+2026-06-18 13:50:07,572 - isca - DEBUG - Loading hybrid ubuntu-conda environment
+2026-06-18 13:50:07,572 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-18 13:50:08,341 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-18 13:50:08,341 - isca - DEBUG - &MPP_IO_NML
+2026-06-18 13:50:08,341 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-18 13:50:08,341 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-18 13:50:08,341 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-18 13:50:08,341 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-18 13:50:08,341 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-18 13:50:08,341 - isca - DEBUG - /
+2026-06-18 13:50:08,341 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-18 13:50:08,351 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-18 13:50:08,357 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-18 13:50:08,358 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-18 13:50:08,358 - isca - DEBUG - X-AXIS =  128
+2026-06-18 13:50:08,358 - isca - DEBUG - Y-AXIS =    4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4
+2026-06-18 13:50:08,362 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-18 13:50:11,809 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-18 13:50:11,872 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
+2026-06-18 13:50:11,993 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=       25600
+2026-06-18 13:50:11,994 - isca - DEBUG - 
+2026-06-18 13:50:11,994 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-18 13:50:11,994 - isca - DEBUG - 
+2026-06-18 13:50:11,994 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-18 13:50:11,994 - isca - DEBUG - Total runtime                         3.653276      3.653370      3.653288      0.000031  1.000     0     0    15
+2026-06-18 13:50:11,994 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-18 13:50:12,982 - isca - INFO - Run 1 complete
+2026-06-18 13:50:13,046 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-18 13:50:15,484 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_semi_y_3d_cuda_smoke/restarts/res0001.tar.gz
+2026-06-18 13:50:15,488 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_semi_y_3d_cuda_smoke/run0001/input.nml'
+2026-06-18 13:50:15,493 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_semi_y_3d_cuda_smoke/run0001/field_table'
+2026-06-18 13:50:15,499 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_semi_y_3d_cuda_smoke/run0001/diag_table'
+2026-06-18 13:50:15,560 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_semi_y_3d_cuda_smoke/run'
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_fv_semi_y_3d_cuda_smoke
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_semi_y_3d_cuda_smoke
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_semi_y_3d_cuda_smoke/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_fv_semi_y_3d_cuda/held_suarez_fv_semi_y_3d_cuda.x
+Days = 1
+dt_atmos = 600
+num_cores = 16
+production_diag = False

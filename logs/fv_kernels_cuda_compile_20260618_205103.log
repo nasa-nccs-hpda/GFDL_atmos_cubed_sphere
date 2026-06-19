@@ -1,0 +1,117 @@
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+=== Inside container ===
+aarch64
+python3= /usr/bin/python3
+mpifort= /usr/bin/mpifort
+mpicc= /usr/bin/mpicc
+nc-config= /usr/bin/nc-config
+nf-config= /usr/bin/nf-config
+g++= /usr/bin/g++
+nvcc= /usr/local/cuda/bin/nvcc
+USE_CUDA_FV_ADVECTION_KERNELS= 1
+GFDL_MKMF_TEMPLATE= fv_kernels_hybrid_cuda
+TARGET= fv_kernels_cuda
+=== Compile Held-Suarez fv_advection kernel-bundle overlay ===
+2026-06-18 20:51:03,808 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-18 20:51:03,846 - isca - INFO - RRTM compilation disabled.
+2026-06-18 20:51:03,846 - isca - INFO - SOCRATES compilation disabled.
+rm -rf build bin outputs libfv_advection_kernels.a
+mkdir -p build
+g++ -O2 -std=c++17 -Wall -Wextra -Iinclude -DUSE_CUDA_FV_ADVECTION_KERNELS -I../../../cuda/fv_advection/kernels -c src/fv_advection_kernels.cpp -o build/fv_advection_kernels.o
+nvcc -O2 -std=c++17 -Iinclude -I../../../cuda/fv_advection/kernels -c ../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu -o build/fv_advection_kernels_cuda.o
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(706): error: identifier "register_cuda_profile_report" is undefined
+      register_cuda_profile_report();
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(707): error: name followed by "::" must be a class or namespace name
+      profile::ScopedTimer timer(semi_x_counter);
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(707): error: expected a ";"
+      profile::ScopedTimer timer(semi_x_counter);
+                           ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(720): error: identifier "register_cuda_profile_report" is undefined
+      register_cuda_profile_report();
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(721): error: name followed by "::" must be a class or namespace name
+      profile::ScopedTimer timer(slope_x_counter);
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(721): error: expected a ";"
+      profile::ScopedTimer timer(slope_x_counter);
+                           ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(734): error: identifier "register_cuda_profile_report" is undefined
+      register_cuda_profile_report();
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(735): error: name followed by "::" must be a class or namespace name
+      profile::ScopedTimer timer(integer_flux_x_counter);
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(735): error: expected a ";"
+      profile::ScopedTimer timer(integer_flux_x_counter);
+                           ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(752): error: identifier "register_cuda_profile_report" is undefined
+      register_cuda_profile_report();
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(753): error: name followed by "::" must be a class or namespace name
+      profile::ScopedTimer timer(vanleer_x_counter);
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(753): error: expected a ";"
+      profile::ScopedTimer timer(vanleer_x_counter);
+                           ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(768): error: identifier "register_cuda_profile_report" is undefined
+      register_cuda_profile_report();
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(769): error: name followed by "::" must be a class or namespace name
+      profile::ScopedTimer timer(slope_sphere_counter);
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(769): error: expected a ";"
+      profile::ScopedTimer timer(slope_sphere_counter);
+                           ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(790): error: identifier "register_cuda_profile_report" is undefined
+      register_cuda_profile_report();
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(791): error: name followed by "::" must be a class or namespace name
+      profile::ScopedTimer timer(vanleer_sphere_counter);
+      ^
+
+../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu(791): error: expected a ";"
+      profile::ScopedTimer timer(vanleer_sphere_counter);
+                           ^
+
+18 errors detected in the compilation of "../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu".
+make: *** [Makefile:38: build/fv_advection_kernels_cuda.o] Error 2
+Building Held-Suarez fv_advection kernel bundle CUDA overlay via CodeBase.compile()
+Building fv_advection kernels C++/CUDA library
+  workdir: /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/code/src/../translated/held_suarez/cpp/fv_advection/kernels
+  CXX: /usr/bin/g++
+  AR: /usr/bin/ar
+  USE_CUDA_FV_ADVECTION_KERNELS: 1
+  NVCC: /usr/local/cuda/bin/nvcc
+  CXX target: aarch64-linux-gnu
+Traceback (most recent call last):
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 667, in <module>
+    main()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 663, in main
+    print("Generated:", build_fv_kernels_cuda())
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 585, in build_fv_kernels_cuda
+    cb.compile()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 488, in compile
+    self.prepare_fv_kernels_library()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/compile_native_overlay.py", line 473, in prepare_fv_kernels_library
+    subprocess.check_call(make_cmd, cwd=str(lib_workdir))
+  File "/usr/lib/python3.10/subprocess.py", line 369, in check_call
+    raise CalledProcessError(retcode, cmd)
+subprocess.CalledProcessError: Command '['make', 'CXX=g++', 'AR=ar', 'USE_CUDA_FV_ADVECTION_KERNELS=1', 'NVCC=nvcc', 'lib']' returned non-zero exit status 2.

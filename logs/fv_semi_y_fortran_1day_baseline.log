@@ -1,0 +1,58 @@
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+2026-06-18 14:01:47,587 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-18 14:01:47,678 - isca - INFO - RRTM compilation disabled.
+2026-06-18 14:01:47,678 - isca - INFO - SOCRATES compilation disabled.
+2026-06-18 14:01:47,682 - isca - INFO - RRTM compilation disabled.
+2026-06-18 14:01:47,682 - isca - INFO - SOCRATES compilation disabled.
+2026-06-18 14:01:47,689 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_1day_baseline'
+2026-06-18 14:01:47,699 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-06-18 14:01:47,704 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_1day_baseline/run'
+2026-06-18 14:01:47,895 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_1day_baseline/run/input.nml'
+2026-06-18 14:01:47,901 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_1day_baseline/run/field_table'
+2026-06-18 14:01:47,908 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_1day_baseline/run/diag_table'
+2026-06-18 14:01:47,912 - isca - INFO - Running without restart file
+2026-06-18 14:01:47,918 - isca - INFO - Beginning run 1
+2026-06-18 14:01:47,920 - isca - INFO - process running as 689709
+2026-06-18 14:01:47,920 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-18 14:01:48,787 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-18 14:01:48,788 - isca - DEBUG - &MPP_IO_NML
+2026-06-18 14:01:48,788 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-18 14:01:48,788 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-18 14:01:48,788 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-18 14:01:48,788 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-18 14:01:48,788 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-18 14:01:48,788 - isca - DEBUG - /
+2026-06-18 14:01:48,788 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-18 14:01:48,797 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-18 14:01:48,804 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-18 14:01:48,804 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-18 14:01:48,804 - isca - DEBUG - X-AXIS =  128
+2026-06-18 14:01:48,805 - isca - DEBUG - Y-AXIS =    4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4
+2026-06-18 14:01:48,808 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-18 14:01:49,659 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-18 14:01:49,735 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
+2026-06-18 14:01:49,817 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=       25600
+2026-06-18 14:01:49,817 - isca - DEBUG - 
+2026-06-18 14:01:49,817 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-18 14:01:49,817 - isca - DEBUG - 
+2026-06-18 14:01:49,817 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-18 14:01:49,817 - isca - DEBUG - Total runtime                         1.029890      1.029891      1.029891      0.000000  1.000     0     0    15
+2026-06-18 14:01:49,817 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-18 14:01:50,024 - isca - INFO - Run 1 complete
+2026-06-18 14:01:50,114 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-18 14:01:52,582 - isca - INFO - Restart archive created at /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_1day_baseline/restarts/res0001.tar.gz
+2026-06-18 14:01:52,586 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_1day_baseline/run0001/input.nml'
+2026-06-18 14:01:52,590 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_1day_baseline/run0001/field_table'
+2026-06-18 14:01:52,597 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_1day_baseline/run0001/diag_table'
+2026-06-18 14:01:52,784 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_1day_baseline/run'
+GFDL_BASE = /isca
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_fortran_1day_baseline
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_1day_baseline
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_1day_baseline/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_isca/build/held_suarez/held_suarez.x
+Days = 1
+dt_atmos = 600
+num_cores = 16
+production_diag = False
