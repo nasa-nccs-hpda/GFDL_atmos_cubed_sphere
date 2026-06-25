@@ -283,6 +283,10 @@ int main(int argc, char** argv) {
             join_path(input_dir, "input_dy_plus.bin"), active_ny + 2);
         const std::vector<double> dy_minus = read_binary<double>(
             join_path(input_dir, "input_dy_minus.bin"), active_ny + 2);
+        const std::vector<double> va =
+            read_binary<double>(join_path(input_dir, "input_va.bin"), x_count);
+        const std::vector<double> dyy = read_binary<double>(
+            join_path(input_dir, "input_dyy.bin"), active_ny + 1);
         const std::vector<double> ua =
             read_binary<double>(join_path(input_dir, "input_ua.bin"), x_count);
         const std::vector<double> uc =
@@ -355,10 +359,11 @@ int main(int argc, char** argv) {
             for (std::size_t i = 0; i < x_count; ++i) {
                 resident_q1_expected[i] += q_x[i];
             }
+
             require_success(
                 fv_advection_kernels::cuda_backend::resident_advection_begin(
                     p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), ua.data(),
-                    q_x.data(), resident_q1.data()),
+                    q_x.data(), resident_q1.data(), va.data(), dyy.data()),
                 "resident_advection_begin");
 
             fv_advection_kernels::vanleer_x_3d(
@@ -369,12 +374,13 @@ int main(int argc, char** argv) {
                 p.je == p.ny, c.data(), cc.data(), dy.data(), dy_plus.data(),
                 dy_minus.data(), vc.data(), q_sphere.data(),
                 resident_dq_dt_expected.data());
+
             require_success(
                 fv_advection_kernels::cuda_backend::resident_advection_finish(
                     p.nx, active_ny, p.nz, p.dt, p.dx, p.monotone,
                     p.js == 1, p.je == p.ny, c.data(), cc.data(), dy.data(),
                     dy_plus.data(), dy_minus.data(), uc.data(), vc.data(),
-                    q_sphere.data(), q_x.data(), resident_dq_dt.data()),
+                    q_sphere.data(), resident_dq_dt.data()),
                 "resident_advection_finish");
         }
 

@@ -372,6 +372,9 @@ program test_fv_advection_kernels
   call write_real_3d('inputs/input_q_sphere.bin', q_sphere)
   call write_real_3d('inputs/input_vc.bin', vc)
 
+  call write_real_3d('inputs/input_va.bin', vc(:,js:je,:))
+  call write_real_1d('inputs/input_dyy.bin', dy(js:je+1))
+
   call write_int_3d('outputs/output_find_cell_x_ii.bin', ii)
   call write_real_3d('outputs/output_semi_x_dq.bin', dq_semi_x)
   call write_real_3d('outputs/output_slope_x.bin', slope_x_out)

@@ -63,18 +63,18 @@
       "name": "resident_q1",
       "pass": true,
       "count": 120,
-      "max_abs_error": 0,
-      "max_rel_error": 0,
-      "rmse": 0,
+      "max_abs_error": 2.8421709430404007e-14,
+      "max_rel_error": 1.2372802649356477e-16,
+      "rmse": 1.3229585764680433e-14,
       "mismatches_above_tolerance": 0
     },
     {
       "name": "resident_combined_dq_dt",
       "pass": true,
       "count": 120,
-      "max_abs_error": 0,
-      "max_rel_error": 0,
-      "rmse": 0,
+      "max_abs_error": 2.2737367544323206e-13,
+      "max_rel_error": 4.368106730269203e-16,
+      "rmse": 2.5288401303743321e-14,
       "mismatches_above_tolerance": 0
     }
   ]

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CONTAINER="${CONTAINER:-/lscratch/jli30/isca-sandbox}"
-export GFDL_BASE="${GFDL_BASE:-/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere}"
-export GFDL_WORK="${GFDL_WORK:-/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work}"
-export GFDL_DATA="${GFDL_DATA:-/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data}"
+CONTAINER=${CONTAINER:-/lscratch/rlgill/isca-debian_latest}
+export GFDL_BASE="${GFDL_BASE:-/explore/nobackup/people/rlgill/SystemTesting/AAI/GFDL_atmos_cubed_sphere}"
+export GFDL_WORK="${GFDL_WORK:-/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work}"
+export GFDL_DATA="${GFDL_DATA:-/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_data}"
 export FV_KERNELS_OVERWRITE="${FV_KERNELS_OVERWRITE:-0}"
 export FV_KERNELS_PROFILE="${FV_KERNELS_PROFILE:-1}"
 
@@ -33,7 +33,7 @@ if [[ "${FV_KERNELS_OVERWRITE}" == "1" ]]; then
 fi
 
 apptainer exec --nv \
-  --bind /explore/nobackup/people/jli30:/explore/nobackup/people/jli30 \
+  --bind /explore/nobackup/people/rlgill:/explore/nobackup/people/rlgill \
   "${CONTAINER}" \
   bash -lc "
 set -e

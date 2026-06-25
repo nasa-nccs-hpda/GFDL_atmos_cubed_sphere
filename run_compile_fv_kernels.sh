@@ -1,11 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-CONTAINER=${CONTAINER:-/lscratch/jli30/isca-sandbox}
+CONTAINER=${CONTAINER:-/lscratch/rlgill/isca-debian_latest}
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 export GFDL_BASE=${GFDL_BASE_OVERRIDE:-${SCRIPT_DIR}}
-export GFDL_WORK=${GFDL_WORK:-/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work}
+export GFDL_WORK=${GFDL_WORK:-/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work}
 export GFDL_DATA=${GFDL_DATA:-/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data}
 export USE_CUDA_FV_ADVECTION_KERNELS=${USE_CUDA_FV_ADVECTION_KERNELS:-0}
 export NVCC=${NVCC:-nvcc}
@@ -27,7 +27,7 @@ LATEST="${LOG_DIR}/${LOG_PREFIX}_latest.log"
 
 set +e
 apptainer exec --nv \
-  --bind /explore/nobackup/people/jli30:/explore/nobackup/people/jli30 \
+  --bind /explore/nobackup/people/rlgill:/explore/nobackup/people/rlgill \
   "${CONTAINER}" \
   bash -lc "
 set -e

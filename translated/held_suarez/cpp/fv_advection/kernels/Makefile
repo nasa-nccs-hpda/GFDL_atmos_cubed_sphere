@@ -1,7 +1,7 @@
 CXX ?= g++
 CXXFLAGS ?= -O2 -std=c++17 -Wall -Wextra -Iinclude
 NVCC ?= nvcc
-NVCCFLAGS ?= -O2 -std=c++17 -Iinclude -I../../../cuda/fv_advection/kernels
+NVCCFLAGS ?= -O2 -std=c++17 -Iinclude -I../../../cuda/fv_advection/kernels -I../../../cuda/fv_advection/semi_y_3d
 
 BASELINE_DIR ?= ../../../../../tests/fortran_baseline/fv_advection_kernels
 REPORT ?= ../../../../../tests/reports/fv_advection_kernels_cpp_compare_report.json
@@ -16,11 +16,13 @@ OBJ = $(CPU_OBJ)
 DRIVER = bin/run_fv_advection_kernels_fixture
 CUDA_SRC = ../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu
 CUDA_OBJ = build/fv_advection_kernels_cuda.o
+SEMI_Y_CUDA_SRC = ../../../cuda/fv_advection/semi_y_3d/semi_y_3d_cuda.cu
+SEMI_Y_CUDA_OBJ = build/semi_y_3d_cuda.o
 CUDA_VALIDATE_SRC = ../../../cuda/fv_advection/kernels/validate_fv_advection_kernels_cuda.cpp
 CUDA_DRIVER = bin/validate_fv_advection_kernels_cuda
 
 ifeq ($(USE_CUDA_FV_ADVECTION_KERNELS),1)
-OBJ += $(CUDA_OBJ)
+OBJ += $(CUDA_OBJ) $(SEMI_Y_CUDA_OBJ)
 CXXFLAGS += -DUSE_CUDA_FV_ADVECTION_KERNELS -I../../../cuda/fv_advection/kernels
 endif
 
@@ -41,6 +43,9 @@ $(CPU_OBJ): src/fv_advection_kernels.cpp include/fv_advection_kernels.hpp includ
 $(CUDA_OBJ): $(CUDA_SRC) ../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.h include/fv_advection_kernel_profile.hpp | build
 	$(NVCC) $(NVCCFLAGS) -c $< -o $@
 
+$(SEMI_Y_CUDA_OBJ): $(SEMI_Y_CUDA_SRC) ../../../cuda/fv_advection/semi_y_3d/semi_y_3d_cuda.h | build
+	$(NVCC) $(NVCCFLAGS) -c $< -o $@
+	
 $(DRIVER): tests/run_fv_advection_kernels_fixture.cpp $(LIB) include/fv_advection_kernels.hpp | bin
 	$(CXX) $(CXXFLAGS) $< -L. -lfv_advection_kernels -o $@
 

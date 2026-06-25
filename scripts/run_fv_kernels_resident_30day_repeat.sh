@@ -9,8 +9,8 @@ export FV_KERNELS_OVERWRITE="${FV_KERNELS_OVERWRITE:-0}"
 export FV_KERNELS_PROFILE="${FV_KERNELS_PROFILE:-1}"
 
 EXECUTABLE=held_suarez_fv_kernels_cuda.x
-EXPERIMENT=held_suarez_fv_kernels_cuda_resident_30day
-LOG="${GFDL_BASE}/logs/fv_kernels_cuda_resident_30day.log"
+EXPERIMENT=held_suarez_fv_kernels_cuda_resident_30day_repeat
+LOG="${GFDL_BASE}/logs/fv_kernels_cuda_resident_30day_repeat.log"
 
 mkdir -p "${GFDL_BASE}/logs"
 exec > >(tee "${LOG}") 2>&1

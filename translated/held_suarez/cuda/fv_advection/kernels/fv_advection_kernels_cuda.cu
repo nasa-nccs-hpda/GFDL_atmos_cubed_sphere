@@ -1,5 +1,6 @@
 #include "fv_advection_kernels_cuda.h"
 #include "fv_advection_kernel_profile.hpp"
+#include "semi_y_3d_cuda.h"
 
 #include <algorithm>
 #include <chrono>
@@ -1259,23 +1260,27 @@ int resident_advection_begin(
     const double* c,
     const double* ua,
     const double* q,
-    double* q1_interior) {
+    double* q1_interior,
+    const double* va,
+    const double* dyy) {
     const CudaMode mode = selected_cuda_mode();
     PhaseCall phase_call(mode);
     CudaPhaseCounter& phases = phase_call.counter();
     if (mode != CudaMode::resident) return FV_CUDA_INVALID_ARGUMENT;
     int ierr = validate_common(nx, ny, nz, mode);
     if (ierr != FV_CUDA_SUCCESS || c == nullptr || ua == nullptr || q == nullptr ||
-        q1_interior == nullptr || persistent_context.resident_stage_active) {
+        q1_interior == nullptr || persistent_context.resident_stage_active || va == nullptr || dyy == nullptr) {
         return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
     }
 
     const std::size_t count = static_cast<std::size_t>(nx) * ny * nz;
     const std::size_t q1_count = static_cast<std::size_t>(nx) * (ny + 4) * nz;
+    
     const std::pair<std::size_t, std::size_t> requests[] = {
         {0, static_cast<std::size_t>(ny)}, {1, count}, {2, count},
-        {3, q1_count}, {12, count}};
-    for (const auto& request : requests) {
+        {3, q1_count}, {4, count}, {5, count}, {6, ny+1}, {12, count}};
+    
+        for (const auto& request : requests) {
         ierr = ensure_buffer(request.first, request.second, phases);
         if (ierr != FV_CUDA_SUCCESS) return ierr;
     }
@@ -1284,10 +1289,16 @@ int resident_advection_begin(
     double* d_ua = persistent_context.buffers[1].data;
     double* d_q = persistent_context.buffers[2].data;
     double* d_q1 = persistent_context.buffers[3].data;
+    double* d_q2 = persistent_context.buffers[4].data;
+    double* d_va = persistent_context.buffers[5].data;
+    double* d_dyy = persistent_context.buffers[6].data;
     double* d_semi_x_dq = persistent_context.buffers[12].data;
+    
     if ((ierr = copy_to_existing_device(d_c, c, ny, "resident c", phases)) != FV_CUDA_SUCCESS ||
         (ierr = copy_to_existing_device(d_ua, ua, count, "resident ua", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_q, q, count, "resident q", phases)) != FV_CUDA_SUCCESS) {
+        (ierr = copy_to_existing_device(d_q, q, count, "resident q", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_va, va, count, "resident va", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_dyy, dyy, ny + 1, "resident dyy", phases)) != FV_CUDA_SUCCESS){
         return ierr;
     }
 
@@ -1306,6 +1317,11 @@ int resident_advection_begin(
         form_q1_with_halo_kernel<<<blocks, threads>>>(nx, ny, nz, d_q, d_semi_x_dq, d_q1);
         ierr = check_cuda(cudaGetLastError(), "resident form_q1_with_halo_kernel");
     }
+
+    if (ierr == FV_CUDA_SUCCESS) {
+        ierr = fv_advection::cuda_backend::semi_y_3d_cuda(nx, 1, ny, nz, half_dt, d_va, d_q1, d_dyy, d_q2);
+    }
+
     if (ierr == FV_CUDA_SUCCESS && timing) {
         ierr = check_cuda(cudaEventRecord(timing_events.stop), "resident begin event stop");
     }
@@ -1361,7 +1377,6 @@ int resident_advection_finish(
     const double* uc,
     const double* vc,
     const double* q1,
-    const double* q2,
     double* dq_dt) {
     const CudaMode mode = selected_cuda_mode();
     PhaseCall phase_call(mode);
@@ -1374,7 +1389,7 @@ int resident_advection_finish(
     int ierr = validate_common(nx, ny, nz, mode);
     if (ierr != FV_CUDA_SUCCESS || c == nullptr || cc == nullptr || dy == nullptr ||
         dy_plus == nullptr || dy_minus == nullptr || uc == nullptr || vc == nullptr ||
-        q1 == nullptr || q2 == nullptr || dq_dt == nullptr) {
+        q1 == nullptr || dq_dt == nullptr) {
         persistent_context.resident_stage_active = false;
         return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
     }
@@ -1405,6 +1420,7 @@ int resident_advection_finish(
     double* d_dy = persistent_context.buffers[9].data;
     double* d_dy_plus = persistent_context.buffers[10].data;
     double* d_dy_minus = persistent_context.buffers[11].data;
+
     if ((ierr = copy_to_existing_device(d_c, c, ny, "resident finish c", phases)) == FV_CUDA_SUCCESS &&
         (ierr = copy_to_existing_device(d_cc, cc, ny + 1, "resident cc", phases)) == FV_CUDA_SUCCESS &&
         (ierr = copy_to_existing_device(d_dy, dy, ny + 2, "resident dy", phases)) == FV_CUDA_SUCCESS &&
@@ -1412,8 +1428,7 @@ int resident_advection_finish(
         (ierr = copy_to_existing_device(d_dy_minus, dy_minus, ny + 2, "resident dy_minus", phases)) == FV_CUDA_SUCCESS &&
         (ierr = copy_to_existing_device(d_uc, uc, count, "resident uc", phases)) == FV_CUDA_SUCCESS &&
         (ierr = copy_to_existing_device(d_vc, vc, vc_count, "resident vc", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_q1, q1, q1_count, "resident q1", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_q2, q2, count, "resident q2", phases)) == FV_CUDA_SUCCESS) {
+        (ierr = copy_to_existing_device(d_q1, q1, q1_count, "resident q1", phases)) == FV_CUDA_SUCCESS) {
         ierr = copy_to_existing_device(d_dq, dq_dt, count, "resident dq_dt", phases);
     }
 
@@ -1582,11 +1597,13 @@ extern "C" int fv_advection_resident_begin_cuda_c(
     const double* c,
     const double* ua,
     const double* q,
-    double* q1_interior) {
+    double* q1_interior,
+    const double* va,
+    const double* dyy) {
     register_cuda_profile_report();
     profile::ScopedTimer timer(resident_begin_counter);
     return fv_advection_kernels::cuda_backend::resident_advection_begin(
-        nx, je - js + 1, nz, half_dt, dx, c, ua, q, q1_interior);
+        nx, je - js + 1, nz, half_dt, dx, c, ua, q, q1_interior, va, dyy);
 }
 
 extern "C" int fv_advection_resident_finish_cuda_c(
@@ -1606,11 +1623,10 @@ extern "C" int fv_advection_resident_finish_cuda_c(
     const double* uc,
     const double* vc,
     const double* q1,
-    const double* q2,
     double* dq_dt) {
     register_cuda_profile_report();
     profile::ScopedTimer timer(resident_finish_counter);
     return fv_advection_kernels::cuda_backend::resident_advection_finish(
         nx, je - js + 1, nz, dt, dx, monotone != 0, js == 1,
-        je == ny_total, c, cc, dy, dy_plus, dy_minus, uc, vc, q1, q2, dq_dt);
+        je == ny_total, c, cc, dy, dy_plus, dy_minus, uc, vc, q1, dq_dt);
 }

@@ -277,7 +277,7 @@ use_resident_boundary = .false.
 if (use_resident_boundary) then
 #ifdef USE_CUDA_FV_ADVECTION_KERNELS
   call fv_advection_resident_begin_wrapper(nx, js, je, size(q,3), 0.5*dt, dx, &
-    c(js:je), ua(:,js:je,:), q(:,js:je,:), q1(:,js:je,:), ierr)
+    c(js:je), ua(:,js:je,:), q(:,js:je,:), q1(:,js:je,:), va(:,js:je,:), dyy(js:je+1), ierr)
   if (ierr /= 0) call error_mesg('fv_advection_mod', &
     'resident CUDA advection begin failed', FATAL)
 #endif
@@ -315,7 +315,7 @@ if (use_resident_boundary) then
   call fv_advection_resident_finish_wrapper(nx, ny, js, je, size(q,3), dt, dx, monotone, &
     c(js:je), cc(js:je+1), dy(js-1:je+1), dy_plus(js-1:je+1), &
     dy_minus(js-1:je+1), uc(:,js:je,:), vc(:,js:je+1,:), q1(:,js-2:je+2,:), &
-    q2(:,js:je,:), dq_dt(:,js:je,:), ierr)
+    dq_dt(:,js:je,:), ierr)
   if (ierr /= 0) call error_mesg('fv_advection_mod', &
     'resident CUDA advection finish failed', FATAL)
 #endif
