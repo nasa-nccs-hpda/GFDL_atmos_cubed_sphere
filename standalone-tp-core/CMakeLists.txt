@@ -192,6 +192,9 @@ if(CMAKE_CUDA_COMPILER)
       endif()
       target_compile_options(${mpi_tgt} PRIVATE
         $<$<COMPILE_LANGUAGE:CUDA>:--allow-unsupported-compiler>)
+      # MPI::MPI_CXX include dirs do not reliably propagate to nvcc; pass them
+      # explicitly (covers both new MPI_CXX_INCLUDE_DIRS and old INCLUDE_PATH).
+      target_include_directories(${mpi_tgt} PRIVATE ${MPI_CXX_INCLUDE_DIRS} ${MPI_CXX_INCLUDE_PATH})
       target_link_libraries(${mpi_tgt} PRIVATE MPI::MPI_CXX)
     endforeach()
   else()
