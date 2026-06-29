@@ -154,6 +154,18 @@ scripts/validate_fv_kernels_resident_30day.sh
 Copy or parameterize them for the new experiment instead of overwriting the
 existing result.
 
+For a repeatable CPU-vs-CUDA performance run, use the consolidated runner:
+
+```bash
+FV_KERNELS_OVERWRITE=1 scripts/run_fv_kernels_compare.sh
+```
+
+By default it builds the CPU C++ and CUDA FV bundle executables, runs standalone
+fixture checks, runs the 30-day CPU and resident-CUDA experiments, and validates
+the NetCDF outputs. Use `--cuda-mode stateless`, `--cuda-mode persistent`, or
+`--cuda-mode resident` to compare a specific CUDA implementation. Use
+`--no-build` after a known-good relink when repeating timings.
+
 ## Important Traps
 
 - Use Isca `CodeBase.compile()`; do not reconstruct manual `mkmf` builds.
