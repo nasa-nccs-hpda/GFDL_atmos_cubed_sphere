@@ -1,5 +1,5 @@
 === Held-Suarez resident CUDA FV boundary: 30-day profile ===
-start_timestamp=2026-06-25T13:19:20-04:00
+start_timestamp=2026-06-25T14:02:47-04:00
 CONTAINER=/lscratch/rlgill/isca-debian_latest
 GFDL_BASE=/explore/nobackup/people/rlgill/SystemTesting/AAI/GFDL_atmos_cubed_sphere
 GFDL_WORK=/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work
@@ -15,129 +15,129 @@ INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is
 container_arch=x86_64
 gpu_status:
 GPU 0: Tesla V100-SXM2-32GB (UUID: GPU-895dce61-23e8-eced-8ca0-fef0c42b38a7)
-2026-06-25 13:19:21,030 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
-2026-06-25 13:19:21,358 - isca - INFO - RRTM compilation disabled.
-2026-06-25 13:19:21,358 - isca - INFO - SOCRATES compilation disabled.
-2026-06-25 13:19:21,365 - isca - INFO - RRTM compilation disabled.
-2026-06-25 13:19:21,366 - isca - INFO - SOCRATES compilation disabled.
-2026-06-25 13:19:21,395 - isca - INFO - Emptied run directory '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_resident_30day/run'
-2026-06-25 13:19:21,397 - isca - WARNING - Data for run 1 already exists and overwrite_data is True. Overwriting.
-2026-06-25 13:19:22,433 - isca - INFO - Writing namelist to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_resident_30day/run/input.nml'
-2026-06-25 13:19:22,439 - isca - INFO - Writing field_table to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_resident_30day/run/field_table'
-2026-06-25 13:19:22,450 - isca - INFO - Writing diag_table to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_resident_30day/run/diag_table'
-2026-06-25 13:19:22,456 - isca - INFO - Running without restart file
-2026-06-25 13:19:22,464 - isca - INFO - Beginning run 1
-2026-06-25 13:19:22,468 - isca - INFO - process running as 421820
-2026-06-25 13:19:22,471 - isca - DEBUG - Loading hybrid ubuntu-conda environment
-2026-06-25 13:19:22,472 - isca - DEBUG - Loading basic ubuntu-conda environment
-2026-06-25 13:19:23,553 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
-2026-06-25 13:19:23,554 - isca - DEBUG - &MPP_IO_NML
-2026-06-25 13:19:23,554 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
-2026-06-25 13:19:23,554 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
-2026-06-25 13:19:23,554 - isca - DEBUG - IO_CLOCKS_ON=F,
-2026-06-25 13:19:23,554 - isca - DEBUG - SHUFFLE=0          ,
-2026-06-25 13:19:23,554 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
-2026-06-25 13:19:23,554 - isca - DEBUG - /
-2026-06-25 13:19:23,556 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
-2026-06-25 13:19:23,571 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
-2026-06-25 13:19:23,589 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
-2026-06-25 13:19:23,589 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
-2026-06-25 13:19:23,589 - isca - DEBUG - X-AXIS =  128
-2026-06-25 13:19:23,590 - isca - DEBUG - Y-AXIS =    4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4
-2026-06-25 13:19:23,609 - isca - DEBUG - mean surface pressure=1000.0000 mb
-2026-06-25 13:19:31,489 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
-2026-06-25 13:19:37,703 - isca - DEBUG - Integration completed through 2000 Jan  3   0: 0: 0
-2026-06-25 13:19:44,348 - isca - DEBUG - Integration completed through 2000 Jan  4   0: 0: 0
-2026-06-25 13:19:50,941 - isca - DEBUG - Integration completed through 2000 Jan  5   0: 0: 0
-2026-06-25 13:19:57,480 - isca - DEBUG - Integration completed through 2000 Jan  6   0: 0: 0
-2026-06-25 13:20:03,880 - isca - DEBUG - Integration completed through 2000 Jan  7   0: 0: 0
-2026-06-25 13:20:10,139 - isca - DEBUG - Integration completed through 2000 Jan  8   0: 0: 0
-2026-06-25 13:20:16,628 - isca - DEBUG - Integration completed through 2000 Jan  9   0: 0: 0
-2026-06-25 13:20:23,369 - isca - DEBUG - Integration completed through 2000 Jan 10   0: 0: 0
-2026-06-25 13:20:29,941 - isca - DEBUG - Integration completed through 2000 Jan 11   0: 0: 0
-2026-06-25 13:20:36,263 - isca - DEBUG - Integration completed through 2000 Jan 12   0: 0: 0
-2026-06-25 13:20:42,559 - isca - DEBUG - Integration completed through 2000 Jan 13   0: 0: 0
-2026-06-25 13:20:49,088 - isca - DEBUG - Integration completed through 2000 Jan 14   0: 0: 0
-2026-06-25 13:20:55,512 - isca - DEBUG - Integration completed through 2000 Jan 15   0: 0: 0
-2026-06-25 13:21:01,884 - isca - DEBUG - Integration completed through 2000 Jan 16   0: 0: 0
-2026-06-25 13:21:08,239 - isca - DEBUG - Integration completed through 2000 Jan 17   0: 0: 0
-2026-06-25 13:21:14,561 - isca - DEBUG - Integration completed through 2000 Jan 18   0: 0: 0
-2026-06-25 13:21:21,111 - isca - DEBUG - Integration completed through 2000 Jan 19   0: 0: 0
-2026-06-25 13:21:27,410 - isca - DEBUG - Integration completed through 2000 Jan 20   0: 0: 0
-2026-06-25 13:21:33,889 - isca - DEBUG - Integration completed through 2000 Jan 21   0: 0: 0
-2026-06-25 13:21:40,238 - isca - DEBUG - Integration completed through 2000 Jan 22   0: 0: 0
-2026-06-25 13:21:46,559 - isca - DEBUG - Integration completed through 2000 Jan 23   0: 0: 0
-2026-06-25 13:21:52,702 - isca - DEBUG - Integration completed through 2000 Jan 24   0: 0: 0
-2026-06-25 13:21:59,312 - isca - DEBUG - Integration completed through 2000 Jan 25   0: 0: 0
-2026-06-25 13:22:05,924 - isca - DEBUG - Integration completed through 2000 Jan 26   0: 0: 0
-2026-06-25 13:22:12,368 - isca - DEBUG - Integration completed through 2000 Jan 27   0: 0: 0
-2026-06-25 13:22:18,681 - isca - DEBUG - Integration completed through 2000 Jan 28   0: 0: 0
-2026-06-25 13:22:24,870 - isca - DEBUG - Integration completed through 2000 Jan 29   0: 0: 0
-2026-06-25 13:22:31,273 - isca - DEBUG - Integration completed through 2000 Jan 30   0: 0: 0
-2026-06-25 13:22:37,579 - isca - DEBUG - Integration completed through 2000 Feb  1   0: 0: 0
-2026-06-25 13:22:37,712 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
-2026-06-25 13:22:38,047 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=       25600
-2026-06-25 13:22:38,047 - isca - DEBUG - 
-2026-06-25 13:22:38,047 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
-2026-06-25 13:22:38,047 - isca - DEBUG - 
-2026-06-25 13:22:38,047 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
-2026-06-25 13:22:38,048 - isca - DEBUG - Total runtime                       194.499305    194.499532    194.499402      0.000064  1.000     0     0    15
-2026-06-25 13:22:38,048 - isca - DEBUG - MPP_STACK high water mark=           0
-2026-06-25 13:22:38,120 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=11 name=resident_advection_begin calls=4320 time=12.456721241 avg=2.883500287e-03
-2026-06-25 13:22:38,120 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=11 name=resident_advection_finish calls=4320 time=12.709017456 avg=2.941902189e-03
-2026-06-25 13:22:38,120 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=11 calls=8640 allocation=1.250760415 h2d=13.184919678 kernel=7.593604802 sync=4.272770704 d2h=0.360473858 free=0.000012847 total=25.159165936
-2026-06-25 13:22:38,120 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=3 name=resident_advection_begin calls=4320 time=12.618490443 avg=2.920946862e-03
-2026-06-25 13:22:38,120 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=3 name=resident_advection_finish calls=4320 time=12.807724495 avg=2.964751041e-03
-2026-06-25 13:22:38,120 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=3 calls=8640 allocation=1.187565908 h2d=13.304047976 kernel=7.702740192 sync=4.347211544 d2h=0.383001309 free=0.000024193 total=25.420115761
-2026-06-25 13:22:38,121 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=4 name=resident_advection_begin calls=4320 time=12.729850231 avg=2.946724591e-03
-2026-06-25 13:22:38,121 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=4 name=resident_advection_finish calls=4320 time=12.665988529 avg=2.931941789e-03
-2026-06-25 13:22:38,121 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=4 calls=8640 allocation=1.250916900 h2d=13.136951481 kernel=7.771338944 sync=4.397184675 d2h=0.361242299 free=0.000013963 total=25.389610218
-2026-06-25 13:22:38,121 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=0 name=resident_advection_begin calls=4320 time=12.738163394 avg=2.948648934e-03
-2026-06-25 13:22:38,121 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=0 name=resident_advection_finish calls=4320 time=13.280856507 avg=3.074272340e-03
-2026-06-25 13:22:38,121 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=0 calls=8640 allocation=1.259712120 h2d=13.530919356 kernel=8.013479108 sync=4.574417978 d2h=0.366054147 free=0.000014126 total=26.012464879
-2026-06-25 13:22:38,122 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=13 name=resident_advection_begin calls=4320 time=12.300714328 avg=2.847387576e-03
-2026-06-25 13:22:38,122 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=13 name=resident_advection_finish calls=4320 time=12.483691414 avg=2.889743383e-03
-2026-06-25 13:22:38,122 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=13 calls=8640 allocation=1.236047056 h2d=12.955340258 kernel=7.470945475 sync=4.207237314 d2h=0.373217661 free=0.000011185 total=24.778009949
-2026-06-25 13:22:38,122 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=15 name=resident_advection_begin calls=4320 time=12.974804411 avg=3.003426947e-03
-2026-06-25 13:22:38,123 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=15 name=resident_advection_finish calls=4320 time=13.430887675 avg=3.109001777e-03
-2026-06-25 13:22:38,123 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=15 calls=8640 allocation=1.215127624 h2d=13.814121563 kernel=8.103986307 sync=4.624950615 d2h=0.367691939 free=0.000031038 total=26.399301945
-2026-06-25 13:22:38,123 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=5 name=resident_advection_begin calls=4320 time=12.657275244 avg=2.929924825e-03
-2026-06-25 13:22:38,123 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=5 name=resident_advection_finish calls=4320 time=12.834818583 avg=2.971022820e-03
-2026-06-25 13:22:38,123 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=5 calls=8640 allocation=1.226820335 h2d=13.278145919 kernel=7.778718177 sync=4.401966200 d2h=0.366647899 free=0.000030972 total=25.486005848
-2026-06-25 13:22:38,123 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=7 name=resident_advection_begin calls=4320 time=12.340002442 avg=2.856482047e-03
-2026-06-25 13:22:38,123 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=7 name=resident_advection_finish calls=4320 time=12.327433097 avg=2.853572476e-03
-2026-06-25 13:22:38,123 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=7 calls=8640 allocation=1.197361397 h2d=12.960990363 kernel=7.361254245 sync=4.168884026 d2h=0.374068802 free=0.000028804 total=24.661492404
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=2 name=resident_advection_begin calls=4320 time=12.408959542 avg=2.872444338e-03
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=2 name=resident_advection_finish calls=4320 time=12.510801072 avg=2.896018767e-03
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=2 calls=8640 allocation=1.254362413 h2d=13.050545488 kernel=7.470833668 sync=4.202619492 d2h=0.367692091 free=0.000012643 total=24.913731924
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=6 name=resident_advection_begin calls=4320 time=12.527639312 avg=2.899916507e-03
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=6 name=resident_advection_finish calls=4320 time=12.652122864 avg=2.928732144e-03
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=6 calls=8640 allocation=1.201319486 h2d=13.165875855 kernel=7.584590308 sync=4.275477291 d2h=0.388985822 free=0.000023183 total=25.173961581
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=9 name=resident_advection_begin calls=4320 time=12.304332303 avg=2.848225070e-03
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=9 name=resident_advection_finish calls=4320 time=12.280176068 avg=2.842633349e-03
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=9 calls=8640 allocation=1.212709741 h2d=12.865627528 kernel=7.384022146 sync=4.181214564 d2h=0.362492093 free=0.000023910 total=24.578556678
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=12 name=resident_advection_begin calls=4320 time=12.459062779 avg=2.884042310e-03
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=12 name=resident_advection_finish calls=4320 time=12.664756539 avg=2.931656606e-03
-2026-06-25 13:22:38,124 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=12 calls=8640 allocation=1.202382029 h2d=13.207022952 kernel=7.568098753 sync=4.273088313 d2h=0.364344289 free=0.000027240 total=25.117925037
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=1 name=resident_advection_begin calls=4320 time=12.337626517 avg=2.855932064e-03
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=1 name=resident_advection_finish calls=4320 time=12.642105595 avg=2.926413332e-03
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=1 calls=8640 allocation=1.243998554 h2d=13.177653395 kernel=7.453422240 sync=4.213988466 d2h=0.374275297 free=0.000024956 total=24.973627179
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=8 name=resident_advection_begin calls=4320 time=12.278043498 avg=2.842139699e-03
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=8 name=resident_advection_finish calls=4320 time=12.254933320 avg=2.836790120e-03
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=8 calls=8640 allocation=1.230280288 h2d=12.794146598 kernel=7.394267905 sync=4.167584969 d2h=0.365880645 free=0.000013701 total=24.526638122
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=14 name=resident_advection_begin calls=4320 time=12.369228877 avg=2.863247425e-03
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=14 name=resident_advection_finish calls=4320 time=12.556670958 avg=2.906636796e-03
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=14 calls=8640 allocation=1.224905755 h2d=13.012587722 kernel=7.593033638 sync=4.290413317 d2h=0.366461639 free=0.000019357 total=24.919629672
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=10 name=resident_advection_begin calls=4320 time=12.267749263 avg=2.839756774e-03
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=10 name=resident_advection_finish calls=4320 time=12.144783191 avg=2.811292405e-03
-2026-06-25 13:22:38,125 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=10 calls=8640 allocation=1.205608164 h2d=12.698018183 kernel=7.413488545 sync=4.171791888 d2h=0.363950605 free=0.000025221 total=24.406206646
-2026-06-25 13:22:38,717 - isca - INFO - Run 1 complete
-2026-06-25 13:22:38,875 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
-2026-06-25 13:22:40,802 - isca - INFO - Restart archive created at /explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_data/held_suarez_fv_kernels_cuda_resident_30day/restarts/res0001.tar.gz
-2026-06-25 13:22:40,812 - isca - INFO - Writing namelist to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_data/held_suarez_fv_kernels_cuda_resident_30day/run0001/input.nml'
-2026-06-25 13:22:40,818 - isca - INFO - Writing field_table to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_data/held_suarez_fv_kernels_cuda_resident_30day/run0001/field_table'
-2026-06-25 13:22:40,828 - isca - INFO - Writing diag_table to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_data/held_suarez_fv_kernels_cuda_resident_30day/run0001/diag_table'
-2026-06-25 13:22:41,207 - isca - INFO - Emptied run directory '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_resident_30day/run'
+2026-06-25 14:02:47,900 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-06-25 14:02:48,043 - isca - INFO - RRTM compilation disabled.
+2026-06-25 14:02:48,043 - isca - INFO - SOCRATES compilation disabled.
+2026-06-25 14:02:48,050 - isca - INFO - RRTM compilation disabled.
+2026-06-25 14:02:48,050 - isca - INFO - SOCRATES compilation disabled.
+2026-06-25 14:02:48,070 - isca - INFO - Emptied run directory '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_resident_30day/run'
+2026-06-25 14:02:48,070 - isca - WARNING - Data for run 1 already exists and overwrite_data is True. Overwriting.
+2026-06-25 14:02:48,452 - isca - INFO - Writing namelist to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_resident_30day/run/input.nml'
+2026-06-25 14:02:48,459 - isca - INFO - Writing field_table to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_resident_30day/run/field_table'
+2026-06-25 14:02:48,470 - isca - INFO - Writing diag_table to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_resident_30day/run/diag_table'
+2026-06-25 14:02:48,477 - isca - INFO - Running without restart file
+2026-06-25 14:02:48,485 - isca - INFO - Beginning run 1
+2026-06-25 14:02:48,490 - isca - INFO - process running as 439341
+2026-06-25 14:02:48,491 - isca - DEBUG - Loading hybrid ubuntu-conda environment
+2026-06-25 14:02:48,491 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-06-25 14:02:49,415 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-06-25 14:02:49,415 - isca - DEBUG - &MPP_IO_NML
+2026-06-25 14:02:49,415 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-06-25 14:02:49,415 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-06-25 14:02:49,415 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-06-25 14:02:49,415 - isca - DEBUG - SHUFFLE=0          ,
+2026-06-25 14:02:49,416 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-06-25 14:02:49,416 - isca - DEBUG - /
+2026-06-25 14:02:49,416 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-06-25 14:02:49,434 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-06-25 14:02:49,451 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-06-25 14:02:49,452 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-06-25 14:02:49,452 - isca - DEBUG - X-AXIS =  128
+2026-06-25 14:02:49,452 - isca - DEBUG - Y-AXIS =    4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4
+2026-06-25 14:02:49,466 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-06-25 14:02:57,077 - isca - DEBUG - Integration completed through 2000 Jan  2   0: 0: 0
+2026-06-25 14:03:03,448 - isca - DEBUG - Integration completed through 2000 Jan  3   0: 0: 0
+2026-06-25 14:03:10,075 - isca - DEBUG - Integration completed through 2000 Jan  4   0: 0: 0
+2026-06-25 14:03:16,697 - isca - DEBUG - Integration completed through 2000 Jan  5   0: 0: 0
+2026-06-25 14:03:23,012 - isca - DEBUG - Integration completed through 2000 Jan  6   0: 0: 0
+2026-06-25 14:03:29,426 - isca - DEBUG - Integration completed through 2000 Jan  7   0: 0: 0
+2026-06-25 14:03:35,729 - isca - DEBUG - Integration completed through 2000 Jan  8   0: 0: 0
+2026-06-25 14:03:42,222 - isca - DEBUG - Integration completed through 2000 Jan  9   0: 0: 0
+2026-06-25 14:03:48,744 - isca - DEBUG - Integration completed through 2000 Jan 10   0: 0: 0
+2026-06-25 14:03:55,329 - isca - DEBUG - Integration completed through 2000 Jan 11   0: 0: 0
+2026-06-25 14:04:01,602 - isca - DEBUG - Integration completed through 2000 Jan 12   0: 0: 0
+2026-06-25 14:04:08,019 - isca - DEBUG - Integration completed through 2000 Jan 13   0: 0: 0
+2026-06-25 14:04:14,367 - isca - DEBUG - Integration completed through 2000 Jan 14   0: 0: 0
+2026-06-25 14:04:20,906 - isca - DEBUG - Integration completed through 2000 Jan 15   0: 0: 0
+2026-06-25 14:04:27,128 - isca - DEBUG - Integration completed through 2000 Jan 16   0: 0: 0
+2026-06-25 14:04:33,533 - isca - DEBUG - Integration completed through 2000 Jan 17   0: 0: 0
+2026-06-25 14:04:39,952 - isca - DEBUG - Integration completed through 2000 Jan 18   0: 0: 0
+2026-06-25 14:04:46,286 - isca - DEBUG - Integration completed through 2000 Jan 19   0: 0: 0
+2026-06-25 14:04:52,840 - isca - DEBUG - Integration completed through 2000 Jan 20   0: 0: 0
+2026-06-25 14:04:59,225 - isca - DEBUG - Integration completed through 2000 Jan 21   0: 0: 0
+2026-06-25 14:05:05,657 - isca - DEBUG - Integration completed through 2000 Jan 22   0: 0: 0
+2026-06-25 14:05:11,907 - isca - DEBUG - Integration completed through 2000 Jan 23   0: 0: 0
+2026-06-25 14:05:18,217 - isca - DEBUG - Integration completed through 2000 Jan 24   0: 0: 0
+2026-06-25 14:05:24,555 - isca - DEBUG - Integration completed through 2000 Jan 25   0: 0: 0
+2026-06-25 14:05:31,018 - isca - DEBUG - Integration completed through 2000 Jan 26   0: 0: 0
+2026-06-25 14:05:37,241 - isca - DEBUG - Integration completed through 2000 Jan 27   0: 0: 0
+2026-06-25 14:05:43,474 - isca - DEBUG - Integration completed through 2000 Jan 28   0: 0: 0
+2026-06-25 14:05:49,667 - isca - DEBUG - Integration completed through 2000 Jan 29   0: 0: 0
+2026-06-25 14:05:56,189 - isca - DEBUG - Integration completed through 2000 Jan 30   0: 0: 0
+2026-06-25 14:06:02,531 - isca - DEBUG - Integration completed through 2000 Feb  1   0: 0: 0
+2026-06-25 14:06:02,621 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
+2026-06-25 14:06:02,786 - isca - DEBUG - MPP_DOMAINS_STACK high water mark=       25600
+2026-06-25 14:06:02,786 - isca - DEBUG - 
+2026-06-25 14:06:02,786 - isca - DEBUG - Tabulating mpp_clock statistics across     16 PEs...
+2026-06-25 14:06:02,786 - isca - DEBUG - 
+2026-06-25 14:06:02,786 - isca - DEBUG - tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+2026-06-25 14:06:02,787 - isca - DEBUG - Total runtime                       193.372861    193.374751    193.373650      0.000853  1.000     0     0    15
+2026-06-25 14:06:02,787 - isca - DEBUG - MPP_STACK high water mark=           0
+2026-06-25 14:06:02,858 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=2 name=resident_advection_begin calls=4320 time=12.308212114 avg=2.849123175e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=2 name=resident_advection_finish calls=4320 time=12.293370148 avg=2.845687534e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=2 calls=8640 allocation=1.135062173 h2d=12.935970299 kernel=7.396896582 sync=4.177119138 d2h=0.366202772 free=0.000022315 total=24.595324832
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=6 name=resident_advection_begin calls=4320 time=12.233167477 avg=2.831751731e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=6 name=resident_advection_finish calls=4320 time=12.197423470 avg=2.823477655e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=6 calls=8640 allocation=1.126399274 h2d=12.811577003 kernel=7.398526624 sync=4.154289655 d2h=0.374345690 free=0.000025379 total=24.424388836
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=9 name=resident_advection_begin calls=4320 time=12.145101177 avg=2.811366013e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=9 name=resident_advection_finish calls=4320 time=12.080983737 avg=2.796524013e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=9 calls=8640 allocation=1.157383286 h2d=12.665708750 kernel=7.323320453 sync=4.119809482 d2h=0.372273948 free=0.000010142 total=24.219890065
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=10 name=resident_advection_begin calls=4320 time=12.101408121 avg=2.801251880e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=10 name=resident_advection_finish calls=4320 time=11.919411518 avg=2.759123037e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=10 calls=8640 allocation=1.134569838 h2d=12.577236824 kernel=7.248565699 sync=4.053029797 d2h=0.357521975 free=0.000023652 total=24.014272886
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=12 name=resident_advection_begin calls=4320 time=12.666791075 avg=2.932127564e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=12 name=resident_advection_finish calls=4320 time=12.536109925 avg=2.901877297e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=12 calls=8640 allocation=1.139472876 h2d=13.233141928 kernel=7.594945573 sync=4.276378338 d2h=0.363503397 free=0.000023042 total=25.196952600
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=15 name=resident_advection_begin calls=4320 time=13.119123765 avg=3.036834205e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=15 name=resident_advection_finish calls=4320 time=13.990010047 avg=3.238428252e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=15 calls=8640 allocation=1.144453143 h2d=14.228786166 kernel=8.389164738 sync=4.810225241 d2h=0.376696298 free=0.000014002 total=27.102394297
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=0 name=resident_advection_begin calls=4320 time=12.861782595 avg=2.977264490e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=0 name=resident_advection_finish calls=4320 time=13.769946815 avg=3.187487689e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=0 calls=8640 allocation=1.126920853 h2d=13.953401491 kernel=8.308164638 sync=4.749862490 d2h=0.382441423 free=0.000026201 total=26.625017510
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=1 name=resident_advection_begin calls=4320 time=12.342424774 avg=2.857042772e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=1 name=resident_advection_finish calls=4320 time=13.016706070 avg=3.013126405e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=1 calls=8640 allocation=1.133558552 h2d=13.365015031 kernel=7.760677245 sync=4.412921258 d2h=0.361077422 free=0.000013057 total=25.352829485
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=13 name=resident_advection_begin calls=4320 time=12.614490741 avg=2.920021005e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=13 name=resident_advection_finish calls=4320 time=12.596741532 avg=2.915912392e-03
+2026-06-25 14:06:02,859 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=13 calls=8640 allocation=1.134804967 h2d=13.119475956 kernel=7.705820487 sync=4.359832706 d2h=0.364731878 free=0.000026697 total=25.204759276
+2026-06-25 14:06:02,870 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=3 name=resident_advection_begin calls=4320 time=12.022725244 avg=2.783038251e-03
+2026-06-25 14:06:02,870 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=3 name=resident_advection_finish calls=4320 time=12.041752596 avg=2.787442731e-03
+2026-06-25 14:06:02,870 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=3 calls=8640 allocation=1.153266451 h2d=12.681843001 kernel=7.179712834 sync=4.024976043 d2h=0.366882364 free=0.000017748 total=24.058137154
+2026-06-25 14:06:02,870 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=5 name=resident_advection_begin calls=4320 time=12.305190398 avg=2.848423703e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=5 name=resident_advection_finish calls=4320 time=12.233572505 avg=2.831845487e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=5 calls=8640 allocation=1.140457862 h2d=12.856479432 kernel=7.391520672 sync=4.171764388 d2h=0.375484422 free=0.000009546 total=24.532479855
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=11 name=resident_advection_begin calls=4320 time=12.366119567 avg=2.862527678e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=11 name=resident_advection_finish calls=4320 time=12.099239651 avg=2.800749919e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=11 calls=8640 allocation=1.151177912 h2d=12.736061059 kernel=7.429530756 sync=4.157270949 d2h=0.364141975 free=0.000008776 total=24.459118333
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=7 name=resident_advection_begin calls=4320 time=12.265443811 avg=2.839223104e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=7 name=resident_advection_finish calls=4320 time=12.312353915 avg=2.850081925e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=7 calls=8640 allocation=1.126001006 h2d=12.847037819 kernel=7.473743711 sync=4.211435295 d2h=0.369631704 free=0.000034826 total=24.571317721
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=8 name=resident_advection_begin calls=4320 time=12.279448106 avg=2.842464839e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=8 name=resident_advection_finish calls=4320 time=12.467662304 avg=2.886032941e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=8 calls=8640 allocation=1.152598588 h2d=12.964200767 kernel=7.511710243 sync=4.212298344 d2h=0.359349538 free=0.000016287 total=24.740481384
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=14 name=resident_advection_begin calls=4320 time=12.641653131 avg=2.926308595e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=14 name=resident_advection_finish calls=4320 time=13.532125639 avg=3.132436491e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=14 calls=8640 allocation=1.146585815 h2d=13.828551804 kernel=7.956280162 sync=4.518128737 d2h=0.368990660 free=0.000012319 total=26.167103247
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=4 name=resident_advection_begin calls=4320 time=12.021011596 avg=2.782641573e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=4 name=resident_advection_finish calls=4320 time=12.163547148 avg=2.815635914e-03
+2026-06-25 14:06:02,871 - isca - DEBUG - PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=4 calls=8640 allocation=1.088285362 h2d=12.750944606 kernel=7.276501188 sync=4.073182565 d2h=0.368853978 free=0.000022448 total=24.178579425
+2026-06-25 14:06:03,631 - isca - INFO - Run 1 complete
+2026-06-25 14:06:03,745 - isca - DEBUG - atmos_monthly.nc combined and copied to data directory
+2026-06-25 14:06:05,633 - isca - INFO - Restart archive created at /explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_data/held_suarez_fv_kernels_cuda_resident_30day/restarts/res0001.tar.gz
+2026-06-25 14:06:05,644 - isca - INFO - Writing namelist to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_data/held_suarez_fv_kernels_cuda_resident_30day/run0001/input.nml'
+2026-06-25 14:06:05,650 - isca - INFO - Writing field_table to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_data/held_suarez_fv_kernels_cuda_resident_30day/run0001/field_table'
+2026-06-25 14:06:05,660 - isca - INFO - Writing diag_table to '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_data/held_suarez_fv_kernels_cuda_resident_30day/run0001/diag_table'
+2026-06-25 14:06:06,045 - isca - INFO - Emptied run directory '/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_resident_30day/run'
 GFDL_BASE = /explore/nobackup/people/rlgill/SystemTesting/AAI/GFDL_atmos_cubed_sphere
 GFDL_WORK = /explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work
 GFDL_DATA = /explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_data
@@ -150,9 +150,9 @@ dt_atmos = 600
 num_cores = 16
 production_diag = True
 
-real	3m20.257s
-user	20m18.688s
-sys	11m56.215s
-end_timestamp=2026-06-25T13:22:41-04:00
+real	3m18.229s
+user	20m20.555s
+sys	11m42.628s
+end_timestamp=2026-06-25T14:06:06-04:00
 output=/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_data/held_suarez_fv_kernels_cuda_resident_30day/run0001/atmos_monthly.nc
 log=/explore/nobackup/people/rlgill/SystemTesting/AAI/GFDL_atmos_cubed_sphere/logs/fv_kernels_cuda_resident_30day.log
