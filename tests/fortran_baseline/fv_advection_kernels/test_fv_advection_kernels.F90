@@ -334,16 +334,28 @@ program test_fv_advection_kernels
   real, dimension(nx,js:je,nz) :: b_x, dq_semi_x, slope_x_out, integer_flux_out
   real, dimension(nx,js:je,nz) :: dq_vanleer_x
   real, dimension(nx,js-2:je+2,nz) :: q_sphere
+  real, dimension(nx,js-2:je+2,nz) :: va_sphere
   real, dimension(nx,js:je+1,nz) :: vc
   real, dimension(nx,js-1:je+1,nz) :: slope_sphere_out
   real, dimension(nx,js:je,nz) :: dq_vanleer_sphere
   integer, dimension(nx,js:je,nz) :: ii
-  integer :: j
+  integer :: i, j, k
 
   call execute_command_line('mkdir -p inputs outputs')
   call init_metrics()
   call init_x_inputs(ua, uc, q_x)
   call init_sphere_inputs(vc, q_sphere)
+
+  ! Haloed va for resident scope-B (begin derives vc from this and strips its
+  ! interior for semi_y). Synthetic field spanning the full y-halo.
+  do k = 1, nz
+    do j = js-2, je+2
+      do i = 1, nx
+        va_sphere(i,j,k) = -1.10 + 0.29*real(mod(2*i + j + 3*k, 7)) &
+                         + 0.015*real(mod(i + 2*j + k, 5))
+      end do
+    end do
+  end do
 
   do j = js, je
     b_x(:,j,:) = ua(:,j,:)*dt/(dx*c(j))
@@ -372,7 +384,8 @@ program test_fv_advection_kernels
   call write_real_3d('inputs/input_q_sphere.bin', q_sphere)
   call write_real_3d('inputs/input_vc.bin', vc)
 
-  call write_real_3d('inputs/input_va.bin', vc(:,js:je,:))
+  call write_real_3d('inputs/input_va.bin', va_sphere(:,js:je,:))
+  call write_real_3d('inputs/input_va_sphere.bin', va_sphere)
   call write_real_1d('inputs/input_dyy.bin', dy(js:je+1))
 
   call write_int_3d('outputs/output_find_cell_x_ii.bin', ii)

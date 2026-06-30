@@ -283,8 +283,10 @@ int main(int argc, char** argv) {
             join_path(input_dir, "input_dy_plus.bin"), active_ny + 2);
         const std::vector<double> dy_minus = read_binary<double>(
             join_path(input_dir, "input_dy_minus.bin"), active_ny + 2);
-        const std::vector<double> va =
-            read_binary<double>(join_path(input_dir, "input_va.bin"), x_count);
+        // Haloed va for resident scope-B: begin derives uc/vc and the divergence
+        // term on the device, so the reference recomputes them from ua/va_sphere.
+        const std::vector<double> va_sphere = read_binary<double>(
+            join_path(input_dir, "input_va_sphere.bin"), sphere_q_count);
         const std::vector<double> dyy = read_binary<double>(
             join_path(input_dir, "input_dyy.bin"), active_ny + 1);
         const std::vector<double> ua =
@@ -382,7 +384,9 @@ int main(int argc, char** argv) {
                         auto qh = [&](int jj) {
                             return q_sphere[(static_cast<std::size_t>(k) * (active_ny + 4) + jj) * p.nx + i];
                         };
-                        const double va_val = va[in];
+                        // semi_y reads interior va = va_sphere row (j+2).
+                        const double va_val =
+                            va_sphere[(static_cast<std::size_t>(k) * (active_ny + 4) + (j + 2)) * p.nx + i];
                         const double inc = (va_val >= 0.0)
                             ? va_val * p.dt * (qh(j + 1) - qh(j + 2)) / dyy[j]
                             : va_val * p.dt * (qh(j + 2) - qh(j + 3)) / dyy[j + 1];
@@ -407,27 +411,68 @@ int main(int argc, char** argv) {
                 }
             }
 
+            // Scope-B reference: begin folds uc, vc, and dq = q*div onto the
+            // device, all derived from ua and the haloed va. Mirror those exactly
+            // so the comparison stays independent of the device output.
+            auto idx3 = [&](int i, int j, int n, int k) {
+                return static_cast<std::size_t>(i) +
+                       static_cast<std::size_t>(p.nx) *
+                           (static_cast<std::size_t>(j) +
+                            static_cast<std::size_t>(n) * k);
+            };
+            std::vector<double> uc_ref(x_count);
+            for (int k = 0; k < p.nz; ++k)
+                for (int j = 0; j < active_ny; ++j)
+                    for (int i = 0; i < p.nx; ++i) {
+                        const int im = (i == 0) ? p.nx - 1 : i - 1;
+                        uc_ref[idx3(i, j, active_ny, k)] =
+                            0.5 * (ua[idx3(im, j, active_ny, k)] +
+                                   ua[idx3(i, j, active_ny, k)]);
+                    }
+            std::vector<double> vc_ref(vc_count);
+            for (int k = 0; k < p.nz; ++k)
+                for (int r = 0; r < active_ny + 1; ++r)
+                    for (int i = 0; i < p.nx; ++i)
+                        vc_ref[idx3(i, r, active_ny + 1, k)] =
+                            0.5 * (va_sphere[idx3(i, r + 1, active_ny + 4, k)] +
+                                   va_sphere[idx3(i, r + 2, active_ny + 4, k)]);
+            // dq = q*div (overwrite; fold_div true).
+            for (int k = 0; k < p.nz; ++k)
+                for (int j = 0; j < active_ny; ++j)
+                    for (int i = 0; i < p.nx; ++i) {
+                        const std::size_t in = idx3(i, j, active_ny, k);
+                        double div =
+                            (vc_ref[idx3(i, j + 1, active_ny + 1, k)] * cc[j + 1] -
+                             vc_ref[idx3(i, j, active_ny + 1, k)] * cc[j]) /
+                            (c[j] * dy[j + 1]);
+                        const int ip = (i == p.nx - 1) ? 0 : i + 1;
+                        div += (uc_ref[idx3(ip, j, active_ny, k)] - uc_ref[in]) /
+                               (c[j] * p.dx);
+                        resident_dq_dt_expected[in] = q_interior[in] * div;
+                    }
+
             require_success(
                 fv_advection_kernels::cuda_backend::resident_advection_begin(
-                    p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), ua.data(),
-                    q_sphere.data(), resident_q1.data(), va.data(), dyy.data()),
+                    p.nx, active_ny, p.nz, p.dt, p.dx, /*fold_div=*/true, c.data(),
+                    cc.data(), dy.data(), dy_plus.data(), dy_minus.data(),
+                    dyy.data(), ua.data(), q_sphere.data(), va_sphere.data(),
+                    resident_q1.data()),
                 "resident_advection_begin");
 
             fv_advection_kernels::vanleer_x_3d(
                 p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), p.monotone,
-                uc.data(), q2_expected.data(), resident_dq_dt_expected.data());
+                uc_ref.data(), q2_expected.data(), resident_dq_dt_expected.data());
             fv_advection_kernels::vanleer_sphere_3d(
                 p.nx, active_ny, p.nz, p.dt, p.monotone, p.js == 1,
                 p.je == p.ny, c.data(), cc.data(), dy.data(), dy_plus.data(),
-                dy_minus.data(), vc.data(), q1_combined.data(),
+                dy_minus.data(), vc_ref.data(), q1_combined.data(),
                 resident_dq_dt_expected.data());
 
             require_success(
                 fv_advection_kernels::cuda_backend::resident_advection_finish(
                     p.nx, active_ny, p.nz, p.dt, p.dx, p.monotone,
-                    p.js == 1, p.je == p.ny, c.data(), cc.data(), dy.data(),
-                    dy_plus.data(), dy_minus.data(), uc.data(), vc.data(),
-                    q1_combined.data(), resident_dq_dt.data()),
+                    p.js == 1, p.je == p.ny, q1_combined.data(),
+                    resident_dq_dt.data()),
                 "resident_advection_finish");
         }
 

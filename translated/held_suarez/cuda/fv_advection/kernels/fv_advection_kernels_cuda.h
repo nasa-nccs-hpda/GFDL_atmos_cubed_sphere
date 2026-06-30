@@ -78,12 +78,17 @@ int resident_advection_begin(
     int nz,
     double half_dt,
     double dx,
+    bool fold_div,
     const double* c,
+    const double* cc,
+    const double* dy,
+    const double* dy_plus,
+    const double* dy_minus,
+    const double* dyy,
     const double* ua,
     const double* q,
-    double* q1_interior,
-    const double* va, 
-    const double* dyy);
+    const double* va,
+    double* q1_interior);
 
 int resident_advection_finish(
     int nx,
@@ -94,13 +99,6 @@ int resident_advection_finish(
     bool monotone,
     bool is_south_boundary,
     bool is_north_boundary,
-    const double* c,
-    const double* cc,
-    const double* dy,
-    const double* dy_plus,
-    const double* dy_minus,
-    const double* uc,
-    const double* vc,
     const double* q1,
     double* dq_dt);
 
@@ -187,12 +185,17 @@ extern "C" int fv_advection_resident_begin_cuda_c(
     int nz,
     double half_dt,
     double dx,
+    int fold_div,
     const double* c,
+    const double* cc,
+    const double* dy,
+    const double* dy_plus,
+    const double* dy_minus,
+    const double* dyy,
     const double* ua,
     const double* q,
-    double* q1_interior,
     const double* va,
-    const double* dyy);
+    double* q1_interior);
 
 extern "C" int fv_advection_resident_finish_cuda_c(
     int nx,
@@ -203,13 +206,6 @@ extern "C" int fv_advection_resident_finish_cuda_c(
     double dt,
     double dx,
     int monotone,
-    const double* c,
-    const double* cc,
-    const double* dy,
-    const double* dy_plus,
-    const double* dy_minus,
-    const double* uc,
-    const double* vc,
     const double* q1,
     double* dq_dt);
 

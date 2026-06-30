@@ -157,6 +157,7 @@ integer :: i, j, k
 integer, dimension(nx) :: ii
 
 logical :: flux_local
+logical :: use_resident_boundary
 
 if(.not.module_is_initialized) then
   call error_mesg('a_grid_horiz_advection','fv_advection_mod is not initialized', FATAL)
@@ -164,6 +165,12 @@ endif
 
 flux_local = .false.
 if(present(flux)) flux_local = flux
+
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+use_resident_boundary = fv_advection_resident_enabled()
+#else
+use_resident_boundary = .false.
+#endif
 
 vx = 0.0
 qx = 0.0
@@ -195,31 +202,36 @@ if(je == ny) then
   end do
 endif
 
-uc(2:nx,js:je,:)   = 0.5*(ua(1:nx-1, js:je  ,:) + ua(2:nx,js:je,:))
-uc(1   ,js:je,:)   = 0.5*(ua(nx    , js:je  ,:) + ua(1   ,js:je,:))
+! Resident scope-B folds uc/vc and the divergence term onto the device in
+! resident_advection_begin, so the host skips them entirely. vx (haloed va) is
+! handed to advection_sphere_3d for the device to derive vc.
+if (.not. use_resident_boundary) then
+  uc(2:nx,js:je,:)   = 0.5*(ua(1:nx-1, js:je  ,:) + ua(2:nx,js:je,:))
+  uc(1   ,js:je,:)   = 0.5*(ua(nx    , js:je  ,:) + ua(1   ,js:je,:))
 
- do k=1,size(vc,3)
-   do j=js,je+1
-     do i=1,nx
-       vc(i,j,k) = 0.5*(vx(i,j-1,k) + vx(i,j,k))
+   do k=1,size(vc,3)
+     do j=js,je+1
+       do i=1,nx
+         vc(i,j,k) = 0.5*(vx(i,j-1,k) + vx(i,j,k))
+       enddo
      enddo
    enddo
- enddo
 
-if(.not.flux_local) then 
-  do j = js,je
-    div(:,j,:) = (vc(:,j+1,:)*cc(j+1) - vc(:,j,:)*cc(j))/(c(j)*dy(j))
-  enddo
+  if(.not.flux_local) then
+    do j = js,je
+      div(:,j,:) = (vc(:,j+1,:)*cc(j+1) - vc(:,j,:)*cc(j))/(c(j)*dy(j))
+    enddo
 
-  do j = js, je
-    div(1:nx-1,j,:) = div(1:nx-1,j,:) + (uc(2:nx,j,:) - uc(1:nx-1,j,:))/(c(j)*dx)
-    div(nx    ,j,:) = div(nx    ,j,:) + (uc(1   ,j,:) - uc(nx    ,j,:))/(c(j)*dx)
-  enddo
+    do j = js, je
+      div(1:nx-1,j,:) = div(1:nx-1,j,:) + (uc(2:nx,j,:) - uc(1:nx-1,j,:))/(c(j)*dx)
+      div(nx    ,j,:) = div(nx    ,j,:) + (uc(1   ,j,:) - uc(nx    ,j,:))/(c(j)*dx)
+    enddo
 
-  dq_dt = dq_dt + q*div
+    dq_dt = dq_dt + q*div
+  endif
 endif
 
-call advection_sphere_3d(dq_dt, dt, qx, uc, vc, ua, va)
+call advection_sphere_3d(dq_dt, dt, qx, uc, vc, ua, va, vx, .not.flux_local)
 
 return
 end subroutine a_grid_horiz_advection_3d
@@ -253,11 +265,13 @@ end subroutine a_grid_horiz_advection_2d
 
 !===========================================================================================
 
-subroutine advection_sphere_3d(dq_dt, dt, q, uc, vc, ua, va)
+subroutine advection_sphere_3d(dq_dt, dt, q, uc, vc, ua, va, vx, fold_div)
 
 real, intent(in)   , dimension(:,js-2:,:) :: q
 real, intent(in)   , dimension(:,js  :,:) :: vc
 real, intent(in)   , dimension(:,js  :,:) :: uc, ua, va
+real, intent(in)   , dimension(:,js-2:,:) :: vx
+logical, intent(in)                       :: fold_div
 real, intent(in)                          :: dt
 real, intent(inout), dimension(:,js  :,:) :: dq_dt
 
@@ -276,18 +290,24 @@ use_resident_boundary = .false.
 
 if (use_resident_boundary) then
 #ifdef USE_CUDA_FV_ADVECTION_KERNELS
-  call fv_advection_resident_begin_wrapper(nx, js, je, size(q,3), 0.5*dt, dx, &
-    c(js:je), ua(:,js:je,:), q(:,js-2:je+2,:), q1(:,js:je,:), va(:,js:je,:), dyy(js:je+1), ierr)
+  ! Resident scope-B: begin computes q1 (semi_x), q2 (semi_y), uc, vc, and the
+  ! divergence term dq = q*div on the device. uc/vc/q2 stay resident for finish,
+  ! so they are not recomputed or transferred host-side. The divergence fold
+  ! overwrites dq, which is valid because the grid-tracer caller enters with
+  ! dq_dt = 0 (see update_tracers); fold_div is .false. only for flux mode.
+  call fv_advection_resident_begin_wrapper(nx, js, je, size(q,3), 0.5*dt, dx, fold_div, &
+    c(js:je), cc(js:je+1), dy(js-1:je+1), dy_plus(js-1:je+1), dy_minus(js-1:je+1), &
+    dyy(js:je+1), ua(:,js:je,:), q(:,js-2:je+2,:), vx(:,js-2:je+2,:), q1(:,js:je,:), ierr)
   if (ierr /= 0) call error_mesg('fv_advection_mod', &
     'resident CUDA advection begin failed', FATAL)
 #endif
 else
   call semi_x_3d(q1(:,js:je,:), ua(:,js:je,:), q(:,js :je ,:), 0.5*dt)
   q1(:,js:je,:) = q(:,js:je,:) + q1(:,js:je,:)
-endif
 
-call semi_y_3d(q2(:,js:je,:), va(:,js:je,:), q(:,js-2:je+2,:), 0.5*dt)
-q2(:,js:je,:) = q(:,js:je,:) + q2(:,js:je,:)
+  call semi_y_3d(q2(:,js:je,:), va(:,js:je,:), q(:,js-2:je+2,:), 0.5*dt)
+  q2(:,js:je,:) = q(:,js:je,:) + q2(:,js:je,:)
+endif
 
 call mpp_update_domains(q1, advection_domain)
 
@@ -313,9 +333,7 @@ endif
 if (use_resident_boundary) then
 #ifdef USE_CUDA_FV_ADVECTION_KERNELS
   call fv_advection_resident_finish_wrapper(nx, ny, js, je, size(q,3), dt, dx, monotone, &
-    c(js:je), cc(js:je+1), dy(js-1:je+1), dy_plus(js-1:je+1), &
-    dy_minus(js-1:je+1), uc(:,js:je,:), vc(:,js:je+1,:), q1(:,js-2:je+2,:), &
-    dq_dt(:,js:je,:), ierr)
+    q1(:,js-2:je+2,:), dq_dt(:,js:je,:), ierr)
   if (ierr /= 0) call error_mesg('fv_advection_mod', &
     'resident CUDA advection finish failed', FATAL)
 #endif

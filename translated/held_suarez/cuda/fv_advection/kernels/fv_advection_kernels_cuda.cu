@@ -157,8 +157,14 @@ struct DeviceBuffer {
     std::size_t capacity = 0;
 };
 
+// Resident scope-B slot map (no cross-phase aliasing for anything live across
+// begin -> finish): 0 c, 1 ua, 2 q_int, 3 q1, 4 q2, 5 va_halo, 6 dyy, 7 dq,
+// 8 cc, 9 dy, 10 dy_plus, 11 dy_minus, 12 uc, 13 vc, 14 q_halo,
+// 15 va_int (semi_y interior), 16 semi scratch. 17..19 spare.
+constexpr std::size_t kNumBuffers = 20;
+
 struct PersistentContext {
-    DeviceBuffer buffers[16];
+    DeviceBuffer buffers[kNumBuffers];
     bool initialized = false;
     bool cleanup_registered = false;
     bool resident_stage_active = false;
@@ -236,7 +242,7 @@ int ensure_persistent_context() {
 }
 
 int ensure_buffer(std::size_t slot, std::size_t count, CudaPhaseCounter& phases) {
-    if (slot >= 16) {
+    if (slot >= kNumBuffers) {
         return FV_CUDA_INVALID_ARGUMENT;
     }
     DeviceBuffer& buffer = persistent_context.buffers[slot];
@@ -450,6 +456,83 @@ __global__ void form_q2_kernel(
     const int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx >= size) return;
     q2[idx] = q[idx] + semi_y_dq[idx];
+}
+
+// uc(i,j) = 0.5*(ua(i-1,j) + ua(i,j)), x-periodic (uc(1) = 0.5*(ua(nx) + ua(1))).
+// Mirrors the host uc averaging in a_grid_horiz_advection_3d so the divergence
+// pre-step can be folded into resident begin instead of crossing to the host.
+__global__ void compute_uc_kernel(
+    int nx,
+    int ny,
+    int nz,
+    const double* ua,
+    double* uc) {
+    const int size = nx * ny * nz;
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= size) return;
+    const int plane = nx * ny;
+    const int k0 = idx / plane;
+    const int rem = idx - k0 * plane;
+    const int j0 = rem / nx;
+    const int i0 = rem - j0 * nx;
+    const int im = (i0 == 0) ? nx - 1 : i0 - 1;
+    uc[idx] = 0.5 * (ua[idx3(im, j0, k0, nx, ny)] + ua[idx]);
+}
+
+// vc(i,j) = 0.5*(vx(i,j-1) + vx(i,j)) for device rows r = 0..ny (global j = js+r),
+// reading the haloed va (vx) at row offset 2. vc layout is nx*(ny+1)*nz.
+__global__ void compute_vc_kernel(
+    int nx,
+    int ny,
+    int nz,
+    const double* va_halo,
+    double* vc) {
+    const int vc_ny = ny + 1;
+    const int size = nx * vc_ny * nz;
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= size) return;
+    const int plane = nx * vc_ny;
+    const int k0 = idx / plane;
+    const int rem = idx - k0 * plane;
+    const int r = rem / nx;
+    const int i0 = rem - r * nx;
+    const int q_ny = ny + 4;
+    const double v_jm1 = va_halo[idx3(i0, r + 1, k0, nx, q_ny)];  // vx(j-1)
+    const double v_j = va_halo[idx3(i0, r + 2, k0, nx, q_ny)];    // vx(j)
+    vc[idx] = 0.5 * (v_jm1 + v_j);
+}
+
+// div from uc/vc and metrics, then dq = q*div. Folds the host
+// `dq_dt = dq_dt + q*div` divergence term; dq is assumed zero on entry (the
+// resident grid-tracer caller passes dt_tr = 0), so this overwrites it.
+// Metric slices: c = c(js:je), cc = cc(js:je+1), dy = dy(js-1:je+1) (offset +1).
+__global__ void div_qdiv_kernel(
+    int nx,
+    int ny,
+    int nz,
+    double dx,
+    const double* c,
+    const double* cc,
+    const double* dy,
+    const double* uc,
+    const double* vc,
+    const double* q,
+    double* dq) {
+    const int size = nx * ny * nz;
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= size) return;
+    const int plane = nx * ny;
+    const int k0 = idx / plane;
+    const int rem = idx - k0 * plane;
+    const int j0 = rem / nx;
+    const int i0 = rem - j0 * nx;
+    const int vc_ny = ny + 1;
+    const double vc_j = vc[idx3(i0, j0, k0, nx, vc_ny)];
+    const double vc_jp = vc[idx3(i0, j0 + 1, k0, nx, vc_ny)];
+    double div = (vc_jp * cc[j0 + 1] - vc_j * cc[j0]) / (c[j0] * dy[j0 + 1]);
+    const int ip = (i0 == nx - 1) ? 0 : i0 + 1;
+    div += (uc[idx3(ip, j0, k0, nx, ny)] - uc[idx]) / (c[j0] * dx);
+    dq[idx] = q[idx] * div;
 }
 
 __global__ void slope_x_kernel(
@@ -1271,31 +1354,44 @@ int resident_advection_begin(
     int nz,
     double half_dt,
     double dx,
+    bool fold_div,
     const double* c,
+    const double* cc,
+    const double* dy,
+    const double* dy_plus,
+    const double* dy_minus,
+    const double* dyy,
     const double* ua,
     const double* q,
-    double* q1_interior,
     const double* va,
-    const double* dyy) {
+    double* q1_interior) {
     const CudaMode mode = selected_cuda_mode();
     PhaseCall phase_call(mode);
     CudaPhaseCounter& phases = phase_call.counter();
     if (mode != CudaMode::resident) return FV_CUDA_INVALID_ARGUMENT;
     int ierr = validate_common(nx, ny, nz, mode);
-    if (ierr != FV_CUDA_SUCCESS || c == nullptr || ua == nullptr || q == nullptr ||
-        q1_interior == nullptr || persistent_context.resident_stage_active || va == nullptr || dyy == nullptr) {
+    if (ierr != FV_CUDA_SUCCESS || c == nullptr || cc == nullptr || dy == nullptr ||
+        dy_plus == nullptr || dy_minus == nullptr || dyy == nullptr || ua == nullptr ||
+        q == nullptr || va == nullptr || q1_interior == nullptr ||
+        persistent_context.resident_stage_active) {
         return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
     }
 
     const std::size_t count = static_cast<std::size_t>(nx) * ny * nz;
     const std::size_t q1_count = static_cast<std::size_t>(nx) * (ny + 4) * nz;
-    
-    const std::pair<std::size_t, std::size_t> requests[] = {
-        {0, static_cast<std::size_t>(ny)}, {1, count}, {2, count},
-        {3, q1_count}, {4, count}, {5, count}, {6, ny+1}, {12, count},
-        {13, q1_count}, {14, count}};
+    const std::size_t vc_count = static_cast<std::size_t>(nx) * (ny + 1) * nz;
+    const std::size_t metric_count = static_cast<std::size_t>(ny + 2);
 
-        for (const auto& request : requests) {
+    // Begin uploads every metric finish needs (none re-uploaded in finish) plus
+    // the haloed q and va, and produces all fields that must stay resident across
+    // the boundary: q1 (interior), q2, uc, vc, and dq = q*div.
+    const std::pair<std::size_t, std::size_t> requests[] = {
+        {0, static_cast<std::size_t>(ny)}, {1, count}, {2, count}, {3, q1_count},
+        {4, count}, {5, q1_count}, {6, static_cast<std::size_t>(ny + 1)}, {7, count},
+        {8, static_cast<std::size_t>(ny + 1)}, {9, metric_count}, {10, metric_count},
+        {11, metric_count}, {12, count}, {13, vc_count}, {14, q1_count}, {15, count},
+        {16, count}};
+    for (const auto& request : requests) {
         ierr = ensure_buffer(request.first, request.second, phases);
         if (ierr != FV_CUDA_SUCCESS) return ierr;
     }
@@ -1305,31 +1401,48 @@ int resident_advection_begin(
     double* d_q = persistent_context.buffers[2].data;
     double* d_q1 = persistent_context.buffers[3].data;
     double* d_q2 = persistent_context.buffers[4].data;
-    double* d_va = persistent_context.buffers[5].data;
+    double* d_va_halo = persistent_context.buffers[5].data;
     double* d_dyy = persistent_context.buffers[6].data;
-    double* d_semi_x_dq = persistent_context.buffers[12].data;
-    double* d_q_halo = persistent_context.buffers[13].data;
-    double* d_semi_y_dq = persistent_context.buffers[14].data;
+    double* d_dq = persistent_context.buffers[7].data;
+    double* d_cc = persistent_context.buffers[8].data;
+    double* d_dy = persistent_context.buffers[9].data;
+    double* d_dy_plus = persistent_context.buffers[10].data;
+    double* d_dy_minus = persistent_context.buffers[11].data;
+    double* d_uc = persistent_context.buffers[12].data;
+    double* d_vc = persistent_context.buffers[13].data;
+    double* d_q_halo = persistent_context.buffers[14].data;
+    double* d_va = persistent_context.buffers[15].data;
+    double* d_semi_dq = persistent_context.buffers[16].data;
 
-    // q arrives haloed (nx*(ny+4)*nz): the cross term q2 = q + semi_y(q) needs a
-    // valid y-halo, and the x-direction kernels reuse the interior slice. Upload
-    // the haloed field once, then strip its interior into d_q (device-side, no
-    // extra host transfer) for semi_x / form_q1 / form_q2.
+    // q and va arrive haloed (nx*(ny+4)*nz). semi_y and vc read the y-halo; the
+    // x-direction kernels and uc/div use the interior, stripped device-side (D2D,
+    // no extra host transfer). Metrics are uploaded here and reused by finish.
     if ((ierr = copy_to_existing_device(d_c, c, ny, "resident c", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_cc, cc, ny + 1, "resident cc", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_dy, dy, metric_count, "resident dy", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_dy_plus, dy_plus, metric_count, "resident dy_plus", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_dy_minus, dy_minus, metric_count, "resident dy_minus", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_dyy, dyy, ny + 1, "resident dyy", phases)) != FV_CUDA_SUCCESS ||
         (ierr = copy_to_existing_device(d_q_halo, q, q1_count, "resident q halo", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_ua, ua, count, "resident ua", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_va, va, count, "resident va", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_dyy, dyy, ny + 1, "resident dyy", phases)) != FV_CUDA_SUCCESS){
+        (ierr = copy_to_existing_device(d_va_halo, va, q1_count, "resident va halo", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_ua, ua, count, "resident ua", phases)) != FV_CUDA_SUCCESS) {
         return ierr;
     }
-    // Strip the ny interior rows {2..ny+1} of the haloed q into the halo-less d_q.
+    // Strip the ny interior rows {2..ny+1} of the haloed q and va into d_q / d_va.
+    const std::size_t int_pitch = static_cast<std::size_t>(nx) * ny * sizeof(double);
+    const std::size_t halo_pitch = static_cast<std::size_t>(nx) * (ny + 4) * sizeof(double);
     ierr = check_cuda(
-        cudaMemcpy2D(d_q, static_cast<std::size_t>(nx) * ny * sizeof(double),
-                     d_q_halo + 2 * nx,
-                     static_cast<std::size_t>(nx) * (ny + 4) * sizeof(double),
+        cudaMemcpy2D(d_q, int_pitch, d_q_halo + 2 * nx, halo_pitch,
                      static_cast<std::size_t>(nx) * ny * sizeof(double), nz,
                      cudaMemcpyDeviceToDevice),
         "resident q interior strip");
+    if (ierr == FV_CUDA_SUCCESS) {
+        ierr = check_cuda(
+            cudaMemcpy2D(d_va, int_pitch, d_va_halo + 2 * nx, halo_pitch,
+                         static_cast<std::size_t>(nx) * ny * sizeof(double), nz,
+                         cudaMemcpyDeviceToDevice),
+            "resident va interior strip");
+    }
     if (ierr != FV_CUDA_SUCCESS) return ierr;
 
     const bool timing = profile::enabled();
@@ -1340,22 +1453,45 @@ int resident_advection_begin(
     const int blocks = static_cast<int>((count + threads - 1) / threads);
     if (ierr == FV_CUDA_SUCCESS) {
         semi_x_kernel<<<blocks, threads>>>(nx, ny, nz, half_dt, dx, d_c, d_ua, d_q,
-                                           d_semi_x_dq);
+                                           d_semi_dq);
         ierr = check_cuda(cudaGetLastError(), "resident semi_x_kernel");
     }
     if (ierr == FV_CUDA_SUCCESS) {
-        form_q1_with_halo_kernel<<<blocks, threads>>>(nx, ny, nz, d_q, d_semi_x_dq, d_q1);
+        form_q1_with_halo_kernel<<<blocks, threads>>>(nx, ny, nz, d_q, d_semi_dq, d_q1);
         ierr = check_cuda(cudaGetLastError(), "resident form_q1_with_halo_kernel");
     }
 
     // q2 = q + semi_y(q): semi_y reads the haloed q (not q1), matching the
     // Fortran cross term; form_q2 adds the field back.
     if (ierr == FV_CUDA_SUCCESS) {
-        ierr = fv_advection::cuda_backend::semi_y_3d_cuda(nx, 1, ny, nz, half_dt, d_va, d_q_halo, d_dyy, d_semi_y_dq);
+        ierr = fv_advection::cuda_backend::semi_y_3d_cuda(nx, 1, ny, nz, half_dt, d_va, d_q_halo, d_dyy, d_semi_dq);
     }
     if (ierr == FV_CUDA_SUCCESS) {
-        form_q2_kernel<<<blocks, threads>>>(nx, ny, nz, d_q, d_semi_y_dq, d_q2);
+        form_q2_kernel<<<blocks, threads>>>(nx, ny, nz, d_q, d_semi_dq, d_q2);
         ierr = check_cuda(cudaGetLastError(), "resident form_q2_kernel");
+    }
+
+    // Divergence pre-step, folded onto the device: uc (x-avg of ua), vc (y-avg of
+    // the haloed va), then dq = q*div. With flux mode (fold_div false) the host
+    // skips the div term, so dq starts at zero.
+    if (ierr == FV_CUDA_SUCCESS) {
+        compute_uc_kernel<<<blocks, threads>>>(nx, ny, nz, d_ua, d_uc);
+        ierr = check_cuda(cudaGetLastError(), "resident compute_uc_kernel");
+    }
+    if (ierr == FV_CUDA_SUCCESS) {
+        const int vc_blocks = static_cast<int>((vc_count + threads - 1) / threads);
+        compute_vc_kernel<<<vc_blocks, threads>>>(nx, ny, nz, d_va_halo, d_vc);
+        ierr = check_cuda(cudaGetLastError(), "resident compute_vc_kernel");
+    }
+    if (ierr == FV_CUDA_SUCCESS) {
+        if (fold_div) {
+            div_qdiv_kernel<<<blocks, threads>>>(nx, ny, nz, dx, d_c, d_cc, d_dy,
+                                                 d_uc, d_vc, d_q, d_dq);
+            ierr = check_cuda(cudaGetLastError(), "resident div_qdiv_kernel");
+        } else {
+            ierr = check_cuda(cudaMemset(d_dq, 0, count * sizeof(double)),
+                              "resident dq zero");
+        }
     }
 
     if (ierr == FV_CUDA_SUCCESS && timing) {
@@ -1419,13 +1555,6 @@ int resident_advection_finish(
     bool monotone,
     bool is_south_boundary,
     bool is_north_boundary,
-    const double* c,
-    const double* cc,
-    const double* dy,
-    const double* dy_plus,
-    const double* dy_minus,
-    const double* uc,
-    const double* vc,
     const double* q1,
     double* dq_dt) {
     const CudaMode mode = selected_cuda_mode();
@@ -1437,49 +1566,25 @@ int resident_advection_finish(
         return FV_CUDA_INVALID_ARGUMENT;
     }
     int ierr = validate_common(nx, ny, nz, mode);
-    if (ierr != FV_CUDA_SUCCESS || c == nullptr || cc == nullptr || dy == nullptr ||
-        dy_plus == nullptr || dy_minus == nullptr || uc == nullptr || vc == nullptr ||
-        q1 == nullptr || dq_dt == nullptr) {
+    if (ierr != FV_CUDA_SUCCESS || q1 == nullptr || dq_dt == nullptr) {
         persistent_context.resident_stage_active = false;
         return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
     }
 
     const std::size_t count = static_cast<std::size_t>(nx) * ny * nz;
-    const std::size_t q1_count = static_cast<std::size_t>(nx) * (ny + 4) * nz;
-    const std::size_t vc_count = static_cast<std::size_t>(nx) * (ny + 1) * nz;
-    const std::size_t metric_count = static_cast<std::size_t>(ny + 2);
-    const std::pair<std::size_t, std::size_t> requests[] = {
-        {0, static_cast<std::size_t>(ny)}, {3, q1_count}, {4, count}, {5, count},
-        {6, vc_count}, {7, count}, {8, static_cast<std::size_t>(ny + 1)},
-        {9, metric_count}, {10, metric_count}, {11, metric_count}};
-    for (const auto& request : requests) {
-        ierr = ensure_buffer(request.first, request.second, phases);
-        if (ierr != FV_CUDA_SUCCESS) {
-            persistent_context.resident_stage_active = false;
-            return ierr;
-        }
-    }
 
+    // c, cc, dy, dy_plus, dy_minus, uc, vc, and dq are all resident from begin;
+    // finish uploads nothing but the q1 halo rows and reads the rest from device.
     double* d_c = persistent_context.buffers[0].data;
     double* d_q1 = persistent_context.buffers[3].data;
     double* d_q2 = persistent_context.buffers[4].data;
-    double* d_uc = persistent_context.buffers[5].data;
-    double* d_vc = persistent_context.buffers[6].data;
     double* d_dq = persistent_context.buffers[7].data;
     double* d_cc = persistent_context.buffers[8].data;
     double* d_dy = persistent_context.buffers[9].data;
     double* d_dy_plus = persistent_context.buffers[10].data;
     double* d_dy_minus = persistent_context.buffers[11].data;
-
-    if ((ierr = copy_to_existing_device(d_c, c, ny, "resident finish c", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_cc, cc, ny + 1, "resident cc", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_dy, dy, ny + 2, "resident dy", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_dy_plus, dy_plus, ny + 2, "resident dy_plus", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_dy_minus, dy_minus, ny + 2, "resident dy_minus", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_uc, uc, count, "resident uc", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_vc, vc, vc_count, "resident vc", phases)) == FV_CUDA_SUCCESS) {
-        ierr = copy_to_existing_device(d_dq, dq_dt, count, "resident dq_dt", phases);
-    }
+    double* d_uc = persistent_context.buffers[12].data;
+    double* d_vc = persistent_context.buffers[13].data;
 
     // Halo-only residency: d_q1's interior is still valid from resident_begin, so
     // only the two halo rows per side (filled host-side by mpp_update_domains and
@@ -1666,16 +1771,22 @@ extern "C" int fv_advection_resident_begin_cuda_c(
     int nz,
     double half_dt,
     double dx,
+    int fold_div,
     const double* c,
+    const double* cc,
+    const double* dy,
+    const double* dy_plus,
+    const double* dy_minus,
+    const double* dyy,
     const double* ua,
     const double* q,
-    double* q1_interior,
     const double* va,
-    const double* dyy) {
+    double* q1_interior) {
     register_cuda_profile_report();
     profile::ScopedTimer timer(resident_begin_counter);
     return fv_advection_kernels::cuda_backend::resident_advection_begin(
-        nx, je - js + 1, nz, half_dt, dx, c, ua, q, q1_interior, va, dyy);
+        nx, je - js + 1, nz, half_dt, dx, fold_div != 0, c, cc, dy, dy_plus,
+        dy_minus, dyy, ua, q, va, q1_interior);
 }
 
 extern "C" int fv_advection_resident_finish_cuda_c(
@@ -1687,18 +1798,11 @@ extern "C" int fv_advection_resident_finish_cuda_c(
     double dt,
     double dx,
     int monotone,
-    const double* c,
-    const double* cc,
-    const double* dy,
-    const double* dy_plus,
-    const double* dy_minus,
-    const double* uc,
-    const double* vc,
     const double* q1,
     double* dq_dt) {
     register_cuda_profile_report();
     profile::ScopedTimer timer(resident_finish_counter);
     return fv_advection_kernels::cuda_backend::resident_advection_finish(
         nx, je - js + 1, nz, dt, dx, monotone != 0, js == 1,
-        je == ny_total, c, cc, dy, dy_plus, dy_minus, uc, vc, q1, dq_dt);
+        je == ny_total, q1, dq_dt);
 }
