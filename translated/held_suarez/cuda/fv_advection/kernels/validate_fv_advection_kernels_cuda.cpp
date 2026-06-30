@@ -431,9 +431,23 @@ int main(int argc, char** argv) {
                                               x_count),
                                           vanleer_sphere_dq_dt, atol, rtol)});
         if (fv_advection_kernels::cuda_backend::resident_boundary_enabled()) {
-            results.push_back({"resident_q1",
-                               compare_arrays(resident_q1_expected, resident_q1,
-                                              atol, rtol)});
+            // Halo-only residency: begin transfers only the two edge interior rows
+            // per side ({0,1} and {ny-2,ny-1}) back to the host; the deep interior
+            // stays resident on the device. Validate exactly those edge rows.
+            const int edge_rows[] = {0, 1, active_ny - 2, active_ny - 1};
+            std::vector<double> q1_edge, q1_edge_expected;
+            for (int k = 0; k < p.nz; ++k) {
+                for (int r : edge_rows) {
+                    const std::size_t base =
+                        (static_cast<std::size_t>(k) * active_ny + r) * p.nx;
+                    for (int i = 0; i < p.nx; ++i) {
+                        q1_edge.push_back(resident_q1[base + i]);
+                        q1_edge_expected.push_back(resident_q1_expected[base + i]);
+                    }
+                }
+            }
+            results.push_back({"resident_q1_edges",
+                               compare_arrays(q1_edge_expected, q1_edge, atol, rtol)});
             results.push_back({"resident_combined_dq_dt",
                                compare_arrays(resident_dq_dt_expected,
                                               resident_dq_dt, atol, rtol)});

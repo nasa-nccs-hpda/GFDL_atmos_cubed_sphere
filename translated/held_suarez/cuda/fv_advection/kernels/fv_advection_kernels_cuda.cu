@@ -1340,15 +1340,29 @@ int resident_advection_begin(
             phases.kernel += static_cast<double>(milliseconds) * 1.0e-3;
         }
     }
+    // Halo-only residency: the device interior of q1 stays authoritative across
+    // begin -> finish, so only the two edge interior rows per side need to reach
+    // the host. mpp_update_domains sends those rows to neighbors and the polar
+    // fold reads rows {1,2} / {ny-1,ny} from them; the deep interior is never
+    // touched host-side before resident_advection_finish uploads the halo back.
     if (ierr == FV_CUDA_SUCCESS) {
+        const std::size_t host_pitch = static_cast<std::size_t>(nx) * ny * sizeof(double);
+        const std::size_t dev_pitch = static_cast<std::size_t>(nx) * (ny + 4) * sizeof(double);
+        const std::size_t edge_width = static_cast<std::size_t>(nx) * 2 * sizeof(double);
         const auto copy_start = Clock::now();
+        // South edge: host rows {0,1} <- device interior rows {2,3}.
         ierr = check_cuda(
-            cudaMemcpy2D(q1_interior, static_cast<std::size_t>(nx) * ny * sizeof(double),
-                         d_q1 + 2 * nx,
-                         static_cast<std::size_t>(nx) * (ny + 4) * sizeof(double),
-                         static_cast<std::size_t>(nx) * ny * sizeof(double), nz,
-                         cudaMemcpyDeviceToHost),
-            "resident q1 interior to host");
+            cudaMemcpy2D(q1_interior, host_pitch, d_q1 + 2 * nx, dev_pitch,
+                         edge_width, nz, cudaMemcpyDeviceToHost),
+            "resident q1 south edge to host");
+        if (ierr == FV_CUDA_SUCCESS) {
+            // North edge: host rows {ny-2,ny-1} <- device interior rows {ny,ny+1}.
+            ierr = check_cuda(
+                cudaMemcpy2D(q1_interior + static_cast<std::size_t>(ny - 2) * nx, host_pitch,
+                             d_q1 + static_cast<std::size_t>(ny) * nx, dev_pitch,
+                             edge_width, nz, cudaMemcpyDeviceToHost),
+                "resident q1 north edge to host");
+        }
         if (timing) phases.d2h += elapsed_seconds(copy_start);
     }
     if (ierr == FV_CUDA_SUCCESS) {
@@ -1427,9 +1441,31 @@ int resident_advection_finish(
         (ierr = copy_to_existing_device(d_dy_plus, dy_plus, ny + 2, "resident dy_plus", phases)) == FV_CUDA_SUCCESS &&
         (ierr = copy_to_existing_device(d_dy_minus, dy_minus, ny + 2, "resident dy_minus", phases)) == FV_CUDA_SUCCESS &&
         (ierr = copy_to_existing_device(d_uc, uc, count, "resident uc", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_vc, vc, vc_count, "resident vc", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_q1, q1, q1_count, "resident q1", phases)) == FV_CUDA_SUCCESS) {
+        (ierr = copy_to_existing_device(d_vc, vc, vc_count, "resident vc", phases)) == FV_CUDA_SUCCESS) {
         ierr = copy_to_existing_device(d_dq, dq_dt, count, "resident dq_dt", phases);
+    }
+
+    // Halo-only residency: d_q1's interior is still valid from resident_begin, so
+    // only the two halo rows per side (filled host-side by mpp_update_domains and
+    // the polar fold) need to be uploaded. Layout matches device d_q1 (halo
+    // offset 2), so rows map 1:1.
+    if (ierr == FV_CUDA_SUCCESS) {
+        const std::size_t pitch = static_cast<std::size_t>(nx) * (ny + 4) * sizeof(double);
+        const std::size_t halo_width = static_cast<std::size_t>(nx) * 2 * sizeof(double);
+        const auto copy_start = Clock::now();
+        // South halo: device/host rows {0,1}.
+        ierr = check_cuda(
+            cudaMemcpy2D(d_q1, pitch, q1, pitch, halo_width, nz, cudaMemcpyHostToDevice),
+            "resident q1 south halo to device");
+        if (ierr == FV_CUDA_SUCCESS) {
+            // North halo: device/host rows {ny+2,ny+3}.
+            ierr = check_cuda(
+                cudaMemcpy2D(d_q1 + static_cast<std::size_t>(ny + 2) * nx, pitch,
+                             q1 + static_cast<std::size_t>(ny + 2) * nx, pitch,
+                             halo_width, nz, cudaMemcpyHostToDevice),
+                "resident q1 north halo to device");
+        }
+        if (profile::enabled()) phases.h2d += elapsed_seconds(copy_start);
     }
 
     const bool timing = profile::enabled();

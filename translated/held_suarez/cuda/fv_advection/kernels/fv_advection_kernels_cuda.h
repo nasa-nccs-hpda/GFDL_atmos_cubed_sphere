@@ -102,7 +102,6 @@ int resident_advection_finish(
     const double* uc,
     const double* vc,
     const double* q1,
-    const double* q2,
     double* dq_dt);
 
 }  // namespace cuda_backend
