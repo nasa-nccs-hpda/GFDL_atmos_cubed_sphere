@@ -360,6 +360,23 @@ int main(int argc, char** argv) {
                 resident_q1_expected[i] += q_x[i];
             }
 
+            // Halo-only residency: finish reuses the device interior produced by
+            // begin (== resident_q1_expected); only the halo rows arrive from the
+            // host. The q1 the device actually sees is q_sphere's halo plus that
+            // begin-computed interior.
+            std::vector<double> q1_combined = q_sphere;
+            for (int k = 0; k < p.nz; ++k) {
+                for (int j = 0; j < active_ny; ++j) {
+                    for (int i = 0; i < p.nx; ++i) {
+                        const std::size_t halo_idx =
+                            (static_cast<std::size_t>(k) * (active_ny + 4) + (j + 2)) * p.nx + i;
+                        const std::size_t int_idx =
+                            (static_cast<std::size_t>(k) * active_ny + j) * p.nx + i;
+                        q1_combined[halo_idx] = resident_q1_expected[int_idx];
+                    }
+                }
+            }
+
             require_success(
                 fv_advection_kernels::cuda_backend::resident_advection_begin(
                     p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), ua.data(),
@@ -372,7 +389,7 @@ int main(int argc, char** argv) {
             fv_advection_kernels::vanleer_sphere_3d(
                 p.nx, active_ny, p.nz, p.dt, p.monotone, p.js == 1,
                 p.je == p.ny, c.data(), cc.data(), dy.data(), dy_plus.data(),
-                dy_minus.data(), vc.data(), q_sphere.data(),
+                dy_minus.data(), vc.data(), q1_combined.data(),
                 resident_dq_dt_expected.data());
 
             require_success(
@@ -380,7 +397,7 @@ int main(int argc, char** argv) {
                     p.nx, active_ny, p.nz, p.dt, p.dx, p.monotone,
                     p.js == 1, p.je == p.ny, c.data(), cc.data(), dy.data(),
                     dy_plus.data(), dy_minus.data(), uc.data(), vc.data(),
-                    q_sphere.data(), resident_dq_dt.data()),
+                    q1_combined.data(), resident_dq_dt.data()),
                 "resident_advection_finish");
         }
 
