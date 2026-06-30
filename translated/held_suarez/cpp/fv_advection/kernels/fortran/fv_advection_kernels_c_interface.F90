@@ -286,7 +286,7 @@ contains
   subroutine fv_advection_resident_begin_wrapper(nx, js, je, nz, half_dt, dx, c, ua, q, q1, va, dyy, ierr)
     integer, intent(in) :: nx, js, je, nz
     real(c_double), intent(in) :: half_dt, dx
-    real(c_double), intent(in), target :: c(js:je), ua(nx,js:je,nz), q(nx,js:je,nz)
+    real(c_double), intent(in), target :: c(js:je), ua(nx,js:je,nz), q(nx,js-2:je+2,nz)
     real(c_double), intent(out), target :: q1(nx,js:je,nz)
     real(c_double), intent(in), target :: va(nx,js:je,nz), dyy(js:je+1)
     integer, intent(out) :: ierr

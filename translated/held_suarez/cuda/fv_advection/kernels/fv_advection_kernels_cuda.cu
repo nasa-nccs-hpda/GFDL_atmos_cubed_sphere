@@ -438,6 +438,20 @@ __global__ void form_q1_with_halo_kernel(
     q1[idx3(i0, j0 + 2, k0, nx, ny + 4)] = q[idx] + semi_x_dq[idx];
 }
 
+// q2 = q + semi_y(q), mirroring the Fortran cross term (interior layout).
+__global__ void form_q2_kernel(
+    int nx,
+    int ny,
+    int nz,
+    const double* q,
+    const double* semi_y_dq,
+    double* q2) {
+    const int size = nx * ny * nz;
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= size) return;
+    q2[idx] = q[idx] + semi_y_dq[idx];
+}
+
 __global__ void slope_x_kernel(
     int nx,
     int ny,
@@ -1278,8 +1292,9 @@ int resident_advection_begin(
     
     const std::pair<std::size_t, std::size_t> requests[] = {
         {0, static_cast<std::size_t>(ny)}, {1, count}, {2, count},
-        {3, q1_count}, {4, count}, {5, count}, {6, ny+1}, {12, count}};
-    
+        {3, q1_count}, {4, count}, {5, count}, {6, ny+1}, {12, count},
+        {13, q1_count}, {14, count}};
+
         for (const auto& request : requests) {
         ierr = ensure_buffer(request.first, request.second, phases);
         if (ierr != FV_CUDA_SUCCESS) return ierr;
@@ -1293,14 +1308,29 @@ int resident_advection_begin(
     double* d_va = persistent_context.buffers[5].data;
     double* d_dyy = persistent_context.buffers[6].data;
     double* d_semi_x_dq = persistent_context.buffers[12].data;
-    
+    double* d_q_halo = persistent_context.buffers[13].data;
+    double* d_semi_y_dq = persistent_context.buffers[14].data;
+
+    // q arrives haloed (nx*(ny+4)*nz): the cross term q2 = q + semi_y(q) needs a
+    // valid y-halo, and the x-direction kernels reuse the interior slice. Upload
+    // the haloed field once, then strip its interior into d_q (device-side, no
+    // extra host transfer) for semi_x / form_q1 / form_q2.
     if ((ierr = copy_to_existing_device(d_c, c, ny, "resident c", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_q_halo, q, q1_count, "resident q halo", phases)) != FV_CUDA_SUCCESS ||
         (ierr = copy_to_existing_device(d_ua, ua, count, "resident ua", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_q, q, count, "resident q", phases)) != FV_CUDA_SUCCESS ||
         (ierr = copy_to_existing_device(d_va, va, count, "resident va", phases)) != FV_CUDA_SUCCESS ||
         (ierr = copy_to_existing_device(d_dyy, dyy, ny + 1, "resident dyy", phases)) != FV_CUDA_SUCCESS){
         return ierr;
     }
+    // Strip the ny interior rows {2..ny+1} of the haloed q into the halo-less d_q.
+    ierr = check_cuda(
+        cudaMemcpy2D(d_q, static_cast<std::size_t>(nx) * ny * sizeof(double),
+                     d_q_halo + 2 * nx,
+                     static_cast<std::size_t>(nx) * (ny + 4) * sizeof(double),
+                     static_cast<std::size_t>(nx) * ny * sizeof(double), nz,
+                     cudaMemcpyDeviceToDevice),
+        "resident q interior strip");
+    if (ierr != FV_CUDA_SUCCESS) return ierr;
 
     const bool timing = profile::enabled();
     if (timing && (ierr = ensure_timing_events()) == FV_CUDA_SUCCESS) {
@@ -1318,8 +1348,14 @@ int resident_advection_begin(
         ierr = check_cuda(cudaGetLastError(), "resident form_q1_with_halo_kernel");
     }
 
+    // q2 = q + semi_y(q): semi_y reads the haloed q (not q1), matching the
+    // Fortran cross term; form_q2 adds the field back.
     if (ierr == FV_CUDA_SUCCESS) {
-        ierr = fv_advection::cuda_backend::semi_y_3d_cuda(nx, 1, ny, nz, half_dt, d_va, d_q1, d_dyy, d_q2);
+        ierr = fv_advection::cuda_backend::semi_y_3d_cuda(nx, 1, ny, nz, half_dt, d_va, d_q_halo, d_dyy, d_semi_y_dq);
+    }
+    if (ierr == FV_CUDA_SUCCESS) {
+        form_q2_kernel<<<blocks, threads>>>(nx, ny, nz, d_q, d_semi_y_dq, d_q2);
+        ierr = check_cuda(cudaGetLastError(), "resident form_q2_kernel");
     }
 
     if (ierr == FV_CUDA_SUCCESS && timing) {

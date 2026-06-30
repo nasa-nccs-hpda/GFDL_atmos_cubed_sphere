@@ -353,17 +353,47 @@ int main(int argc, char** argv) {
                         "vanleer_sphere_3d_cuda");
 
         if (fv_advection_kernels::cuda_backend::resident_boundary_enabled()) {
+            // begin now receives the haloed q (q_sphere): q1 = q + semi_x(q) and
+            // the cross term q2 = q + semi_y(q), the latter needing q's y-halo.
+            // The device strips q's interior for the x-direction kernels; mirror
+            // that here.
+            std::vector<double> q_interior(x_count);
+            for (int k = 0; k < p.nz; ++k)
+                for (int j = 0; j < active_ny; ++j)
+                    for (int i = 0; i < p.nx; ++i)
+                        q_interior[(static_cast<std::size_t>(k) * active_ny + j) * p.nx + i] =
+                            q_sphere[(static_cast<std::size_t>(k) * (active_ny + 4) + (j + 2)) * p.nx + i];
+
+            // q1 = q + semi_x(q)
             fv_advection_kernels::semi_x_3d(
                 p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), ua.data(),
-                q_x.data(), resident_q1_expected.data());
+                q_interior.data(), resident_q1_expected.data());
             for (std::size_t i = 0; i < x_count; ++i) {
-                resident_q1_expected[i] += q_x[i];
+                resident_q1_expected[i] += q_interior[i];
             }
 
-            // Halo-only residency: finish reuses the device interior produced by
-            // begin (== resident_q1_expected); only the halo rows arrive from the
-            // host. The q1 the device actually sees is q_sphere's halo plus that
-            // begin-computed interior.
+            // q2 = q + semi_y(q): upwind y increment over the haloed q.
+            std::vector<double> q2_expected(x_count);
+            for (int k = 0; k < p.nz; ++k) {
+                for (int j = 0; j < active_ny; ++j) {
+                    for (int i = 0; i < p.nx; ++i) {
+                        const std::size_t in =
+                            (static_cast<std::size_t>(k) * active_ny + j) * p.nx + i;
+                        auto qh = [&](int jj) {
+                            return q_sphere[(static_cast<std::size_t>(k) * (active_ny + 4) + jj) * p.nx + i];
+                        };
+                        const double va_val = va[in];
+                        const double inc = (va_val >= 0.0)
+                            ? va_val * p.dt * (qh(j + 1) - qh(j + 2)) / dyy[j]
+                            : va_val * p.dt * (qh(j + 2) - qh(j + 3)) / dyy[j + 1];
+                        q2_expected[in] = q_interior[in] + inc;
+                    }
+                }
+            }
+
+            // Halo-only residency: finish reuses the device q1 interior from begin
+            // (== resident_q1_expected); only the halo rows arrive from the host.
+            // The q1 the device sees is q_sphere's halo plus that interior.
             std::vector<double> q1_combined = q_sphere;
             for (int k = 0; k < p.nz; ++k) {
                 for (int j = 0; j < active_ny; ++j) {
@@ -380,12 +410,12 @@ int main(int argc, char** argv) {
             require_success(
                 fv_advection_kernels::cuda_backend::resident_advection_begin(
                     p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), ua.data(),
-                    q_x.data(), resident_q1.data(), va.data(), dyy.data()),
+                    q_sphere.data(), resident_q1.data(), va.data(), dyy.data()),
                 "resident_advection_begin");
 
             fv_advection_kernels::vanleer_x_3d(
                 p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), p.monotone,
-                uc.data(), q_x.data(), resident_dq_dt_expected.data());
+                uc.data(), q2_expected.data(), resident_dq_dt_expected.data());
             fv_advection_kernels::vanleer_sphere_3d(
                 p.nx, active_ny, p.nz, p.dt, p.monotone, p.js == 1,
                 p.je == p.ny, c.data(), cc.data(), dy.data(), dy_plus.data(),
