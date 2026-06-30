@@ -1,14 +1,7 @@
-export HS_FORCE_BACKEND=cpu
-
-python3 hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py \
-  --exp-name held_suarez_hybrid_cpu \
-  --days 30 \
-  --production-diag \
-  --overwrite \
-  2>&1 | tee logs/hybrid_cpu_30day.lg#!/bin/bash
+#!/bin/bash
 set -euo pipefail
 
-CONTAINER=/lscratch/jli30/isca-sandbox
+CONTAINER=${CONTAINER:-/lscratch/rlgill/isca-debian_latest}
 
 export GFDL_BASE=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
 export GFDL_WORK=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work

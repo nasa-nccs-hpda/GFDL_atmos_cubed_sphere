@@ -1,14 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
-CONTAINER=/lscratch/jli30/isca-sandbox
+CONTAINER=${CONTAINER:-/lscratch/rlgill/isca-debian_latest}
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-export GFDL_BASE=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
-export GFDL_WORK=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
-export GFDL_DATA=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+export GFDL_BASE=${GFDL_BASE_OVERRIDE:-${SCRIPT_DIR}}
+export GFDL_WORK=${GFDL_WORK:-/explore/nobackup/people/rlgill/SystemTesting/AAI/Isca/isca_work}
+export GFDL_DATA=${GFDL_DATA:-/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data}
 
-apptainer exec \
-  --bind /explore/nobackup/people/jli30:/explore/nobackup/people/jli30 \
+apptainer exec --nv \
+  --bind /explore/nobackup/people:/explore/nobackup/people \
   ${CONTAINER} \
   bash -lc "
 set -e
