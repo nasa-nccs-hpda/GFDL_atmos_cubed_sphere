@@ -44,15 +44,17 @@ def make_experiment(args):
     exp = Experiment(args.exp_name, codebase=cb)
     exp.namelist = original.namelist.copy()
     exp.diag_table = original.diag.copy()
-    exp.set_resolution(*original.RESOLUTION)
 
-    exp.update_namelist(
-        {
-            "main_nml": {
-                "days": args.days,
-            }
-        }
-    )
+    # Resolution/levels default to the original test case; override for scaling sweeps.
+    resolution = args.resolution or original.RESOLUTION[0]
+    levels = args.levels if args.levels is not None else original.RESOLUTION[1]
+    exp.set_resolution(resolution, levels)
+
+    main_nml = {"days": args.days}
+    # dt_atmos must scale with resolution (CFL): T42:600, T85:300, T170:150.
+    if args.dt_atmos is not None:
+        main_nml["dt_atmos"] = args.dt_atmos
+    exp.update_namelist({"main_nml": main_nml})
 
     if not args.production_diag:
         for output_file in exp.diag_table.files.values():
@@ -88,6 +90,24 @@ def main():
         type=int,
         default=16,
         help="MPI rank count. Defaults to the original Held-Suarez test case.",
+    )
+    parser.add_argument(
+        "--resolution",
+        default=None,
+        help="Spectral resolution, e.g. T42/T85/T170. Defaults to the original test case.",
+    )
+    parser.add_argument(
+        "--levels",
+        type=int,
+        default=None,
+        help="Number of vertical levels. Defaults to the original test case.",
+    )
+    parser.add_argument(
+        "--dt-atmos",
+        type=int,
+        default=None,
+        help="Dynamics timestep (s). Must scale with resolution for CFL "
+        "(T42:600, T85:300, T170:150). Defaults to the namelist value.",
     )
     parser.add_argument(
         "--diag-frequency-days",
