@@ -171,6 +171,13 @@ struct PersistentContext {
     int resident_nx = 0;
     int resident_ny = 0;
     int resident_nz = 0;
+    // The 6 grid metrics (c, dyy, cc, dy, dy_plus, dy_minus) are run-constant, so
+    // begin uploads them once and reuses them; these track whether the resident
+    // metric slots already hold the metrics for the current grid dimensions.
+    bool metrics_resident = false;
+    int metrics_nx = 0;
+    int metrics_ny = 0;
+    int metrics_nz = 0;
 };
 
 PersistentContext persistent_context;
@@ -296,6 +303,10 @@ void release_persistent_context() {
     }
     persistent_context.initialized = false;
     persistent_context.resident_stage_active = false;
+    persistent_context.metrics_resident = false;
+    persistent_context.metrics_nx = 0;
+    persistent_context.metrics_ny = 0;
+    persistent_context.metrics_nz = 0;
 }
 
 int ensure_timing_events() {
@@ -1414,16 +1425,35 @@ int resident_advection_begin(
     double* d_va = persistent_context.buffers[15].data;
     double* d_semi_dq = persistent_context.buffers[16].data;
 
+    // The 6 grid metrics are run-constant (computed once in fv_advection_init and
+    // passed as the same js:je slice every call). Nothing but begin/finish touches
+    // their slots in resident mode, so upload them once and reuse across all calls;
+    // re-upload only when the grid dimensions change (ensure_buffer would have
+    // reallocated the slots, dropping their contents). This removes the per-call
+    // H2D of the constant metrics, the residency headroom task-4 identified.
+    const bool metrics_current =
+        persistent_context.metrics_resident && persistent_context.metrics_nx == nx &&
+        persistent_context.metrics_ny == ny && persistent_context.metrics_nz == nz;
+    if (!metrics_current) {
+        persistent_context.metrics_resident = false;
+        if ((ierr = copy_to_existing_device(d_c, c, ny, "resident c", phases)) != FV_CUDA_SUCCESS ||
+            (ierr = copy_to_existing_device(d_cc, cc, ny + 1, "resident cc", phases)) != FV_CUDA_SUCCESS ||
+            (ierr = copy_to_existing_device(d_dy, dy, metric_count, "resident dy", phases)) != FV_CUDA_SUCCESS ||
+            (ierr = copy_to_existing_device(d_dy_plus, dy_plus, metric_count, "resident dy_plus", phases)) != FV_CUDA_SUCCESS ||
+            (ierr = copy_to_existing_device(d_dy_minus, dy_minus, metric_count, "resident dy_minus", phases)) != FV_CUDA_SUCCESS ||
+            (ierr = copy_to_existing_device(d_dyy, dyy, ny + 1, "resident dyy", phases)) != FV_CUDA_SUCCESS) {
+            return ierr;
+        }
+        persistent_context.metrics_resident = true;
+        persistent_context.metrics_nx = nx;
+        persistent_context.metrics_ny = ny;
+        persistent_context.metrics_nz = nz;
+    }
+
     // q and va arrive haloed (nx*(ny+4)*nz). semi_y and vc read the y-halo; the
     // x-direction kernels and uc/div use the interior, stripped device-side (D2D,
-    // no extra host transfer). Metrics are uploaded here and reused by finish.
-    if ((ierr = copy_to_existing_device(d_c, c, ny, "resident c", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_cc, cc, ny + 1, "resident cc", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_dy, dy, metric_count, "resident dy", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_dy_plus, dy_plus, metric_count, "resident dy_plus", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_dy_minus, dy_minus, metric_count, "resident dy_minus", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_dyy, dyy, ny + 1, "resident dyy", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_q_halo, q, q1_count, "resident q halo", phases)) != FV_CUDA_SUCCESS ||
+    // no extra host transfer). These fields are time-varying, so upload every call.
+    if ((ierr = copy_to_existing_device(d_q_halo, q, q1_count, "resident q halo", phases)) != FV_CUDA_SUCCESS ||
         (ierr = copy_to_existing_device(d_va_halo, va, q1_count, "resident va halo", phases)) != FV_CUDA_SUCCESS ||
         (ierr = copy_to_existing_device(d_ua, ua, count, "resident ua", phases)) != FV_CUDA_SUCCESS) {
         return ierr;
