@@ -24,6 +24,7 @@ profile::Counter resident_begin_counter{"resident_advection_begin", 0, 0.0};
 profile::Counter resident_finish_counter{"resident_advection_finish", 0, 0.0};
 
 enum class CudaMode { stateless, persistent, resident, invalid };
+enum class Q1TransferMode { full, halo_only, invalid };
 
 struct CudaPhaseCounter {
     long long calls = 0;
@@ -60,6 +61,35 @@ CudaMode selected_cuda_mode() {
         reported = true;
     }
     return CudaMode::invalid;
+}
+
+bool env_flag_enabled(const char* name) {
+    const char* value = std::getenv(name);
+    return value != nullptr && std::strcmp(value, "1") == 0;
+}
+
+bool resident_static_metrics_enabled() {
+    return env_flag_enabled("FV_KERNELS_RESIDENT_STATIC_METRICS");
+}
+
+Q1TransferMode resident_q1_transfer_mode() {
+    const char* value = std::getenv("FV_KERNELS_RESIDENT_Q1_TRANSFER");
+    if (value == nullptr || value[0] == '\0' || std::strcmp(value, "full") == 0) {
+        return Q1TransferMode::full;
+    }
+    if (std::strcmp(value, "halo_only") == 0) {
+        return Q1TransferMode::halo_only;
+    }
+    static bool reported = false;
+    if (!reported) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels CUDA error: invalid "
+                     "FV_KERNELS_RESIDENT_Q1_TRANSFER='%s'; expected full or "
+                     "halo_only\n",
+                     value);
+        reported = true;
+    }
+    return Q1TransferMode::invalid;
 }
 
 const char* cuda_backend_name(CudaMode mode) {
@@ -164,6 +194,14 @@ struct PersistentContext {
     int resident_nx = 0;
     int resident_ny = 0;
     int resident_nz = 0;
+    bool resident_begin_metrics_valid = false;
+    int resident_begin_metrics_nx = 0;
+    int resident_begin_metrics_ny = 0;
+    int resident_begin_metrics_nz = 0;
+    bool resident_finish_metrics_valid = false;
+    int resident_finish_metrics_nx = 0;
+    int resident_finish_metrics_ny = 0;
+    int resident_finish_metrics_nz = 0;
 };
 
 PersistentContext persistent_context;
@@ -243,6 +281,12 @@ int ensure_buffer(std::size_t slot, std::size_t count, CudaPhaseCounter& phases)
         return FV_CUDA_SUCCESS;
     }
 
+    if (slot == 0 || slot == 8 || slot == 9 || slot == 10 || slot == 11 ||
+        slot == 15) {
+        persistent_context.resident_begin_metrics_valid = false;
+        persistent_context.resident_finish_metrics_valid = false;
+    }
+
     if (buffer.data != nullptr) {
         const auto start = Clock::now();
         const int ierr = check_cuda(cudaFree(buffer.data), "persistent buffer resize free");
@@ -289,6 +333,8 @@ void release_persistent_context() {
     }
     persistent_context.initialized = false;
     persistent_context.resident_stage_active = false;
+    persistent_context.resident_begin_metrics_valid = false;
+    persistent_context.resident_finish_metrics_valid = false;
 }
 
 int ensure_timing_events() {
@@ -337,6 +383,72 @@ int copy_to_existing_device(
     const auto start = Clock::now();
     const int ierr = check_cuda(
         cudaMemcpy(dst, src, count * sizeof(double), cudaMemcpyHostToDevice), name);
+    if (profile::enabled()) {
+        phases.h2d += elapsed_seconds(start);
+    }
+    return ierr;
+}
+
+bool resident_begin_metrics_valid_for(int nx, int ny, int nz) {
+    return persistent_context.resident_begin_metrics_valid &&
+           persistent_context.resident_begin_metrics_nx == nx &&
+           persistent_context.resident_begin_metrics_ny == ny &&
+           persistent_context.resident_begin_metrics_nz == nz;
+}
+
+bool resident_finish_metrics_valid_for(int nx, int ny, int nz) {
+    return persistent_context.resident_finish_metrics_valid &&
+           persistent_context.resident_finish_metrics_nx == nx &&
+           persistent_context.resident_finish_metrics_ny == ny &&
+           persistent_context.resident_finish_metrics_nz == nz;
+}
+
+void mark_resident_begin_metrics_valid(int nx, int ny, int nz) {
+    persistent_context.resident_begin_metrics_valid = true;
+    persistent_context.resident_begin_metrics_nx = nx;
+    persistent_context.resident_begin_metrics_ny = ny;
+    persistent_context.resident_begin_metrics_nz = nz;
+}
+
+void mark_resident_finish_metrics_valid(int nx, int ny, int nz) {
+    persistent_context.resident_finish_metrics_valid = true;
+    persistent_context.resident_finish_metrics_nx = nx;
+    persistent_context.resident_finish_metrics_ny = ny;
+    persistent_context.resident_finish_metrics_nz = nz;
+}
+
+int copy_q1_halo_to_existing_device(
+    double* dst,
+    const double* src,
+    int nx,
+    int ny,
+    int nz,
+    CudaPhaseCounter& phases) {
+    if (src == nullptr || dst == nullptr || nx <= 0 || ny <= 0 || nz <= 0) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels CUDA error: invalid q1 halo copy "
+                     "argument\n");
+        return FV_CUDA_INVALID_ARGUMENT;
+    }
+    const std::size_t pitch = static_cast<std::size_t>(nx) *
+                              static_cast<std::size_t>(ny + 4) *
+                              sizeof(double);
+    const std::size_t width = static_cast<std::size_t>(nx) * 2 * sizeof(double);
+    const std::size_t upper_offset =
+        static_cast<std::size_t>(nx) * static_cast<std::size_t>(ny + 2);
+
+    const auto start = Clock::now();
+    int ierr = check_cuda(
+        cudaMemcpy2D(dst, pitch, src, pitch, width, static_cast<std::size_t>(nz),
+                     cudaMemcpyHostToDevice),
+        "resident q1 lower halo");
+    if (ierr == FV_CUDA_SUCCESS) {
+        ierr = check_cuda(
+            cudaMemcpy2D(dst + upper_offset, pitch, src + upper_offset, pitch,
+                         width, static_cast<std::size_t>(nz),
+                         cudaMemcpyHostToDevice),
+            "resident q1 upper halo");
+    }
     if (profile::enabled()) {
         phases.h2d += elapsed_seconds(start);
     }
@@ -435,6 +547,46 @@ __global__ void form_q1_with_halo_kernel(
     const int j0 = rem / nx;
     const int i0 = rem - j0 * nx;
     q1[idx3(i0, j0 + 2, k0, nx, ny + 4)] = q[idx] + semi_x_dq[idx];
+}
+
+__global__ void form_q2_from_semi_y_kernel(
+    int nx,
+    int ny,
+    int nz,
+    double dt,
+    const double* va,
+    const double* q,
+    const double* q_halo,
+    const double* dyy,
+    double* q2) {
+    const int size = nx * ny * nz;
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= size) return;
+    const int plane = nx * ny;
+    const int k0 = idx / plane;
+    const int rem = idx - k0 * plane;
+    const int j0 = rem / nx;
+    const int i0 = rem - j0 * nx;
+    const int q_halo_ny = ny + 4;
+
+    const double va_val = va[idx];
+    const int q_j_minus_1 = j0 + 1;
+    const int q_j = j0 + 2;
+    const int q_j_plus_1 = j0 + 3;
+
+    double semi_y_dq = 0.0;
+    if (va_val >= 0.0) {
+        semi_y_dq = va_val * dt *
+                    (q_halo[idx3(i0, q_j_minus_1, k0, nx, q_halo_ny)] -
+                     q_halo[idx3(i0, q_j, k0, nx, q_halo_ny)]) /
+                    dyy[j0];
+    } else {
+        semi_y_dq = va_val * dt *
+                    (q_halo[idx3(i0, q_j, k0, nx, q_halo_ny)] -
+                     q_halo[idx3(i0, q_j_plus_1, k0, nx, q_halo_ny)]) /
+                    dyy[j0 + 1];
+    }
+    q2[idx] = q[idx] + semi_y_dq;
 }
 
 __global__ void slope_x_kernel(
@@ -1258,15 +1410,19 @@ int resident_advection_begin(
     double dx,
     const double* c,
     const double* ua,
+    const double* va,
     const double* q,
+    const double* q_halo,
+    const double* dyy,
     double* q1_interior) {
     const CudaMode mode = selected_cuda_mode();
     PhaseCall phase_call(mode);
     CudaPhaseCounter& phases = phase_call.counter();
     if (mode != CudaMode::resident) return FV_CUDA_INVALID_ARGUMENT;
     int ierr = validate_common(nx, ny, nz, mode);
-    if (ierr != FV_CUDA_SUCCESS || c == nullptr || ua == nullptr || q == nullptr ||
-        q1_interior == nullptr || persistent_context.resident_stage_active) {
+    if (ierr != FV_CUDA_SUCCESS || c == nullptr || ua == nullptr || va == nullptr ||
+        q == nullptr || q_halo == nullptr || dyy == nullptr || q1_interior == nullptr ||
+        persistent_context.resident_stage_active) {
         return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
     }
 
@@ -1274,7 +1430,8 @@ int resident_advection_begin(
     const std::size_t q1_count = static_cast<std::size_t>(nx) * (ny + 4) * nz;
     const std::pair<std::size_t, std::size_t> requests[] = {
         {0, static_cast<std::size_t>(ny)}, {1, count}, {2, count},
-        {3, q1_count}, {12, count}};
+        {3, q1_count}, {4, count}, {12, count}, {13, count}, {14, q1_count},
+        {15, static_cast<std::size_t>(ny + 1)}};
     for (const auto& request : requests) {
         ierr = ensure_buffer(request.first, request.second, phases);
         if (ierr != FV_CUDA_SUCCESS) return ierr;
@@ -1284,10 +1441,25 @@ int resident_advection_begin(
     double* d_ua = persistent_context.buffers[1].data;
     double* d_q = persistent_context.buffers[2].data;
     double* d_q1 = persistent_context.buffers[3].data;
+    double* d_q2 = persistent_context.buffers[4].data;
     double* d_semi_x_dq = persistent_context.buffers[12].data;
-    if ((ierr = copy_to_existing_device(d_c, c, ny, "resident c", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_ua, ua, count, "resident ua", phases)) != FV_CUDA_SUCCESS ||
-        (ierr = copy_to_existing_device(d_q, q, count, "resident q", phases)) != FV_CUDA_SUCCESS) {
+    double* d_va = persistent_context.buffers[13].data;
+    double* d_q_halo = persistent_context.buffers[14].data;
+    double* d_dyy = persistent_context.buffers[15].data;
+    if (!resident_static_metrics_enabled() ||
+        !resident_begin_metrics_valid_for(nx, ny, nz)) {
+        if ((ierr = copy_to_existing_device(d_c, c, ny, "resident c", phases)) != FV_CUDA_SUCCESS ||
+            (ierr = copy_to_existing_device(d_dyy, dyy, ny + 1, "resident dyy", phases)) != FV_CUDA_SUCCESS) {
+            return ierr;
+        }
+        if (resident_static_metrics_enabled()) {
+            mark_resident_begin_metrics_valid(nx, ny, nz);
+        }
+    }
+    if ((ierr = copy_to_existing_device(d_ua, ua, count, "resident ua", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_va, va, count, "resident va", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_q, q, count, "resident q", phases)) != FV_CUDA_SUCCESS ||
+        (ierr = copy_to_existing_device(d_q_halo, q_halo, q1_count, "resident q_halo", phases)) != FV_CUDA_SUCCESS) {
         return ierr;
     }
 
@@ -1305,6 +1477,11 @@ int resident_advection_begin(
     if (ierr == FV_CUDA_SUCCESS) {
         form_q1_with_halo_kernel<<<blocks, threads>>>(nx, ny, nz, d_q, d_semi_x_dq, d_q1);
         ierr = check_cuda(cudaGetLastError(), "resident form_q1_with_halo_kernel");
+    }
+    if (ierr == FV_CUDA_SUCCESS) {
+        form_q2_from_semi_y_kernel<<<blocks, threads>>>(nx, ny, nz, half_dt, d_va, d_q,
+                                                        d_q_halo, d_dyy, d_q2);
+        ierr = check_cuda(cudaGetLastError(), "resident form_q2_from_semi_y_kernel");
     }
     if (ierr == FV_CUDA_SUCCESS && timing) {
         ierr = check_cuda(cudaEventRecord(timing_events.stop), "resident begin event stop");
@@ -1361,7 +1538,6 @@ int resident_advection_finish(
     const double* uc,
     const double* vc,
     const double* q1,
-    const double* q2,
     double* dq_dt) {
     const CudaMode mode = selected_cuda_mode();
     PhaseCall phase_call(mode);
@@ -1374,7 +1550,7 @@ int resident_advection_finish(
     int ierr = validate_common(nx, ny, nz, mode);
     if (ierr != FV_CUDA_SUCCESS || c == nullptr || cc == nullptr || dy == nullptr ||
         dy_plus == nullptr || dy_minus == nullptr || uc == nullptr || vc == nullptr ||
-        q1 == nullptr || q2 == nullptr || dq_dt == nullptr) {
+        q1 == nullptr || dq_dt == nullptr) {
         persistent_context.resident_stage_active = false;
         return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
     }
@@ -1405,15 +1581,34 @@ int resident_advection_finish(
     double* d_dy = persistent_context.buffers[9].data;
     double* d_dy_plus = persistent_context.buffers[10].data;
     double* d_dy_minus = persistent_context.buffers[11].data;
-    if ((ierr = copy_to_existing_device(d_c, c, ny, "resident finish c", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_cc, cc, ny + 1, "resident cc", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_dy, dy, ny + 2, "resident dy", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_dy_plus, dy_plus, ny + 2, "resident dy_plus", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_dy_minus, dy_minus, ny + 2, "resident dy_minus", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_uc, uc, count, "resident uc", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_vc, vc, vc_count, "resident vc", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_q1, q1, q1_count, "resident q1", phases)) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_existing_device(d_q2, q2, count, "resident q2", phases)) == FV_CUDA_SUCCESS) {
+    if (!resident_static_metrics_enabled() ||
+        !resident_finish_metrics_valid_for(nx, ny, nz)) {
+        if ((ierr = copy_to_existing_device(d_c, c, ny, "resident finish c", phases)) != FV_CUDA_SUCCESS ||
+            (ierr = copy_to_existing_device(d_cc, cc, ny + 1, "resident cc", phases)) != FV_CUDA_SUCCESS ||
+            (ierr = copy_to_existing_device(d_dy, dy, ny + 2, "resident dy", phases)) != FV_CUDA_SUCCESS ||
+            (ierr = copy_to_existing_device(d_dy_plus, dy_plus, ny + 2, "resident dy_plus", phases)) != FV_CUDA_SUCCESS ||
+            (ierr = copy_to_existing_device(d_dy_minus, dy_minus, ny + 2, "resident dy_minus", phases)) != FV_CUDA_SUCCESS) {
+            persistent_context.resident_stage_active = false;
+            return ierr;
+        }
+        if (resident_static_metrics_enabled()) {
+            mark_resident_finish_metrics_valid(nx, ny, nz);
+        }
+    }
+    const Q1TransferMode q1_transfer_mode = resident_q1_transfer_mode();
+    if (q1_transfer_mode == Q1TransferMode::invalid) {
+        persistent_context.resident_stage_active = false;
+        return FV_CUDA_INVALID_ARGUMENT;
+    }
+    if ((ierr = copy_to_existing_device(d_uc, uc, count, "resident uc", phases)) == FV_CUDA_SUCCESS &&
+        (ierr = copy_to_existing_device(d_vc, vc, vc_count, "resident vc", phases)) == FV_CUDA_SUCCESS) {
+        if (q1_transfer_mode == Q1TransferMode::halo_only) {
+            ierr = copy_q1_halo_to_existing_device(d_q1, q1, nx, ny, nz, phases);
+        } else {
+            ierr = copy_to_existing_device(d_q1, q1, q1_count, "resident q1", phases);
+        }
+    }
+    if (ierr == FV_CUDA_SUCCESS) {
         ierr = copy_to_existing_device(d_dq, dq_dt, count, "resident dq_dt", phases);
     }
 
@@ -1581,12 +1776,16 @@ extern "C" int fv_advection_resident_begin_cuda_c(
     double dx,
     const double* c,
     const double* ua,
+    const double* va,
     const double* q,
+    const double* q_halo,
+    const double* dyy,
     double* q1_interior) {
     register_cuda_profile_report();
     profile::ScopedTimer timer(resident_begin_counter);
     return fv_advection_kernels::cuda_backend::resident_advection_begin(
-        nx, je - js + 1, nz, half_dt, dx, c, ua, q, q1_interior);
+        nx, je - js + 1, nz, half_dt, dx, c, ua, va, q, q_halo, dyy,
+        q1_interior);
 }
 
 extern "C" int fv_advection_resident_finish_cuda_c(
@@ -1606,11 +1805,10 @@ extern "C" int fv_advection_resident_finish_cuda_c(
     const double* uc,
     const double* vc,
     const double* q1,
-    const double* q2,
     double* dq_dt) {
     register_cuda_profile_report();
     profile::ScopedTimer timer(resident_finish_counter);
     return fv_advection_kernels::cuda_backend::resident_advection_finish(
         nx, je - js + 1, nz, dt, dx, monotone != 0, js == 1,
-        je == ny_total, c, cc, dy, dy_plus, dy_minus, uc, vc, q1, q2, dq_dt);
+        je == ny_total, c, cc, dy, dy_plus, dy_minus, uc, vc, q1, dq_dt);
 }

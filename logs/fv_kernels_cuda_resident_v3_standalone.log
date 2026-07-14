@@ -1,0 +1,5 @@
+mkdir -p build
+g++ -O2 -std=c++17 -Wall -Wextra -Iinclude -DUSE_CUDA_FV_ADVECTION_KERNELS -I../../../cuda/fv_advection/kernels -c src/fv_advection_kernels.cpp -o build/fv_advection_kernels.o
+/usr/local/cuda/bin/nvcc -O2 -std=c++17 -Iinclude -I../../../cuda/fv_advection/kernels -c ../../../cuda/fv_advection/kernels/fv_advection_kernels_cuda.cu -o build/fv_advection_kernels_cuda.o
+nvcc fatal   : no argument expected after '-objtemp'
+make: *** [Makefile:42: build/fv_advection_kernels_cuda.o] Error 1

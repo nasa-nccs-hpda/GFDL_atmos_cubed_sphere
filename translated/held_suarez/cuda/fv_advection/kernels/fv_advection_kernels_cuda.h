@@ -80,7 +80,10 @@ int resident_advection_begin(
     double dx,
     const double* c,
     const double* ua,
+    const double* va,
     const double* q,
+    const double* q_halo,
+    const double* dyy,
     double* q1_interior);
 
 int resident_advection_finish(
@@ -100,7 +103,6 @@ int resident_advection_finish(
     const double* uc,
     const double* vc,
     const double* q1,
-    const double* q2,
     double* dq_dt);
 
 }  // namespace cuda_backend
@@ -188,7 +190,10 @@ extern "C" int fv_advection_resident_begin_cuda_c(
     double dx,
     const double* c,
     const double* ua,
+    const double* va,
     const double* q,
+    const double* q_halo,
+    const double* dyy,
     double* q1_interior);
 
 extern "C" int fv_advection_resident_finish_cuda_c(
@@ -208,7 +213,6 @@ extern "C" int fv_advection_resident_finish_cuda_c(
     const double* uc,
     const double* vc,
     const double* q1,
-    const double* q2,
     double* dq_dt);
 
 #endif  // FV_ADVECTION_KERNELS_CUDA_H

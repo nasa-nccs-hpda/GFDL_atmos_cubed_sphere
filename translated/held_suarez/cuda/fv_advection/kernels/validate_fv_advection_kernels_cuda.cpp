@@ -241,6 +241,50 @@ void require_success(int ierr, const std::string& name) {
     }
 }
 
+std::size_t idx3(int i0, int j0, int k0, int nx, int ny) {
+    return static_cast<std::size_t>(i0) +
+           static_cast<std::size_t>(nx) *
+               (static_cast<std::size_t>(j0) +
+                static_cast<std::size_t>(ny) * static_cast<std::size_t>(k0));
+}
+
+std::vector<double> form_q2_from_semi_y_reference(
+    int nx,
+    int ny,
+    int nz,
+    double dt,
+    const std::vector<double>& va,
+    const std::vector<double>& q,
+    const std::vector<double>& q_halo,
+    const std::vector<double>& dyy) {
+    std::vector<double> q2(q.size(), 0.0);
+    const int q_halo_ny = ny + 4;
+    for (int k0 = 0; k0 < nz; ++k0) {
+        for (int j0 = 0; j0 < ny; ++j0) {
+            for (int i0 = 0; i0 < nx; ++i0) {
+                const std::size_t idx = idx3(i0, j0, k0, nx, ny);
+                const double va_val = va[idx];
+                double semi_y_dq = 0.0;
+                if (va_val >= 0.0) {
+                    semi_y_dq =
+                        va_val * dt *
+                        (q_halo[idx3(i0, j0 + 1, k0, nx, q_halo_ny)] -
+                         q_halo[idx3(i0, j0 + 2, k0, nx, q_halo_ny)]) /
+                        dyy[static_cast<std::size_t>(j0)];
+                } else {
+                    semi_y_dq =
+                        va_val * dt *
+                        (q_halo[idx3(i0, j0 + 2, k0, nx, q_halo_ny)] -
+                         q_halo[idx3(i0, j0 + 3, k0, nx, q_halo_ny)]) /
+                        dyy[static_cast<std::size_t>(j0 + 1)];
+                }
+                q2[idx] = q[idx] + semi_y_dq;
+            }
+        }
+    }
+    return q2;
+}
+
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -293,6 +337,15 @@ int main(int argc, char** argv) {
             join_path(input_dir, "input_q_sphere.bin"), sphere_q_count);
         const std::vector<double> vc =
             read_binary<double>(join_path(input_dir, "input_vc.bin"), vc_count);
+
+        std::vector<double> va(x_count);
+        std::vector<double> dyy(static_cast<std::size_t>(active_ny + 1));
+        for (std::size_t i = 0; i < va.size(); ++i) {
+            va[i] = (i % 2 == 0 ? 1.0 : -1.0) * (0.017 + 0.0003 * static_cast<double>(i % 17));
+        }
+        for (int j0 = 0; j0 < active_ny + 1; ++j0) {
+            dyy[static_cast<std::size_t>(j0)] = 1.25 + 0.015 * static_cast<double>(j0);
+        }
 
         std::vector<double> b_x(x_count);
         for (int k0 = 0; k0 < p.nz; ++k0) {
@@ -358,23 +411,39 @@ int main(int argc, char** argv) {
             require_success(
                 fv_advection_kernels::cuda_backend::resident_advection_begin(
                     p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), ua.data(),
-                    q_x.data(), resident_q1.data()),
+                    va.data(), q_x.data(), q_sphere.data(), dyy.data(),
+                    resident_q1.data()),
                 "resident_advection_begin");
 
+            const std::vector<double> resident_q2_expected =
+                form_q2_from_semi_y_reference(p.nx, active_ny, p.nz, p.dt,
+                                              va, q_x, q_sphere, dyy);
+            std::vector<double> resident_q1_finish_input = q_sphere;
+            for (int k0 = 0; k0 < p.nz; ++k0) {
+                for (int j0 = 0; j0 < active_ny; ++j0) {
+                    for (int i0 = 0; i0 < p.nx; ++i0) {
+                        resident_q1_finish_input[idx3(i0, j0 + 2, k0, p.nx,
+                                                      active_ny + 4)] =
+                            resident_q1_expected[idx3(i0, j0, k0, p.nx,
+                                                      active_ny)];
+                    }
+                }
+            }
             fv_advection_kernels::vanleer_x_3d(
                 p.nx, active_ny, p.nz, p.dt, p.dx, c.data(), p.monotone,
-                uc.data(), q_x.data(), resident_dq_dt_expected.data());
+                uc.data(), resident_q2_expected.data(),
+                resident_dq_dt_expected.data());
             fv_advection_kernels::vanleer_sphere_3d(
                 p.nx, active_ny, p.nz, p.dt, p.monotone, p.js == 1,
                 p.je == p.ny, c.data(), cc.data(), dy.data(), dy_plus.data(),
-                dy_minus.data(), vc.data(), q_sphere.data(),
+                dy_minus.data(), vc.data(), resident_q1_finish_input.data(),
                 resident_dq_dt_expected.data());
             require_success(
                 fv_advection_kernels::cuda_backend::resident_advection_finish(
                     p.nx, active_ny, p.nz, p.dt, p.dx, p.monotone,
                     p.js == 1, p.je == p.ny, c.data(), cc.data(), dy.data(),
                     dy_plus.data(), dy_minus.data(), uc.data(), vc.data(),
-                    q_sphere.data(), q_x.data(), resident_dq_dt.data()),
+                    resident_q1_finish_input.data(), resident_dq_dt.data()),
                 "resident_advection_finish");
         }
 
