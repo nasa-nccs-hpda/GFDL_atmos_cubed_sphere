@@ -1,3 +1,6 @@
 *~
+# Python bytecode cache
+__pycache__/
+*.pyc
 # Fortran integration runner outputs
 translated/held_suarez/cpp/forcing_module/fortran/candidate_outputs/
