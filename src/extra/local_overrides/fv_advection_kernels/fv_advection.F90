@@ -73,6 +73,26 @@ end interface
 contains
 !===========================================================================================
 
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+logical function use_a_grid_resident_boundary()
+  character(len=32) :: value
+  integer :: length, status
+
+  use_a_grid_resident_boundary = .false.
+  if (.not. fv_advection_resident_enabled()) return
+
+  value = ''
+  call get_environment_variable('FV_KERNELS_RESIDENT_BOUNDARY', value, length, status)
+  if (status /= 0) return
+  if (length <= 0) return
+  if (trim(value(1:min(length, len(value)))) == 'a_grid') then
+    use_a_grid_resident_boundary = .true.
+  endif
+end function use_a_grid_resident_boundary
+#endif
+
+!===========================================================================================
+
 
 subroutine fv_advection_init(nx_in, ny_in, yy_in, degrees_lon, advection_layout)
 
@@ -150,13 +170,15 @@ real, intent(inout), dimension(:,js:,:) :: dq_dt
 logical, optional, intent(in) :: flux
 
 real, dimension(nx,js-2:je+2,size(q,3)) :: vx, qx
+real, dimension(nx,js-2:je+2,size(q,3)) :: q1
 real, dimension(nx,js  :je+1,size(q,3)) :: vc
 real, dimension(nx,js  :je  ,size(q,3)) :: uc, div
 
-integer :: i, j, k
+integer :: i, j, k, ierr
 integer, dimension(nx) :: ii
 
 logical :: flux_local
+logical :: use_a_grid_boundary
 
 if(.not.module_is_initialized) then
   call error_mesg('a_grid_horiz_advection','fv_advection_mod is not initialized', FATAL)
@@ -164,6 +186,11 @@ endif
 
 flux_local = .false.
 if(present(flux)) flux_local = flux
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+use_a_grid_boundary = use_a_grid_resident_boundary()
+#else
+use_a_grid_boundary = .false.
+#endif
 
 vx = 0.0
 qx = 0.0
@@ -219,7 +246,40 @@ if(.not.flux_local) then
   dq_dt = dq_dt + q*div
 endif
 
+if (use_a_grid_boundary) then
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+  call fv_advection_resident_begin_wrapper(nx, js, je, size(q,3), 0.5*dt, dx, &
+    c(js:je), ua(:,js:je,:), va(:,js:je,:), qx(:,js:je,:), qx(:,js-2:je+2,:), &
+    dyy(js:je+1), q1(:,js:je,:), ierr)
+  if (ierr /= 0) call error_mesg('fv_advection_mod', &
+    'a_grid resident CUDA advection begin failed', FATAL)
+
+  call mpp_update_domains(q1, advection_domain)
+
+  if(js == 1) then
+    do i = 1,nx
+      q1(i, 0,:) =   q1(ii(i),1,:)
+      q1(i,-1,:) =   q1(ii(i),2,:)
+    end do
+  endif
+
+  if(je == ny) then
+    do i = 1,nx
+      q1(i,ny+1,:) =   q1(ii(i),ny  ,:)
+      q1(i,ny+2,:) =   q1(ii(i),ny-1,:)
+    end do
+  endif
+
+  call fv_advection_resident_finish_wrapper(nx, ny, js, je, size(q,3), dt, dx, monotone, &
+    c(js:je), cc(js:je+1), dy(js-1:je+1), dy_plus(js-1:je+1), &
+    dy_minus(js-1:je+1), uc(:,js:je,:), vc(:,js:je+1,:), q1(:,js-2:je+2,:), &
+    dq_dt(:,js:je,:), ierr)
+  if (ierr /= 0) call error_mesg('fv_advection_mod', &
+    'a_grid resident CUDA advection finish failed', FATAL)
+#endif
+else
 call advection_sphere_3d(dq_dt, dt, qx, uc, vc, ua, va)
+endif
 
 return
 end subroutine a_grid_horiz_advection_3d
