@@ -55,7 +55,8 @@ contains
     end do
   end subroutine slope_sphere_cpu
 
-  ! Same computation, offloaded with OpenACC.
+  ! Same computation, offloaded with OpenACC. Per-call data movement (copyin/
+  ! copyout every call): the worst case, transfer-bound for a light kernel.
   subroutine slope_sphere_acc(slope, q, dyp, dym)
     real, intent(out) :: slope(:,:,:)
     real, intent(in)  :: q(:,:,:)
@@ -85,6 +86,38 @@ contains
     end do
   end subroutine slope_sphere_acc
 
+  ! Same kernel, but assumes the arrays are already resident on the device
+  ! (present). The caller keeps them there across calls with an !$acc data
+  ! region, so no per-call transfer. This is the residency scenario.
+  subroutine slope_sphere_acc_resident(slope, q, dyp, dym)
+    real, intent(out) :: slope(:,:,:)
+    real, intent(in)  :: q(:,:,:)
+    real, intent(in)  :: dyp(:), dym(:)
+    integer :: i, j, k
+    real :: s, qm, qp, qc, qmin, qmax
+
+    !$acc parallel loop collapse(3) present(q, dyp, dym, slope) &
+    !$acc   private(s, qm, qp, qc, qmin, qmax)
+    do k = 1, nz
+      do j = 1, ny
+        do i = 1, nx
+          qm = q(i,j,  k)
+          qc = q(i,j+1,k)
+          qp = q(i,j+2,k)
+          s  = (qp - qc)*dyp(j) + (qc - qm)*dym(j)
+          if (monotone) then
+            qmin = min(qm, qc, qp)
+            qmax = max(qm, qc, qp)
+            s = sign(1.0, s) * min(abs(s), 2.0*(qc - qmin), 2.0*(qmax - qc))
+          else
+            s = sign(1.0, s) * min(abs(s), 2.0*qc)
+          end if
+          slope(i,j,k) = s
+        end do
+      end do
+    end do
+  end subroutine slope_sphere_acc_resident
+
 end module slope_trial_mod
 
 program acc_trial_slope_sphere
@@ -95,7 +128,7 @@ program acc_trial_slope_sphere
   real, allocatable :: dyp(:), dym(:)
   integer :: i, j, k, it, niters
   integer(8) :: t0, t1, rate
-  real :: tcpu, tacc, maxdiff
+  real :: tcpu, tacc, tacc_res, maxdiff
   integer :: dev
 
   niters = 50
@@ -139,6 +172,18 @@ program acc_trial_slope_sphere
   call system_clock(t1)
   tacc = real(t1 - t0)/real(rate)
 
+  ! Time OpenACC with data resident on the device: copyin/copyout happen once
+  ! at the data-region boundaries (outside the timed loop), so this measures
+  ! kernel launch + compute only, as in a resident kernel-chain design.
+  !$acc data copyin(q, dyp, dym) copyout(slope_acc)
+  call system_clock(t0, rate)
+  do it = 1, niters
+    call slope_sphere_acc_resident(slope_acc, q, dyp, dym)
+  end do
+  call system_clock(t1)
+  !$acc end data
+  tacc_res = real(t1 - t0)/real(rate)
+
   ! Correctness.
   maxdiff = 0.0
   do k = 1, nz
@@ -150,8 +195,10 @@ program acc_trial_slope_sphere
   end do
 
   write(*,'(A,I0,A,I0,A,I0,A,I0)') 'size nx=', nx, ' ny=', ny, ' nz=', nz, ' niters=', niters
-  write(*,'(A,ES12.4,A)') 'CPU  time = ', tcpu, ' s'
-  write(*,'(A,ES12.4,A)') 'ACC  time = ', tacc, ' s'
-  write(*,'(A,F8.2)')     'CPU/ACC   = ', tcpu/max(tacc, 1.0e-30)
-  write(*,'(A,ES12.4)')   'max|cpu-acc| = ', maxdiff
+  write(*,'(A,ES12.4,A)') 'CPU  time            = ', tcpu, ' s'
+  write(*,'(A,ES12.4,A)') 'ACC  time (per-call) = ', tacc, ' s'
+  write(*,'(A,ES12.4,A)') 'ACC  time (resident) = ', tacc_res, ' s'
+  write(*,'(A,F8.2)')     'CPU/ACC per-call     = ', tcpu/max(tacc, 1.0e-30)
+  write(*,'(A,F8.2)')     'CPU/ACC resident     = ', tcpu/max(tacc_res, 1.0e-30)
+  write(*,'(A,ES12.4)')   'max|cpu-acc|         = ', maxdiff
 end program acc_trial_slope_sphere
