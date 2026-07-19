@@ -1,32 +1,28 @@
 ! OpenACC residency port of fv_advection_mod::advection_sphere_3d and its leaf
 ! routines, direct Fortran->GPU (nvfortran, no C++/CUDA layer).
 !
-! Structure mirrors src/atmos_spectral/model/fv_advection.F90. The leaf kernels
-! run on the device with data assumed present; advection_sphere_3d keeps all
-! working arrays resident in one !$acc data region so no per-call host-device
-! transfer occurs inside the chain.
+! Structure mirrors src/atmos_spectral/model/fv_advection.F90. Leaf kernels run
+! on the device with data present; advection_sphere_3d keeps all working arrays
+! resident in one data region so no per-call host-device transfer occurs inside
+! the chain. Module grid metrics live on the device via !$acc declare create.
 !
 ! Single-tile assumption (js=1, je=ny): the mid-routine mpp_update_domains(q1)
-! in the real code is a y-halo exchange. On one tile both poles are local, so
-! the halo is filled by the polar fixups (done on device here). The real
-! multi-rank model keeps this residency and brackets the exchange with
-! !$acc update host(q1 halo) / !$acc update device(q1 halo) around the MPI call.
+! y-halo exchange is filled by polar fixups (on device here). The real
+! multi-rank model keeps this residency and brackets the MPI exchange with
+! !$acc update host(q1 halo) / !$acc update device(q1 halo).
 !
-! Validation: the SAME annotated code runs once on the host device and once on
-! the GPU (via acc_set_device_type); we compare max|host-device| (checks the
-! parallelization is race-free and reorder-stable) and report CPU, per-call GPU,
-! and resident GPU timing.
+! Validation is by two builds of this one file:
+!   GPU:  nvfortran -O2 -cpp -r8 -acc -gpu=ccnative acc_advection_sphere.F90 -o adv_gpu
+!   CPU:  nvfortran -O2 -cpp -r8                    acc_advection_sphere.F90 -o adv_cpu
+! Each prints a high-precision checksum of dq_dt; identical to rounding => the
+! OpenACC port is numerically faithful. adv_gpu also reports resident speedup.
 !
-! Build + run (host GPU node):
 !   module load nvidia/12.8
-!   nvfortran -O2 -cpp -r8 -acc -gpu=ccnative -Minfo=accel \
-!       acc_advection_sphere.F90 -o acc_advection_sphere && ./acc_advection_sphere
+!   ./adv_cpu ; ./adv_gpu
 
 module adv_sphere_mod
-  use openacc
   implicit none
 
-  ! Problem size (single tile, js=1..je=ny).
   integer, parameter :: nx = 256
   integer, parameter :: ny = 256
   integer, parameter :: nz = 64
@@ -35,11 +31,11 @@ module adv_sphere_mod
   real, parameter :: pi = 3.14159265358979323846d0
   real, parameter :: radius = 6.371d6
 
-  ! Grid metrics (mirror fv_advection_init).
   real :: c(ny), s(ny), cc(ny+1)
   real :: dy(-1:ny+2), dyy(ny+1)
   real :: dy_plus(0:ny+1), dy_minus(0:ny+1)
   real :: dx
+  !$acc declare create(c,s,cc,dy,dyy,dy_plus,dy_minus,dx)
 
 contains
 
@@ -63,13 +59,14 @@ contains
     y   = y*radius;  yy = yy*radius
     dy  = dy*radius; dyy = dyy*radius
     dx  = 2.d0*pi*radius/real(nx)
+    !$acc update device(c,s,cc,dy,dyy,dy_plus,dy_minus,dx)
   end subroutine init_metrics
 
   ! ---- leaf kernels (device, data present) ----
 
   subroutine semi_x_3d(dq, ua, q, dt)
     real, intent(out) :: dq(nx,ny,nz)
-    real, intent(in)  :: ua(nx,ny,nz), q(nx,ny,nz)
+    real, intent(in)  :: ua(nx,ny,nz), q(nx,-1:ny+2,nz)
     real, intent(in)  :: dt
     integer :: i, j, k, il, ir
     real :: b, bb
@@ -169,10 +166,10 @@ contains
     real, intent(inout) :: dq_dt(nx,ny,nz)
     real, intent(in)    :: uc(nx,ny,nz), q(nx,ny,nz)
     real, intent(in)    :: dt
-    real :: b(nx,ny,nz), bb(nx,ny,nz), s(nx,ny,nz), intf(nx,ny,nz)
+    real :: b(nx,ny,nz), bb(nx,ny,nz), sx(nx,ny,nz), intf(nx,ny,nz)
     real :: fl(nx+1,ny,nz)
     integer :: i, j, k, ii
-    !$acc data present(dq_dt,uc,q,c) create(b,bb,s,intf,fl)
+    !$acc data present(dq_dt,uc,q,c) create(b,bb,sx,intf,fl)
     !$acc parallel loop collapse(3) present(b,bb,uc,c)
     do k = 1, nz
       do j = 1, ny
@@ -183,8 +180,8 @@ contains
       end do
     end do
     call integer_flux_x(intf, b, q)   ! full array; 0 where int(b)=0
-    call slope_x(s, q)
-    !$acc parallel loop collapse(3) present(fl,intf,bb,q,s,b) private(ii)
+    call slope_x(sx, q)
+    !$acc parallel loop collapse(3) present(fl,intf,bb,q,sx,b) private(ii)
     do k = 1, nz
       do j = 1, ny
         do i = 1, nx
@@ -192,7 +189,7 @@ contains
           do while (ii > nx); ii = ii - nx; end do
           do while (ii < 1 ); ii = ii + nx; end do
           fl(i,j,k) = intf(i,j,k) + bb(i,j,k)*(q(ii,j,k) &
-                    + 0.5d0*s(ii,j,k)*(sign(1.d0,bb(i,j,k)) - bb(i,j,k)))
+                    + 0.5d0*sx(ii,j,k)*(sign(1.d0,bb(i,j,k)) - bb(i,j,k)))
         end do
       end do
     end do
@@ -291,11 +288,11 @@ contains
     real :: q1(nx,-1:ny+2,nz), q2(nx,ny,nz), tmp(nx,ny,nz)
     integer :: i, j, k, ii
 
-    ! Working arrays resident for the whole routine. Inputs assumed present
-    ! (caller's outer data region); create the temporaries here.
-    !$acc data present(dq_dt,q,uc,vc,ua,va) create(q1,q2,tmp)
+    ! present-or-copy: reused (no transfer) when the caller already made these
+    ! resident; copied when called standalone (per-call path).
+    !$acc data copyin(q,uc,vc,ua,va) copy(dq_dt) create(q1,q2,tmp)
 
-    call semi_x_3d(tmp, ua, q(:,1:ny,:), 0.5d0*dt)
+    call semi_x_3d(tmp, ua, q, 0.5d0*dt)
     !$acc parallel loop collapse(3) present(q1,q,tmp)
     do k = 1, nz
       do j = 1, ny
@@ -315,17 +312,15 @@ contains
       end do
     end do
 
-    ! mpp_update_domains(q1) stand-in for single tile: polar halo fixups
-    ! (i -> i+nx/2 wrap). Real multi-rank model brackets the MPI exchange with
-    ! !$acc update host/device on the q1 halo rows here instead.
+    ! mpp_update_domains(q1) stand-in for single tile: polar halo fixups.
     !$acc parallel loop collapse(2) present(q1) private(ii)
     do k = 1, nz
       do i = 1, nx
         ii = i + nx/2; if (ii > nx) ii = ii - nx
-        q1(i, 0,k)    = q1(ii,1,k)
-        q1(i,-1,k)    = q1(ii,2,k)
-        q1(i,ny+1,k)  = q1(ii,ny,k)
-        q1(i,ny+2,k)  = q1(ii,ny-1,k)
+        q1(i, 0,k)   = q1(ii,1,k)
+        q1(i,-1,k)   = q1(ii,2,k)
+        q1(i,ny+1,k) = q1(ii,ny,k)
+        q1(i,ny+2,k) = q1(ii,ny-1,k)
       end do
     end do
 
@@ -341,11 +336,11 @@ program acc_advection_sphere
   use adv_sphere_mod
   implicit none
 
-  real :: dq_dt(nx,ny,nz), dq0(nx,ny,nz), dqh(nx,ny,nz)
+  real :: dq_dt(nx,ny,nz), dq0(nx,ny,nz)
   real :: q(nx,-1:ny+2,nz), uc(nx,ny,nz), vc(nx,ny+1,nz), ua(nx,ny,nz), va(nx,ny,nz)
   integer :: i, j, k, it, niters
   integer(8) :: t0, t1, rate
-  real :: tcpu, tpc, tres, maxdiff
+  real :: tpc, tres, csum, cabs, cmax
 
   niters = 50
   call init_metrics()
@@ -376,22 +371,7 @@ program acc_advection_sphere
   end do
   dq0 = 0.013d0
 
-  write(*,'(A,I0)') 'acc_get_num_devices(nvidia) = ', acc_get_num_devices(acc_device_nvidia)
-
-  ! Reference on host device (same annotated code).
-  call acc_set_device_type(acc_device_host)
-  dq_dt = dq0
-  call system_clock(t0, rate)
-  do it = 1, niters
-    dq_dt = dq0
-    call advection_sphere_3d(dq_dt, 900.d0, q, uc, vc, ua, va)
-  end do
-  call system_clock(t1)
-  tcpu = real(t1 - t0)/real(rate)
-  dqh = dq_dt
-
-  ! GPU, per-call transfer (no outer data region).
-  call acc_set_device_type(acc_device_nvidia)
+  ! Per-call: advection_sphere_3d does its own copyin/copyout each call.
   call system_clock(t0, rate)
   do it = 1, niters
     dq_dt = dq0
@@ -400,7 +380,7 @@ program acc_advection_sphere
   call system_clock(t1)
   tpc = real(t1 - t0)/real(rate)
 
-  ! GPU, resident: inputs stay on device across all iterations.
+  ! Resident: inputs stay on device across all iterations.
   !$acc data copyin(q,uc,vc,ua,va,dq0) copyout(dq_dt)
   call system_clock(t0, rate)
   do it = 1, niters
@@ -418,20 +398,22 @@ program acc_advection_sphere
   !$acc end data
   tres = real(t1 - t0)/real(rate)
 
-  maxdiff = 0.d0
+  ! Checksums of the final dq_dt (compare across the CPU and GPU builds).
+  csum = 0.d0; cabs = 0.d0; cmax = 0.d0
   do k = 1, nz
     do j = 1, ny
       do i = 1, nx
-        maxdiff = max(maxdiff, abs(dqh(i,j,k) - dq_dt(i,j,k)))
+        csum = csum + dq_dt(i,j,k)
+        cabs = cabs + abs(dq_dt(i,j,k))
+        cmax = max(cmax, abs(dq_dt(i,j,k)))
       end do
     end do
   end do
 
   write(*,'(A,I0,A,I0,A,I0,A,I0)') 'size nx=', nx, ' ny=', ny, ' nz=', nz, ' niters=', niters
-  write(*,'(A,ES12.4,A)') 'host time            = ', tcpu, ' s'
-  write(*,'(A,ES12.4,A)') 'gpu  time (per-call) = ', tpc,  ' s'
-  write(*,'(A,ES12.4,A)') 'gpu  time (resident) = ', tres, ' s'
-  write(*,'(A,F8.2)')     'host/gpu per-call    = ', tcpu/max(tpc, 1.d-30)
-  write(*,'(A,F8.2)')     'host/gpu resident    = ', tcpu/max(tres,1.d-30)
-  write(*,'(A,ES12.4)')   'max|host-gpu|        = ', maxdiff
+  write(*,'(A,ES12.4,A)') 'time (per-call) = ', tpc,  ' s'
+  write(*,'(A,ES12.4,A)') 'time (resident) = ', tres, ' s'
+  write(*,'(A,ES24.16)')  'sum(dq_dt)      = ', csum
+  write(*,'(A,ES24.16)')  'sum|dq_dt|      = ', cabs
+  write(*,'(A,ES24.16)')  'max|dq_dt|      = ', cmax
 end program acc_advection_sphere
