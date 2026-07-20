@@ -1,0 +1,189 @@
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+HOST=gh019 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=3
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+HOST=gh018 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=2
+HOST=gh016 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=0
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+HOST=gh017 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=1
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh019
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh019
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh019:2226554] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh016
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh016
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh016:2595980] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh018
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh018
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh018:2567025] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh017
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh017
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh017:1948879] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+&MPP_IO_NML
+ HEADER_BUFFER_VAL=16384      ,
+ GLOBAL_FIELD_ON_ROOT_PE=T,
+ IO_CLOCKS_ON=F,
+ SHUFFLE=0          ,
+ DEFLATE_LEVEL=-1         ,
+ /
+NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+  starting            1  OpenMP threads per MPI-task
+ATMOS MODEL DOMAIN DECOMPOSITION
+  X-AXIS =  128
+  Y-AXIS =   16  16  16  16
+mean surface pressure=1000.0000 mb
+PROFILE_FV_GPU_MAPPING rank=0 local_rank=0 device=0 visible_gpus=1 hostname=gh016 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=1 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=0 device=0 free_before=101420302336 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=1 local_rank=0 device=0 visible_gpus=1 hostname=gh017 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=1 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=1 device=0 free_before=101414273024 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=3 local_rank=0 device=0 visible_gpus=1 hostname=gh019 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=1 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=3 device=0 free_before=101422465024 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=2 local_rank=0 device=0 visible_gpus=1 hostname=gh018 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=1 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=2 device=0 free_before=101406081024 total=102005473280
+ Integration completed through 2000 Jan  2   0: 0: 0
+ Integration completed through 2000 Jan  3   0: 0: 0
+ Integration completed through 2000 Jan  4   0: 0: 0
+ Integration completed through 2000 Jan  5   0: 0: 0
+ Integration completed through 2000 Jan  6   0: 0: 0
+ Integration completed through 2000 Jan  7   0: 0: 0
+ Integration completed through 2000 Jan  8   0: 0: 0
+ Integration completed through 2000 Jan  9   0: 0: 0
+ Integration completed through 2000 Jan 10   0: 0: 0
+ Integration completed through 2000 Jan 11   0: 0: 0
+ Integration completed through 2000 Jan 12   0: 0: 0
+ Integration completed through 2000 Jan 13   0: 0: 0
+ Integration completed through 2000 Jan 14   0: 0: 0
+ Integration completed through 2000 Jan 15   0: 0: 0
+ Integration completed through 2000 Jan 16   0: 0: 0
+ Integration completed through 2000 Jan 17   0: 0: 0
+ Integration completed through 2000 Jan 18   0: 0: 0
+ Integration completed through 2000 Jan 19   0: 0: 0
+ Integration completed through 2000 Jan 20   0: 0: 0
+ Integration completed through 2000 Jan 21   0: 0: 0
+ Integration completed through 2000 Jan 22   0: 0: 0
+ Integration completed through 2000 Jan 23   0: 0: 0
+ Integration completed through 2000 Jan 24   0: 0: 0
+ Integration completed through 2000 Jan 25   0: 0: 0
+ Integration completed through 2000 Jan 26   0: 0: 0
+ Integration completed through 2000 Jan 27   0: 0: 0
+ Integration completed through 2000 Jan 28   0: 0: 0
+ Integration completed through 2000 Jan 29   0: 0: 0
+ Integration completed through 2000 Jan 30   0: 0: 0
+ Integration completed through 2000 Feb  1   0: 0: 0
+NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     204800.
+ MPP_DOMAINS_STACK high water mark=      102400
+
+Tabulating mpp_clock statistics across      4 PEs...
+
+                                          tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+Total runtime                        96.413190     96.413456     96.413323      0.000132  1.000     0     0     3
+ MPP_STACK high water mark=           0
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=4320 time=0.650763079 avg=1.506396016e-04
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=4320 time=0.379996530 avg=8.796215972e-05
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=8640 allocation=0.000283872 h2d=0.451812878 kernel=0.128056992 sync=0.068354676 d2h=0.091111945 free=0.000000000 total=1.026652316
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=4320 time=0.637372110 avg=1.475398403e-04
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=4320 time=0.372597061 avg=8.624931968e-05
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=8640 allocation=0.000267617 h2d=0.439730147 kernel=0.126007776 sync=0.065007533 d2h=0.091232665 free=0.000000000 total=1.005924664
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=4320 time=0.734911868 avg=1.701184880e-04
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=4320 time=0.379949150 avg=8.795119213e-05
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=8640 allocation=0.000334978 h2d=0.451714958 kernel=0.218257216 sync=0.069540351 d2h=0.091278351 free=0.000000000 total=1.110710067
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=4320 time=0.654250969 avg=1.514469836e-04
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=4320 time=0.382082242 avg=8.844496343e-05
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=8640 allocation=0.000273217 h2d=0.452543022 kernel=0.128458944 sync=0.067847009 d2h=0.090729471 free=0.000000000 total=1.032068497

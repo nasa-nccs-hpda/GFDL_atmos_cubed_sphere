@@ -9,6 +9,7 @@
 #include <cstring>
 #include <cuda_runtime.h>
 #include <utility>
+#include <unistd.h>
 
 namespace {
 
@@ -206,6 +207,17 @@ struct PersistentContext {
 
 PersistentContext persistent_context;
 
+struct CudaDeviceContext {
+    bool initialized = false;
+    int device = -1;
+    int visible_gpus = 0;
+    int global_rank = -1;
+    int local_rank = -1;
+    bool strict_unique = false;
+};
+
+CudaDeviceContext cuda_device_context;
+
 struct TimingEvents {
     cudaEvent_t start = nullptr;
     cudaEvent_t stop = nullptr;
@@ -243,7 +255,133 @@ int check_cuda(cudaError_t status, const char* what) {
     return FV_CUDA_ERROR;
 }
 
-int check_device_available() {
+int parse_nonnegative_int(const char* value, const char* name, int fallback) {
+    if (value == nullptr || value[0] == '\0') {
+        return fallback;
+    }
+    char* end = nullptr;
+    const long parsed = std::strtol(value, &end, 10);
+    if (end == value || *end != '\0' || parsed < 0 || parsed > 2147483647L) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels CUDA warning: ignoring invalid "
+                     "%s='%s'\n",
+                     name, value);
+        return fallback;
+    }
+    return static_cast<int>(parsed);
+}
+
+int parse_required_nonnegative_int(const char* value, const char* name) {
+    if (value == nullptr || value[0] == '\0') {
+        std::fprintf(stderr,
+                     "fv_advection_kernels CUDA error: %s is required for this "
+                     "GPU mapping mode\n",
+                     name);
+        return -1;
+    }
+    char* end = nullptr;
+    const long parsed = std::strtol(value, &end, 10);
+    if (end == value || *end != '\0' || parsed < 0 || parsed > 2147483647L) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels CUDA error: invalid %s='%s'\n",
+                     name, value);
+        return -1;
+    }
+    return static_cast<int>(parsed);
+}
+
+int detect_global_rank() {
+    const char* value = std::getenv("OMPI_COMM_WORLD_RANK");
+    if (value != nullptr) {
+        return parse_nonnegative_int(value, "OMPI_COMM_WORLD_RANK", -1);
+    }
+    value = std::getenv("PMI_RANK");
+    if (value != nullptr) {
+        return parse_nonnegative_int(value, "PMI_RANK", -1);
+    }
+    value = std::getenv("SLURM_PROCID");
+    if (value != nullptr) {
+        return parse_nonnegative_int(value, "SLURM_PROCID", -1);
+    }
+    value = std::getenv("MPI_RANKID");
+    if (value != nullptr) {
+        return parse_nonnegative_int(value, "MPI_RANKID", -1);
+    }
+    return -1;
+}
+
+int detect_local_rank(int global_rank) {
+    const char* value = std::getenv("OMPI_COMM_WORLD_LOCAL_RANK");
+    if (value != nullptr) {
+        return parse_nonnegative_int(value, "OMPI_COMM_WORLD_LOCAL_RANK",
+                                     global_rank < 0 ? 0 : global_rank);
+    }
+    value = std::getenv("SLURM_LOCALID");
+    if (value != nullptr) {
+        return parse_nonnegative_int(value, "SLURM_LOCALID",
+                                     global_rank < 0 ? 0 : global_rank);
+    }
+    value = std::getenv("MV2_COMM_WORLD_LOCAL_RANK");
+    if (value != nullptr) {
+        return parse_nonnegative_int(value, "MV2_COMM_WORLD_LOCAL_RANK",
+                                     global_rank < 0 ? 0 : global_rank);
+    }
+    value = std::getenv("PMI_LOCAL_RANK");
+    if (value != nullptr) {
+        return parse_nonnegative_int(value, "PMI_LOCAL_RANK",
+                                     global_rank < 0 ? 0 : global_rank);
+    }
+    return global_rank < 0 ? 0 : global_rank;
+}
+
+int choose_gpu_for_rank(int global_rank, int local_rank, int visible_gpus) {
+    const char* policy = std::getenv("FV_KERNELS_GPU_MAPPING");
+    if (policy == nullptr || policy[0] == '\0') {
+        int current_device = -1;
+        const cudaError_t status = cudaGetDevice(&current_device);
+        if (status == cudaSuccess && current_device >= 0 &&
+            current_device < visible_gpus) {
+            return current_device;
+        }
+        return 0;
+    }
+
+    if (std::strcmp(policy, "local_rank") == 0) {
+        return local_rank % visible_gpus;
+    }
+    if (std::strcmp(policy, "round_robin") == 0) {
+        const int rank = global_rank < 0 ? local_rank : global_rank;
+        return rank % visible_gpus;
+    }
+    if (std::strcmp(policy, "env") == 0) {
+        return parse_required_nonnegative_int(std::getenv("FV_KERNELS_GPU_ID"),
+                                              "FV_KERNELS_GPU_ID");
+    }
+
+    std::fprintf(stderr,
+                 "fv_advection_kernels CUDA error: invalid "
+                 "FV_KERNELS_GPU_MAPPING='%s'; expected local_rank, "
+                 "round_robin, or env\n",
+                 policy);
+    return -1;
+}
+
+void hostname_string(char* buffer, std::size_t size) {
+    if (size == 0) {
+        return;
+    }
+    buffer[0] = '\0';
+    if (gethostname(buffer, size) != 0) {
+        std::snprintf(buffer, size, "unknown");
+    }
+    buffer[size - 1] = '\0';
+}
+
+int ensure_cuda_device_initialized() {
+    if (cuda_device_context.initialized) {
+        return FV_CUDA_SUCCESS;
+    }
+
     int device_count = 0;
     int ierr = check_cuda(cudaGetDeviceCount(&device_count), "cudaGetDeviceCount");
     if (ierr != FV_CUDA_SUCCESS) {
@@ -251,10 +389,105 @@ int check_device_available() {
     }
     if (device_count <= 0) {
         std::fprintf(stderr,
-                     "fv_advection_kernels CUDA error: CUDA backend requested but no CUDA devices are available.\n");
+                     "fv_advection_kernels CUDA error: CUDA backend requested "
+                     "but no CUDA devices are available.\n");
         return FV_CUDA_ERROR;
     }
+
+    const int global_rank = detect_global_rank();
+    const int local_rank = detect_local_rank(global_rank);
+    const bool strict_unique = env_flag_enabled("FV_KERNELS_REQUIRE_UNIQUE_GPU");
+    if (strict_unique && local_rank >= device_count) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels CUDA error: "
+                     "FV_KERNELS_REQUIRE_UNIQUE_GPU=1 but local_rank=%d and "
+                     "visible_gpus=%d. Use fewer ranks per node or expose more "
+                     "GPUs.\n",
+                     local_rank, device_count);
+        return FV_CUDA_ERROR;
+    }
+
+    const int selected_device =
+        choose_gpu_for_rank(global_rank, local_rank, device_count);
+    if (selected_device < 0 || selected_device >= device_count) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels CUDA error: selected GPU id %d is "
+                     "outside visible device range [0,%d)\n",
+                     selected_device, device_count);
+        return FV_CUDA_ERROR;
+    }
+
+    ierr = check_cuda(cudaSetDevice(selected_device), "cudaSetDevice");
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+
+    int current_device = -1;
+    ierr = check_cuda(cudaGetDevice(&current_device), "cudaGetDevice");
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+    if (current_device != selected_device) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels CUDA error: cudaSetDevice selected "
+                     "device %d but cudaGetDevice returned %d\n",
+                     selected_device, current_device);
+        return FV_CUDA_ERROR;
+    }
+
+    cudaDeviceProp props;
+    ierr = check_cuda(cudaGetDeviceProperties(&props, current_device),
+                      "cudaGetDeviceProperties");
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+
+    size_t free_bytes = 0;
+    size_t total_bytes = 0;
+    ierr = check_cuda(cudaMemGetInfo(&free_bytes, &total_bytes), "cudaMemGetInfo");
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+
+    char hostname[256];
+    hostname_string(hostname, sizeof(hostname));
+    char pci_bus_id[32];
+    pci_bus_id[0] = '\0';
+    const cudaError_t pci_status = cudaDeviceGetPCIBusId(
+        pci_bus_id, static_cast<int>(sizeof(pci_bus_id)), current_device);
+    if (pci_status != cudaSuccess) {
+        pci_bus_id[0] = '\0';
+    }
+    const char* cuda_visible_devices = std::getenv("CUDA_VISIBLE_DEVICES");
+
+    std::fprintf(stdout,
+                 "PROFILE_FV_GPU_MAPPING rank=%d local_rank=%d device=%d "
+                 "visible_gpus=%d hostname=%s name=\"%s\" pci_bus_id=%s "
+                 "policy=%s strict_unique=%d cuda_visible_devices=%s\n",
+                 global_rank, local_rank, current_device, device_count, hostname,
+                 props.name, pci_bus_id[0] == '\0' ? "unknown" : pci_bus_id,
+                 std::getenv("FV_KERNELS_GPU_MAPPING") == nullptr
+                     ? "default"
+                     : std::getenv("FV_KERNELS_GPU_MAPPING"),
+                 strict_unique ? 1 : 0,
+                 cuda_visible_devices == nullptr ? "unset" : cuda_visible_devices);
+    std::fprintf(stdout,
+                 "PROFILE_FV_GPU_MEMORY rank=%d device=%d free_before=%zu "
+                 "total=%zu\n",
+                 global_rank, current_device, free_bytes, total_bytes);
+    std::fflush(stdout);
+
+    cuda_device_context.initialized = true;
+    cuda_device_context.device = current_device;
+    cuda_device_context.visible_gpus = device_count;
+    cuda_device_context.global_rank = global_rank;
+    cuda_device_context.local_rank = local_rank;
+    cuda_device_context.strict_unique = strict_unique;
     return FV_CUDA_SUCCESS;
+}
+
+int check_device_available() {
+    return ensure_cuda_device_initialized();
 }
 
 int ensure_persistent_context() {
@@ -460,8 +693,12 @@ int copy_to_device(double** dst, const double* src, std::size_t count, const cha
         std::fprintf(stderr, "fv_advection_kernels CUDA error: null input pointer %s\n", name);
         return FV_CUDA_INVALID_ARGUMENT;
     }
+    int ierr = ensure_cuda_device_initialized();
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
     const auto allocation_start = Clock::now();
-    int ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(dst), count * sizeof(double)), name);
+    ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(dst), count * sizeof(double)), name);
     if (profile::enabled()) {
         stateless_phases.allocation += elapsed_seconds(allocation_start);
     }
