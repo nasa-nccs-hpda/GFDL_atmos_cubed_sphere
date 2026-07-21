@@ -29,8 +29,7 @@ use fms_mod, only: open_namelist_file
 
 use fms_mod, only: mpp_pe, mpp_root_pe, error_mesg, FATAL, write_version_number, stdlog, close_file, check_nml_error
 
-use mpp_mod, only: mpp_chksum, mpp_error, mpp_npes, mpp_sum, mpp_sync, mpp_sync_self, mpp_transmit, &
-                   mpp_clock_id, mpp_clock_begin, mpp_clock_end
+use mpp_mod, only: mpp_chksum, mpp_error, mpp_npes, mpp_sum, mpp_sync, mpp_sync_self, mpp_transmit
 
 use mpp_domains_mod, only: mpp_get_compute_domain, mpp_get_compute_domains, mpp_get_domain_components, mpp_get_layout, &
                            mpp_get_pelist, mpp_update_domains, domain1D, XUPDATE, mpp_global_field
@@ -206,6 +205,11 @@ integer :: npes
 integer, dimension(2) :: grid_layout, spectral_layout
 integer :: xmaxsize, ymaxsize   !used for dimensioning in transpose routines
 logical :: debug=.FALSE.
+
+! Temporary transpose timing (T3-followup): system_clock accumulators, printed
+! per-PE in transforms_end. Revert after the measurement run.
+integer(8) :: prof_transpose_fwd_ticks=0, prof_transpose_rev_ticks=0
+integer    :: prof_transpose_fwd_calls=0, prof_transpose_rev_calls=0
 integer :: ms, me, ns, ne, is, ie, js, je
 
 real, allocatable, dimension(:) :: lat_boundaries_global, lon_boundaries_global
@@ -976,14 +980,13 @@ subroutine reverse_transpose_fourier( fourier_s, fourier_g )
   integer :: i,j,k, jj, jp, jm, pp, pm, nput, nget, jpos
   type(domain1D) :: spectral_domain_x, grid_domain_y
   integer, dimension(0:grid_layout(2)-1) :: pelist, ygridsize, xspecsize, xsbegin, xsend
-  integer, save :: id_clk_rev = 0
+  integer(8) :: prof_c0, prof_c1
 
   if(.not.module_is_initialized) then
     call error_mesg('reverse_transpose_fourier','transforms module is not initialized', FATAL)
   end if
 
-  if(id_clk_rev == 0) id_clk_rev = mpp_clock_id('reverse_transpose_fourier')
-  call mpp_clock_begin(id_clk_rev)
+  call system_clock(prof_c0)
 
   call mpp_get_domain_components( grid_domain, y=grid_domain_y )
   call mpp_get_domain_components( spectral_domain, x=spectral_domain_x )
@@ -1012,7 +1015,9 @@ subroutine reverse_transpose_fourier( fourier_s, fourier_g )
      end do
   end do
   call mpp_sync()
-  call mpp_clock_end(id_clk_rev)
+  call system_clock(prof_c1)
+  prof_transpose_rev_ticks = prof_transpose_rev_ticks + (prof_c1 - prof_c0)
+  prof_transpose_rev_calls = prof_transpose_rev_calls + 1
   return
 end subroutine reverse_transpose_fourier
 
@@ -1025,14 +1030,13 @@ subroutine transpose_fourier( fourier_g, fourier_s )
   integer :: i,j,k, ii, ip, im, pp, pm, nput, nget, ipos, jp
   type(domain1D) :: spectral_domain_x, grid_domain_y
   integer, dimension(0:spectral_layout(1)-1) :: pelist, ygridsize, xspecsize, xsbegin, xsend
-  integer, save :: id_clk_fwd = 0
+  integer(8) :: prof_c0, prof_c1
 
   if(.not.module_is_initialized) then
     call error_mesg('transpose_fourier','transforms module is not initialized', FATAL)
   end if
 
-  if(id_clk_fwd == 0) id_clk_fwd = mpp_clock_id('transpose_fourier')
-  call mpp_clock_begin(id_clk_fwd)
+  call system_clock(prof_c0)
 
   call mpp_get_domain_components( grid_domain, y=grid_domain_y )
   call mpp_get_domain_components( spectral_domain, x=spectral_domain_x )
@@ -1062,7 +1066,9 @@ subroutine transpose_fourier( fourier_g, fourier_s )
                         get_data=fourier_s(1,1,1,im), glen=nget, from_pe=pm )
   end do
   call mpp_sync()
-  call mpp_clock_end(id_clk_fwd)
+  call system_clock(prof_c1)
+  prof_transpose_fwd_ticks = prof_transpose_fwd_ticks + (prof_c1 - prof_c0)
+  prof_transpose_fwd_calls = prof_transpose_fwd_calls + 1
   return
 end subroutine transpose_fourier
 
@@ -1092,6 +1098,25 @@ subroutine transforms_end
 !-------------------------------------------------------------------------
 
 if(.not.module_is_initialized) return
+
+! Temporary transpose timing report (T3-followup); revert after measurement.
+block
+  integer(8) :: prof_rate
+  real(8) :: t_fwd, t_rev
+  call system_clock(count_rate=prof_rate)
+  if(prof_rate > 0) then
+    t_fwd = real(prof_transpose_fwd_ticks,8)/real(prof_rate,8)
+    t_rev = real(prof_transpose_rev_ticks,8)/real(prof_rate,8)
+    write(*,'(a,i0,a,i0,a,es15.9,a,es15.9)') &
+      'PROFILE_TRANSPOSE rank=', mpp_pe(), ' name=transpose_fourier calls=', &
+      prof_transpose_fwd_calls, ' time=', t_fwd, ' avg=', &
+      t_fwd/max(1,prof_transpose_fwd_calls)
+    write(*,'(a,i0,a,i0,a,es15.9,a,es15.9)') &
+      'PROFILE_TRANSPOSE rank=', mpp_pe(), ' name=reverse_transpose_fourier calls=', &
+      prof_transpose_rev_calls, ' time=', t_rev, ' avg=', &
+      t_rev/max(1,prof_transpose_rev_calls)
+  end if
+end block
 
 deallocate(lon_boundaries_global, lat_boundaries_global)
 call grid_fourier_end
