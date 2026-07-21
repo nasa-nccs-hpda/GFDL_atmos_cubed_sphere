@@ -29,7 +29,8 @@ use fms_mod, only: open_namelist_file
 
 use fms_mod, only: mpp_pe, mpp_root_pe, error_mesg, FATAL, write_version_number, stdlog, close_file, check_nml_error
 
-use mpp_mod, only: mpp_chksum, mpp_error, mpp_npes, mpp_sum, mpp_sync, mpp_sync_self, mpp_transmit
+use mpp_mod, only: mpp_chksum, mpp_error, mpp_npes, mpp_sum, mpp_sync, mpp_sync_self, mpp_transmit, &
+                   mpp_clock_id, mpp_clock_begin, mpp_clock_end
 
 use mpp_domains_mod, only: mpp_get_compute_domain, mpp_get_compute_domains, mpp_get_domain_components, mpp_get_layout, &
                            mpp_get_pelist, mpp_update_domains, domain1D, XUPDATE, mpp_global_field
@@ -975,10 +976,14 @@ subroutine reverse_transpose_fourier( fourier_s, fourier_g )
   integer :: i,j,k, jj, jp, jm, pp, pm, nput, nget, jpos
   type(domain1D) :: spectral_domain_x, grid_domain_y
   integer, dimension(0:grid_layout(2)-1) :: pelist, ygridsize, xspecsize, xsbegin, xsend
+  integer, save :: id_clk_rev = 0
 
   if(.not.module_is_initialized) then
     call error_mesg('reverse_transpose_fourier','transforms module is not initialized', FATAL)
   end if
+
+  if(id_clk_rev == 0) id_clk_rev = mpp_clock_id('reverse_transpose_fourier')
+  call mpp_clock_begin(id_clk_rev)
 
   call mpp_get_domain_components( grid_domain, y=grid_domain_y )
   call mpp_get_domain_components( spectral_domain, x=spectral_domain_x )
@@ -1007,6 +1012,7 @@ subroutine reverse_transpose_fourier( fourier_s, fourier_g )
      end do
   end do
   call mpp_sync()
+  call mpp_clock_end(id_clk_rev)
   return
 end subroutine reverse_transpose_fourier
 
@@ -1019,10 +1025,14 @@ subroutine transpose_fourier( fourier_g, fourier_s )
   integer :: i,j,k, ii, ip, im, pp, pm, nput, nget, ipos, jp
   type(domain1D) :: spectral_domain_x, grid_domain_y
   integer, dimension(0:spectral_layout(1)-1) :: pelist, ygridsize, xspecsize, xsbegin, xsend
+  integer, save :: id_clk_fwd = 0
 
   if(.not.module_is_initialized) then
     call error_mesg('transpose_fourier','transforms module is not initialized', FATAL)
   end if
+
+  if(id_clk_fwd == 0) id_clk_fwd = mpp_clock_id('transpose_fourier')
+  call mpp_clock_begin(id_clk_fwd)
 
   call mpp_get_domain_components( grid_domain, y=grid_domain_y )
   call mpp_get_domain_components( spectral_domain, x=spectral_domain_x )
@@ -1052,6 +1062,7 @@ subroutine transpose_fourier( fourier_g, fourier_s )
                         get_data=fourier_s(1,1,1,im), glen=nget, from_pe=pm )
   end do
   call mpp_sync()
+  call mpp_clock_end(id_clk_fwd)
   return
 end subroutine transpose_fourier
 
