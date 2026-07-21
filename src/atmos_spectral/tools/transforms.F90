@@ -1118,10 +1118,10 @@ end subroutine transforms_end
 ! file holds the totals independent of whether transforms_end is ever called.
 subroutine prof_transpose_dump()
   integer, save :: nd = 0
-  integer :: u
+  integer :: u, blen
   integer(8) :: rate
   real(8) :: t_fwd, t_rev
-  character(len=64) :: fn
+  character(len=256) :: fn, base
 
   nd = nd + 1
   if(mod(nd,200) /= 0) return
@@ -1131,7 +1131,13 @@ subroutine prof_transpose_dump()
   t_fwd = real(prof_transpose_fwd_ticks,8)/real(rate,8)
   t_rev = real(prof_transpose_rev_ticks,8)/real(rate,8)
 
-  write(fn,'(a,i4.4,a)') 'PROFILE_TRANSPOSE_rank', mpp_pe(), '.txt'
+  ! Write to $GFDL_BASE/logs so the file persists after the run dir is cleaned.
+  call get_environment_variable('GFDL_BASE', base, blen)
+  if(blen > 0) then
+    write(fn,'(a,a,i4.4,a)') trim(base), '/logs/PROFILE_TRANSPOSE_rank', mpp_pe(), '.txt'
+  else
+    write(fn,'(a,i4.4,a)') 'PROFILE_TRANSPOSE_rank', mpp_pe(), '.txt'
+  end if
   open(newunit=u, file=trim(fn), status='replace', action='write')
   write(u,'(a,i0,a,i0,a,es16.9,a,es16.9)') 'rank=', mpp_pe(), &
     ' name=transpose_fourier calls=', prof_transpose_fwd_calls, &
