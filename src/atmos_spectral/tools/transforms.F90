@@ -1018,6 +1018,7 @@ subroutine reverse_transpose_fourier( fourier_s, fourier_g )
   call system_clock(prof_c1)
   prof_transpose_rev_ticks = prof_transpose_rev_ticks + (prof_c1 - prof_c0)
   prof_transpose_rev_calls = prof_transpose_rev_calls + 1
+  call prof_transpose_dump()
   return
 end subroutine reverse_transpose_fourier
 
@@ -1069,6 +1070,7 @@ subroutine transpose_fourier( fourier_g, fourier_s )
   call system_clock(prof_c1)
   prof_transpose_fwd_ticks = prof_transpose_fwd_ticks + (prof_c1 - prof_c0)
   prof_transpose_fwd_calls = prof_transpose_fwd_calls + 1
+  call prof_transpose_dump()
   return
 end subroutine transpose_fourier
 
@@ -1099,24 +1101,7 @@ subroutine transforms_end
 
 if(.not.module_is_initialized) return
 
-! Temporary transpose timing report (T3-followup); revert after measurement.
-block
-  integer(8) :: prof_rate
-  real(8) :: t_fwd, t_rev
-  call system_clock(count_rate=prof_rate)
-  if(prof_rate > 0) then
-    t_fwd = real(prof_transpose_fwd_ticks,8)/real(prof_rate,8)
-    t_rev = real(prof_transpose_rev_ticks,8)/real(prof_rate,8)
-    write(*,'(a,i0,a,i0,a,es15.9,a,es15.9)') &
-      'PROFILE_TRANSPOSE rank=', mpp_pe(), ' name=transpose_fourier calls=', &
-      prof_transpose_fwd_calls, ' time=', t_fwd, ' avg=', &
-      t_fwd/max(1,prof_transpose_fwd_calls)
-    write(*,'(a,i0,a,i0,a,es15.9,a,es15.9)') &
-      'PROFILE_TRANSPOSE rank=', mpp_pe(), ' name=reverse_transpose_fourier calls=', &
-      prof_transpose_rev_calls, ' time=', t_rev, ' avg=', &
-      t_rev/max(1,prof_transpose_rev_calls)
-  end if
-end block
+call prof_transpose_dump()   ! T3-followup: final flush; revert after measurement
 
 deallocate(lon_boundaries_global, lat_boundaries_global)
 call grid_fourier_end
@@ -1126,6 +1111,37 @@ module_is_initialized = .false.
 
 return
 end subroutine transforms_end
+
+!-------------------------------------------------------------------------
+! T3-followup (temporary; revert after measurement): write the running
+! transpose timing totals to a per-PE file, throttled to bound I/O. The final
+! file holds the totals independent of whether transforms_end is ever called.
+subroutine prof_transpose_dump()
+  integer, save :: nd = 0
+  integer :: u
+  integer(8) :: rate
+  real(8) :: t_fwd, t_rev
+  character(len=64) :: fn
+
+  nd = nd + 1
+  if(mod(nd,200) /= 0) return
+
+  call system_clock(count_rate=rate)
+  if(rate <= 0) return
+  t_fwd = real(prof_transpose_fwd_ticks,8)/real(rate,8)
+  t_rev = real(prof_transpose_rev_ticks,8)/real(rate,8)
+
+  write(fn,'(a,i4.4,a)') 'PROFILE_TRANSPOSE_rank', mpp_pe(), '.txt'
+  open(newunit=u, file=trim(fn), status='replace', action='write')
+  write(u,'(a,i0,a,i0,a,es16.9,a,es16.9)') 'rank=', mpp_pe(), &
+    ' name=transpose_fourier calls=', prof_transpose_fwd_calls, &
+    ' time=', t_fwd, ' avg=', t_fwd/real(max(1,prof_transpose_fwd_calls),8)
+  write(u,'(a,i0,a,i0,a,es16.9,a,es16.9)') 'rank=', mpp_pe(), &
+    ' name=reverse_transpose_fourier calls=', prof_transpose_rev_calls, &
+    ' time=', t_rev, ' avg=', t_rev/real(max(1,prof_transpose_rev_calls),8)
+  close(u)
+  return
+end subroutine prof_transpose_dump
 !-------------------------------------------------------------------------
 
 end module transforms_mod
