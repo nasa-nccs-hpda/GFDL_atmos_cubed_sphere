@@ -26,6 +26,16 @@ ORIGINAL_SPECTRAL_DYNAMICS = "atmos_spectral/model/spectral_dynamics.F90"
 OVERLAY_SPECTRAL_DYNAMICS = (
     "extra/local_overrides/spectral_dynamics/spectral_dynamics.F90"
 )
+ORIGINAL_TRANSFORMS = "atmos_spectral/tools/transforms.F90"
+OVERLAY_TRANSFORMS_TOP = "extra/local_overrides/transforms_top/transforms.F90"
+ORIGINAL_GRID_FOURIER = "atmos_spectral/tools/grid_fourier.F90"
+OVERLAY_GRID_FOURIER_STAGE = (
+    "extra/local_overrides/transforms_top/grid_fourier.F90"
+)
+ORIGINAL_SPHERICAL_FOURIER = "atmos_spectral/tools/spherical_fourier.F90"
+OVERLAY_SPHERICAL_FOURIER_STAGE = (
+    "extra/local_overrides/transforms_top/spherical_fourier.F90"
+)
 ORIGINAL_VERT_ADVECTION = "atmos_shared/vert_advection/vert_advection.F90"
 OVERLAY_VERT_ADVECTION = "extra/local_overrides/vert_advection/vert_advection.F90"
 ORIGINAL_FV_ADVECTION = "atmos_spectral/model/fv_advection.F90"
@@ -296,6 +306,167 @@ class HeldSuarezDynamicsDeepProfileCodeBase(DryCodeBase):
         return super(HeldSuarezDynamicsDeepProfileCodeBase, self).compile(*args, **kwargs)
 
 
+class HeldSuarezTransformsTopProfileCodeBase(DryCodeBase):
+    """Held-Suarez executable with top-level transform module timers."""
+
+    executable_name = "held_suarez_profile_transforms_top.x"
+
+    def configure_overlay(self):
+        paths = self.read_path_names(
+            P(self.srcdir, "extra", "model", self.name, "path_names")
+        )
+
+        replaced_spectral_dynamics = 0
+        replaced_transforms = 0
+        overlay_paths = []
+        for path in paths:
+            if path == ORIGINAL_SPECTRAL_DYNAMICS:
+                overlay_paths.append(OVERLAY_SPECTRAL_DYNAMICS)
+                replaced_spectral_dynamics += 1
+            elif path == ORIGINAL_TRANSFORMS:
+                overlay_paths.append(OVERLAY_TRANSFORMS_TOP)
+                replaced_transforms += 1
+            else:
+                overlay_paths.append(path)
+
+        if replaced_spectral_dynamics != 1:
+            raise RuntimeError(
+                "Expected exactly one %s entry in dry path_names, found %d"
+                % (ORIGINAL_SPECTRAL_DYNAMICS, replaced_spectral_dynamics)
+            )
+        if replaced_transforms != 1:
+            raise RuntimeError(
+                "Expected exactly one %s entry in dry path_names, found %d"
+                % (ORIGINAL_TRANSFORMS, replaced_transforms)
+            )
+
+        self.path_names = overlay_paths
+        for flag in ("-DPROFILE_DYNAMICS_DEEP", "-DPROFILE_TRANSFORMS_TOP"):
+            if flag not in self.compile_flags:
+                self.compile_flags.append(flag)
+
+    def compile(self, *args, **kwargs):
+        self.configure_overlay()
+        return super(HeldSuarezTransformsTopProfileCodeBase, self).compile(*args, **kwargs)
+
+
+class HeldSuarezTransformsStageProfileCodeBase(DryCodeBase):
+    """Held-Suarez executable with FFT and Legendre transform sub-timers."""
+
+    executable_name = "held_suarez_profile_transforms_stage.x"
+
+    def configure_overlay(self):
+        paths = self.read_path_names(
+            P(self.srcdir, "extra", "model", self.name, "path_names")
+        )
+
+        replaced_spectral_dynamics = 0
+        replaced_transforms = 0
+        replaced_grid_fourier = 0
+        replaced_spherical_fourier = 0
+        overlay_paths = []
+        for path in paths:
+            if path == ORIGINAL_SPECTRAL_DYNAMICS:
+                overlay_paths.append(OVERLAY_SPECTRAL_DYNAMICS)
+                replaced_spectral_dynamics += 1
+            elif path == ORIGINAL_TRANSFORMS:
+                overlay_paths.append(OVERLAY_TRANSFORMS_TOP)
+                replaced_transforms += 1
+            elif path == ORIGINAL_GRID_FOURIER:
+                overlay_paths.append(OVERLAY_GRID_FOURIER_STAGE)
+                replaced_grid_fourier += 1
+            elif path == ORIGINAL_SPHERICAL_FOURIER:
+                overlay_paths.append(OVERLAY_SPHERICAL_FOURIER_STAGE)
+                replaced_spherical_fourier += 1
+            else:
+                overlay_paths.append(path)
+
+        expected = (
+            (ORIGINAL_SPECTRAL_DYNAMICS, replaced_spectral_dynamics),
+            (ORIGINAL_TRANSFORMS, replaced_transforms),
+            (ORIGINAL_GRID_FOURIER, replaced_grid_fourier),
+            (ORIGINAL_SPHERICAL_FOURIER, replaced_spherical_fourier),
+        )
+        for path, count in expected:
+            if count != 1:
+                raise RuntimeError(
+                    "Expected exactly one %s entry in dry path_names, found %d"
+                    % (path, count)
+                )
+
+        self.path_names = overlay_paths
+        for flag in (
+            "-DPROFILE_DYNAMICS_DEEP",
+            "-DPROFILE_TRANSFORMS_TOP",
+            "-DPROFILE_TRANSFORMS_STAGE",
+        ):
+            if flag not in self.compile_flags:
+                self.compile_flags.append(flag)
+
+    def compile(self, *args, **kwargs):
+        self.configure_overlay()
+        return super(HeldSuarezTransformsStageProfileCodeBase, self).compile(*args, **kwargs)
+
+
+class HeldSuarezTransformsWrapperProfileCodeBase(DryCodeBase):
+    """Held-Suarez executable with transform wrapper-gap timers."""
+
+    executable_name = "held_suarez_profile_transforms_wrapper.x"
+
+    def configure_overlay(self):
+        paths = self.read_path_names(
+            P(self.srcdir, "extra", "model", self.name, "path_names")
+        )
+
+        replaced_spectral_dynamics = 0
+        replaced_transforms = 0
+        replaced_grid_fourier = 0
+        replaced_spherical_fourier = 0
+        overlay_paths = []
+        for path in paths:
+            if path == ORIGINAL_SPECTRAL_DYNAMICS:
+                overlay_paths.append(OVERLAY_SPECTRAL_DYNAMICS)
+                replaced_spectral_dynamics += 1
+            elif path == ORIGINAL_TRANSFORMS:
+                overlay_paths.append(OVERLAY_TRANSFORMS_TOP)
+                replaced_transforms += 1
+            elif path == ORIGINAL_GRID_FOURIER:
+                overlay_paths.append(OVERLAY_GRID_FOURIER_STAGE)
+                replaced_grid_fourier += 1
+            elif path == ORIGINAL_SPHERICAL_FOURIER:
+                overlay_paths.append(OVERLAY_SPHERICAL_FOURIER_STAGE)
+                replaced_spherical_fourier += 1
+            else:
+                overlay_paths.append(path)
+
+        expected = (
+            (ORIGINAL_SPECTRAL_DYNAMICS, replaced_spectral_dynamics),
+            (ORIGINAL_TRANSFORMS, replaced_transforms),
+            (ORIGINAL_GRID_FOURIER, replaced_grid_fourier),
+            (ORIGINAL_SPHERICAL_FOURIER, replaced_spherical_fourier),
+        )
+        for path, count in expected:
+            if count != 1:
+                raise RuntimeError(
+                    "Expected exactly one %s entry in dry path_names, found %d"
+                    % (path, count)
+                )
+
+        self.path_names = overlay_paths
+        for flag in (
+            "-DPROFILE_DYNAMICS_DEEP",
+            "-DPROFILE_TRANSFORMS_TOP",
+            "-DPROFILE_TRANSFORMS_STAGE",
+            "-DPROFILE_TRANSFORMS_WRAPPER",
+        ):
+            if flag not in self.compile_flags:
+                self.compile_flags.append(flag)
+
+    def compile(self, *args, **kwargs):
+        self.configure_overlay()
+        return super(HeldSuarezTransformsWrapperProfileCodeBase, self).compile(*args, **kwargs)
+
+
 class HeldSuarezFvSemiYCodeBase(DryCodeBase):
     """Held-Suarez executable with fv_advection::semi_y_3d calling C++."""
 
@@ -562,6 +733,27 @@ def build_profile_dynamics_deep():
     return cb.executable_fullpath
 
 
+def build_profile_transforms_top():
+    cb = HeldSuarezTransformsTopProfileCodeBase.from_directory(GFDL_BASE)
+    use_gfdl_base_templates(cb)
+    cb.compile()
+    return cb.executable_fullpath
+
+
+def build_profile_transforms_stage():
+    cb = HeldSuarezTransformsStageProfileCodeBase.from_directory(GFDL_BASE)
+    use_gfdl_base_templates(cb)
+    cb.compile()
+    return cb.executable_fullpath
+
+
+def build_profile_transforms_wrapper():
+    cb = HeldSuarezTransformsWrapperProfileCodeBase.from_directory(GFDL_BASE)
+    use_gfdl_base_templates(cb)
+    cb.compile()
+    return cb.executable_fullpath
+
+
 def build_fv_semi_y():
     cb = HeldSuarezFvSemiYCodeBase.from_directory(GFDL_BASE)
     use_gfdl_base_templates(cb)
@@ -603,6 +795,9 @@ def main():
             "profile_vert_advection",
             "profile_dynamics_regions",
             "profile_dynamics_deep",
+            "profile_transforms_top",
+            "profile_transforms_stage",
+            "profile_transforms_wrapper",
             "fv_semi_y",
             "fv_semi_y_cuda",
             "fv_kernels",
@@ -649,6 +844,18 @@ def main():
     if args.target == "profile_dynamics_deep":
         print("Building Held-Suarez deep dynamics profile via CodeBase.compile()")
         print("Generated:", build_profile_dynamics_deep())
+
+    if args.target == "profile_transforms_top":
+        print("Building Held-Suarez top-level transforms profile via CodeBase.compile()")
+        print("Generated:", build_profile_transforms_top())
+
+    if args.target == "profile_transforms_stage":
+        print("Building Held-Suarez FFT/Legendre transforms profile via CodeBase.compile()")
+        print("Generated:", build_profile_transforms_stage())
+
+    if args.target == "profile_transforms_wrapper":
+        print("Building Held-Suarez transform wrapper-gap profile via CodeBase.compile()")
+        print("Generated:", build_profile_transforms_wrapper())
 
     if args.target == "fv_semi_y":
         print("Building Held-Suarez fv semi_y_3d C++ overlay via CodeBase.compile()")
