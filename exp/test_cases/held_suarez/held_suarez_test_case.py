@@ -105,6 +105,9 @@ if __name__ == '__main__':
     
     cb.compile()  # compile the source code to working directory $GFDL_WORK/codebase
 
+    # T3-followup (temporary; revert after measurement): a single 30-day segment
+    # so the transpose instrumentation totals match this one process's
+    # "Total runtime" mpp_clock exactly (no per-segment overwrite ambiguity).
     exp.run(1, num_cores=NCORES, use_restart=False)
-    for i in range(2, 13):
-        exp.run(i, num_cores=NCORES)  # use the restart i-1 by default
+    # for i in range(2, 13):
+    #     exp.run(i, num_cores=NCORES)  # use the restart i-1 by default
