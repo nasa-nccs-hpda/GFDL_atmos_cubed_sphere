@@ -9,12 +9,47 @@ executable by name.
 
 import argparse
 import os
+import shutil
 import sys
 from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 HELD_SUAREZ_CASE_DIR = REPO_ROOT / "exp" / "test_cases" / "held_suarez"
+
+
+def prepare_run_directory(exp, cb, num_cores):
+    """Write an Isca run directory without launching the generated mpirun."""
+    exp.clear_rundir()
+
+    rundir = Path(exp.rundir)
+    input_dir = rundir / "INPUT"
+    restart_dir = rundir / "RESTART"
+    input_dir.mkdir(parents=True, exist_ok=True)
+    restart_dir.mkdir(parents=True, exist_ok=True)
+    Path(exp.restartdir).mkdir(parents=True, exist_ok=True)
+
+    cb.write_source_control_status(str(rundir / "git_hash_used.txt"))
+    exp.write_namelist(str(rundir))
+    exp.write_field_table(str(rundir))
+    exp.write_diag_table(str(rundir))
+
+    for filename in exp.inputfiles:
+        shutil.copy2(filename, input_dir / Path(filename).name)
+
+    runscript = exp.templates.get_template("run.sh")
+    runscript.stream(
+        rundir=exp.rundir,
+        execdir=cb.builddir,
+        executable=cb.executable_name,
+        env_source=exp.env_source,
+        mpirun_opts="",
+        num_cores=num_cores,
+        run_idb=False,
+        nice_score=0,
+    ).dump(str(rundir / "run.sh"))
+
+    shutil.copy2(cb.executable_fullpath, rundir / cb.executable_name)
 
 
 def main():
@@ -39,6 +74,14 @@ def main():
         "--overwrite",
         action="store_true",
         help="Overwrite existing run0001 output. Default preserves existing output.",
+    )
+    parser.add_argument(
+        "--prepare-only",
+        action="store_true",
+        help=(
+            "Write input.nml, tables, executable, and run.sh, then stop before "
+            "launching the model. Useful for external srun/apptainer launches."
+        ),
     )
     args = parser.parse_args()
 
@@ -92,6 +135,11 @@ def main():
     print("HS_PROFILE =", os.environ.get("HS_PROFILE", ""))
     print("Data dir =", exp.datadir)
     print("Run dir =", exp.rundir)
+
+    if args.prepare_only:
+        prepare_run_directory(exp, cb, args.num_cores)
+        print("Prepared run directory =", exp.rundir)
+        return
 
     exp.run(
         1,
