@@ -1131,10 +1131,12 @@ subroutine prof_transpose_dump()
   t_fwd = real(prof_transpose_fwd_ticks,8)/real(rate,8)
   t_rev = real(prof_transpose_rev_ticks,8)/real(rate,8)
 
-  ! Write to $GFDL_BASE/logs so the file persists after the run dir is cleaned.
-  call get_environment_variable('GFDL_BASE', base, blen)
+  ! Write to $HOME (always set, preserved by mpirun/srun, persists after the
+  ! Isca run dir is emptied). Fall back to $GFDL_BASE, then cwd.
+  call get_environment_variable('HOME', base, blen)
+  if(blen <= 0) call get_environment_variable('GFDL_BASE', base, blen)
   if(blen > 0) then
-    write(fn,'(a,a,i4.4,a)') trim(base), '/logs/PROFILE_TRANSPOSE_rank', mpp_pe(), '.txt'
+    write(fn,'(a,a,i4.4,a)') trim(base), '/PROFILE_TRANSPOSE_rank', mpp_pe(), '.txt'
   else
     write(fn,'(a,i4.4,a)') 'PROFILE_TRANSPOSE_rank', mpp_pe(), '.txt'
   end if
