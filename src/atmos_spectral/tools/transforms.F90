@@ -205,11 +205,6 @@ integer :: npes
 integer, dimension(2) :: grid_layout, spectral_layout
 integer :: xmaxsize, ymaxsize   !used for dimensioning in transpose routines
 logical :: debug=.FALSE.
-
-! Temporary transpose timing (T3-followup): system_clock accumulators, printed
-! per-PE in transforms_end. Revert after the measurement run.
-integer(8) :: prof_transpose_fwd_ticks=0, prof_transpose_rev_ticks=0
-integer    :: prof_transpose_fwd_calls=0, prof_transpose_rev_calls=0
 integer :: ms, me, ns, ne, is, ie, js, je
 
 real, allocatable, dimension(:) :: lat_boundaries_global, lon_boundaries_global
@@ -980,13 +975,10 @@ subroutine reverse_transpose_fourier( fourier_s, fourier_g )
   integer :: i,j,k, jj, jp, jm, pp, pm, nput, nget, jpos
   type(domain1D) :: spectral_domain_x, grid_domain_y
   integer, dimension(0:grid_layout(2)-1) :: pelist, ygridsize, xspecsize, xsbegin, xsend
-  integer(8) :: prof_c0, prof_c1
 
   if(.not.module_is_initialized) then
     call error_mesg('reverse_transpose_fourier','transforms module is not initialized', FATAL)
   end if
-
-  call system_clock(prof_c0)
 
   call mpp_get_domain_components( grid_domain, y=grid_domain_y )
   call mpp_get_domain_components( spectral_domain, x=spectral_domain_x )
@@ -1015,10 +1007,6 @@ subroutine reverse_transpose_fourier( fourier_s, fourier_g )
      end do
   end do
   call mpp_sync()
-  call system_clock(prof_c1)
-  prof_transpose_rev_ticks = prof_transpose_rev_ticks + (prof_c1 - prof_c0)
-  prof_transpose_rev_calls = prof_transpose_rev_calls + 1
-  call prof_transpose_dump()
   return
 end subroutine reverse_transpose_fourier
 
@@ -1031,13 +1019,10 @@ subroutine transpose_fourier( fourier_g, fourier_s )
   integer :: i,j,k, ii, ip, im, pp, pm, nput, nget, ipos, jp
   type(domain1D) :: spectral_domain_x, grid_domain_y
   integer, dimension(0:spectral_layout(1)-1) :: pelist, ygridsize, xspecsize, xsbegin, xsend
-  integer(8) :: prof_c0, prof_c1
 
   if(.not.module_is_initialized) then
     call error_mesg('transpose_fourier','transforms module is not initialized', FATAL)
   end if
-
-  call system_clock(prof_c0)
 
   call mpp_get_domain_components( grid_domain, y=grid_domain_y )
   call mpp_get_domain_components( spectral_domain, x=spectral_domain_x )
@@ -1067,10 +1052,6 @@ subroutine transpose_fourier( fourier_g, fourier_s )
                         get_data=fourier_s(1,1,1,im), glen=nget, from_pe=pm )
   end do
   call mpp_sync()
-  call system_clock(prof_c1)
-  prof_transpose_fwd_ticks = prof_transpose_fwd_ticks + (prof_c1 - prof_c0)
-  prof_transpose_fwd_calls = prof_transpose_fwd_calls + 1
-  call prof_transpose_dump()
   return
 end subroutine transpose_fourier
 
@@ -1101,8 +1082,6 @@ subroutine transforms_end
 
 if(.not.module_is_initialized) return
 
-call prof_transpose_dump()   ! T3-followup: final flush; revert after measurement
-
 deallocate(lon_boundaries_global, lat_boundaries_global)
 call grid_fourier_end
 call spherical_fourier_end
@@ -1111,45 +1090,6 @@ module_is_initialized = .false.
 
 return
 end subroutine transforms_end
-
-!-------------------------------------------------------------------------
-! T3-followup (temporary; revert after measurement): write the running
-! transpose timing totals to a per-PE file, throttled to bound I/O. The final
-! file holds the totals independent of whether transforms_end is ever called.
-subroutine prof_transpose_dump()
-  integer, save :: nd = 0
-  integer :: u, blen
-  integer(8) :: rate
-  real(8) :: t_fwd, t_rev
-  character(len=256) :: fn, base
-
-  nd = nd + 1
-  if(mod(nd,200) /= 0) return
-
-  call system_clock(count_rate=rate)
-  if(rate <= 0) return
-  t_fwd = real(prof_transpose_fwd_ticks,8)/real(rate,8)
-  t_rev = real(prof_transpose_rev_ticks,8)/real(rate,8)
-
-  ! Write to $HOME (always set, preserved by mpirun/srun, persists after the
-  ! Isca run dir is emptied). Fall back to $GFDL_BASE, then cwd.
-  call get_environment_variable('HOME', base, blen)
-  if(blen <= 0) call get_environment_variable('GFDL_BASE', base, blen)
-  if(blen > 0) then
-    write(fn,'(a,a,i4.4,a)') trim(base), '/PROFILE_TRANSPOSE_rank', mpp_pe(), '.txt'
-  else
-    write(fn,'(a,i4.4,a)') 'PROFILE_TRANSPOSE_rank', mpp_pe(), '.txt'
-  end if
-  open(newunit=u, file=trim(fn), status='replace', action='write')
-  write(u,'(a,i0,a,i0,a,es16.9,a,es16.9)') 'rank=', mpp_pe(), &
-    ' name=transpose_fourier calls=', prof_transpose_fwd_calls, &
-    ' time=', t_fwd, ' avg=', t_fwd/real(max(1,prof_transpose_fwd_calls),8)
-  write(u,'(a,i0,a,i0,a,es16.9,a,es16.9)') 'rank=', mpp_pe(), &
-    ' name=reverse_transpose_fourier calls=', prof_transpose_rev_calls, &
-    ' time=', t_rev, ' avg=', t_rev/real(max(1,prof_transpose_rev_calls),8)
-  close(u)
-  return
-end subroutine prof_transpose_dump
 !-------------------------------------------------------------------------
 
 end module transforms_mod
