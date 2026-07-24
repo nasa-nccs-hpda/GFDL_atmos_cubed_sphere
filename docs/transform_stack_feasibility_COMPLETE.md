@@ -42,19 +42,14 @@ honest share is **~24%**. Always measure on 1-rank-per-core.
 - Resident compute + host-staged transpose → **~neutral** (staging cost cancels compute saved).
 - Resident compute + CUDA-aware-MPI / NCCL device-to-device transpose → **the only path with a gain**, and even then modest at this config.
 
-## Open decision for whoever picks this up
+## Decision
 
-The analysis is done; the next move is a **judgment call**, not more measurement:
-
-- **(A) Scope the NCCL transpose port** — the identified prize. A CUDA-aware-MPI
-  redesign on the resident spine, not a compute port. Largest effort.
-- **(B) Re-check the payoff at higher res / rank-per-GPU** *before* committing —
-  recommended gate. This is where the case gets materially stronger (per-rank
-  matrices fill the GPU, compute fraction of the region rises).
-- **(C) Cheap CPU-only fix** — the reverse-transpose load imbalance (ranks 11–15
-  at ~29% vs ~21%) is a pure `mpp_transmit` decomposition issue, recoverable with
-  no GPU work.
-- **(D) Shelve** — the verdict is committed; revisit later.
+**Not pursuing this strategy for now (2026-07-24).** The measured payoff at
+T42L25 / 16 ranks (~1.1–1.2× whole-model) does not justify the multi-week
+CUDA-aware-MPI transpose redesign at this configuration. The analysis is
+self-contained and committed; if this is revisited, the strongest case is at
+rank-per-GPU / higher resolution, and a cheap CPU-only option (the
+reverse-transpose load imbalance) remains available independent of any GPU work.
 
 ## Document chain (derivation, in order)
 
