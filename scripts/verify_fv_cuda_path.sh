@@ -27,6 +27,7 @@ if [[ ! -f "${COMPILE_LOG}" ]]; then
   missing=1
 else
   check_log compile 'USE_CUDA_FV_ADVECTION_KERNELS= 1' "${COMPILE_LOG}"
+  check_log compile 'Building press_and_geopot CUDA library' "${COMPILE_LOG}"
   check_log compile 'FV_KERNELS_FORCE_CLEAN_NATIVE= 1' "${COMPILE_LOG}"
   check_log compile 'Removing existing FV kernels native builddir for clean rebuild' "${COMPILE_LOG}"
   check_log compile 'Generated:' "${COMPILE_LOG}"
@@ -40,15 +41,17 @@ else
   check_log runtime 'name=a_grid_advection_stage1' "${RUN_LOG}"
   check_log runtime 'name=a_grid_advection_stage2' "${RUN_LOG}"
   check_log runtime 'PROFILE_FV_ADVECTION_KERNEL backend=cuda' "${RUN_LOG}"
+  check_log runtime 'PRESS_GEOPOT_CUDA_RUNTIME version=column_cuda_20260724' "${RUN_LOG}"
+  check_log runtime 'PROFILE_PRESS_GEOPOT backend=cuda' "${RUN_LOG}"
 fi
 
 if [[ "${missing}" != "0" ]]; then
   echo
-  echo "The latest CUDA run did not prove it used the widened a_grid CUDA path."
+  echo "The latest CUDA run did not prove it used the widened FV plus press/geopot CUDA path."
   echo "Rebuild/rerun with:"
   echo "  FV_KERNELS_FORCE_CLEAN_NATIVE=1 FV_KERNELS_OVERWRITE=1 scripts/compare_fv_kernels_cpu_gpu.sh"
   exit 1
 fi
 
 echo
-echo "CUDA widened a_grid path verified."
+echo "CUDA widened FV plus press/geopot path verified."

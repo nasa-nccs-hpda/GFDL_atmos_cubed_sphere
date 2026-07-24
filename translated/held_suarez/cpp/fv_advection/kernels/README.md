@@ -67,14 +67,14 @@ comparison workflow:
 FV_KERNELS_OVERWRITE=1 scripts/compare_fv_kernels_cpu_gpu.sh
 ```
 
-By default this compares CPU with 16 MPI ranks against CUDA with 1 MPI rank:
+By default this compares CPU with 16 MPI ranks against CUDA with 16 MPI ranks:
 
 ```sh
 FV_KERNELS_CPU_NUM_CORES=16
-FV_KERNELS_CUDA_NUM_CORES=1
+FV_KERNELS_CUDA_NUM_CORES=16
 ```
 
-To search for the best CUDA rank count on a node:
+To search for the best CUDA rank count on a node, including fewer ranks:
 
 ```sh
 FV_KERNELS_CUDA_RANK_SWEEP="1 2 4 8 16" scripts/sweep_fv_cuda_ranks.sh

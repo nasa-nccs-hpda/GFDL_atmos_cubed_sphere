@@ -33,6 +33,7 @@ OVERLAY_FV_ADVECTION = "extra/local_overrides/fv_advection/fv_advection.F90"
 OVERLAY_FV_ADVECTION_KERNELS = (
     "extra/local_overrides/fv_advection_kernels/fv_advection.F90"
 )
+ORIGINAL_PRESS_AND_GEOPOT = "atmos_spectral/model/press_and_geopot.F90"
 
 # Relative to the normal Isca source root (<code>/src).  The repository has
 # translated/ at the same level as src/.
@@ -54,6 +55,12 @@ FV_KERNELS_INTERFACE = (
 )
 FV_KERNELS_LIBRARY_DIR = "../translated/held_suarez/cpp/fv_advection/kernels"
 FV_KERNELS_LIBRARY = FV_KERNELS_LIBRARY_DIR + "/libfv_advection_kernels.a"
+PRESS_GEOPOT_INTERFACE = (
+    "../translated/held_suarez/cpp/press_and_geopot/fortran/"
+    "press_and_geopot_c_interface.F90"
+)
+PRESS_GEOPOT_LIBRARY_DIR = "../translated/held_suarez/cpp/press_and_geopot"
+PRESS_GEOPOT_LIBRARY = PRESS_GEOPOT_LIBRARY_DIR + "/libpress_and_geopot_cuda.a"
 
 
 def use_gfdl_base_templates(codebase):
@@ -415,6 +422,9 @@ class HeldSuarezFvKernelsCodeBase(DryCodeBase):
                 overlay_paths.append(FV_KERNELS_INTERFACE)
                 overlay_paths.append(OVERLAY_FV_ADVECTION_KERNELS)
                 replaced += 1
+            elif self.use_cuda and path == ORIGINAL_PRESS_AND_GEOPOT:
+                overlay_paths.append(PRESS_GEOPOT_INTERFACE)
+                overlay_paths.append(path)
             else:
                 overlay_paths.append(path)
 
@@ -431,6 +441,8 @@ class HeldSuarezFvKernelsCodeBase(DryCodeBase):
             flag = "-DUSE_CPP_FV_ADVECTION_KERNELS"
         if flag not in self.compile_flags:
             self.compile_flags.append(flag)
+        if self.use_cuda and "-DUSE_CUDA_PRESS_GEOPOT" not in self.compile_flags:
+            self.compile_flags.append("-DUSE_CUDA_PRESS_GEOPOT")
 
     def prepare_fv_kernels_library(self):
         force_clean_native = os.environ.get("FV_KERNELS_FORCE_CLEAN_NATIVE", "1")
@@ -482,9 +494,41 @@ class HeldSuarezFvKernelsCodeBase(DryCodeBase):
 
         shutil.copy2(str(lib_src), str(lib_dest_dir / "libfv_advection_kernels.a"))
 
+        if self.use_cuda:
+            self.prepare_press_geopot_library(lib_dest_dir, nvcc)
+
         executable = Path(self.builddir) / self.executable_name
         if executable.exists():
             executable.unlink()
+
+    def prepare_press_geopot_library(self, lib_dest_dir, nvcc):
+        lib_workdir = Path(self.srcdir) / PRESS_GEOPOT_LIBRARY_DIR
+        lib_src = Path(self.srcdir) / PRESS_GEOPOT_LIBRARY
+
+        if not lib_workdir.is_dir():
+            raise RuntimeError(
+                "press_and_geopot CUDA library source dir not found: %s" % lib_workdir
+            )
+
+        print("Building press_and_geopot CUDA library")
+        print("  workdir:", lib_workdir)
+        print("  NVCC:", shutil.which(nvcc) or nvcc)
+        if shutil.which(nvcc) is None and not Path(nvcc).exists():
+            raise RuntimeError(
+                "USE_CUDA_PRESS_GEOPOT was requested, but NVCC was not found. "
+                "Set NVCC to a valid CUDA compiler path or use a CUDA container."
+            )
+
+        subprocess.check_call(["make", "clean"], cwd=str(lib_workdir))
+        subprocess.check_call(
+            ["make", "NVCC=%s" % nvcc, "lib"],
+            cwd=str(lib_workdir),
+        )
+
+        if not lib_src.exists():
+            raise RuntimeError("press_and_geopot CUDA library not found: %s" % lib_src)
+
+        shutil.copy2(str(lib_src), str(lib_dest_dir / "libpress_and_geopot_cuda.a"))
 
     def compile(self, *args, **kwargs):
         if os.environ.get("GFDL_ENV") != "hybrid":

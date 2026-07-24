@@ -39,6 +39,16 @@ use       fms_mod, only: mpp_pe, mpp_root_pe, error_mesg, FATAL, &
                          write_version_number
 
 use constants_mod, only: grav, rdgas, rvgas
+#ifdef USE_CUDA_PRESS_GEOPOT
+use press_and_geopot_c_interface, only: &
+                         PRESS_GEOPOT_OPTION_SIMMONS_BURRIDGE, &
+                         PRESS_GEOPOT_OPTION_MCM, &
+                         press_geopot_cuda_init_wrapper, &
+                         press_geopot_pressure_variables_cuda_wrapper, &
+                         press_geopot_compute_geopotential_cuda_wrapper, &
+                         press_geopot_cuda_finalize_wrapper, &
+                         press_geopot_cuda_profile_print_wrapper
+#endif
 
 implicit none
 
@@ -77,6 +87,10 @@ real    :: ln_top_level_factor
 integer :: num_levels
 logical :: use_virtual_temperature
 character(len=64) :: vert_difference_option
+#ifdef USE_CUDA_PRESS_GEOPOT
+logical :: cuda_press_geopot_available = .false.
+integer :: cuda_press_geopot_option
+#endif
  
 logical :: module_is_initialized = .false.
 
@@ -89,6 +103,9 @@ subroutine press_and_geopot_init(pk_in, bk_in, use_virtual_temperature_in, vert_
 real,    intent (in), dimension(:)   :: pk_in, bk_in
 logical, intent (in)                 :: use_virtual_temperature_in
 character(len=*), intent (in)        :: vert_difference_option_in
+#ifdef USE_CUDA_PRESS_GEOPOT
+integer :: cuda_ierr
+#endif
 
 if(module_is_initialized) return
 
@@ -103,6 +120,21 @@ bk = bk_in
 
 vert_difference_option  = vert_difference_option_in
 use_virtual_temperature = use_virtual_temperature_in
+#ifdef USE_CUDA_PRESS_GEOPOT
+if(trim(vert_difference_option) == 'simmons_and_burridge') then
+  cuda_press_geopot_option = PRESS_GEOPOT_OPTION_SIMMONS_BURRIDGE
+else if(trim(vert_difference_option) == 'mcm') then
+  cuda_press_geopot_option = PRESS_GEOPOT_OPTION_MCM
+else
+  cuda_press_geopot_option = -1
+endif
+if(cuda_press_geopot_option > 0) then
+  call press_geopot_cuda_init_wrapper(pk, bk, rdgas, rvgas, use_virtual_temperature, cuda_press_geopot_option, cuda_ierr)
+  cuda_press_geopot_available = (cuda_ierr == 0)
+else
+  cuda_press_geopot_available = .false.
+endif
+#endif
 
 ln_top_level_factor = -1.0
 
@@ -161,6 +193,14 @@ integer :: k
 if(.not.module_is_initialized) then
   call error_mesg('pressure_variables','press_and_geopot_init has not been called', FATAL)
 end if
+
+#ifdef USE_CUDA_PRESS_GEOPOT
+if(cuda_press_geopot_available) then
+  call press_geopot_pressure_variables_cuda_wrapper( &
+       p_half, ln_p_half, p_full, ln_p_full, surface_p, k)
+  if(k == 0) return
+endif
+#endif
 
 p_half = half_level_pressures(surface_p)
 
@@ -326,6 +366,19 @@ if(.not.module_is_initialized) then
   call error_mesg('compute_geopotential','press_and_geopot_init has not been called', FATAL)
 end if
 
+#ifdef USE_CUDA_PRESS_GEOPOT
+if(cuda_press_geopot_available) then
+  if(present(q_grid)) then
+    call press_geopot_compute_geopotential_cuda_wrapper( &
+         t_grid, ln_p_half, ln_p_full, surf_geopotential, geopot_full, geopot_half, k, q_grid)
+  else
+    call press_geopot_compute_geopotential_cuda_wrapper( &
+         t_grid, ln_p_half, ln_p_full, surf_geopotential, geopot_full, geopot_half, k)
+  endif
+  if(k == 0) return
+endif
+#endif
+
 num_levels = size(t_grid,3)
 
 geopot_half(:,:,num_levels+1) = surf_geopotential
@@ -456,6 +509,14 @@ end subroutine compute_pressures_and_heights_2d
 subroutine press_and_geopot_end
 
 if(.not.module_is_initialized) return
+
+#ifdef USE_CUDA_PRESS_GEOPOT
+if(cuda_press_geopot_available) then
+  call press_geopot_cuda_profile_print_wrapper()
+  call press_geopot_cuda_finalize_wrapper()
+  cuda_press_geopot_available = .false.
+endif
+#endif
 
 deallocate(pk, bk)
 module_is_initialized = .false.
