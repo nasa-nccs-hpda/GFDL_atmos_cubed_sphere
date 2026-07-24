@@ -433,6 +433,11 @@ class HeldSuarezFvKernelsCodeBase(DryCodeBase):
             self.compile_flags.append(flag)
 
     def prepare_fv_kernels_library(self):
+        force_clean_native = os.environ.get("FV_KERNELS_FORCE_CLEAN_NATIVE", "1")
+        force_clean_native = force_clean_native not in ("0", "false", "FALSE", "off", "OFF")
+        if force_clean_native and Path(self.builddir).exists():
+            print("Removing existing FV kernels native builddir for clean rebuild:", self.builddir)
+            shutil.rmtree(self.builddir)
         mkdir(self.builddir)
         lib_workdir = Path(self.srcdir) / FV_KERNELS_LIBRARY_DIR
         lib_src = Path(self.srcdir) / FV_KERNELS_LIBRARY

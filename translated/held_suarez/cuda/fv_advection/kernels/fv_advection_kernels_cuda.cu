@@ -26,6 +26,18 @@ profile::Counter cuda_h2d_counter{"cuda_h2d", 0, 0.0};
 profile::Counter cuda_d2h_counter{"cuda_d2h", 0, 0.0};
 profile::Counter cuda_sync_counter{"cuda_sync", 0, 0.0};
 
+void print_cuda_runtime_banner_once() {
+    static bool printed = false;
+    if (printed) {
+        return;
+    }
+    std::fprintf(stdout,
+                 "FV_CUDA_RUNTIME version=a_grid_stage_cuda_resident_20260724 "
+                 "features=clean-build-required,a_grid_stage1,a_grid_stage2,resident_uc_vc_q2_dq\n");
+    std::fflush(stdout);
+    printed = true;
+}
+
 void print_cuda_profile() {
     profile::print_counter("cuda", semi_x_counter);
     profile::print_counter("cuda", slope_x_counter);
@@ -44,6 +56,7 @@ void print_cuda_profile() {
 }
 
 void register_cuda_profile_report() {
+    print_cuda_runtime_banner_once();
     static bool registered = false;
     if (!registered && profile::enabled()) {
         std::atexit(print_cuda_profile);

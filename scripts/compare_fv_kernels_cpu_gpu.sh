@@ -33,3 +33,16 @@ echo "CPU log:  ${GFDL_BASE}/logs/fv_kernels_cpu_30day.log"
 echo "CUDA log: ${GFDL_BASE}/logs/fv_kernels_cuda_30day.log"
 echo "Profile marker: PROFILE_FV_ADVECTION_KERNEL"
 echo "Set FV_KERNELS_OVERWRITE=1 to replace previous experiment outputs."
+
+if ! grep -q 'FV_CUDA_RUNTIME version=a_grid_stage_cuda_resident_20260724' "${GFDL_BASE}/logs/fv_kernels_cuda_30day.log"; then
+  echo "WARNING: CUDA runtime banner for the widened a_grid path was not found."
+  echo "         The run may have used an old executable or old CUDA library."
+fi
+
+if ! grep -q 'name=a_grid_advection_stage1' "${GFDL_BASE}/logs/fv_kernels_cuda_30day.log"; then
+  echo "WARNING: a_grid_advection_stage1 profile marker was not found in CUDA log."
+fi
+
+if ! grep -q 'name=a_grid_advection_stage2' "${GFDL_BASE}/logs/fv_kernels_cuda_30day.log"; then
+  echo "WARNING: a_grid_advection_stage2 profile marker was not found in CUDA log."
+fi

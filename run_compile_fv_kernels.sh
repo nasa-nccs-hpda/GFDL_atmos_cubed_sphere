@@ -9,6 +9,7 @@ export GFDL_BASE=${GFDL_BASE_OVERRIDE:-${SCRIPT_DIR}}
 export GFDL_WORK=${GFDL_WORK:-${DEFAULT_PROJECT_ROOT}/isca_work}
 export GFDL_DATA=${GFDL_DATA:-${DEFAULT_PROJECT_ROOT}/isca_data}
 export USE_CUDA_FV_ADVECTION_KERNELS=${USE_CUDA_FV_ADVECTION_KERNELS:-0}
+export FV_KERNELS_FORCE_CLEAN_NATIVE=${FV_KERNELS_FORCE_CLEAN_NATIVE:-1}
 export NVCC=${NVCC:-nvcc}
 export APPTAINER_BIND_ROOT=${APPTAINER_BIND_ROOT:-/explore/nobackup/people/jacaraba}
 
@@ -40,6 +41,7 @@ export GFDL_DATA=${GFDL_DATA}
 export GFDL_ENV=hybrid
 export GFDL_MKMF_TEMPLATE=${TEMPLATE}
 export USE_CUDA_FV_ADVECTION_KERNELS=${USE_CUDA_FV_ADVECTION_KERNELS}
+export FV_KERNELS_FORCE_CLEAN_NATIVE=${FV_KERNELS_FORCE_CLEAN_NATIVE}
 export NVCC=${NVCC}
 
 export OMPI_MCA_rmaps_base_oversubscribe=1
@@ -55,6 +57,7 @@ echo 'nf-config=' \$(command -v nf-config || true)
 echo 'g++=' \$(command -v g++ || true)
 echo 'nvcc=' \$(command -v \${NVCC} || true)
 echo 'USE_CUDA_FV_ADVECTION_KERNELS=' \${USE_CUDA_FV_ADVECTION_KERNELS}
+echo 'FV_KERNELS_FORCE_CLEAN_NATIVE=' \${FV_KERNELS_FORCE_CLEAN_NATIVE}
 echo 'GFDL_MKMF_TEMPLATE=' \${GFDL_MKMF_TEMPLATE}
 echo 'TARGET=' ${TARGET}
 
