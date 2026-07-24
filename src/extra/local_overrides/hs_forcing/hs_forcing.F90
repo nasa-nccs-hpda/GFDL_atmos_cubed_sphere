@@ -35,7 +35,7 @@ use   interpolator_mod, only: interpolate_type, interpolator_init, &
 
 use      astronomy_mod, only: diurnal_exoplanet, astronomy_init, obliq, ecc
 #ifdef USE_CPP_HS_FORCE
-use hs_forcing_c_interface, only: hs_forcing_driver_c_wrapper, hs_forcing_profile_print
+use hs_forcing_c_interface, only: hs_forcing_driver_c_wrapper, hs_forcing_driver_cuda_fast_wrapper, hs_forcing_profile_print
 #endif
 #ifdef COLUMN_MODEL
 use       spec_mpp_mod, only: grid_domain, get_grid_domain 
@@ -155,13 +155,21 @@ subroutine hs_forcing ( is, ie, js, je, dt, Time, lon, lat, p_half, p_full, &
    integer, intent(in),    dimension(:,:)  , optional :: kbot
 !-----------------------------------------------------------------------
 
+#ifndef USE_CPP_HS_FORCE
    real, dimension(size(t,1),size(t,2))           :: ps, diss_heat, h_trop
    real, dimension(size(t,1),size(t,2),size(t,3)) :: ttnd, utnd, vtnd, teq, pmass
    real, dimension(size(r,1),size(r,2),size(r,3)) :: rst, rtnd
-   integer :: i, j, k, kb, n, num_tracers, ierr
+   integer :: i, j, k, kb, n, num_tracers
    logical :: used
    real    :: flux, sink, value
    character(len=128) :: scheme, params
+#else
+   real, dimension(size(t,1),size(t,2)) :: ps
+#ifndef USE_CUDA_HS_FORCE
+   real, dimension(size(t,1),size(t,2),size(t,3)) :: teq
+#endif
+   integer :: i, j, kb, ierr
+#endif
 
 #ifndef USE_CPP_HS_FORCE
 ! Original Fortran implementation (kept unchanged)
@@ -283,8 +291,13 @@ subroutine hs_forcing ( is, ie, js, je, dt, Time, lon, lat, p_half, p_full, &
       ps(:,:) = p_half(:,:,size(p_half,3))
   endif
 
+#ifdef USE_CUDA_HS_FORCE
+  call hs_forcing_driver_cuda_fast_wrapper(size(lon,1), size(lon,2), size(t,3), dt, &
+       hs_force_lat1d, ps, p_full, u, v, t, udt, vdt, tdt, ierr)
+#else
   call hs_forcing_driver_c_wrapper(size(lon,1), size(lon,2), size(t,3), dt, &
        hs_force_lon1d, hs_force_lat1d, ps, p_full, u, v, t, udt, vdt, tdt, teq, ierr)
+#endif
 
   if (ierr /= 0) call error_mesg('hs_forcing','hs_forcing_driver_c_wrapper failed', FATAL)
 
@@ -351,13 +364,17 @@ subroutine hs_forcing_init ( axes, Time, lonb, latb, lat )
       twopi = 2*PI
 
 #ifdef USE_CPP_HS_FORCE
+#ifndef USE_CUDA_HS_FORCE
       if (allocated(hs_force_lon1d)) deallocate(hs_force_lon1d)
-      if (allocated(hs_force_lat1d)) deallocate(hs_force_lat1d)
       allocate(hs_force_lon1d(size(lat,1)))
+#endif
+      if (allocated(hs_force_lat1d)) deallocate(hs_force_lat1d)
       allocate(hs_force_lat1d(size(lat,2)))
+#ifndef USE_CUDA_HS_FORCE
       do i = 1, size(lat,1)
         hs_force_lon1d(i) = 0.0
       enddo
+#endif
       do j = 1, size(lat,2)
         hs_force_lat1d(j) = lat(1,j)
       enddo
@@ -535,7 +552,9 @@ subroutine hs_forcing_end
 
 #ifdef USE_CPP_HS_FORCE
  call hs_forcing_profile_print()
+#ifndef USE_CUDA_HS_FORCE
  if (allocated(hs_force_lon1d)) deallocate(hs_force_lon1d)
+#endif
  if (allocated(hs_force_lat1d)) deallocate(hs_force_lat1d)
 #endif
 

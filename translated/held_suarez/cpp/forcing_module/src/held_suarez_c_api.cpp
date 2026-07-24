@@ -116,6 +116,16 @@ int hs_forcing_driver_c(
         hs_forcing::profile::Region::CInterface,
         static_cast<unsigned long long>(nlon) * nlat * nlev);
 
+    const Backend backend = requested_backend();
+    print_backend_banner_once(backend);
+    if (backend == Backend::Invalid) {
+        const char* env = std::getenv("HS_FORCE_BACKEND");
+        std::fprintf(stderr,
+                     "HS forcing backend error: invalid HS_FORCE_BACKEND='%s'. Use 'cpu' or 'cuda'.\n",
+                     env != nullptr ? env : "");
+        return HS_ERROR_INVALID_CONFIG;
+    }
+
     // Validate required inputs
     if (nlon <= 0 || nlat <= 0 || nlev <= 0) {
         return HS_ERROR_INVALID_DIMS;
@@ -123,7 +133,10 @@ int hs_forcing_driver_c(
 
     if (lat == nullptr || ps == nullptr || p_full == nullptr ||
         u == nullptr || v == nullptr || t == nullptr ||
-        udt == nullptr || vdt == nullptr || tdt == nullptr || teq == nullptr) {
+        udt == nullptr || vdt == nullptr || tdt == nullptr) {
+        return HS_ERROR_NULL_POINTER;
+    }
+    if (backend != Backend::Cuda && teq == nullptr) {
         return HS_ERROR_NULL_POINTER;
     }
 
@@ -164,16 +177,6 @@ int hs_forcing_driver_c(
     config.do_conserve_energy = do_conserve_energy;
     config.equilibrium_option = equilibrium_option;
     config.stratosphere_option = stratosphere_option;
-
-    const Backend backend = requested_backend();
-    print_backend_banner_once(backend);
-    if (backend == Backend::Invalid) {
-        const char* env = std::getenv("HS_FORCE_BACKEND");
-        std::fprintf(stderr,
-                     "HS forcing backend error: invalid HS_FORCE_BACKEND='%s'. Use 'cpu' or 'cuda'.\n",
-                     env != nullptr ? env : "");
-        return HS_ERROR_INVALID_CONFIG;
-    }
 
     if (backend == Backend::Cuda) {
 #ifdef USE_CUDA_HS_FORCE

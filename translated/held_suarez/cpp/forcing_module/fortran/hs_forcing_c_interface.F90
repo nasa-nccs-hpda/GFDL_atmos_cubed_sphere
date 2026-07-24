@@ -6,6 +6,7 @@ module hs_forcing_c_interface
 
   ! Public interface and constants
   public :: hs_forcing_driver_c_wrapper
+  public :: hs_forcing_driver_cuda_fast_wrapper
   public :: hs_forcing_profile_print
   public :: HS_SUCCESS, HS_ERROR_NULL_POINTER, HS_ERROR_INVALID_DIMS
   public :: HS_EQUILIBRIUM_HELD_SUAREZ, HS_EQUILIBRIUM_TOP_DOWN
@@ -32,6 +33,9 @@ module hs_forcing_c_interface
   logical :: hs_profile_enabled = .false.
   integer :: hs_profile_calls = 0
   real(c_double) :: hs_profile_seconds = 0.0_c_double
+  real(c_double), allocatable, target :: hs_lat2d_cache(:,:)
+  integer :: hs_lat2d_nlon = 0
+  integer :: hs_lat2d_nlat = 0
 
   ! C function interfaces
   interface
@@ -155,6 +159,67 @@ contains
 
     ierr = int(status)
   end subroutine hs_forcing_driver_c_wrapper
+
+  subroutine hs_forcing_driver_cuda_fast_wrapper(nlon, nlat, nlev, dt, &
+      lat, ps, p_full, u, v, t, udt, vdt, tdt, ierr)
+    integer, intent(in) :: nlon, nlat, nlev
+    real(c_double), intent(in) :: dt
+    real(c_double), intent(in), target :: lat(:)
+    real(c_double), intent(in), target :: ps(:,:)
+    real(c_double), intent(in), target :: p_full(:,:,:)
+    real(c_double), intent(in), target :: u(:,:,:), v(:,:,:), t(:,:,:)
+    real(c_double), intent(inout), target :: udt(:,:,:), vdt(:,:,:), tdt(:,:,:)
+    integer, intent(out) :: ierr
+
+    real(c_double) :: t_zero, t_strat, delh, delv, eps, P00, kappa
+    real(c_double) :: tka, tks, vkf, sigma_b
+    real(c_double) :: orbital_period, ecc, obliq, peri_time, smaxis
+    real(c_double) :: solar_const, stefan, albedo, lapse, h_a, tau_s
+    real(c_double) :: heat_capacity, ml_depth
+    integer(c_int) :: status
+    integer :: i, j
+    integer :: clock_start, clock_stop, clock_rate
+
+    if (hs_forcing_profile_is_enabled()) call system_clock(clock_start, clock_rate)
+
+    call hs_get_defaults_c(t_zero, t_strat, delh, delv, eps, P00, kappa, &
+      tka, tks, vkf, sigma_b, &
+      orbital_period, ecc, obliq, peri_time, smaxis, &
+      solar_const, stefan, albedo, lapse, h_a, tau_s, heat_capacity, ml_depth)
+
+    if (.not. allocated(hs_lat2d_cache) .or. hs_lat2d_nlon /= nlon .or. hs_lat2d_nlat /= nlat) then
+      if (allocated(hs_lat2d_cache)) deallocate(hs_lat2d_cache)
+      allocate(hs_lat2d_cache(nlon, nlat))
+      do j = 1, nlat
+        do i = 1, nlon
+          hs_lat2d_cache(i, j) = lat(j)
+        end do
+      end do
+      hs_lat2d_nlon = nlon
+      hs_lat2d_nlat = nlat
+    endif
+
+    status = hs_forcing_driver_c( &
+      int(nlon, c_int), int(nlat, c_int), int(nlev, c_int), 0_c_int, dt, &
+      c_null_ptr, c_loc(hs_lat2d_cache), c_loc(ps), c_loc(p_full), c_null_ptr, &
+      c_loc(u), c_loc(v), c_loc(t), c_null_ptr, c_null_ptr, c_null_ptr, c_null_ptr, &
+      t_zero, t_strat, delh, delv, eps, P00, kappa, tka, tks, vkf, &
+      sigma_b, orbital_period, ecc, obliq, peri_time, smaxis, &
+      solar_const, stefan, albedo, lapse, h_a, tau_s, heat_capacity, ml_depth, &
+      0_c_int, HS_EQUILIBRIUM_HELD_SUAREZ, HS_STRATOSPHERE_DEFAULT, &
+      c_loc(udt), c_loc(vdt), c_loc(tdt), c_null_ptr, c_null_ptr, c_null_ptr, c_null_ptr)
+
+    if (hs_profile_enabled) then
+      call system_clock(clock_stop)
+      hs_profile_calls = hs_profile_calls + 1
+      if (clock_rate > 0) then
+        hs_profile_seconds = hs_profile_seconds + &
+          real(clock_stop - clock_start, c_double) / real(clock_rate, c_double)
+      end if
+    end if
+
+    ierr = int(status)
+  end subroutine hs_forcing_driver_cuda_fast_wrapper
 
   logical function hs_forcing_profile_is_enabled()
     character(len=32) :: env

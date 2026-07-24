@@ -105,6 +105,9 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
         self.path_names = overlay_paths
         if "-DUSE_CPP_HS_FORCE" not in self.compile_flags:
             self.compile_flags.append("-DUSE_CPP_HS_FORCE")
+        if os.environ.get("USE_CUDA_HS_FORCE") == "1":
+            if "-DUSE_CUDA_HS_FORCE" not in self.compile_flags:
+                self.compile_flags.append("-DUSE_CUDA_HS_FORCE")
 
     def prepare_hybrid_library(self):
         force_clean_native = os.environ.get("HYBRID_FORCE_CLEAN_NATIVE", "1")

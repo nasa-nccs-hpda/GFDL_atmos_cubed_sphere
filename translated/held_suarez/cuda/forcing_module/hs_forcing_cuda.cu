@@ -264,6 +264,11 @@ int hs_forcing_driver_cuda(
     const std::size_t size_3d = size_2d * static_cast<std::size_t>(nlev);
 
     const bool copy_teq = env_enabled("HS_FORCE_COPY_TEQ", false);
+    if (copy_teq && teq == nullptr) {
+        std::fprintf(stderr,
+                     "HS CUDA backend error: HS_FORCE_COPY_TEQ=1 requires a host teq array.\n");
+        return HS_ERROR_NULL_POINTER;
+    }
 
     if (!g_banner_printed) {
         std::fprintf(stderr,
