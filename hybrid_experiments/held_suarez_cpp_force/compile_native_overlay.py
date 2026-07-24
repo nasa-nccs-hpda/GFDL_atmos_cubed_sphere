@@ -107,6 +107,11 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
             self.compile_flags.append("-DUSE_CPP_HS_FORCE")
 
     def prepare_hybrid_library(self):
+        force_clean_native = os.environ.get("HYBRID_FORCE_CLEAN_NATIVE", "1")
+        force_clean_native = force_clean_native not in ("0", "false", "FALSE", "off", "OFF")
+        if force_clean_native and Path(self.builddir).exists():
+            print("Removing existing hybrid native builddir for clean rebuild:", self.builddir)
+            shutil.rmtree(self.builddir)
         mkdir(self.builddir)
         lib_workdir = Path(self.srcdir) / HS_FORCE_LIBRARY_DIR
         lib_src = Path(self.srcdir) / HS_FORCE_LIBRARY

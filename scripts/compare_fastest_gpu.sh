@@ -41,8 +41,8 @@ if ! grep -q 'HS_FORCE_RUNTIME version=combined_cuda_20260724 backend=cuda' "${G
   exit 31
 fi
 
-if ! grep -q 'HS_FORCE_CUDA_RUNTIME version=persistent_buffers_20260724' "${GFDL_BASE}/logs/fastest_gpu_cuda_30day.log"; then
-  echo "ERROR: persistent-buffer CUDA forcing runtime banner missing."
+if ! grep -q 'HS_FORCE_CUDA_RUNTIME version=fused_persistent_20260724' "${GFDL_BASE}/logs/fastest_gpu_cuda_30day.log"; then
+  echo "ERROR: fused persistent CUDA forcing runtime banner missing."
   exit 32
 fi
 

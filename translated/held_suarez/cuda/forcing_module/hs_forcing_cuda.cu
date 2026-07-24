@@ -15,6 +15,7 @@ namespace {
 struct DeviceBuffers {
     std::size_t size_2d = 0;
     std::size_t size_3d = 0;
+    bool static_fields_ready = false;
     double* lat = nullptr;
     double* ps = nullptr;
     double* p_full = nullptr;
@@ -64,6 +65,7 @@ void free_buffers()
     free_ptr(g_buffers.mask);
     g_buffers.size_2d = 0;
     g_buffers.size_3d = 0;
+    g_buffers.static_fields_ready = false;
 }
 
 int alloc_ptr(double*& ptr, std::size_t count, const char* name)
@@ -121,53 +123,7 @@ bool env_enabled(const char* name, bool default_value)
 
 } // namespace
 
-__global__ void rayleigh_accumulate_kernel(
-    int size_3d,
-    int nlon,
-    int nlat,
-    int nlev,
-    const double* ps,
-    const double* p_full,
-    const double* u,
-    const double* v,
-    double vkf,
-    double sigma_b,
-    const double* mask,
-    double* udt,
-    double* vdt)
-{
-    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx >= size_3d) {
-        return;
-    }
-
-    const int plane = nlon * nlat;
-    const int k = idx / plane;
-    if (k >= nlev) {
-        return;
-    }
-    const int idx_2d = idx - k * plane;
-    const double sigma = p_full[idx] / ps[idx_2d];
-    double utnd = 0.0;
-    double vtnd = 0.0;
-
-    if (sigma <= 1.0 && sigma > sigma_b) {
-        const double vcoeff = -vkf / (1.0 - sigma_b);
-        const double vfactr = vcoeff * (sigma - sigma_b);
-        utnd = vfactr * u[idx];
-        vtnd = vfactr * v[idx];
-    }
-
-    if (mask != nullptr) {
-        utnd *= mask[idx];
-        vtnd *= mask[idx];
-    }
-
-    udt[idx] += utnd;
-    vdt[idx] += vtnd;
-}
-
-__global__ void newtonian_accumulate_kernel(
+__global__ void hs_forcing_accumulate_kernel(
     int size_3d,
     int nlon,
     int nlat,
@@ -175,6 +131,8 @@ __global__ void newtonian_accumulate_kernel(
     const double* lat,
     const double* ps,
     const double* p_full,
+    const double* u,
+    const double* v,
     const double* t,
     double t_zero,
     double t_strat,
@@ -185,8 +143,11 @@ __global__ void newtonian_accumulate_kernel(
     double kappa,
     double tka,
     double tks,
+    double vkf,
     double sigma_b,
     const double* mask,
+    double* udt,
+    double* vdt,
     double* tdt,
     double* teq)
 {
@@ -201,6 +162,16 @@ __global__ void newtonian_accumulate_kernel(
         return;
     }
     const int idx_2d = idx - k * plane;
+    const double sigma = p_full[idx] / ps[idx_2d];
+
+    double utnd = 0.0;
+    double vtnd = 0.0;
+    if (sigma <= 1.0 && sigma > sigma_b) {
+        const double vcoeff = -vkf / (1.0 - sigma_b);
+        const double vfactr = vcoeff * (sigma - sigma_b);
+        utnd = vfactr * u[idx];
+        vtnd = vfactr * v[idx];
+    }
 
     const double sin_lat = sin(lat[idx_2d]);
     const double sin_lat_2 = sin_lat * sin_lat;
@@ -213,7 +184,6 @@ __global__ void newtonian_accumulate_kernel(
     const double the = t_star - delv * cos_lat_2 * log(p_norm);
     double teq_value = fmax(the * pow(p_norm, kappa), tstr);
 
-    const double sigma = p_full[idx] / ps[idx_2d];
     double tdamp = tka;
     if (sigma <= 1.0 && sigma > sigma_b) {
         const double tcoeff = (tks - tka) / (1.0 - sigma_b);
@@ -223,10 +193,14 @@ __global__ void newtonian_accumulate_kernel(
 
     double ttnd = -tdamp * (t[idx] - teq_value);
     if (mask != nullptr) {
+        utnd *= mask[idx];
+        vtnd *= mask[idx];
         ttnd *= mask[idx];
         teq_value *= mask[idx];
     }
 
+    udt[idx] += utnd;
+    vdt[idx] += vtnd;
     tdt[idx] += ttnd;
     teq[idx] = teq_value;
 }
@@ -293,13 +267,18 @@ int hs_forcing_driver_cuda(
 
     if (!g_banner_printed) {
         std::fprintf(stderr,
-                     "HS_FORCE_CUDA_RUNTIME version=persistent_buffers_20260724 sync=implicit copy_teq=%d size_3d=%zu\n",
+                     "HS_FORCE_CUDA_RUNTIME version=fused_persistent_20260724 sync=implicit copy_teq=%d size_3d=%zu\n",
                      copy_teq ? 1 : 0, size_3d);
         g_banner_printed = true;
     }
 
     ierr = ensure_buffers(size_2d, size_3d);
-    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.lat, lat, size_2d, "copy lat");
+    if (ierr == HS_SUCCESS && !g_buffers.static_fields_ready) {
+        ierr = copy_h2d(g_buffers.lat, lat, size_2d, "copy lat");
+        if (ierr == HS_SUCCESS) {
+            g_buffers.static_fields_ready = true;
+        }
+    }
     if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.ps, ps, size_2d, "copy ps");
     if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.p_full, p_full, size_3d, "copy p_full");
     if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.u, u, size_3d, "copy u");
@@ -308,7 +287,6 @@ int hs_forcing_driver_cuda(
     if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.udt, udt, size_3d, "copy udt");
     if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.vdt, vdt, size_3d, "copy vdt");
     if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.tdt, tdt, size_3d, "copy tdt");
-    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.teq, teq, size_3d, "copy teq");
     if (ierr == HS_SUCCESS && mask != nullptr) ierr = copy_h2d(g_buffers.mask, mask, size_3d, "copy mask");
     if (ierr != HS_SUCCESS) {
         return ierr;
@@ -317,22 +295,14 @@ int hs_forcing_driver_cuda(
     const int threads = 256;
     const int blocks = static_cast<int>((size_3d + threads - 1) / threads);
 
-    rayleigh_accumulate_kernel<<<blocks, threads>>>(
-        static_cast<int>(size_3d), nlon, nlat, nlev,
+    hs_forcing_accumulate_kernel<<<blocks, threads>>>(
+        static_cast<int>(size_3d), nlon, nlat, nlev, g_buffers.lat,
         g_buffers.ps, g_buffers.p_full, g_buffers.u, g_buffers.v,
+        g_buffers.t, config.t_zero, config.t_strat, config.delh, config.delv,
+        config.eps, config.P00, config.kappa, config.tka, config.tks,
         config.vkf, config.sigma_b, mask != nullptr ? g_buffers.mask : nullptr,
-        g_buffers.udt, g_buffers.vdt);
-    ierr = check_cuda(cudaGetLastError(), "rayleigh_accumulate_kernel launch");
-
-    if (ierr == HS_SUCCESS) {
-        newtonian_accumulate_kernel<<<blocks, threads>>>(
-            static_cast<int>(size_3d), nlon, nlat, nlev,
-            g_buffers.lat, g_buffers.ps, g_buffers.p_full, g_buffers.t,
-            config.t_zero, config.t_strat, config.delh, config.delv, config.eps,
-            config.P00, config.kappa, config.tka, config.tks, config.sigma_b,
-            mask != nullptr ? g_buffers.mask : nullptr, g_buffers.tdt, g_buffers.teq);
-        ierr = check_cuda(cudaGetLastError(), "newtonian_accumulate_kernel launch");
-    }
+        g_buffers.udt, g_buffers.vdt, g_buffers.tdt, g_buffers.teq);
+    ierr = check_cuda(cudaGetLastError(), "hs_forcing_accumulate_kernel launch");
 
     if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(udt, g_buffers.udt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy udt to host");
     if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(vdt, g_buffers.vdt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy vdt to host");

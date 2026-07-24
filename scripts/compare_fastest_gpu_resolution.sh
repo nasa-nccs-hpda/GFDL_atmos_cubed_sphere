@@ -127,8 +127,8 @@ if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cuda" ]] &&
 fi
 
 if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cuda" ]] && \
-   ! grep -q 'HS_FORCE_CUDA_RUNTIME version=persistent_buffers_20260724' "${CUDA_LOG}"; then
-  echo "ERROR: persistent-buffer CUDA forcing runtime banner missing."
+   ! grep -q 'HS_FORCE_CUDA_RUNTIME version=fused_persistent_20260724' "${CUDA_LOG}"; then
+  echo "ERROR: fused persistent CUDA forcing runtime banner missing."
   exit 32
 fi
 
