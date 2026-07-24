@@ -39,6 +39,8 @@ Current kernel names:
 - `vanleer_sphere_3d`
 - `advection_sphere_predictor`
 - `advection_sphere_corrector`
+- `a_grid_advection_stage1`
+- `a_grid_advection_stage2`
 
 The CUDA backend also reports aggregate phase counters:
 
@@ -53,12 +55,13 @@ synchronization, and copy-back time. Allocation is only expected when a buffer
 first appears or grows for a larger domain. Static grid metrics are copied once
 per stable host pointer and then reused from device memory.
 
-In the native CUDA overlay, `advection_sphere_3d` uses a two-stage fused CUDA
-path. The predictor stage computes `q1` and `q2`, then Fortran performs the
-required `mpp_update_domains(q1, advection_domain)` halo exchange. The
-corrector stage applies the x and spherical Van Leer updates in one CUDA entry
-point. `q2` stays resident on the device between those stages, and only the
-interior of `q1` is copied back before the Fortran halo update.
+In the native CUDA overlay, `a_grid_horiz_advection_3d` uses a two-stage CUDA
+path. Stage 1 computes `uc`, `vc`, optional divergence tendency, `q1`, and `q2`
+on the GPU. Fortran then performs the required
+`mpp_update_domains(q1, advection_domain)` halo exchange. Stage 2 applies the x
+and spherical Van Leer updates in one CUDA entry point. `uc`, `vc`, `q2`, and
+`dq_dt` stay resident on the device between stages, and only the interior of
+`q1` is copied back before the Fortran halo update.
 
 ## Required rebuild
 

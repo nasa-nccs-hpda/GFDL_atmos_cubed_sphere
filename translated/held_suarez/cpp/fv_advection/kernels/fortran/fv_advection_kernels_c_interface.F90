@@ -18,6 +18,8 @@ module fv_advection_kernels_c_interface
   public :: vanleer_sphere_3d_cuda_wrapper
   public :: advection_sphere_predictor_cuda_wrapper
   public :: advection_sphere_corrector_cuda_wrapper
+  public :: a_grid_advection_stage1_cuda_wrapper
+  public :: a_grid_advection_stage2_cuda_wrapper
 #endif
 
   interface
@@ -129,6 +131,24 @@ module fv_advection_kernels_c_interface
       type(c_ptr), value :: c, cc, dy, dy_plus, dy_minus, uc, vc, q1, q2, dq_dt
       integer(c_int) :: fv_advection_sphere_corrector_cuda_c
     end function fv_advection_sphere_corrector_cuda_c
+
+    function fv_a_grid_advection_stage1_cuda_c(nx, js, je, nz, dt, dx, flux_only, c, cc, dy, dyy, &
+        ua, vx, qx, dq_dt, q1) bind(C, name='fv_a_grid_advection_stage1_cuda_c')
+      use, intrinsic :: iso_c_binding, only: c_double, c_int, c_ptr
+      integer(c_int), value :: nx, js, je, nz, flux_only
+      real(c_double), value :: dt, dx
+      type(c_ptr), value :: c, cc, dy, dyy, ua, vx, qx, dq_dt, q1
+      integer(c_int) :: fv_a_grid_advection_stage1_cuda_c
+    end function fv_a_grid_advection_stage1_cuda_c
+
+    function fv_a_grid_advection_stage2_cuda_c(nx, ny_total, js, je, nz, dt, dx, monotone, c, cc, dy, &
+        dy_plus, dy_minus, q1, dq_dt) bind(C, name='fv_a_grid_advection_stage2_cuda_c')
+      use, intrinsic :: iso_c_binding, only: c_double, c_int, c_ptr
+      integer(c_int), value :: nx, ny_total, js, je, nz, monotone
+      real(c_double), value :: dt, dx
+      type(c_ptr), value :: c, cc, dy, dy_plus, dy_minus, q1, dq_dt
+      integer(c_int) :: fv_a_grid_advection_stage2_cuda_c
+    end function fv_a_grid_advection_stage2_cuda_c
 #endif
   end interface
 
@@ -301,6 +321,39 @@ contains
       int(je,c_int), int(nz,c_int), dt, dx, monotone_flag(monotone), c_loc(c), c_loc(cc), c_loc(dy), &
       c_loc(dy_plus), c_loc(dy_minus), c_loc(uc), c_loc(vc), c_loc(q1), c_loc(q2), c_loc(dq_dt)))
   end subroutine advection_sphere_corrector_cuda_wrapper
+
+  subroutine a_grid_advection_stage1_cuda_wrapper(nx, js, je, nz, dt, dx, flux_only, c, cc, dy, dyy, &
+      ua, vx, qx, dq_dt, q1, ierr)
+    integer, intent(in) :: nx, js, je, nz
+    real(c_double), intent(in) :: dt, dx
+    logical, intent(in) :: flux_only
+    real(c_double), intent(in), target :: c(js:je), cc(js:je+1)
+    real(c_double), intent(in), target :: dy(js-1:je+1), dyy(js:je+1)
+    real(c_double), intent(in), target :: ua(nx,js:je,nz)
+    real(c_double), intent(in), target :: vx(nx,js-2:je+2,nz), qx(nx,js-2:je+2,nz)
+    real(c_double), intent(inout), target :: dq_dt(nx,js:je,nz)
+    real(c_double), intent(inout), target :: q1(nx,js-2:je+2,nz)
+    integer, intent(out) :: ierr
+    ierr = int(fv_a_grid_advection_stage1_cuda_c(int(nx,c_int), int(js,c_int), int(je,c_int), &
+      int(nz,c_int), dt, dx, monotone_flag(flux_only), c_loc(c), c_loc(cc), c_loc(dy), c_loc(dyy), &
+      c_loc(ua), c_loc(vx), c_loc(qx), c_loc(dq_dt), c_loc(q1)))
+  end subroutine a_grid_advection_stage1_cuda_wrapper
+
+  subroutine a_grid_advection_stage2_cuda_wrapper(nx, ny_total, js, je, nz, dt, dx, monotone, c, cc, dy, &
+      dy_plus, dy_minus, q1, dq_dt, ierr)
+    integer, intent(in) :: nx, ny_total, js, je, nz
+    real(c_double), intent(in) :: dt, dx
+    logical, intent(in) :: monotone
+    real(c_double), intent(in), target :: c(js:je), cc(js:je+1)
+    real(c_double), intent(in), target :: dy(js-1:je+1)
+    real(c_double), intent(in), target :: dy_plus(js-1:je+1), dy_minus(js-1:je+1)
+    real(c_double), intent(in), target :: q1(nx,js-2:je+2,nz)
+    real(c_double), intent(inout), target :: dq_dt(nx,js:je,nz)
+    integer, intent(out) :: ierr
+    ierr = int(fv_a_grid_advection_stage2_cuda_c(int(nx,c_int), int(ny_total,c_int), int(js,c_int), &
+      int(je,c_int), int(nz,c_int), dt, dx, monotone_flag(monotone), c_loc(c), c_loc(cc), c_loc(dy), &
+      c_loc(dy_plus), c_loc(dy_minus), c_loc(q1), c_loc(dq_dt)))
+  end subroutine a_grid_advection_stage2_cuda_wrapper
 #endif
 
 end module fv_advection_kernels_c_interface

@@ -43,7 +43,8 @@ use fv_advection_kernels_c_interface, only : semi_x_3d_cpp_wrapper, slope_x_cpp_
 use fv_advection_kernels_c_interface, only : semi_x_3d_cuda_wrapper, slope_x_cuda_wrapper, &
   integer_flux_x_cuda_wrapper, vanleer_x_3d_cuda_wrapper, slope_sphere_cuda_wrapper, &
   vanleer_sphere_3d_cuda_wrapper, advection_sphere_predictor_cuda_wrapper, &
-  advection_sphere_corrector_cuda_wrapper
+  advection_sphere_corrector_cuda_wrapper, a_grid_advection_stage1_cuda_wrapper, &
+  a_grid_advection_stage2_cuda_wrapper
 #endif
 
 implicit none
@@ -150,11 +151,17 @@ real, intent(inout), dimension(:,js:,:) :: dq_dt
 logical, optional, intent(in) :: flux
 
 real, dimension(nx,js-2:je+2,size(q,3)) :: vx, qx
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+real, dimension(nx,js-2:je+2,size(q,3)) :: q1
+#endif
 real, dimension(nx,js  :je+1,size(q,3)) :: vc
 real, dimension(nx,js  :je  ,size(q,3)) :: uc, div
 
 integer :: i, j, k
 integer, dimension(nx) :: ii
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+integer :: ierr
+#endif
 
 logical :: flux_local
 
@@ -194,6 +201,36 @@ if(je == ny) then
     qx(i,ny+2,:) =   qx(ii(i),ny-1,:)
   end do
 endif
+
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+call a_grid_advection_stage1_cuda_wrapper(nx, js, je, size(q,3), dt, dx, flux_local, &
+  c(js:je), cc(js:je+1), dy(js-1:je+1), dyy(js:je+1), ua(:,js:je,:), &
+  vx(:,js-2:je+2,:), qx(:,js-2:je+2,:), dq_dt(:,js:je,:), q1, ierr)
+if (ierr /= 0) call error_mesg('fv_advection_mod', 'a_grid advection stage1 CUDA wrapper failed', FATAL)
+
+call mpp_update_domains(q1, advection_domain)
+
+if(js == 1) then
+  do i = 1,nx
+    q1(i, 0,:) =   q1(ii(i),1,:)
+    q1(i,-1,:) =   q1(ii(i),2,:)
+  end do
+endif
+
+if(je == ny) then
+  do i = 1,nx
+    q1(i,ny+1,:) =   q1(ii(i),ny  ,:)
+    q1(i,ny+2,:) =   q1(ii(i),ny-1,:)
+  end do
+endif
+
+call a_grid_advection_stage2_cuda_wrapper(nx, ny, js, je, size(q,3), dt, dx, monotone, &
+  c(js:je), cc(js:je+1), dy(js-1:je+1), dy_plus(js-1:je+1), dy_minus(js-1:je+1), &
+  q1(:,js-2:je+2,:), dq_dt(:,js:je,:), ierr)
+if (ierr /= 0) call error_mesg('fv_advection_mod', 'a_grid advection stage2 CUDA wrapper failed', FATAL)
+
+return
+#endif
 
 uc(2:nx,js:je,:)   = 0.5*(ua(1:nx-1, js:je  ,:) + ua(2:nx,js:je,:))
 uc(1   ,js:je,:)   = 0.5*(ua(nx    , js:je  ,:) + ua(1   ,js:je,:))

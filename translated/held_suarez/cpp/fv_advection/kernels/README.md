@@ -52,10 +52,11 @@ The CUDA fixture reuses device buffers across repeated calls. With
 allocation growth, host-to-device copies, synchronization, and device-to-host
 copies. Grid metric arrays such as `c`, `cc`, `dy`, `dy_plus`, and `dy_minus`
 are cached on the device when the same host storage is reused across calls.
-The native CUDA overlay also uses a two-stage fused `advection_sphere_3d` path:
-predictor kernels run before the required Fortran halo update, and the x plus
-spherical Van Leer corrector kernels run in one CUDA entry point after it. The
-`q2` predictor field stays on the device across the halo update.
+The native CUDA overlay also uses a two-stage fused `a_grid_horiz_advection_3d`
+path. Stage 1 computes local setup, optional divergence tendency, and predictor
+fields before the required Fortran halo update. Stage 2 runs the x plus
+spherical Van Leer corrector kernels after it. `uc`, `vc`, `q2`, and `dq_dt`
+stay on the device across the halo update.
 
 ## CPU/GPU Model Comparison
 

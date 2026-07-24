@@ -19,14 +19,16 @@ The CUDA wrapper now avoids repeated device discovery, reuses device buffers
 across calls, and caches static grid metrics on the device when the same host
 storage is reused.
 
-The native CUDA overlay uses a two-stage fused `advection_sphere_3d` path:
+The native CUDA overlay uses a two-stage fused `a_grid_horiz_advection_3d`
+path:
 
-1. CUDA predictor stage computes `q1` and `q2`.
+1. CUDA stage 1 computes local setup, optional divergence tendency, `q1`, and
+   `q2`.
 2. Fortran performs the required `mpp_update_domains(q1, advection_domain)`.
-3. CUDA corrector stage applies `vanleer_x_3d` and `vanleer_sphere_3d`.
+3. CUDA stage 2 applies `vanleer_x_3d` and `vanleer_sphere_3d`.
 
-The predictor keeps `q2` resident on the device for the corrector stage and
-copies back only the interior of `q1` needed for the Fortran halo exchange.
+CUDA keeps `uc`, `vc`, `q2`, and `dq_dt` resident on the device between stages
+and copies back only the interior of `q1` needed for the Fortran halo exchange.
 
 Run the current CPU/GPU comparison workflow with:
 
