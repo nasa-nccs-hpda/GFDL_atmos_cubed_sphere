@@ -11,6 +11,8 @@ export GFDL_WORK="${GFDL_WORK:-${DEFAULT_PROJECT_ROOT}/isca_work}"
 export GFDL_DATA="${GFDL_DATA:-${DEFAULT_PROJECT_ROOT}/isca_data}"
 export FV_KERNELS_OVERWRITE="${FV_KERNELS_OVERWRITE:-0}"
 export FV_KERNELS_PROFILE="${FV_KERNELS_PROFILE:-1}"
+export FV_KERNELS_CUDA_NUM_CORES="${FV_KERNELS_CUDA_NUM_CORES:-1}"
+export FV_KERNELS_CUDA_EXP_NAME="${FV_KERNELS_CUDA_EXP_NAME:-held_suarez_fv_kernels_cuda_30day}"
 export APPTAINER_BIND_ROOT="${APPTAINER_BIND_ROOT:-/explore/nobackup/people/jacaraba}"
 
 LOG="${GFDL_BASE}/logs/fv_kernels_cuda_30day.log"
@@ -25,8 +27,9 @@ echo "GFDL_WORK=${GFDL_WORK}"
 echo "GFDL_DATA=${GFDL_DATA}"
 echo "FV_KERNELS_OVERWRITE=${FV_KERNELS_OVERWRITE}"
 echo "FV_KERNELS_PROFILE=${FV_KERNELS_PROFILE}"
+echo "FV_KERNELS_CUDA_NUM_CORES=${FV_KERNELS_CUDA_NUM_CORES}"
 echo "executable=held_suarez_fv_kernels_cuda.x"
-echo "experiment=held_suarez_fv_kernels_cuda_30day"
+echo "experiment=${FV_KERNELS_CUDA_EXP_NAME}"
 
 overwrite_arg=()
 if [[ "${FV_KERNELS_OVERWRITE}" == "1" ]]; then
@@ -48,10 +51,10 @@ export OMPI_MCA_btl_vader_single_copy_mechanism=none
 cd '${GFDL_BASE}'
 time python3 hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py \
   --executable-name held_suarez_fv_kernels_cuda.x \
-  --exp-name held_suarez_fv_kernels_cuda_30day \
+  --exp-name '${FV_KERNELS_CUDA_EXP_NAME}' \
   --days 30 \
   --production-diag \
-  --num-cores 16 \
+  --num-cores '${FV_KERNELS_CUDA_NUM_CORES}' \
   ${overwrite_arg[*]}
 "
 

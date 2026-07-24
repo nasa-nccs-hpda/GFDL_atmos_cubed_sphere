@@ -11,6 +11,8 @@ export GFDL_WORK="${GFDL_WORK:-${DEFAULT_PROJECT_ROOT}/isca_work}"
 export GFDL_DATA="${GFDL_DATA:-${DEFAULT_PROJECT_ROOT}/isca_data}"
 export FV_KERNELS_OVERWRITE="${FV_KERNELS_OVERWRITE:-0}"
 export FV_KERNELS_PROFILE="${FV_KERNELS_PROFILE:-0}"
+export FV_KERNELS_CPU_NUM_CORES="${FV_KERNELS_CPU_NUM_CORES:-16}"
+export FV_KERNELS_CUDA_NUM_CORES="${FV_KERNELS_CUDA_NUM_CORES:-1}"
 export APPTAINER_BIND_ROOT="${APPTAINER_BIND_ROOT:-/explore/nobackup/people/jacaraba}"
 
 LOG="${GFDL_BASE}/logs/fv_kernels_1day_smoke.log"
@@ -25,6 +27,8 @@ echo "GFDL_WORK=${GFDL_WORK}"
 echo "GFDL_DATA=${GFDL_DATA}"
 echo "FV_KERNELS_OVERWRITE=${FV_KERNELS_OVERWRITE}"
 echo "FV_KERNELS_PROFILE=${FV_KERNELS_PROFILE}"
+echo "FV_KERNELS_CPU_NUM_CORES=${FV_KERNELS_CPU_NUM_CORES}"
+echo "FV_KERNELS_CUDA_NUM_CORES=${FV_KERNELS_CUDA_NUM_CORES}"
 echo "cpu_executable=held_suarez_fv_kernels.x"
 echo "cuda_executable=held_suarez_fv_kernels_cuda.x"
 echo "cpu_experiment=held_suarez_fv_kernels_1day"
@@ -55,7 +59,7 @@ time python3 hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py 
   --exp-name held_suarez_fv_kernels_1day \
   --days 1 \
   --production-diag \
-  --num-cores 16 \
+  --num-cores '${FV_KERNELS_CPU_NUM_CORES}' \
   ${overwrite_arg[*]}
 
 echo '=== CUDA kernel-bundle smoke ==='
@@ -64,7 +68,7 @@ time python3 hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py 
   --exp-name held_suarez_fv_kernels_cuda_1day \
   --days 1 \
   --production-diag \
-  --num-cores 16 \
+  --num-cores '${FV_KERNELS_CUDA_NUM_CORES}' \
   ${overwrite_arg[*]}
 "
 

@@ -9,6 +9,7 @@ PROFILE_RE = re.compile(
     r"rank=(?P<rank>\S+) name=(?P<name>\S+) calls=(?P<calls>\d+) "
     r"time=(?P<time>[0-9.eE+-]+) avg=(?P<avg>[0-9.eE+-]+)"
 )
+REAL_RE = re.compile(r"^real\s+(?:(?P<min>\d+)m)?(?P<sec>[0-9.]+)s$")
 
 
 def parse_log(path):
@@ -23,6 +24,18 @@ def parse_log(path):
         item["avg"] = float(item["avg"])
         rows.append(item)
     return rows
+
+
+def parse_real_seconds(path):
+    values = []
+    for line in Path(path).read_text(errors="replace").splitlines():
+        match = REAL_RE.match(line.strip())
+        if not match:
+            continue
+        minutes = int(match.group("min") or 0)
+        seconds = float(match.group("sec"))
+        values.append(minutes * 60.0 + seconds)
+    return values
 
 
 def summarize(rows):
@@ -73,7 +86,12 @@ def main():
     all_rows = []
     for log in args.logs:
         rows = parse_log(log)
-        print(f"{log}: {len(rows)} profile rows")
+        real_times = parse_real_seconds(log)
+        if real_times:
+            real_text = ", ".join(f"{value:.3f}s" for value in real_times)
+            print(f"{log}: {len(rows)} profile rows, real={real_text}")
+        else:
+            print(f"{log}: {len(rows)} profile rows")
         all_rows.extend(rows)
 
     summaries = summarize(all_rows)
