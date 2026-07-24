@@ -40,6 +40,22 @@ def main():
         action="store_true",
         help="Overwrite existing run0001 output. Default preserves existing output.",
     )
+    parser.add_argument(
+        "--diag-frequency-days",
+        type=int,
+        default=30,
+        help="Diagnostic output cadence in days when not using --production-diag.",
+    )
+    parser.add_argument(
+        "--production-diag",
+        action="store_true",
+        help="Use the original Held-Suarez diagnostic cadence exactly.",
+    )
+    parser.add_argument(
+        "--no-tracer-field-table",
+        action="store_true",
+        help="Use an empty field_table for dry-core performance benchmarking.",
+    )
     args = parser.parse_args()
 
     sys.path.insert(0, str(HELD_SUAREZ_CASE_DIR))
@@ -72,6 +88,25 @@ def main():
             }
         }
     )
+    if not args.production_diag:
+        for output_file in exp.diag_table.files.values():
+            output_file["freq"] = args.diag_frequency_days
+            output_file["units"] = "days"
+            output_file["time_units"] = "days"
+
+    if args.no_tracer_field_table:
+        empty_field_table = Path(os.environ["GFDL_WORK"]) / "empty_dry_field_table"
+        empty_field_table.parent.mkdir(parents=True, exist_ok=True)
+        empty_field_table.write_text("\n")
+        exp.field_table_file = str(empty_field_table)
+        exp.update_namelist(
+            {
+                "spectral_dynamics_nml": {
+                    "do_water_correction": False,
+                    "use_virtual_temperature": False,
+                }
+            }
+        )
 
     print("Experiment =", exp.name)
     print("Backend =", args.backend_label)
@@ -81,7 +116,9 @@ def main():
     print("Days =", args.days)
     print("dt_atmos =", args.dt_atmos)
     print("num_cores =", args.num_cores)
-    print("production_diag = True")
+    print("production_diag =", args.production_diag)
+    print("diag_frequency_days =", args.diag_frequency_days)
+    print("no_tracer_field_table =", args.no_tracer_field_table)
     print("overwrite =", args.overwrite)
     print("GFDL_BASE =", os.environ.get("GFDL_BASE"))
     print("Codebase dir =", codebase_dir)

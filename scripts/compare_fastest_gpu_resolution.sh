@@ -19,9 +19,12 @@ FAST_GPU_OVERWRITE="${FAST_GPU_OVERWRITE:-1}"
 FAST_GPU_REBUILD="${FAST_GPU_REBUILD:-1}"
 FAST_GPU_RUN_MODE="${FAST_GPU_RUN_MODE:-both}"
 FAST_GPU_CASE_SUFFIX="${FAST_GPU_CASE_SUFFIX:-}"
+FAST_GPU_PRODUCTION_DIAG="${FAST_GPU_PRODUCTION_DIAG:-1}"
+FAST_GPU_DIAG_FREQUENCY_DAYS="${FAST_GPU_DIAG_FREQUENCY_DAYS:-${FAST_GPU_DAYS}}"
+FAST_GPU_NO_TRACERS="${FAST_GPU_NO_TRACERS:-0}"
 HS_PROFILE="${HS_PROFILE:-1}"
 HS_FORCE_COPY_TEQ="${HS_FORCE_COPY_TEQ:-0}"
-USE_CUDA_TRANSFORMS="${USE_CUDA_TRANSFORMS:-1}"
+USE_CUDA_TRANSFORMS="${USE_CUDA_TRANSFORMS:-0}"
 
 if [[ -z "${FAST_GPU_DT_ATMOS:-}" ]]; then
   case "${FAST_GPU_RESOLUTION}" in
@@ -56,6 +59,9 @@ echo "FAST_GPU_OVERWRITE=${FAST_GPU_OVERWRITE}"
 echo "FAST_GPU_REBUILD=${FAST_GPU_REBUILD}"
 echo "FAST_GPU_RUN_MODE=${FAST_GPU_RUN_MODE}"
 echo "FAST_GPU_CASE_SUFFIX=${FAST_GPU_CASE_SUFFIX}"
+echo "FAST_GPU_PRODUCTION_DIAG=${FAST_GPU_PRODUCTION_DIAG}"
+echo "FAST_GPU_DIAG_FREQUENCY_DAYS=${FAST_GPU_DIAG_FREQUENCY_DAYS}"
+echo "FAST_GPU_NO_TRACERS=${FAST_GPU_NO_TRACERS}"
 echo "HS_PROFILE=${HS_PROFILE}"
 echo "HS_FORCE_COPY_TEQ=${HS_FORCE_COPY_TEQ}"
 echo "USE_CUDA_TRANSFORMS=${USE_CUDA_TRANSFORMS}"
@@ -75,6 +81,16 @@ if [[ "${FAST_GPU_OVERWRITE}" == "1" ]]; then
   overwrite_arg=(--overwrite)
 fi
 
+production_diag_arg=()
+if [[ "${FAST_GPU_PRODUCTION_DIAG}" == "1" ]]; then
+  production_diag_arg=(--production-diag)
+fi
+
+no_tracer_arg=()
+if [[ "${FAST_GPU_NO_TRACERS}" == "1" ]]; then
+  no_tracer_arg=(--no-tracer-field-table)
+fi
+
 run_backend() {
   local backend=$1
   local label=$2
@@ -92,6 +108,7 @@ export GFDL_WORK='${GFDL_WORK}'
 export GFDL_DATA='${GFDL_DATA}'
 export GFDL_ENV=hybrid
 export HS_FORCE_BACKEND='${backend}'
+export TRANSFORMS_BACKEND='${backend}'
 export HS_PROFILE='${HS_PROFILE}'
 export HS_FORCE_COPY_TEQ='${HS_FORCE_COPY_TEQ}'
 export OMPI_MCA_rmaps_base_oversubscribe=1
@@ -106,6 +123,9 @@ time python3 scripts/run_T85L25_case.py \
   --dt-atmos '${FAST_GPU_DT_ATMOS}' \
   --days '${FAST_GPU_DAYS}' \
   --num-cores '${FAST_GPU_NUM_CORES}' \
+  --diag-frequency-days '${FAST_GPU_DIAG_FREQUENCY_DAYS}' \
+  ${production_diag_arg[*]} \
+  ${no_tracer_arg[*]} \
   ${overwrite_arg[*]}
 " 2>&1 | tee "${log}"
 }

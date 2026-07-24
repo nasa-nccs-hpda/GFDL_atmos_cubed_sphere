@@ -4,6 +4,7 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(cd "${SCRIPT_DIR}/.." && pwd)
 GFDL_BASE="${GFDL_BASE:-${REPO_ROOT}}"
+VERIFY_CUDA_TRANSFORMS="${VERIFY_CUDA_TRANSFORMS:-0}"
 
 LOG="${1:-}"
 if [[ -z "${LOG}" ]]; then
@@ -32,15 +33,17 @@ echo "Checking ${LOG}"
 check_log 'HS_FORCE_RUNTIME version=combined_cuda_20260724 backend=cuda'
 check_log 'HS_FORCE_CUDA_RUNTIME version=fused_persistent_20260724'
 check_log 'copy_teq=0'
-check_log 'TRANSFORMS_CUDA_RUNTIME version=horizontal_fused_20260724'
+if [[ "${VERIFY_CUDA_TRANSFORMS}" == "1" ]]; then
+  check_log 'TRANSFORMS_CUDA_RUNTIME version=horizontal_fused_20260724'
+fi
 
 if [[ "${missing}" != "0" ]]; then
   echo
-  echo "This log did not use the latest fused CUDA forcing plus transform runtime."
+  echo "This log did not use the requested latest CUDA runtime."
   echo "Rebuild and rerun with:"
   echo "  FAST_GPU_REBUILD=1 FAST_GPU_RESOLUTION=T170 FAST_GPU_DAYS=2 scripts/run_fastest_gpu_resolution.sh"
   exit 1
 fi
 
 echo
-echo "Fastest GPU fused CUDA forcing plus transform path verified."
+echo "Fastest GPU fused CUDA forcing path verified."
