@@ -66,6 +66,16 @@ comparison workflow:
 FV_KERNELS_OVERWRITE=1 scripts/compare_fv_kernels_cpu_gpu.sh
 ```
 
+Default runtime paths are:
+
+- `CONTAINER=/lscratch/jacaraba/isca-sandbox`
+- `GFDL_WORK=/explore/nobackup/people/jacaraba/projects/AgenticAI/isca_work`
+- `GFDL_DATA=/explore/nobackup/people/jacaraba/projects/AgenticAI/isca_data`
+- `APPTAINER_BIND_ROOT=/explore/nobackup/people/jacaraba`
+
+Override any of these as environment variables if your container image or
+project directory has a different name.
+
 This builds:
 
 - `held_suarez_fv_kernels.x`

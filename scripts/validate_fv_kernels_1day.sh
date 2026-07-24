@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export GFDL_BASE="${GFDL_BASE:-/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere}"
-export GFDL_DATA="${GFDL_DATA:-/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data}"
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+REPO_ROOT=$(cd "${SCRIPT_DIR}/.." && pwd)
+DEFAULT_PROJECT_ROOT=/explore/nobackup/people/jacaraba/projects/AgenticAI
+
+export GFDL_BASE="${GFDL_BASE:-${REPO_ROOT}}"
+export GFDL_DATA="${GFDL_DATA:-${DEFAULT_PROJECT_ROOT}/isca_data}"
 
 LOG="${GFDL_BASE}/logs/fv_kernels_1day_model_validation.log"
 mkdir -p "${GFDL_BASE}/logs" "${GFDL_BASE}/tests/reports"
@@ -18,4 +22,3 @@ python3 tests/validate_T85L25_forcing_outputs.py \
   --markdown-out tests/reports/fv_advection_kernels_1day_model_validation_report.md \
   --json-out tests/reports/fv_advection_kernels_1day_model_validation_report.json \
   2>&1 | tee "${LOG}"
-

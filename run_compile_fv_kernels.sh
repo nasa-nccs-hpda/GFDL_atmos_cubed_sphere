@@ -1,14 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-CONTAINER=${CONTAINER:-/lscratch/jli30/isca-sandbox}
+CONTAINER=${CONTAINER:-/lscratch/jacaraba/isca-sandbox}
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+DEFAULT_PROJECT_ROOT=/explore/nobackup/people/jacaraba/projects/AgenticAI
 
 export GFDL_BASE=${GFDL_BASE_OVERRIDE:-${SCRIPT_DIR}}
-export GFDL_WORK=${GFDL_WORK:-/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work}
-export GFDL_DATA=${GFDL_DATA:-/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data}
+export GFDL_WORK=${GFDL_WORK:-${DEFAULT_PROJECT_ROOT}/isca_work}
+export GFDL_DATA=${GFDL_DATA:-${DEFAULT_PROJECT_ROOT}/isca_data}
 export USE_CUDA_FV_ADVECTION_KERNELS=${USE_CUDA_FV_ADVECTION_KERNELS:-0}
 export NVCC=${NVCC:-nvcc}
+export APPTAINER_BIND_ROOT=${APPTAINER_BIND_ROOT:-/explore/nobackup/people/jacaraba}
 
 LOG_DIR="${SCRIPT_DIR}/logs"
 mkdir -p "${LOG_DIR}"
@@ -27,7 +29,7 @@ LATEST="${LOG_DIR}/${LOG_PREFIX}_latest.log"
 
 set +e
 apptainer exec --nv \
-  --bind /explore/nobackup/people/jli30:/explore/nobackup/people/jli30 \
+  --bind "${APPTAINER_BIND_ROOT}:${APPTAINER_BIND_ROOT}" \
   "${CONTAINER}" \
   bash -lc "
 set -e

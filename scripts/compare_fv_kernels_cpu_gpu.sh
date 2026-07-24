@@ -3,10 +3,15 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(cd "${SCRIPT_DIR}/.." && pwd)
+DEFAULT_PROJECT_ROOT=/explore/nobackup/people/jacaraba/projects/AgenticAI
 
+export CONTAINER="${CONTAINER:-/lscratch/jacaraba/isca-sandbox}"
 export GFDL_BASE="${GFDL_BASE:-${REPO_ROOT}}"
+export GFDL_WORK="${GFDL_WORK:-${DEFAULT_PROJECT_ROOT}/isca_work}"
+export GFDL_DATA="${GFDL_DATA:-${DEFAULT_PROJECT_ROOT}/isca_data}"
 export FV_KERNELS_PROFILE="${FV_KERNELS_PROFILE:-1}"
 export FV_KERNELS_OVERWRITE="${FV_KERNELS_OVERWRITE:-0}"
+export APPTAINER_BIND_ROOT="${APPTAINER_BIND_ROOT:-/explore/nobackup/people/jacaraba}"
 
 echo "=== Build CPU fv_advection kernel bundle ==="
 USE_CUDA_FV_ADVECTION_KERNELS=0 "${REPO_ROOT}/run_compile_fv_kernels.sh"

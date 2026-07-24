@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CONTAINER="${CONTAINER:-/lscratch/jli30/isca-sandbox}"
-export GFDL_BASE="${GFDL_BASE:-/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere}"
-export GFDL_WORK="${GFDL_WORK:-/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work}"
-export GFDL_DATA="${GFDL_DATA:-/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data}"
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+REPO_ROOT=$(cd "${SCRIPT_DIR}/.." && pwd)
+DEFAULT_PROJECT_ROOT=/explore/nobackup/people/jacaraba/projects/AgenticAI
+
+CONTAINER="${CONTAINER:-/lscratch/jacaraba/isca-sandbox}"
+export GFDL_BASE="${GFDL_BASE:-${REPO_ROOT}}"
+export GFDL_WORK="${GFDL_WORK:-${DEFAULT_PROJECT_ROOT}/isca_work}"
+export GFDL_DATA="${GFDL_DATA:-${DEFAULT_PROJECT_ROOT}/isca_data}"
 export FV_KERNELS_OVERWRITE="${FV_KERNELS_OVERWRITE:-0}"
 export FV_KERNELS_PROFILE="${FV_KERNELS_PROFILE:-1}"
+export APPTAINER_BIND_ROOT="${APPTAINER_BIND_ROOT:-/explore/nobackup/people/jacaraba}"
 
 LOG="${GFDL_BASE}/logs/fv_kernels_cpu_30day.log"
 mkdir -p "${GFDL_BASE}/logs"
@@ -29,7 +34,7 @@ if [[ "${FV_KERNELS_OVERWRITE}" == "1" ]]; then
 fi
 
 apptainer exec --nv \
-  --bind /explore/nobackup/people/jli30:/explore/nobackup/people/jli30 \
+  --bind "${APPTAINER_BIND_ROOT}:${APPTAINER_BIND_ROOT}" \
   "${CONTAINER}" \
   bash -lc "
 set -e
