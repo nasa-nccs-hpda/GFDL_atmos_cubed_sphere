@@ -118,6 +118,9 @@ private
    real :: trdamp, twopi
 
    real, allocatable, dimension(:,:) :: tg_prev
+#ifdef USE_CPP_HS_FORCE
+   real, allocatable, dimension(:) :: hs_force_lon1d, hs_force_lat1d
+#endif
 
    integer :: id_teq, id_h_trop, id_tdt, id_udt, id_vdt, id_tdt_diss, id_diss_heat, id_local_heating, id_newtonian_damping
    real    :: missing_value = -1.e10
@@ -159,7 +162,6 @@ subroutine hs_forcing ( is, ie, js, je, dt, Time, lon, lat, p_half, p_full, &
    logical :: used
    real    :: flux, sink, value
    character(len=128) :: scheme, params
-   real, allocatable :: lon1d(:), lat1d(:)
 
 #ifndef USE_CPP_HS_FORCE
 ! Original Fortran implementation (kept unchanged)
@@ -281,23 +283,10 @@ subroutine hs_forcing ( is, ie, js, je, dt, Time, lon, lat, p_half, p_full, &
       ps(:,:) = p_half(:,:,size(p_half,3))
   endif
 
-  ! Build 1D lon/lat arrays from 2D inputs (assumes grid is lon varying fastest)
-  allocate(lon1d(size(lon,1)))
-  allocate(lat1d(size(lon,2)))
-  do i = 1, size(lon,1)
-    lon1d(i) = lon(i,1)
-  end do
-  do j = 1, size(lon,2)
-    lat1d(j) = lat(1,j)
-  end do
-
   call hs_forcing_driver_c_wrapper(size(lon,1), size(lon,2), size(t,3), dt, &
-       lon1d, lat1d, ps, p_full, u, v, t, udt, vdt, tdt, teq, ierr)
+       hs_force_lon1d, hs_force_lat1d, ps, p_full, u, v, t, udt, vdt, tdt, teq, ierr)
 
   if (ierr /= 0) call error_mesg('hs_forcing','hs_forcing_driver_c_wrapper failed', FATAL)
-
-  deallocate(lon1d)
-  deallocate(lat1d)
 
 #endif
 
@@ -321,7 +310,7 @@ subroutine hs_forcing_init ( axes, Time, lonb, latb, lat )
 
 
 !-----------------------------------------------------------------------
-   integer  unit, io, ierr
+   integer  unit, io, ierr, i, j
 
    real, dimension(size(lat,1),size(lat,2)) :: s, t_radbal, t_trop, h_trop, t_surf, hour_angle, tg
    integer :: spin_count, seconds, days, dt_integer
@@ -357,9 +346,22 @@ subroutine hs_forcing_init ( axes, Time, lonb, latb, lat )
       call write_version_number (version,tagname)
       if (mpp_pe() == mpp_root_pe()) write (stdlog(),nml=hs_forcing_nml)
 
-      if (no_forcing) return
+     if (no_forcing) return
 
       twopi = 2*PI
+
+#ifdef USE_CPP_HS_FORCE
+      if (allocated(hs_force_lon1d)) deallocate(hs_force_lon1d)
+      if (allocated(hs_force_lat1d)) deallocate(hs_force_lat1d)
+      allocate(hs_force_lon1d(size(lat,1)))
+      allocate(hs_force_lat1d(size(lat,2)))
+      do i = 1, size(lat,1)
+        hs_force_lon1d(i) = 0.0
+      enddo
+      do j = 1, size(lat,2)
+        hs_force_lat1d(j) = lat(1,j)
+      enddo
+#endif
 
    ! ---- spin-up simple heat capacity used in top-down code ----
 
@@ -533,6 +535,8 @@ subroutine hs_forcing_end
 
 #ifdef USE_CPP_HS_FORCE
  call hs_forcing_profile_print()
+ if (allocated(hs_force_lon1d)) deallocate(hs_force_lon1d)
+ if (allocated(hs_force_lat1d)) deallocate(hs_force_lat1d)
 #endif
 
  module_is_initialized = .false.
