@@ -89,6 +89,14 @@ After a CUDA run, confirm the widened path was used:
 scripts/verify_fv_cuda_path.sh
 ```
 
+Summarize CPU and CUDA FV timing markers:
+
+```sh
+scripts/summarize_fv_kernel_profile.py \
+  logs/fv_kernels_cpu_30day.log \
+  logs/fv_kernels_cuda_30day.log
+```
+
 This builds:
 
 - `held_suarez_fv_kernels.x`
