@@ -42,7 +42,8 @@ use fv_advection_kernels_c_interface, only : semi_x_3d_cpp_wrapper, slope_x_cpp_
 #ifdef USE_CUDA_FV_ADVECTION_KERNELS
 use fv_advection_kernels_c_interface, only : semi_x_3d_cuda_wrapper, slope_x_cuda_wrapper, &
   integer_flux_x_cuda_wrapper, vanleer_x_3d_cuda_wrapper, slope_sphere_cuda_wrapper, &
-  vanleer_sphere_3d_cuda_wrapper
+  vanleer_sphere_3d_cuda_wrapper, advection_sphere_predictor_cuda_wrapper, &
+  advection_sphere_corrector_cuda_wrapper
 #endif
 
 implicit none
@@ -265,13 +266,21 @@ real, dimension(nx, js-2:je+2, size(q,3)) :: q1
 
 integer, dimension(nx) :: ii
 integer :: i
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+integer :: ierr
+#endif
 
-
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+call advection_sphere_predictor_cuda_wrapper(nx, js, je, size(q,3), dt, dx, c(js:je), &
+  dyy(js:je+1), ua(:,js:je,:), va(:,js:je,:), q(:,js-2:je+2,:), q1, q2, ierr)
+if (ierr /= 0) call error_mesg('fv_advection_mod', 'advection_sphere predictor CUDA wrapper failed', FATAL)
+#else
 call semi_x_3d(q1(:,js:je,:), ua(:,js:je,:), q(:,js :je ,:), 0.5*dt)
 q1(:,js:je,:) = q(:,js:je,:) + q1(:,js:je,:)
 
 call semi_y_3d(q2(:,js:je,:), va(:,js:je,:), q(:,js-2:je+2,:), 0.5*dt)
 q2(:,js:je,:) = q(:,js:je,:) + q2(:,js:je,:)
+#endif
 
 call mpp_update_domains(q1, advection_domain)
 
@@ -294,9 +303,16 @@ if(je == ny) then
   end do
 endif
 
-call vanleer_x_3d     (dq_dt(:,js:je,:), uc(:,js:je,:)  , q2(:,js:je,:)    , dt)
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+call advection_sphere_corrector_cuda_wrapper(nx, ny, js, je, size(q,3), dt, dx, monotone, &
+  c(js:je), cc(js:je+1), dy(js-1:je+1), dy_plus(js-1:je+1), dy_minus(js-1:je+1), &
+  uc(:,js:je,:), vc(:,js:je+1,:), q1(:,js-2:je+2,:), q2(:,js:je,:), dq_dt(:,js:je,:), ierr)
+if (ierr /= 0) call error_mesg('fv_advection_mod', 'advection_sphere corrector CUDA wrapper failed', FATAL)
+#else
+call vanleer_x_3d(dq_dt(:,js:je,:), uc(:,js:je,:), q2(:,js:je,:), dt)
 
 call vanleer_sphere_3d(dq_dt(:,js:je,:), vc(:,js:je+1,:), q1(:,js-2:je+2,:), dt)
+#endif
 
 return
 end subroutine advection_sphere_3d

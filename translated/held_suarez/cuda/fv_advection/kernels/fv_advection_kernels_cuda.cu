@@ -17,6 +17,12 @@ profile::Counter integer_flux_x_counter{"integer_flux_x", 0, 0.0};
 profile::Counter vanleer_x_counter{"vanleer_x_3d", 0, 0.0};
 profile::Counter slope_sphere_counter{"slope_sphere", 0, 0.0};
 profile::Counter vanleer_sphere_counter{"vanleer_sphere_3d", 0, 0.0};
+profile::Counter advection_predictor_counter{"advection_sphere_predictor", 0, 0.0};
+profile::Counter advection_corrector_counter{"advection_sphere_corrector", 0, 0.0};
+profile::Counter cuda_alloc_counter{"cuda_alloc_resize", 0, 0.0};
+profile::Counter cuda_h2d_counter{"cuda_h2d", 0, 0.0};
+profile::Counter cuda_d2h_counter{"cuda_d2h", 0, 0.0};
+profile::Counter cuda_sync_counter{"cuda_sync", 0, 0.0};
 
 void print_cuda_profile() {
     profile::print_counter("cuda", semi_x_counter);
@@ -25,6 +31,12 @@ void print_cuda_profile() {
     profile::print_counter("cuda", vanleer_x_counter);
     profile::print_counter("cuda", slope_sphere_counter);
     profile::print_counter("cuda", vanleer_sphere_counter);
+    profile::print_counter("cuda", advection_predictor_counter);
+    profile::print_counter("cuda", advection_corrector_counter);
+    profile::print_counter("cuda", cuda_alloc_counter);
+    profile::print_counter("cuda", cuda_h2d_counter);
+    profile::print_counter("cuda", cuda_d2h_counter);
+    profile::print_counter("cuda", cuda_sync_counter);
 }
 
 void register_cuda_profile_report() {
@@ -71,40 +83,115 @@ int check_cuda(cudaError_t status, const char* what) {
     return FV_CUDA_ERROR;
 }
 
+struct DeviceBuffer {
+    double* ptr = nullptr;
+    std::size_t capacity = 0;
+    const double* cached_host = nullptr;
+    std::size_t cached_count = 0;
+
+    ~DeviceBuffer() {
+        if (ptr != nullptr) {
+            cudaFree(ptr);
+        }
+    }
+
+    int ensure(std::size_t count, const char* name) {
+        if (count <= capacity) {
+            return FV_CUDA_SUCCESS;
+        }
+        profile::ScopedTimer timer(cuda_alloc_counter);
+        if (ptr != nullptr) {
+            cudaFree(ptr);
+            ptr = nullptr;
+            capacity = 0;
+            cached_host = nullptr;
+            cached_count = 0;
+        }
+        const int ierr =
+            check_cuda(cudaMalloc(reinterpret_cast<void**>(&ptr), count * sizeof(double)),
+                       name);
+        if (ierr == FV_CUDA_SUCCESS) {
+            capacity = count;
+        }
+        return ierr;
+    }
+
+    int copy_from_host(const double* src, std::size_t count, const char* name) {
+        if (src == nullptr) {
+            std::fprintf(stderr, "fv_advection_kernels CUDA error: null input pointer %s\n", name);
+            return FV_CUDA_INVALID_ARGUMENT;
+        }
+        int ierr = ensure(count, name);
+        if (ierr != FV_CUDA_SUCCESS) {
+            return ierr;
+        }
+        profile::ScopedTimer timer(cuda_h2d_counter);
+        return check_cuda(cudaMemcpy(ptr, src, count * sizeof(double), cudaMemcpyHostToDevice),
+                          name);
+    }
+
+    int copy_static_from_host(const double* src, std::size_t count, const char* name) {
+        if (src == nullptr) {
+            std::fprintf(stderr, "fv_advection_kernels CUDA error: null input pointer %s\n", name);
+            return FV_CUDA_INVALID_ARGUMENT;
+        }
+        // Grid metrics are initialized once by the Fortran model and reused
+        // for every timestep. Avoid recopying them when the same host storage
+        // is passed repeatedly.
+        if (src == cached_host && count == cached_count && count <= capacity) {
+            return FV_CUDA_SUCCESS;
+        }
+        const int ierr = copy_from_host(src, count, name);
+        if (ierr == FV_CUDA_SUCCESS) {
+            cached_host = src;
+            cached_count = count;
+        }
+        return ierr;
+    }
+
+    int copy_to_host(double* dst, std::size_t count, const char* name) {
+        if (dst == nullptr) {
+            std::fprintf(stderr, "fv_advection_kernels CUDA error: null output pointer %s\n", name);
+            return FV_CUDA_INVALID_ARGUMENT;
+        }
+        profile::ScopedTimer timer(cuda_d2h_counter);
+        return check_cuda(cudaMemcpy(dst, ptr, count * sizeof(double), cudaMemcpyDeviceToHost),
+                          name);
+    }
+};
+
+struct ResidentFusedAdvectionState {
+    DeviceBuffer q2;
+    int nx = 0;
+    int ny = 0;
+    int nz = 0;
+    bool q2_valid = false;
+};
+
+ResidentFusedAdvectionState& resident_fused_advection_state() {
+    static thread_local ResidentFusedAdvectionState state;
+    return state;
+}
+
 int check_device_available() {
+    static int cached_status = -1;
+    if (cached_status >= 0) {
+        return cached_status;
+    }
     int device_count = 0;
     int ierr = check_cuda(cudaGetDeviceCount(&device_count), "cudaGetDeviceCount");
     if (ierr != FV_CUDA_SUCCESS) {
+        cached_status = ierr;
         return ierr;
     }
     if (device_count <= 0) {
         std::fprintf(stderr,
                      "fv_advection_kernels CUDA error: CUDA backend requested but no CUDA devices are available.\n");
+        cached_status = FV_CUDA_ERROR;
         return FV_CUDA_ERROR;
     }
+    cached_status = FV_CUDA_SUCCESS;
     return FV_CUDA_SUCCESS;
-}
-
-int copy_to_device(double** dst, const double* src, std::size_t count, const char* name) {
-    if (src == nullptr) {
-        std::fprintf(stderr, "fv_advection_kernels CUDA error: null input pointer %s\n", name);
-        return FV_CUDA_INVALID_ARGUMENT;
-    }
-    int ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(dst), count * sizeof(double)), name);
-    if (ierr != FV_CUDA_SUCCESS) {
-        return ierr;
-    }
-    return check_cuda(cudaMemcpy(*dst, src, count * sizeof(double), cudaMemcpyHostToDevice), name);
-}
-
-int copy_inout_to_device(double** dst, const double* src, std::size_t count, const char* name) {
-    return copy_to_device(dst, src, count, name);
-}
-
-void free_if_present(double* ptr) {
-    if (ptr != nullptr) {
-        cudaFree(ptr);
-    }
 }
 
 __global__ void semi_x_kernel(
@@ -142,6 +229,63 @@ __global__ void semi_x_kernel(
     const double bb = b - floor(b);
     dq[idx] = bb * q[idx3(left, j0, k0, nx, ny)] +
               (1.0 - bb) * q[idx3(right, j0, k0, nx, ny)] - q[idx];
+}
+
+__global__ void advection_predictor_kernel(
+    int nx,
+    int ny,
+    int nz,
+    double half_dt,
+    double dx,
+    const double* c,
+    const double* dyy,
+    const double* ua,
+    const double* va,
+    const double* q,
+    double* q1,
+    double* q2) {
+    const int size = nx * ny * nz;
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= size) {
+        return;
+    }
+
+    const int q_ny = ny + 4;
+    const int plane = nx * ny;
+    const int k0 = idx / plane;
+    const int rem = idx - k0 * plane;
+    const int j0 = rem / nx;
+    const int i0 = rem - j0 * nx;
+    const int qj = j0 + 2;
+    const double q_center = q[idx3(i0, qj, k0, nx, q_ny)];
+
+    const double bx = ua[idx] * half_dt / (dx * c[j0]);
+    int ii = i0;
+    ii -= static_cast<int>(floor(bx));
+    if (ii > nx) {
+        ii -= nx;
+    }
+    if (ii < 1) {
+        ii += nx;
+    }
+    const int left = ii - 1;
+    const int right = (left + 1 >= nx) ? 0 : left + 1;
+    const double bb = bx - floor(bx);
+    const double dq_x = bb * q[idx3(left, qj, k0, nx, q_ny)] +
+                        (1.0 - bb) * q[idx3(right, qj, k0, nx, q_ny)] -
+                        q_center;
+    q1[idx3(i0, qj, k0, nx, q_ny)] = q_center + dq_x;
+
+    const double va_val = va[idx];
+    double dq_y;
+    if (va_val >= 0.0) {
+        dq_y = va_val * half_dt *
+               (q[idx3(i0, qj - 1, k0, nx, q_ny)] - q_center) / dyy[j0];
+    } else {
+        dq_y = va_val * half_dt *
+               (q_center - q[idx3(i0, qj + 1, k0, nx, q_ny)]) / dyy[j0 + 1];
+    }
+    q2[idx] = q_center + dq_y;
 }
 
 __global__ void slope_x_kernel(
@@ -492,17 +636,16 @@ __global__ void vanleer_sphere_kernel(
 
 int launch_and_copy_back(
     double* host_out,
-    double* device_out,
+    DeviceBuffer& device_out,
     std::size_t count,
     const char* kernel_name) {
     int ierr = check_cuda(cudaGetLastError(), kernel_name);
     if (ierr == FV_CUDA_SUCCESS) {
+        profile::ScopedTimer timer(cuda_sync_counter);
         ierr = check_cuda(cudaDeviceSynchronize(), kernel_name);
     }
     if (ierr == FV_CUDA_SUCCESS) {
-        ierr = check_cuda(cudaMemcpy(host_out, device_out, count * sizeof(double),
-                                     cudaMemcpyDeviceToHost),
-                          "copy result to host");
+        ierr = device_out.copy_to_host(host_out, count, "copy result to host");
     }
     return ierr;
 }
@@ -532,17 +675,19 @@ int semi_x_3d_cuda(
         return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
     }
     const std::size_t count = static_cast<std::size_t>(nx) * ny * nz;
-    double *d_c = nullptr, *d_ua = nullptr, *d_q = nullptr, *d_dq = nullptr;
-    if ((ierr = copy_to_device(&d_c, c, ny, "c")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_ua, ua, count, "ua")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_q, q, count, "q")) == FV_CUDA_SUCCESS &&
-        (ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&d_dq), count * sizeof(double)), "dq")) == FV_CUDA_SUCCESS) {
+    static thread_local DeviceBuffer d_c;
+    static thread_local DeviceBuffer d_ua;
+    static thread_local DeviceBuffer d_q;
+    static thread_local DeviceBuffer d_dq;
+    if ((ierr = d_c.copy_static_from_host(c, ny, "c")) == FV_CUDA_SUCCESS &&
+        (ierr = d_ua.copy_from_host(ua, count, "ua")) == FV_CUDA_SUCCESS &&
+        (ierr = d_q.copy_from_host(q, count, "q")) == FV_CUDA_SUCCESS &&
+        (ierr = d_dq.ensure(count, "dq")) == FV_CUDA_SUCCESS) {
         const int threads = 256;
         semi_x_kernel<<<static_cast<int>((count + threads - 1) / threads), threads>>>(
-            nx, ny, nz, dt, dx, d_c, d_ua, d_q, d_dq);
+            nx, ny, nz, dt, dx, d_c.ptr, d_ua.ptr, d_q.ptr, d_dq.ptr);
         ierr = launch_and_copy_back(dq, d_dq, count, "semi_x_kernel");
     }
-    free_if_present(d_c); free_if_present(d_ua); free_if_present(d_q); free_if_present(d_dq);
     return ierr;
 }
 
@@ -552,15 +697,15 @@ int slope_x_cuda(int nx, int ny, int nz, bool monotone, const double* q, double*
         return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
     }
     const std::size_t count = static_cast<std::size_t>(nx) * ny * nz;
-    double *d_q = nullptr, *d_slope = nullptr;
-    if ((ierr = copy_to_device(&d_q, q, count, "q")) == FV_CUDA_SUCCESS &&
-        (ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&d_slope), count * sizeof(double)), "slope")) == FV_CUDA_SUCCESS) {
+    static thread_local DeviceBuffer d_q;
+    static thread_local DeviceBuffer d_slope;
+    if ((ierr = d_q.copy_from_host(q, count, "q")) == FV_CUDA_SUCCESS &&
+        (ierr = d_slope.ensure(count, "slope")) == FV_CUDA_SUCCESS) {
         const int threads = 256;
         slope_x_kernel<<<static_cast<int>((count + threads - 1) / threads), threads>>>(
-            nx, ny, nz, monotone, d_q, d_slope);
+            nx, ny, nz, monotone, d_q.ptr, d_slope.ptr);
         ierr = launch_and_copy_back(slope, d_slope, count, "slope_x_kernel");
     }
-    free_if_present(d_q); free_if_present(d_slope);
     return ierr;
 }
 
@@ -576,16 +721,17 @@ int integer_flux_x_cuda(
         return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
     }
     const std::size_t count = static_cast<std::size_t>(nx) * ny * nz;
-    double *d_courant = nullptr, *d_q = nullptr, *d_flux = nullptr;
-    if ((ierr = copy_to_device(&d_courant, courant, count, "courant")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_q, q, count, "q")) == FV_CUDA_SUCCESS &&
-        (ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&d_flux), count * sizeof(double)), "flux")) == FV_CUDA_SUCCESS) {
+    static thread_local DeviceBuffer d_courant;
+    static thread_local DeviceBuffer d_q;
+    static thread_local DeviceBuffer d_flux;
+    if ((ierr = d_courant.copy_from_host(courant, count, "courant")) == FV_CUDA_SUCCESS &&
+        (ierr = d_q.copy_from_host(q, count, "q")) == FV_CUDA_SUCCESS &&
+        (ierr = d_flux.ensure(count, "flux")) == FV_CUDA_SUCCESS) {
         const int threads = 256;
         integer_flux_x_kernel<<<static_cast<int>((count + threads - 1) / threads), threads>>>(
-            nx, ny, nz, d_courant, d_q, d_flux);
+            nx, ny, nz, d_courant.ptr, d_q.ptr, d_flux.ptr);
         ierr = launch_and_copy_back(flux, d_flux, count, "integer_flux_x_kernel");
     }
-    free_if_present(d_courant); free_if_present(d_q); free_if_present(d_flux);
     return ierr;
 }
 
@@ -605,17 +751,19 @@ int vanleer_x_3d_cuda(
         return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
     }
     const std::size_t count = static_cast<std::size_t>(nx) * ny * nz;
-    double *d_c = nullptr, *d_uc = nullptr, *d_q = nullptr, *d_dq = nullptr;
-    if ((ierr = copy_to_device(&d_c, c, ny, "c")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_uc, uc, count, "uc")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_q, q, count, "q")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_inout_to_device(&d_dq, dq_dt, count, "dq_dt")) == FV_CUDA_SUCCESS) {
+    static thread_local DeviceBuffer d_c;
+    static thread_local DeviceBuffer d_uc;
+    static thread_local DeviceBuffer d_q;
+    static thread_local DeviceBuffer d_dq;
+    if ((ierr = d_c.copy_static_from_host(c, ny, "c")) == FV_CUDA_SUCCESS &&
+        (ierr = d_uc.copy_from_host(uc, count, "uc")) == FV_CUDA_SUCCESS &&
+        (ierr = d_q.copy_from_host(q, count, "q")) == FV_CUDA_SUCCESS &&
+        (ierr = d_dq.copy_from_host(dq_dt, count, "dq_dt")) == FV_CUDA_SUCCESS) {
         const int threads = 256;
         vanleer_x_kernel<<<static_cast<int>((count + threads - 1) / threads), threads>>>(
-            nx, ny, nz, dt, dx, d_c, monotone, d_uc, d_q, d_dq);
+            nx, ny, nz, dt, dx, d_c.ptr, monotone, d_uc.ptr, d_q.ptr, d_dq.ptr);
         ierr = launch_and_copy_back(dq_dt, d_dq, count, "vanleer_x_kernel");
     }
-    free_if_present(d_c); free_if_present(d_uc); free_if_present(d_q); free_if_present(d_dq);
     return ierr;
 }
 
@@ -634,17 +782,19 @@ int slope_sphere_cuda(
     }
     const std::size_t slope_count = static_cast<std::size_t>(nx) * nys * nz;
     const std::size_t q_count = static_cast<std::size_t>(nx) * (nys + 2) * nz;
-    double *d_dy_plus = nullptr, *d_dy_minus = nullptr, *d_q = nullptr, *d_slope = nullptr;
-    if ((ierr = copy_to_device(&d_dy_plus, dy_plus, nys, "dy_plus")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_dy_minus, dy_minus, nys, "dy_minus")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_q, q, q_count, "q")) == FV_CUDA_SUCCESS &&
-        (ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&d_slope), slope_count * sizeof(double)), "slope")) == FV_CUDA_SUCCESS) {
+    static thread_local DeviceBuffer d_dy_plus;
+    static thread_local DeviceBuffer d_dy_minus;
+    static thread_local DeviceBuffer d_q;
+    static thread_local DeviceBuffer d_slope;
+    if ((ierr = d_dy_plus.copy_static_from_host(dy_plus, nys, "dy_plus")) == FV_CUDA_SUCCESS &&
+        (ierr = d_dy_minus.copy_static_from_host(dy_minus, nys, "dy_minus")) == FV_CUDA_SUCCESS &&
+        (ierr = d_q.copy_from_host(q, q_count, "q")) == FV_CUDA_SUCCESS &&
+        (ierr = d_slope.ensure(slope_count, "slope")) == FV_CUDA_SUCCESS) {
         const int threads = 256;
         slope_sphere_kernel<<<static_cast<int>((slope_count + threads - 1) / threads), threads>>>(
-            nx, nys, nz, monotone, d_dy_plus, d_dy_minus, d_q, d_slope);
+            nx, nys, nz, monotone, d_dy_plus.ptr, d_dy_minus.ptr, d_q.ptr, d_slope.ptr);
         ierr = launch_and_copy_back(slope, d_slope, slope_count, "slope_sphere_kernel");
     }
-    free_if_present(d_dy_plus); free_if_present(d_dy_minus); free_if_present(d_q); free_if_present(d_slope);
     return ierr;
 }
 
@@ -672,24 +822,176 @@ int vanleer_sphere_3d_cuda(
     const std::size_t dq_count = static_cast<std::size_t>(nx) * ny * nz;
     const std::size_t vc_count = static_cast<std::size_t>(nx) * (ny + 1) * nz;
     const std::size_t q_count = static_cast<std::size_t>(nx) * (ny + 4) * nz;
-    double *d_c = nullptr, *d_cc = nullptr, *d_dy = nullptr, *d_dy_plus = nullptr, *d_dy_minus = nullptr;
-    double *d_vc = nullptr, *d_q = nullptr, *d_dq = nullptr;
-    if ((ierr = copy_to_device(&d_c, c, ny, "c")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_cc, cc, ny + 1, "cc")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_dy, dy, ny + 2, "dy")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_dy_plus, dy_plus, ny + 2, "dy_plus")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_dy_minus, dy_minus, ny + 2, "dy_minus")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_vc, vc, vc_count, "vc")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_to_device(&d_q, q, q_count, "q")) == FV_CUDA_SUCCESS &&
-        (ierr = copy_inout_to_device(&d_dq, dq_dt, dq_count, "dq_dt")) == FV_CUDA_SUCCESS) {
+    static thread_local DeviceBuffer d_c;
+    static thread_local DeviceBuffer d_cc;
+    static thread_local DeviceBuffer d_dy;
+    static thread_local DeviceBuffer d_dy_plus;
+    static thread_local DeviceBuffer d_dy_minus;
+    static thread_local DeviceBuffer d_vc;
+    static thread_local DeviceBuffer d_q;
+    static thread_local DeviceBuffer d_dq;
+    if ((ierr = d_c.copy_static_from_host(c, ny, "c")) == FV_CUDA_SUCCESS &&
+        (ierr = d_cc.copy_static_from_host(cc, ny + 1, "cc")) == FV_CUDA_SUCCESS &&
+        (ierr = d_dy.copy_static_from_host(dy, ny + 2, "dy")) == FV_CUDA_SUCCESS &&
+        (ierr = d_dy_plus.copy_static_from_host(dy_plus, ny + 2, "dy_plus")) == FV_CUDA_SUCCESS &&
+        (ierr = d_dy_minus.copy_static_from_host(dy_minus, ny + 2, "dy_minus")) == FV_CUDA_SUCCESS &&
+        (ierr = d_vc.copy_from_host(vc, vc_count, "vc")) == FV_CUDA_SUCCESS &&
+        (ierr = d_q.copy_from_host(q, q_count, "q")) == FV_CUDA_SUCCESS &&
+        (ierr = d_dq.copy_from_host(dq_dt, dq_count, "dq_dt")) == FV_CUDA_SUCCESS) {
         const int threads = 256;
         vanleer_sphere_kernel<<<static_cast<int>((dq_count + threads - 1) / threads), threads>>>(
-            nx, ny, nz, dt, monotone, is_south_boundary, is_north_boundary, d_c,
-            d_cc, d_dy, d_dy_plus, d_dy_minus, d_vc, d_q, d_dq);
+            nx, ny, nz, dt, monotone, is_south_boundary, is_north_boundary, d_c.ptr,
+            d_cc.ptr, d_dy.ptr, d_dy_plus.ptr, d_dy_minus.ptr, d_vc.ptr, d_q.ptr, d_dq.ptr);
         ierr = launch_and_copy_back(dq_dt, d_dq, dq_count, "vanleer_sphere_kernel");
     }
-    free_if_present(d_c); free_if_present(d_cc); free_if_present(d_dy); free_if_present(d_dy_plus);
-    free_if_present(d_dy_minus); free_if_present(d_vc); free_if_present(d_q); free_if_present(d_dq);
+    return ierr;
+}
+
+int advection_sphere_predictor_cuda(
+    int nx,
+    int ny,
+    int nz,
+    double dt,
+    double dx,
+    const double* c,
+    const double* dyy,
+    const double* ua,
+    const double* va,
+    const double* q,
+    double* q1,
+    double* q2) {
+    int ierr = validate_common(nx, ny, nz);
+    if (ierr != FV_CUDA_SUCCESS || c == nullptr || dyy == nullptr || ua == nullptr ||
+        va == nullptr || q == nullptr || q1 == nullptr || q2 == nullptr) {
+        return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
+    }
+    const std::size_t center_count = static_cast<std::size_t>(nx) * ny * nz;
+    const std::size_t halo_count = static_cast<std::size_t>(nx) * (ny + 4) * nz;
+    static thread_local DeviceBuffer d_c;
+    static thread_local DeviceBuffer d_dyy;
+    static thread_local DeviceBuffer d_ua;
+    static thread_local DeviceBuffer d_va;
+    static thread_local DeviceBuffer d_q;
+    static thread_local DeviceBuffer d_q1;
+    ResidentFusedAdvectionState& resident = resident_fused_advection_state();
+    if ((ierr = d_c.copy_static_from_host(c, ny, "c")) == FV_CUDA_SUCCESS &&
+        (ierr = d_dyy.copy_static_from_host(dyy, ny + 1, "dyy")) == FV_CUDA_SUCCESS &&
+        (ierr = d_ua.copy_from_host(ua, center_count, "ua")) == FV_CUDA_SUCCESS &&
+        (ierr = d_va.copy_from_host(va, center_count, "va")) == FV_CUDA_SUCCESS &&
+        (ierr = d_q.copy_from_host(q, halo_count, "q")) == FV_CUDA_SUCCESS &&
+        (ierr = d_q1.ensure(halo_count, "q1")) == FV_CUDA_SUCCESS &&
+        (ierr = resident.q2.ensure(center_count, "q2")) == FV_CUDA_SUCCESS) {
+        ierr = check_cuda(cudaMemcpy(d_q1.ptr, d_q.ptr, halo_count * sizeof(double),
+                                     cudaMemcpyDeviceToDevice),
+                          "initialize q1 halos");
+    }
+    if (ierr == FV_CUDA_SUCCESS) {
+        const int threads = 256;
+        advection_predictor_kernel<<<static_cast<int>((center_count + threads - 1) / threads), threads>>>(
+            nx, ny, nz, 0.5 * dt, dx, d_c.ptr, d_dyy.ptr, d_ua.ptr, d_va.ptr,
+            d_q.ptr, d_q1.ptr, resident.q2.ptr);
+        ierr = check_cuda(cudaGetLastError(), "advection_predictor_kernel");
+        if (ierr == FV_CUDA_SUCCESS) {
+            {
+                profile::ScopedTimer timer(cuda_sync_counter);
+                ierr = check_cuda(cudaDeviceSynchronize(), "advection_predictor_kernel");
+            }
+        }
+        if (ierr == FV_CUDA_SUCCESS) {
+            profile::ScopedTimer timer(cuda_d2h_counter);
+            const std::size_t plane_count = static_cast<std::size_t>(nx) * (ny + 4);
+            const std::size_t interior_offset = static_cast<std::size_t>(2) * nx;
+            ierr = check_cuda(
+                cudaMemcpy2D(q1 + interior_offset, plane_count * sizeof(double),
+                             d_q1.ptr + interior_offset, plane_count * sizeof(double),
+                             static_cast<std::size_t>(nx) * ny * sizeof(double),
+                             static_cast<std::size_t>(nz), cudaMemcpyDeviceToHost),
+                "copy q1 interior to host");
+        }
+        if (ierr == FV_CUDA_SUCCESS) {
+            resident.nx = nx;
+            resident.ny = ny;
+            resident.nz = nz;
+            resident.q2_valid = true;
+        }
+    }
+    return ierr;
+}
+
+int advection_sphere_corrector_cuda(
+    int nx,
+    int ny_total,
+    int ny,
+    int nz,
+    double dt,
+    double dx,
+    bool monotone,
+    bool is_south_boundary,
+    bool is_north_boundary,
+    const double* c,
+    const double* cc,
+    const double* dy,
+    const double* dy_plus,
+    const double* dy_minus,
+    const double* uc,
+    const double* vc,
+    const double* q1,
+    const double* q2,
+    double* dq_dt) {
+    (void)ny_total;
+    int ierr = validate_common(nx, ny, nz);
+    if (ierr != FV_CUDA_SUCCESS || c == nullptr || cc == nullptr || dy == nullptr ||
+        dy_plus == nullptr || dy_minus == nullptr || uc == nullptr || vc == nullptr ||
+        q1 == nullptr || q2 == nullptr || dq_dt == nullptr) {
+        return ierr == FV_CUDA_SUCCESS ? FV_CUDA_INVALID_ARGUMENT : ierr;
+    }
+    const std::size_t center_count = static_cast<std::size_t>(nx) * ny * nz;
+    const std::size_t vc_count = static_cast<std::size_t>(nx) * (ny + 1) * nz;
+    const std::size_t q1_count = static_cast<std::size_t>(nx) * (ny + 4) * nz;
+    static thread_local DeviceBuffer d_c;
+    static thread_local DeviceBuffer d_cc;
+    static thread_local DeviceBuffer d_dy;
+    static thread_local DeviceBuffer d_dy_plus;
+    static thread_local DeviceBuffer d_dy_minus;
+    static thread_local DeviceBuffer d_uc;
+    static thread_local DeviceBuffer d_vc;
+    static thread_local DeviceBuffer d_q1;
+    static thread_local DeviceBuffer d_dq;
+    ResidentFusedAdvectionState& resident = resident_fused_advection_state();
+    const bool use_resident_q2 =
+        resident.q2_valid && resident.nx == nx && resident.ny == ny && resident.nz == nz;
+    if ((ierr = d_c.copy_static_from_host(c, ny, "c")) == FV_CUDA_SUCCESS &&
+        (ierr = d_cc.copy_static_from_host(cc, ny + 1, "cc")) == FV_CUDA_SUCCESS &&
+        (ierr = d_dy.copy_static_from_host(dy, ny + 2, "dy")) == FV_CUDA_SUCCESS &&
+        (ierr = d_dy_plus.copy_static_from_host(dy_plus, ny + 2, "dy_plus")) == FV_CUDA_SUCCESS &&
+        (ierr = d_dy_minus.copy_static_from_host(dy_minus, ny + 2, "dy_minus")) == FV_CUDA_SUCCESS &&
+        (ierr = d_uc.copy_from_host(uc, center_count, "uc")) == FV_CUDA_SUCCESS &&
+        (ierr = d_vc.copy_from_host(vc, vc_count, "vc")) == FV_CUDA_SUCCESS &&
+        (ierr = d_q1.copy_from_host(q1, q1_count, "q1")) == FV_CUDA_SUCCESS &&
+        (ierr = (use_resident_q2 ? FV_CUDA_SUCCESS : resident.q2.copy_from_host(q2, center_count, "q2"))) == FV_CUDA_SUCCESS &&
+        (ierr = d_dq.copy_from_host(dq_dt, center_count, "dq_dt")) == FV_CUDA_SUCCESS) {
+        const int threads = 256;
+        const int blocks = static_cast<int>((center_count + threads - 1) / threads);
+        vanleer_x_kernel<<<blocks, threads>>>(
+            nx, ny, nz, dt, dx, d_c.ptr, monotone, d_uc.ptr, resident.q2.ptr, d_dq.ptr);
+        ierr = check_cuda(cudaGetLastError(), "fused vanleer_x_kernel");
+        if (ierr == FV_CUDA_SUCCESS) {
+            vanleer_sphere_kernel<<<blocks, threads>>>(
+                nx, ny, nz, dt, monotone, is_south_boundary, is_north_boundary,
+                d_c.ptr, d_cc.ptr, d_dy.ptr, d_dy_plus.ptr, d_dy_minus.ptr,
+                d_vc.ptr, d_q1.ptr, d_dq.ptr);
+            ierr = check_cuda(cudaGetLastError(), "fused vanleer_sphere_kernel");
+        }
+        if (ierr == FV_CUDA_SUCCESS) {
+            {
+                profile::ScopedTimer timer(cuda_sync_counter);
+                ierr = check_cuda(cudaDeviceSynchronize(), "advection_sphere_corrector");
+            }
+        }
+        if (ierr == FV_CUDA_SUCCESS) {
+            ierr = d_dq.copy_to_host(dq_dt, center_count, "copy dq_dt to host");
+        }
+    }
     return ierr;
 }
 
@@ -796,4 +1098,50 @@ extern "C" int fv_vanleer_sphere_3d_cuda_c(
     return fv_advection_kernels::cuda_backend::vanleer_sphere_3d_cuda(
         nx, je - js + 1, nz, dt, monotone != 0, js == 1,
         je == ny_total, c, cc, dy, dy_plus, dy_minus, vc, q, dq_dt);
+}
+
+extern "C" int fv_advection_sphere_predictor_cuda_c(
+    int nx,
+    int js,
+    int je,
+    int nz,
+    double dt,
+    double dx,
+    const double* c,
+    const double* dyy,
+    const double* ua,
+    const double* va,
+    const double* q,
+    double* q1,
+    double* q2) {
+    register_cuda_profile_report();
+    profile::ScopedTimer timer(advection_predictor_counter);
+    return fv_advection_kernels::cuda_backend::advection_sphere_predictor_cuda(
+        nx, je - js + 1, nz, dt, dx, c, dyy, ua, va, q, q1, q2);
+}
+
+extern "C" int fv_advection_sphere_corrector_cuda_c(
+    int nx,
+    int ny_total,
+    int js,
+    int je,
+    int nz,
+    double dt,
+    double dx,
+    int monotone,
+    const double* c,
+    const double* cc,
+    const double* dy,
+    const double* dy_plus,
+    const double* dy_minus,
+    const double* uc,
+    const double* vc,
+    const double* q1,
+    const double* q2,
+    double* dq_dt) {
+    register_cuda_profile_report();
+    profile::ScopedTimer timer(advection_corrector_counter);
+    return fv_advection_kernels::cuda_backend::advection_sphere_corrector_cuda(
+        nx, ny_total, je - js + 1, nz, dt, dx, monotone != 0, js == 1,
+        je == ny_total, c, cc, dy, dy_plus, dy_minus, uc, vc, q1, q2, dq_dt);
 }

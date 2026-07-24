@@ -47,6 +47,35 @@ The CUDA report is written to:
 
 `tests/reports/fv_advection_kernels_cuda_compare_report.json`
 
+The CUDA fixture reuses device buffers across repeated calls. With
+`FV_KERNELS_PROFILE=1`, it also reports aggregate CUDA phase timings for
+allocation growth, host-to-device copies, synchronization, and device-to-host
+copies. Grid metric arrays such as `c`, `cc`, `dy`, `dy_plus`, and `dy_minus`
+are cached on the device when the same host storage is reused across calls.
+The native CUDA overlay also uses a two-stage fused `advection_sphere_3d` path:
+predictor kernels run before the required Fortran halo update, and the x plus
+spherical Van Leer corrector kernels run in one CUDA entry point after it. The
+`q2` predictor field stays on the device across the halo update.
+
+## CPU/GPU Model Comparison
+
+From the repository root, build both native overlays and run the smoke/profile
+comparison workflow:
+
+```sh
+FV_KERNELS_OVERWRITE=1 scripts/compare_fv_kernels_cpu_gpu.sh
+```
+
+This builds:
+
+- `held_suarez_fv_kernels.x`
+- `held_suarez_fv_kernels_cuda.x`
+
+and writes the main profile logs to:
+
+- `logs/fv_kernels_cpu_30day.log`
+- `logs/fv_kernels_cuda_30day.log`
+
 ## Fortran C-Wrapper Fixture
 
 CPU wrapper validation:
