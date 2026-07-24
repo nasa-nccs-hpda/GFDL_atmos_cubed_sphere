@@ -289,10 +289,12 @@ int hs_forcing_driver_cuda(
     const std::size_t size_2d = static_cast<std::size_t>(nlon) * static_cast<std::size_t>(nlat);
     const std::size_t size_3d = size_2d * static_cast<std::size_t>(nlev);
 
+    const bool copy_teq = env_enabled("HS_FORCE_COPY_TEQ", false);
+
     if (!g_banner_printed) {
         std::fprintf(stderr,
-                     "HS_FORCE_CUDA_RUNTIME version=persistent_buffers_20260724 sync=implicit size_3d=%zu\n",
-                     size_3d);
+                     "HS_FORCE_CUDA_RUNTIME version=persistent_buffers_20260724 sync=implicit copy_teq=%d size_3d=%zu\n",
+                     copy_teq ? 1 : 0, size_3d);
         g_banner_printed = true;
     }
 
@@ -335,7 +337,7 @@ int hs_forcing_driver_cuda(
     if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(udt, g_buffers.udt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy udt to host");
     if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(vdt, g_buffers.vdt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy vdt to host");
     if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(tdt, g_buffers.tdt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy tdt to host");
-    if (ierr == HS_SUCCESS && env_enabled("HS_FORCE_COPY_TEQ", true)) {
+    if (ierr == HS_SUCCESS && copy_teq) {
         ierr = check_cuda(cudaMemcpy(teq, g_buffers.teq, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy teq to host");
     }
 

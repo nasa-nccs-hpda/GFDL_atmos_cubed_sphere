@@ -19,6 +19,7 @@ FAST_GPU_OVERWRITE="${FAST_GPU_OVERWRITE:-1}"
 FAST_GPU_REBUILD="${FAST_GPU_REBUILD:-1}"
 FAST_GPU_RUN_MODE="${FAST_GPU_RUN_MODE:-both}"
 HS_PROFILE="${HS_PROFILE:-1}"
+HS_FORCE_COPY_TEQ="${HS_FORCE_COPY_TEQ:-0}"
 
 if [[ -z "${FAST_GPU_DT_ATMOS:-}" ]]; then
   case "${FAST_GPU_RESOLUTION}" in
@@ -53,6 +54,7 @@ echo "FAST_GPU_OVERWRITE=${FAST_GPU_OVERWRITE}"
 echo "FAST_GPU_REBUILD=${FAST_GPU_REBUILD}"
 echo "FAST_GPU_RUN_MODE=${FAST_GPU_RUN_MODE}"
 echo "HS_PROFILE=${HS_PROFILE}"
+echo "HS_FORCE_COPY_TEQ=${HS_FORCE_COPY_TEQ}"
 
 if [[ "${FAST_GPU_RUN_MODE}" != "both" && "${FAST_GPU_RUN_MODE}" != "cpu" && "${FAST_GPU_RUN_MODE}" != "cuda" ]]; then
   echo "FAST_GPU_RUN_MODE must be one of: both, cpu, cuda"
@@ -87,6 +89,7 @@ export GFDL_DATA='${GFDL_DATA}'
 export GFDL_ENV=hybrid
 export HS_FORCE_BACKEND='${backend}'
 export HS_PROFILE='${HS_PROFILE}'
+export HS_FORCE_COPY_TEQ='${HS_FORCE_COPY_TEQ}'
 export OMPI_MCA_rmaps_base_oversubscribe=1
 export OMPI_MCA_btl_vader_single_copy_mechanism=none
 cd '${GFDL_BASE}'

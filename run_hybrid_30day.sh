@@ -12,6 +12,7 @@ export HYBRID_OVERWRITE="${HYBRID_OVERWRITE:-0}"
 export HYBRID_NUM_CORES="${HYBRID_NUM_CORES:-16}"
 export HS_FORCE_BACKEND="${HS_FORCE_BACKEND:-cpu}"
 export HS_PROFILE="${HS_PROFILE:-1}"
+export HS_FORCE_COPY_TEQ="${HS_FORCE_COPY_TEQ:-0}"
 export APPTAINER_BIND_ROOT="${APPTAINER_BIND_ROOT:-/explore/nobackup/people/jacaraba}"
 
 LOG="${GFDL_BASE}/logs/hybrid_${HS_FORCE_BACKEND}_30day.log"
@@ -28,6 +29,7 @@ echo "HYBRID_OVERWRITE=${HYBRID_OVERWRITE}"
 echo "HYBRID_NUM_CORES=${HYBRID_NUM_CORES}"
 echo "HS_FORCE_BACKEND=${HS_FORCE_BACKEND}"
 echo "HS_PROFILE=${HS_PROFILE}"
+echo "HS_FORCE_COPY_TEQ=${HS_FORCE_COPY_TEQ}"
 
 overwrite_arg=()
 if [[ "${HYBRID_OVERWRITE}" == "1" ]]; then
@@ -45,6 +47,7 @@ export GFDL_DATA='${GFDL_DATA}'
 export GFDL_ENV=hybrid
 export HS_FORCE_BACKEND='${HS_FORCE_BACKEND}'
 export HS_PROFILE='${HS_PROFILE}'
+export HS_FORCE_COPY_TEQ='${HS_FORCE_COPY_TEQ}'
 export OMPI_MCA_rmaps_base_oversubscribe=1
 export OMPI_MCA_btl_vader_single_copy_mechanism=none
 cd '${GFDL_BASE}'

@@ -13,6 +13,7 @@ export APPTAINER_BIND_ROOT="${APPTAINER_BIND_ROOT:-/explore/nobackup/people/jaca
 export HYBRID_OVERWRITE="${HYBRID_OVERWRITE:-1}"
 export HYBRID_NUM_CORES="${HYBRID_NUM_CORES:-16}"
 export HS_PROFILE="${HS_PROFILE:-1}"
+export HS_FORCE_COPY_TEQ="${HS_FORCE_COPY_TEQ:-0}"
 
 echo "=== Build fastest currently useful GPU executable ==="
 echo "This builds Held-Suarez forcing with CUDA support and leaves FV CUDA out."
