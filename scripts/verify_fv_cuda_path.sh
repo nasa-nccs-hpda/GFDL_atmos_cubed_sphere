@@ -51,11 +51,11 @@ fi
 
 if [[ "${missing}" != "0" ]]; then
   echo
-  echo "The latest CUDA run did not prove it used the widened FV plus press/geopot CUDA path."
+  echo "The latest FV-CUDA diagnostic run did not prove it used the expected experimental CUDA path."
   echo "Rebuild/rerun with:"
   echo "  FV_KERNELS_FORCE_CLEAN_NATIVE=1 FV_KERNELS_OVERWRITE=1 scripts/compare_fv_kernels_cpu_gpu.sh"
   exit 1
 fi
 
 echo
-echo "CUDA widened FV plus press/geopot path verified."
+echo "Experimental FV-CUDA diagnostic path verified."
