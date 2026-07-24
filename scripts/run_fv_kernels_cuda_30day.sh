@@ -13,6 +13,9 @@ export FV_KERNELS_OVERWRITE="${FV_KERNELS_OVERWRITE:-0}"
 export FV_KERNELS_PROFILE="${FV_KERNELS_PROFILE:-1}"
 export FV_KERNELS_CUDA_NUM_CORES="${FV_KERNELS_CUDA_NUM_CORES:-16}"
 export FV_KERNELS_CUDA_EXP_NAME="${FV_KERNELS_CUDA_EXP_NAME:-held_suarez_fv_kernels_cuda_30day}"
+export HS_FORCE_BACKEND="${HS_FORCE_BACKEND:-cuda}"
+export HS_PROFILE="${HS_PROFILE:-1}"
+export PRESS_GEOPOT_CUDA_ENABLE="${PRESS_GEOPOT_CUDA_ENABLE:-0}"
 export APPTAINER_BIND_ROOT="${APPTAINER_BIND_ROOT:-/explore/nobackup/people/jacaraba}"
 
 LOG="${GFDL_BASE}/logs/fv_kernels_cuda_30day.log"
@@ -28,6 +31,9 @@ echo "GFDL_DATA=${GFDL_DATA}"
 echo "FV_KERNELS_OVERWRITE=${FV_KERNELS_OVERWRITE}"
 echo "FV_KERNELS_PROFILE=${FV_KERNELS_PROFILE}"
 echo "FV_KERNELS_CUDA_NUM_CORES=${FV_KERNELS_CUDA_NUM_CORES}"
+echo "HS_FORCE_BACKEND=${HS_FORCE_BACKEND}"
+echo "HS_PROFILE=${HS_PROFILE}"
+echo "PRESS_GEOPOT_CUDA_ENABLE=${PRESS_GEOPOT_CUDA_ENABLE}"
 echo "executable=held_suarez_fv_kernels_cuda.x"
 echo "experiment=${FV_KERNELS_CUDA_EXP_NAME}"
 
@@ -46,6 +52,9 @@ export GFDL_WORK='${GFDL_WORK}'
 export GFDL_DATA='${GFDL_DATA}'
 export GFDL_ENV=hybrid
 export FV_KERNELS_PROFILE='${FV_KERNELS_PROFILE}'
+export HS_FORCE_BACKEND='${HS_FORCE_BACKEND}'
+export HS_PROFILE='${HS_PROFILE}'
+export PRESS_GEOPOT_CUDA_ENABLE='${PRESS_GEOPOT_CUDA_ENABLE}'
 export OMPI_MCA_rmaps_base_oversubscribe=1
 export OMPI_MCA_btl_vader_single_copy_mechanism=none
 cd '${GFDL_BASE}'

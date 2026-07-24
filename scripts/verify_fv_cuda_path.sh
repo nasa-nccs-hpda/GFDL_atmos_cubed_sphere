@@ -27,6 +27,7 @@ if [[ ! -f "${COMPILE_LOG}" ]]; then
   missing=1
 else
   check_log compile 'USE_CUDA_FV_ADVECTION_KERNELS= 1' "${COMPILE_LOG}"
+  check_log compile 'Building Held-Suarez forcing CUDA library for fv_kernels_cuda executable' "${COMPILE_LOG}"
   check_log compile 'Building press_and_geopot CUDA library' "${COMPILE_LOG}"
   check_log compile 'FV_KERNELS_FORCE_CLEAN_NATIVE= 1' "${COMPILE_LOG}"
   check_log compile 'Removing existing FV kernels native builddir for clean rebuild' "${COMPILE_LOG}"
@@ -38,11 +39,14 @@ if [[ ! -f "${RUN_LOG}" ]]; then
   missing=1
 else
   check_log runtime 'FV_CUDA_RUNTIME version=a_grid_stage_cuda_resident_20260724' "${RUN_LOG}"
+  check_log runtime 'HS_FORCE_RUNTIME version=combined_cuda_20260724 backend=cuda' "${RUN_LOG}"
   check_log runtime 'name=a_grid_advection_stage1' "${RUN_LOG}"
   check_log runtime 'name=a_grid_advection_stage2' "${RUN_LOG}"
   check_log runtime 'PROFILE_FV_ADVECTION_KERNEL backend=cuda' "${RUN_LOG}"
   check_log runtime 'PRESS_GEOPOT_CUDA_RUNTIME version=column_cuda_20260724' "${RUN_LOG}"
-  check_log runtime 'PROFILE_PRESS_GEOPOT backend=cuda' "${RUN_LOG}"
+  if [[ "${PRESS_GEOPOT_CUDA_ENABLE:-0}" == "1" ]]; then
+    check_log runtime 'PROFILE_PRESS_GEOPOT backend=cuda' "${RUN_LOG}"
+  fi
 fi
 
 if [[ "${missing}" != "0" ]]; then

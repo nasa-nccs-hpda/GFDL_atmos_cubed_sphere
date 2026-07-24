@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cuda_runtime.h>
 
 namespace {
@@ -10,12 +11,24 @@ constexpr int OPTION_SIMMONS_BURRIDGE = 1;
 constexpr int OPTION_MCM = 2;
 struct DeviceState {
     int nlev = 0;
+    int columns = 0;
+    int has_buffers = 0;
     int use_virtual_temperature = 0;
     int vert_difference_option = OPTION_SIMMONS_BURRIDGE;
     double rdgas = 287.04;
     double rvgas = 461.50;
     double* pk = nullptr;
     double* bk = nullptr;
+    double* surface_p = nullptr;
+    double* p_half = nullptr;
+    double* ln_p_half = nullptr;
+    double* p_full = nullptr;
+    double* ln_p_full = nullptr;
+    double* t_grid = nullptr;
+    double* surf_geopotential = nullptr;
+    double* geopot_full = nullptr;
+    double* geopot_half = nullptr;
+    double* q_grid = nullptr;
 };
 
 DeviceState g_state;
@@ -44,7 +57,29 @@ void free_state()
         cudaFree(g_state.bk);
         g_state.bk = nullptr;
     }
+    if (g_state.surface_p != nullptr) cudaFree(g_state.surface_p);
+    if (g_state.p_half != nullptr) cudaFree(g_state.p_half);
+    if (g_state.ln_p_half != nullptr) cudaFree(g_state.ln_p_half);
+    if (g_state.p_full != nullptr) cudaFree(g_state.p_full);
+    if (g_state.ln_p_full != nullptr) cudaFree(g_state.ln_p_full);
+    if (g_state.t_grid != nullptr) cudaFree(g_state.t_grid);
+    if (g_state.surf_geopotential != nullptr) cudaFree(g_state.surf_geopotential);
+    if (g_state.geopot_full != nullptr) cudaFree(g_state.geopot_full);
+    if (g_state.geopot_half != nullptr) cudaFree(g_state.geopot_half);
+    if (g_state.q_grid != nullptr) cudaFree(g_state.q_grid);
+    g_state.surface_p = nullptr;
+    g_state.p_half = nullptr;
+    g_state.ln_p_half = nullptr;
+    g_state.p_full = nullptr;
+    g_state.ln_p_full = nullptr;
+    g_state.t_grid = nullptr;
+    g_state.surf_geopotential = nullptr;
+    g_state.geopot_full = nullptr;
+    g_state.geopot_half = nullptr;
+    g_state.q_grid = nullptr;
     g_state.nlev = 0;
+    g_state.columns = 0;
+    g_state.has_buffers = 0;
 }
 
 int copy_to_device(double** dst, const double* src, std::size_t count, const char* name)
@@ -54,6 +89,69 @@ int copy_to_device(double** dst, const double* src, std::size_t count, const cha
         return ierr;
     }
     return check_cuda(cudaMemcpy(*dst, src, count * sizeof(double), cudaMemcpyHostToDevice), name);
+}
+
+int allocate_model_buffers(int columns, int nlev)
+{
+    if (g_state.has_buffers && g_state.columns == columns) {
+        return 0;
+    }
+
+    if (g_state.surface_p != nullptr) cudaFree(g_state.surface_p);
+    if (g_state.p_half != nullptr) cudaFree(g_state.p_half);
+    if (g_state.ln_p_half != nullptr) cudaFree(g_state.ln_p_half);
+    if (g_state.p_full != nullptr) cudaFree(g_state.p_full);
+    if (g_state.ln_p_full != nullptr) cudaFree(g_state.ln_p_full);
+    if (g_state.t_grid != nullptr) cudaFree(g_state.t_grid);
+    if (g_state.surf_geopotential != nullptr) cudaFree(g_state.surf_geopotential);
+    if (g_state.geopot_full != nullptr) cudaFree(g_state.geopot_full);
+    if (g_state.geopot_half != nullptr) cudaFree(g_state.geopot_half);
+    if (g_state.q_grid != nullptr) cudaFree(g_state.q_grid);
+    g_state.surface_p = nullptr;
+    g_state.p_half = nullptr;
+    g_state.ln_p_half = nullptr;
+    g_state.p_full = nullptr;
+    g_state.ln_p_full = nullptr;
+    g_state.t_grid = nullptr;
+    g_state.surf_geopotential = nullptr;
+    g_state.geopot_full = nullptr;
+    g_state.geopot_half = nullptr;
+    g_state.q_grid = nullptr;
+    g_state.has_buffers = 0;
+
+    const std::size_t count_2d = static_cast<std::size_t>(columns);
+    const std::size_t count_full = count_2d * static_cast<std::size_t>(nlev);
+    const std::size_t count_half = count_2d * static_cast<std::size_t>(nlev + 1);
+
+    int ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&g_state.surface_p), count_2d * sizeof(double)), "surface_p");
+    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&g_state.p_half), count_half * sizeof(double)), "p_half");
+    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&g_state.ln_p_half), count_half * sizeof(double)), "ln_p_half");
+    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&g_state.p_full), count_full * sizeof(double)), "p_full");
+    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&g_state.ln_p_full), count_full * sizeof(double)), "ln_p_full");
+    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&g_state.t_grid), count_full * sizeof(double)), "t_grid");
+    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&g_state.surf_geopotential), count_2d * sizeof(double)), "surf_geopotential");
+    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&g_state.geopot_full), count_full * sizeof(double)), "geopot_full");
+    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&g_state.geopot_half), count_half * sizeof(double)), "geopot_half");
+    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&g_state.q_grid), count_full * sizeof(double)), "q_grid");
+
+    if (ierr != 0) {
+        free_state();
+        return ierr;
+    }
+
+    g_state.columns = columns;
+    g_state.has_buffers = 1;
+    return 0;
+}
+
+bool env_enabled(const char* name, bool default_value)
+{
+    const char* value = std::getenv(name);
+    if (value == nullptr || value[0] == '\0') {
+        return default_value;
+    }
+    return !(value[0] == '0' || value[0] == 'f' || value[0] == 'F' ||
+             value[0] == 'n' || value[0] == 'N');
 }
 
 double elapsed_seconds(cudaEvent_t start, cudaEvent_t stop)
@@ -236,6 +334,12 @@ extern "C" int press_geopot_cuda_init_c(
     int use_virtual_temperature,
     int vert_difference_option)
 {
+    if (!env_enabled("PRESS_GEOPOT_CUDA_ENABLE", false)) {
+        std::fprintf(stderr,
+                     "PRESS_GEOPOT_CUDA_RUNTIME version=column_cuda_20260724 disabled=1 set_PRESS_GEOPOT_CUDA_ENABLE=1_to_enable\n");
+        return -10;
+    }
+
     int device_count = 0;
     int ierr = check_cuda(cudaGetDeviceCount(&device_count), "cudaGetDeviceCount");
     if (ierr != 0 || device_count <= 0) {
@@ -284,37 +388,29 @@ extern "C" int press_geopot_pressure_variables_cuda_c(
     const std::size_t count_full = static_cast<std::size_t>(columns) * static_cast<std::size_t>(nlev);
     const std::size_t count_half = static_cast<std::size_t>(columns) * static_cast<std::size_t>(nlev + 1);
 
-    double *d_surface_p = nullptr, *d_p_half = nullptr, *d_ln_p_half = nullptr;
-    double *d_p_full = nullptr, *d_ln_p_full = nullptr;
     cudaEvent_t start{}, stop{};
     int ierr = start_timer(&start, &stop);
     if (ierr != 0) return ierr;
 
-    ierr = copy_to_device(&d_surface_p, surface_p, count_2d, "surface_p");
-    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&d_p_half), count_half * sizeof(double)), "p_half");
-    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&d_ln_p_half), count_half * sizeof(double)), "ln_p_half");
-    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&d_p_full), count_full * sizeof(double)), "p_full");
-    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&d_ln_p_full), count_full * sizeof(double)), "ln_p_full");
+    ierr = allocate_model_buffers(columns, nlev);
+    if (ierr == 0) {
+        ierr = check_cuda(cudaMemcpy(g_state.surface_p, surface_p, count_2d * sizeof(double), cudaMemcpyHostToDevice), "copy surface_p");
+    }
 
     if (ierr == 0) {
         const int block = 128;
         const int grid = (columns + block - 1) / block;
         pressure_variables_kernel<<<grid, block>>>(
             columns, nlev, g_state.vert_difference_option, g_state.pk, g_state.bk,
-            d_surface_p, d_p_half, d_ln_p_half, d_p_full, d_ln_p_full);
+            g_state.surface_p, g_state.p_half, g_state.ln_p_half,
+            g_state.p_full, g_state.ln_p_full);
         ierr = check_cuda(cudaGetLastError(), "pressure_variables_kernel");
     }
 
-    if (ierr == 0) ierr = check_cuda(cudaMemcpy(p_half, d_p_half, count_half * sizeof(double), cudaMemcpyDeviceToHost), "copy p_half");
-    if (ierr == 0) ierr = check_cuda(cudaMemcpy(ln_p_half, d_ln_p_half, count_half * sizeof(double), cudaMemcpyDeviceToHost), "copy ln_p_half");
-    if (ierr == 0) ierr = check_cuda(cudaMemcpy(p_full, d_p_full, count_full * sizeof(double), cudaMemcpyDeviceToHost), "copy p_full");
-    if (ierr == 0) ierr = check_cuda(cudaMemcpy(ln_p_full, d_ln_p_full, count_full * sizeof(double), cudaMemcpyDeviceToHost), "copy ln_p_full");
-
-    cudaFree(d_surface_p);
-    cudaFree(d_p_half);
-    cudaFree(d_ln_p_half);
-    cudaFree(d_p_full);
-    cudaFree(d_ln_p_full);
+    if (ierr == 0) ierr = check_cuda(cudaMemcpy(p_half, g_state.p_half, count_half * sizeof(double), cudaMemcpyDeviceToHost), "copy p_half");
+    if (ierr == 0) ierr = check_cuda(cudaMemcpy(ln_p_half, g_state.ln_p_half, count_half * sizeof(double), cudaMemcpyDeviceToHost), "copy ln_p_half");
+    if (ierr == 0) ierr = check_cuda(cudaMemcpy(p_full, g_state.p_full, count_full * sizeof(double), cudaMemcpyDeviceToHost), "copy p_full");
+    if (ierr == 0) ierr = check_cuda(cudaMemcpy(ln_p_full, g_state.ln_p_full, count_full * sizeof(double), cudaMemcpyDeviceToHost), "copy ln_p_full");
 
     if (ierr == 0) {
         ++g_pressure_calls;
@@ -348,41 +444,30 @@ extern "C" int press_geopot_compute_geopotential_cuda_c(
     const std::size_t count_full = static_cast<std::size_t>(columns) * static_cast<std::size_t>(nlev);
     const std::size_t count_half = static_cast<std::size_t>(columns) * static_cast<std::size_t>(nlev + 1);
 
-    double *d_t_grid = nullptr, *d_ln_p_half = nullptr, *d_ln_p_full = nullptr;
-    double *d_surf_geopotential = nullptr, *d_geopot_full = nullptr, *d_geopot_half = nullptr;
-    double* d_q_grid = nullptr;
     cudaEvent_t start{}, stop{};
     int ierr = start_timer(&start, &stop);
     if (ierr != 0) return ierr;
 
-    ierr = copy_to_device(&d_t_grid, t_grid, count_full, "t_grid");
-    if (ierr == 0) ierr = copy_to_device(&d_ln_p_half, ln_p_half, count_half, "ln_p_half");
-    if (ierr == 0) ierr = copy_to_device(&d_ln_p_full, ln_p_full, count_full, "ln_p_full");
-    if (ierr == 0) ierr = copy_to_device(&d_surf_geopotential, surf_geopotential, count_2d, "surf_geopotential");
-    if (ierr == 0 && has_q_grid) ierr = copy_to_device(&d_q_grid, q_grid, count_full, "q_grid");
-    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&d_geopot_full), count_full * sizeof(double)), "geopot_full");
-    if (ierr == 0) ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(&d_geopot_half), count_half * sizeof(double)), "geopot_half");
+    ierr = allocate_model_buffers(columns, nlev);
+    if (ierr == 0) ierr = check_cuda(cudaMemcpy(g_state.t_grid, t_grid, count_full * sizeof(double), cudaMemcpyHostToDevice), "copy t_grid");
+    if (ierr == 0) ierr = check_cuda(cudaMemcpy(g_state.ln_p_half, ln_p_half, count_half * sizeof(double), cudaMemcpyHostToDevice), "copy ln_p_half");
+    if (ierr == 0) ierr = check_cuda(cudaMemcpy(g_state.ln_p_full, ln_p_full, count_full * sizeof(double), cudaMemcpyHostToDevice), "copy ln_p_full");
+    if (ierr == 0) ierr = check_cuda(cudaMemcpy(g_state.surf_geopotential, surf_geopotential, count_2d * sizeof(double), cudaMemcpyHostToDevice), "copy surf_geopotential");
+    if (ierr == 0 && has_q_grid) ierr = check_cuda(cudaMemcpy(g_state.q_grid, q_grid, count_full * sizeof(double), cudaMemcpyHostToDevice), "copy q_grid");
 
     if (ierr == 0) {
         const int block = 128;
         const int grid = (columns + block - 1) / block;
         compute_geopotential_kernel<<<grid, block>>>(
             columns, nlev, g_state.use_virtual_temperature, g_state.rdgas, g_state.rvgas, g_state.pk,
-            d_t_grid, d_ln_p_half, d_ln_p_full, d_surf_geopotential,
-            d_q_grid, has_q_grid, d_geopot_full, d_geopot_half);
+            g_state.t_grid, g_state.ln_p_half, g_state.ln_p_full,
+            g_state.surf_geopotential, g_state.q_grid, has_q_grid,
+            g_state.geopot_full, g_state.geopot_half);
         ierr = check_cuda(cudaGetLastError(), "compute_geopotential_kernel");
     }
 
-    if (ierr == 0) ierr = check_cuda(cudaMemcpy(geopot_full, d_geopot_full, count_full * sizeof(double), cudaMemcpyDeviceToHost), "copy geopot_full");
-    if (ierr == 0) ierr = check_cuda(cudaMemcpy(geopot_half, d_geopot_half, count_half * sizeof(double), cudaMemcpyDeviceToHost), "copy geopot_half");
-
-    cudaFree(d_t_grid);
-    cudaFree(d_ln_p_half);
-    cudaFree(d_ln_p_full);
-    cudaFree(d_surf_geopotential);
-    cudaFree(d_q_grid);
-    cudaFree(d_geopot_full);
-    cudaFree(d_geopot_half);
+    if (ierr == 0) ierr = check_cuda(cudaMemcpy(geopot_full, g_state.geopot_full, count_full * sizeof(double), cudaMemcpyDeviceToHost), "copy geopot_full");
+    if (ierr == 0) ierr = check_cuda(cudaMemcpy(geopot_half, g_state.geopot_half, count_half * sizeof(double), cudaMemcpyDeviceToHost), "copy geopot_half");
 
     if (ierr == 0) {
         ++g_geopot_calls;

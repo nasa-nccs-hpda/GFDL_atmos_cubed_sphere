@@ -37,6 +37,24 @@ Backend requested_backend()
     return Backend::Invalid;
 }
 
+void print_backend_banner_once(Backend backend)
+{
+    static bool printed = false;
+    if (printed) {
+        return;
+    }
+    printed = true;
+    const char* label = "cpu";
+    if (backend == Backend::Cuda) {
+        label = "cuda";
+    } else if (backend == Backend::Invalid) {
+        label = "invalid";
+    }
+    std::fprintf(stderr,
+                 "HS_FORCE_RUNTIME version=combined_cuda_20260724 backend=%s\n",
+                 label);
+}
+
 } // namespace
 
 // ============================================================================
@@ -148,6 +166,7 @@ int hs_forcing_driver_c(
     config.stratosphere_option = stratosphere_option;
 
     const Backend backend = requested_backend();
+    print_backend_banner_once(backend);
     if (backend == Backend::Invalid) {
         const char* env = std::getenv("HS_FORCE_BACKEND");
         std::fprintf(stderr,

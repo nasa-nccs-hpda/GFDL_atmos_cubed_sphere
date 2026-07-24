@@ -9,21 +9,36 @@ PROFILE_RE = re.compile(
     r"rank=(?P<rank>\S+) name=(?P<name>\S+) calls=(?P<calls>\d+) "
     r"time=(?P<time>[0-9.eE+-]+) avg=(?P<avg>[0-9.eE+-]+)"
 )
+PRESS_PROFILE_RE = re.compile(
+    r"PROFILE_PRESS_GEOPOT backend=(?P<backend>\S+) "
+    r"name=(?P<name>\S+) calls=(?P<calls>\d+) "
+    r"total_s=(?P<time>[0-9.eE+-]+) avg_s=(?P<avg>[0-9.eE+-]+)"
+)
 REAL_RE = re.compile(r"^real\s+(?:(?P<min>\d+)m)?(?P<sec>[0-9.]+)s$")
 
 
 def parse_log(path):
     rows = []
+    press_rows = []
     for line in Path(path).read_text(errors="replace").splitlines():
         match = PROFILE_RE.search(line)
-        if not match:
+        if match:
+            item = match.groupdict()
+            item["calls"] = int(item["calls"])
+            item["time"] = float(item["time"])
+            item["avg"] = float(item["avg"])
+            rows.append(item)
             continue
-        item = match.groupdict()
-        item["calls"] = int(item["calls"])
-        item["time"] = float(item["time"])
-        item["avg"] = float(item["avg"])
-        rows.append(item)
-    return rows
+        match = PRESS_PROFILE_RE.search(line)
+        if match:
+            item = match.groupdict()
+            item["rank"] = "0"
+            item["name"] = "press_geopot_" + item["name"]
+            item["calls"] = int(item["calls"])
+            item["time"] = float(item["time"])
+            item["avg"] = float(item["avg"])
+            press_rows.append(item)
+    return rows, press_rows
 
 
 def parse_real_seconds(path):
@@ -84,15 +99,17 @@ def main():
     args = parser.parse_args()
 
     all_rows = []
+    all_press_rows = []
     for log in args.logs:
-        rows = parse_log(log)
+        rows, press_rows = parse_log(log)
         real_times = parse_real_seconds(log)
         if real_times:
             real_text = ", ".join(f"{value:.3f}s" for value in real_times)
-            print(f"{log}: {len(rows)} profile rows, real={real_text}")
+            print(f"{log}: {len(rows)} fv profile rows, {len(press_rows)} press/geopot rows, real={real_text}")
         else:
-            print(f"{log}: {len(rows)} profile rows")
+            print(f"{log}: {len(rows)} fv profile rows, {len(press_rows)} press/geopot rows")
         all_rows.extend(rows)
+        all_press_rows.extend(press_rows)
 
     summaries = summarize(all_rows)
     if not summaries:
@@ -100,6 +117,9 @@ def main():
 
     print()
     print_table("FV Kernel Profile Summary", summaries)
+    if all_press_rows:
+        print()
+        print_table("Press/Geopot Profile Summary", summarize(all_press_rows))
 
 
 if __name__ == "__main__":

@@ -12,5 +12,5 @@ FFLAGS = $(CPPFLAGS) $(NC_LIB) -cpp -fcray-pointer \
 FC = $(F90)
 LD = $(F90)
 
-LDFLAGS = -lnetcdff -lnetcdf -lmpi -L$(PWD)/lib -lfv_advection_kernels -lpress_and_geopot_cuda -lstdc++ -L$(CUDA_LIBDIR) -lcudart -lm
+LDFLAGS = -lnetcdff -lnetcdf -lmpi -L$(PWD)/lib -lfv_advection_kernels -lhs_forcing -lpress_and_geopot_cuda -lstdc++ -L$(CUDA_LIBDIR) -lcudart -lm
 CFLAGS = -D__IFC

@@ -418,7 +418,10 @@ class HeldSuarezFvKernelsCodeBase(DryCodeBase):
         replaced = 0
         overlay_paths = []
         for path in paths:
-            if path == ORIGINAL_FV_ADVECTION:
+            if self.use_cuda and path == ORIGINAL_HS_FORCE:
+                overlay_paths.append(HS_FORCE_INTERFACE)
+                overlay_paths.append(OVERLAY_HS_FORCE)
+            elif path == ORIGINAL_FV_ADVECTION:
                 overlay_paths.append(FV_KERNELS_INTERFACE)
                 overlay_paths.append(OVERLAY_FV_ADVECTION_KERNELS)
                 replaced += 1
@@ -443,6 +446,8 @@ class HeldSuarezFvKernelsCodeBase(DryCodeBase):
             self.compile_flags.append(flag)
         if self.use_cuda and "-DUSE_CUDA_PRESS_GEOPOT" not in self.compile_flags:
             self.compile_flags.append("-DUSE_CUDA_PRESS_GEOPOT")
+        if self.use_cuda and "-DUSE_CPP_HS_FORCE" not in self.compile_flags:
+            self.compile_flags.append("-DUSE_CPP_HS_FORCE")
 
     def prepare_fv_kernels_library(self):
         force_clean_native = os.environ.get("FV_KERNELS_FORCE_CLEAN_NATIVE", "1")
@@ -495,6 +500,7 @@ class HeldSuarezFvKernelsCodeBase(DryCodeBase):
         shutil.copy2(str(lib_src), str(lib_dest_dir / "libfv_advection_kernels.a"))
 
         if self.use_cuda:
+            self.prepare_hs_force_library(lib_dest_dir, cxx, ar, nvcc)
             self.prepare_press_geopot_library(lib_dest_dir, nvcc)
 
         executable = Path(self.builddir) / self.executable_name
@@ -529,6 +535,35 @@ class HeldSuarezFvKernelsCodeBase(DryCodeBase):
             raise RuntimeError("press_and_geopot CUDA library not found: %s" % lib_src)
 
         shutil.copy2(str(lib_src), str(lib_dest_dir / "libpress_and_geopot_cuda.a"))
+
+    def prepare_hs_force_library(self, lib_dest_dir, cxx, ar, nvcc):
+        lib_workdir = Path(self.srcdir) / HS_FORCE_LIBRARY_DIR
+        lib_src = Path(self.srcdir) / HS_FORCE_LIBRARY
+
+        if not lib_workdir.is_dir():
+            raise RuntimeError("Hybrid forcing library source dir not found: %s" % lib_workdir)
+
+        print("Building Held-Suarez forcing CUDA library for fv_kernels_cuda executable")
+        print("  workdir:", lib_workdir)
+        print("  CXX:", shutil.which(cxx) or cxx)
+        print("  AR:", shutil.which(ar) or ar)
+        print("  NVCC:", shutil.which(nvcc) or nvcc)
+        if shutil.which(nvcc) is None and not Path(nvcc).exists():
+            raise RuntimeError(
+                "USE_CUDA_HS_FORCE was requested, but NVCC was not found. "
+                "Set NVCC to a valid CUDA compiler path or use a CUDA container."
+            )
+
+        subprocess.check_call(["make", "clean"], cwd=str(lib_workdir))
+        subprocess.check_call(
+            ["make", "CXX=%s" % cxx, "AR=%s" % ar, "USE_CUDA_HS_FORCE=1", "NVCC=%s" % nvcc, "lib"],
+            cwd=str(lib_workdir),
+        )
+
+        if not lib_src.exists():
+            raise RuntimeError("Hybrid forcing library not found: %s" % lib_src)
+
+        shutil.copy2(str(lib_src), str(lib_dest_dir / "libhs_forcing.a"))
 
     def compile(self, *args, **kwargs):
         if os.environ.get("GFDL_ENV") != "hybrid":
