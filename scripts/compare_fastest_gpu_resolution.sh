@@ -17,6 +17,7 @@ FAST_GPU_DAYS="${FAST_GPU_DAYS:-30}"
 FAST_GPU_NUM_CORES="${FAST_GPU_NUM_CORES:-16}"
 FAST_GPU_OVERWRITE="${FAST_GPU_OVERWRITE:-1}"
 FAST_GPU_REBUILD="${FAST_GPU_REBUILD:-1}"
+FAST_GPU_RUN_MODE="${FAST_GPU_RUN_MODE:-both}"
 HS_PROFILE="${HS_PROFILE:-1}"
 
 if [[ -z "${FAST_GPU_DT_ATMOS:-}" ]]; then
@@ -50,7 +51,13 @@ echo "FAST_GPU_DAYS=${FAST_GPU_DAYS}"
 echo "FAST_GPU_NUM_CORES=${FAST_GPU_NUM_CORES}"
 echo "FAST_GPU_OVERWRITE=${FAST_GPU_OVERWRITE}"
 echo "FAST_GPU_REBUILD=${FAST_GPU_REBUILD}"
+echo "FAST_GPU_RUN_MODE=${FAST_GPU_RUN_MODE}"
 echo "HS_PROFILE=${HS_PROFILE}"
+
+if [[ "${FAST_GPU_RUN_MODE}" != "both" && "${FAST_GPU_RUN_MODE}" != "cpu" && "${FAST_GPU_RUN_MODE}" != "cuda" ]]; then
+  echo "FAST_GPU_RUN_MODE must be one of: both, cpu, cuda"
+  exit 3
+fi
 
 if [[ "${FAST_GPU_REBUILD}" == "1" ]]; then
   echo "=== Build CUDA-capable Held-Suarez forcing executable ==="
@@ -96,12 +103,45 @@ time python3 scripts/run_T85L25_case.py \
 " 2>&1 | tee "${log}"
 }
 
-run_backend cpu cpu_cpp_hybrid "${CPU_LOG}"
-run_backend cuda cuda_hybrid "${CUDA_LOG}"
+if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cpu" ]]; then
+  run_backend cpu cpu_cpp_hybrid "${CPU_LOG}"
+fi
+
+if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cuda" ]]; then
+  run_backend cuda cuda_hybrid "${CUDA_LOG}"
+fi
+
+if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cpu" ]] && \
+   ! grep -q 'HS_FORCE_RUNTIME version=combined_cuda_20260724 backend=cpu' "${CPU_LOG}"; then
+  echo "ERROR: CPU backend runtime banner missing."
+  exit 30
+fi
+
+if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cuda" ]] && \
+   ! grep -q 'HS_FORCE_RUNTIME version=combined_cuda_20260724 backend=cuda' "${CUDA_LOG}"; then
+  echo "ERROR: CUDA backend runtime banner missing."
+  exit 31
+fi
+
+if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cuda" ]] && \
+   ! grep -q 'HS_FORCE_CUDA_RUNTIME version=persistent_buffers_20260724' "${CUDA_LOG}"; then
+  echo "ERROR: persistent-buffer CUDA forcing runtime banner missing."
+  exit 32
+fi
 
 echo
 echo "Logs:"
-echo "CPU:  ${CPU_LOG}"
-echo "CUDA: ${CUDA_LOG}"
+if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cpu" ]]; then
+  echo "CPU:  ${CPU_LOG}"
+fi
+if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cuda" ]]; then
+  echo "CUDA: ${CUDA_LOG}"
+fi
 echo
-"${REPO_ROOT}/scripts/summarize_real_times.py" "${CPU_LOG}" "${CUDA_LOG}"
+if [[ "${FAST_GPU_RUN_MODE}" == "both" ]]; then
+  "${REPO_ROOT}/scripts/summarize_real_times.py" "${CPU_LOG}" "${CUDA_LOG}"
+elif [[ "${FAST_GPU_RUN_MODE}" == "cpu" ]]; then
+  "${REPO_ROOT}/scripts/summarize_real_times.py" "${CPU_LOG}"
+else
+  "${REPO_ROOT}/scripts/summarize_real_times.py" "${CUDA_LOG}"
+fi

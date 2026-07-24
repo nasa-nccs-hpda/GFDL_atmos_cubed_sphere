@@ -5,11 +5,31 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <cstdlib>
 
 namespace hs_forcing {
 namespace cuda_backend {
 
 namespace {
+
+struct DeviceBuffers {
+    std::size_t size_2d = 0;
+    std::size_t size_3d = 0;
+    double* lat = nullptr;
+    double* ps = nullptr;
+    double* p_full = nullptr;
+    double* u = nullptr;
+    double* v = nullptr;
+    double* t = nullptr;
+    double* udt = nullptr;
+    double* vdt = nullptr;
+    double* tdt = nullptr;
+    double* teq = nullptr;
+    double* mask = nullptr;
+};
+
+DeviceBuffers g_buffers;
+bool g_banner_printed = false;
 
 int check_cuda(cudaError_t status, const char* what)
 {
@@ -21,39 +41,82 @@ int check_cuda(cudaError_t status, const char* what)
     return HS_ERROR_INVALID_CONFIG;
 }
 
-int copy_to_device(double** dst, const double* src, std::size_t count, const char* name)
-{
-    if (src == nullptr) {
-        *dst = nullptr;
-        return HS_SUCCESS;
-    }
-
-    int ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(dst), count * sizeof(double)), name);
-    if (ierr != HS_SUCCESS) {
-        return ierr;
-    }
-    return check_cuda(cudaMemcpy(*dst, src, count * sizeof(double), cudaMemcpyHostToDevice), name);
-}
-
-int alloc_and_copy_inout(double** dst, double* src, std::size_t count, const char* name)
-{
-    if (src == nullptr) {
-        *dst = nullptr;
-        return HS_ERROR_NULL_POINTER;
-    }
-
-    int ierr = check_cuda(cudaMalloc(reinterpret_cast<void**>(dst), count * sizeof(double)), name);
-    if (ierr != HS_SUCCESS) {
-        return ierr;
-    }
-    return check_cuda(cudaMemcpy(*dst, src, count * sizeof(double), cudaMemcpyHostToDevice), name);
-}
-
-void free_if_present(double* ptr)
+void free_ptr(double*& ptr)
 {
     if (ptr != nullptr) {
         cudaFree(ptr);
+        ptr = nullptr;
     }
+}
+
+void free_buffers()
+{
+    free_ptr(g_buffers.lat);
+    free_ptr(g_buffers.ps);
+    free_ptr(g_buffers.p_full);
+    free_ptr(g_buffers.u);
+    free_ptr(g_buffers.v);
+    free_ptr(g_buffers.t);
+    free_ptr(g_buffers.udt);
+    free_ptr(g_buffers.vdt);
+    free_ptr(g_buffers.tdt);
+    free_ptr(g_buffers.teq);
+    free_ptr(g_buffers.mask);
+    g_buffers.size_2d = 0;
+    g_buffers.size_3d = 0;
+}
+
+int alloc_ptr(double*& ptr, std::size_t count, const char* name)
+{
+    return check_cuda(cudaMalloc(reinterpret_cast<void**>(&ptr), count * sizeof(double)), name);
+}
+
+int ensure_buffers(std::size_t size_2d, std::size_t size_3d)
+{
+    if (g_buffers.size_2d == size_2d && g_buffers.size_3d == size_3d) {
+        return HS_SUCCESS;
+    }
+
+    free_buffers();
+
+    int ierr = alloc_ptr(g_buffers.lat, size_2d, "lat");
+    if (ierr == HS_SUCCESS) ierr = alloc_ptr(g_buffers.ps, size_2d, "ps");
+    if (ierr == HS_SUCCESS) ierr = alloc_ptr(g_buffers.p_full, size_3d, "p_full");
+    if (ierr == HS_SUCCESS) ierr = alloc_ptr(g_buffers.u, size_3d, "u");
+    if (ierr == HS_SUCCESS) ierr = alloc_ptr(g_buffers.v, size_3d, "v");
+    if (ierr == HS_SUCCESS) ierr = alloc_ptr(g_buffers.t, size_3d, "t");
+    if (ierr == HS_SUCCESS) ierr = alloc_ptr(g_buffers.udt, size_3d, "udt");
+    if (ierr == HS_SUCCESS) ierr = alloc_ptr(g_buffers.vdt, size_3d, "vdt");
+    if (ierr == HS_SUCCESS) ierr = alloc_ptr(g_buffers.tdt, size_3d, "tdt");
+    if (ierr == HS_SUCCESS) ierr = alloc_ptr(g_buffers.teq, size_3d, "teq");
+    if (ierr == HS_SUCCESS) ierr = alloc_ptr(g_buffers.mask, size_3d, "mask");
+
+    if (ierr != HS_SUCCESS) {
+        free_buffers();
+        return ierr;
+    }
+
+    g_buffers.size_2d = size_2d;
+    g_buffers.size_3d = size_3d;
+    return HS_SUCCESS;
+}
+
+int copy_h2d(double* dst, const double* src, std::size_t count, const char* name)
+{
+    if (src == nullptr) {
+        return HS_SUCCESS;
+    }
+    return check_cuda(cudaMemcpy(dst, src, count * sizeof(double), cudaMemcpyHostToDevice), name);
+}
+
+bool env_enabled(const char* name, bool default_value)
+{
+    const char* value = std::getenv(name);
+    if (value == nullptr || value[0] == '\0') {
+        return default_value;
+    }
+    return !(value[0] == '0' || value[0] == 'f' || value[0] == 'F' ||
+             value[0] == 'n' || value[0] == 'N');
 }
 
 } // namespace
@@ -226,42 +289,26 @@ int hs_forcing_driver_cuda(
     const std::size_t size_2d = static_cast<std::size_t>(nlon) * static_cast<std::size_t>(nlat);
     const std::size_t size_3d = size_2d * static_cast<std::size_t>(nlev);
 
-    double* d_lat = nullptr;
-    double* d_ps = nullptr;
-    double* d_p_full = nullptr;
-    double* d_u = nullptr;
-    double* d_v = nullptr;
-    double* d_t = nullptr;
-    double* d_udt = nullptr;
-    double* d_vdt = nullptr;
-    double* d_tdt = nullptr;
-    double* d_teq = nullptr;
-    double* d_mask = nullptr;
+    if (!g_banner_printed) {
+        std::fprintf(stderr,
+                     "HS_FORCE_CUDA_RUNTIME version=persistent_buffers_20260724 sync=implicit size_3d=%zu\n",
+                     size_3d);
+        g_banner_printed = true;
+    }
 
-    ierr = copy_to_device(&d_lat, lat, size_2d, "lat");
-    if (ierr == HS_SUCCESS) ierr = copy_to_device(&d_ps, ps, size_2d, "ps");
-    if (ierr == HS_SUCCESS) ierr = copy_to_device(&d_p_full, p_full, size_3d, "p_full");
-    if (ierr == HS_SUCCESS) ierr = copy_to_device(&d_u, u, size_3d, "u");
-    if (ierr == HS_SUCCESS) ierr = copy_to_device(&d_v, v, size_3d, "v");
-    if (ierr == HS_SUCCESS) ierr = copy_to_device(&d_t, t, size_3d, "t");
-    if (ierr == HS_SUCCESS) ierr = alloc_and_copy_inout(&d_udt, udt, size_3d, "udt");
-    if (ierr == HS_SUCCESS) ierr = alloc_and_copy_inout(&d_vdt, vdt, size_3d, "vdt");
-    if (ierr == HS_SUCCESS) ierr = alloc_and_copy_inout(&d_tdt, tdt, size_3d, "tdt");
-    if (ierr == HS_SUCCESS) ierr = alloc_and_copy_inout(&d_teq, teq, size_3d, "teq");
-    if (ierr == HS_SUCCESS && mask != nullptr) ierr = copy_to_device(&d_mask, mask, size_3d, "mask");
-
+    ierr = ensure_buffers(size_2d, size_3d);
+    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.lat, lat, size_2d, "copy lat");
+    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.ps, ps, size_2d, "copy ps");
+    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.p_full, p_full, size_3d, "copy p_full");
+    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.u, u, size_3d, "copy u");
+    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.v, v, size_3d, "copy v");
+    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.t, t, size_3d, "copy t");
+    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.udt, udt, size_3d, "copy udt");
+    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.vdt, vdt, size_3d, "copy vdt");
+    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.tdt, tdt, size_3d, "copy tdt");
+    if (ierr == HS_SUCCESS) ierr = copy_h2d(g_buffers.teq, teq, size_3d, "copy teq");
+    if (ierr == HS_SUCCESS && mask != nullptr) ierr = copy_h2d(g_buffers.mask, mask, size_3d, "copy mask");
     if (ierr != HS_SUCCESS) {
-        free_if_present(d_lat);
-        free_if_present(d_ps);
-        free_if_present(d_p_full);
-        free_if_present(d_u);
-        free_if_present(d_v);
-        free_if_present(d_t);
-        free_if_present(d_udt);
-        free_if_present(d_vdt);
-        free_if_present(d_tdt);
-        free_if_present(d_teq);
-        free_if_present(d_mask);
         return ierr;
     }
 
@@ -270,39 +317,27 @@ int hs_forcing_driver_cuda(
 
     rayleigh_accumulate_kernel<<<blocks, threads>>>(
         static_cast<int>(size_3d), nlon, nlat, nlev,
-        d_ps, d_p_full, d_u, d_v,
-        config.vkf, config.sigma_b, d_mask,
-        d_udt, d_vdt);
+        g_buffers.ps, g_buffers.p_full, g_buffers.u, g_buffers.v,
+        config.vkf, config.sigma_b, mask != nullptr ? g_buffers.mask : nullptr,
+        g_buffers.udt, g_buffers.vdt);
     ierr = check_cuda(cudaGetLastError(), "rayleigh_accumulate_kernel launch");
-    if (ierr == HS_SUCCESS) ierr = check_cuda(cudaDeviceSynchronize(), "rayleigh_accumulate_kernel synchronize");
 
     if (ierr == HS_SUCCESS) {
         newtonian_accumulate_kernel<<<blocks, threads>>>(
             static_cast<int>(size_3d), nlon, nlat, nlev,
-            d_lat, d_ps, d_p_full, d_t,
+            g_buffers.lat, g_buffers.ps, g_buffers.p_full, g_buffers.t,
             config.t_zero, config.t_strat, config.delh, config.delv, config.eps,
             config.P00, config.kappa, config.tka, config.tks, config.sigma_b,
-            d_mask, d_tdt, d_teq);
+            mask != nullptr ? g_buffers.mask : nullptr, g_buffers.tdt, g_buffers.teq);
         ierr = check_cuda(cudaGetLastError(), "newtonian_accumulate_kernel launch");
     }
-    if (ierr == HS_SUCCESS) ierr = check_cuda(cudaDeviceSynchronize(), "newtonian_accumulate_kernel synchronize");
 
-    if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(udt, d_udt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy udt to host");
-    if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(vdt, d_vdt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy vdt to host");
-    if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(tdt, d_tdt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy tdt to host");
-    if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(teq, d_teq, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy teq to host");
-
-    free_if_present(d_lat);
-    free_if_present(d_ps);
-    free_if_present(d_p_full);
-    free_if_present(d_u);
-    free_if_present(d_v);
-    free_if_present(d_t);
-    free_if_present(d_udt);
-    free_if_present(d_vdt);
-    free_if_present(d_tdt);
-    free_if_present(d_teq);
-    free_if_present(d_mask);
+    if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(udt, g_buffers.udt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy udt to host");
+    if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(vdt, g_buffers.vdt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy vdt to host");
+    if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(tdt, g_buffers.tdt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy tdt to host");
+    if (ierr == HS_SUCCESS && env_enabled("HS_FORCE_COPY_TEQ", true)) {
+        ierr = check_cuda(cudaMemcpy(teq, g_buffers.teq, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy teq to host");
+    }
 
     return ierr;
 }
