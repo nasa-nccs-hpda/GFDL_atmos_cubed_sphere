@@ -86,8 +86,7 @@ FV_KERNELS_FORCE_CLEAN_NATIVE=1
 After a CUDA run, confirm the widened path was used:
 
 ```sh
-grep 'FV_CUDA_RUNTIME version=a_grid_stage_cuda_resident_20260724' logs/fv_kernels_cuda_30day.log
-grep 'name=a_grid_advection_stage' logs/fv_kernels_cuda_30day.log
+scripts/verify_fv_cuda_path.sh
 ```
 
 This builds:
