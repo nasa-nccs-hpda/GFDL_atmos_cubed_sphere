@@ -26,6 +26,8 @@ ORIGINAL_SPECTRAL_DYNAMICS = "atmos_spectral/model/spectral_dynamics.F90"
 OVERLAY_SPECTRAL_DYNAMICS = (
     "extra/local_overrides/spectral_dynamics/spectral_dynamics.F90"
 )
+ORIGINAL_TRANSFORMS = "atmos_spectral/tools/transforms.F90"
+OVERLAY_TRANSFORMS_CUDA = "extra/local_overrides/spectral_dynamics/transforms_cuda.F90"
 ORIGINAL_VERT_ADVECTION = "atmos_shared/vert_advection/vert_advection.F90"
 OVERLAY_VERT_ADVECTION = "extra/local_overrides/vert_advection/vert_advection.F90"
 ORIGINAL_FV_ADVECTION = "atmos_spectral/model/fv_advection.F90"
@@ -93,6 +95,8 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
                 overlay_paths.append(HS_FORCE_INTERFACE)
                 overlay_paths.append(OVERLAY_HS_FORCE)
                 replaced += 1
+            elif os.environ.get("USE_CUDA_TRANSFORMS") == "1" and path == ORIGINAL_TRANSFORMS:
+                overlay_paths.append(OVERLAY_TRANSFORMS_CUDA)
             else:
                 overlay_paths.append(path)
 
@@ -108,6 +112,9 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
         if os.environ.get("USE_CUDA_HS_FORCE") == "1":
             if "-DUSE_CUDA_HS_FORCE" not in self.compile_flags:
                 self.compile_flags.append("-DUSE_CUDA_HS_FORCE")
+        if os.environ.get("USE_CUDA_TRANSFORMS") == "1":
+            if "-DUSE_CUDA_TRANSFORMS" not in self.compile_flags:
+                self.compile_flags.append("-DUSE_CUDA_TRANSFORMS")
 
     def prepare_hybrid_library(self):
         force_clean_native = os.environ.get("HYBRID_FORCE_CLEAN_NATIVE", "1")
@@ -167,6 +174,11 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
             raise RuntimeError(
                 "Hybrid build requires GFDL_ENV=hybrid so compile.sh sources "
                 "src/extra/env/hybrid and selects mkmf.template.hybrid."
+            )
+        if os.environ.get("USE_CUDA_TRANSFORMS") == "1" and os.environ.get("USE_CUDA_HS_FORCE") != "1":
+            raise RuntimeError(
+                "USE_CUDA_TRANSFORMS=1 requires USE_CUDA_HS_FORCE=1 because "
+                "the transform helper symbols are linked through the CUDA hybrid library."
             )
         self.configure_overlay()
         self.prepare_hybrid_library()

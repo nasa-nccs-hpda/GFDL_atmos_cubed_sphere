@@ -21,6 +21,7 @@ FAST_GPU_RUN_MODE="${FAST_GPU_RUN_MODE:-both}"
 FAST_GPU_CASE_SUFFIX="${FAST_GPU_CASE_SUFFIX:-}"
 HS_PROFILE="${HS_PROFILE:-1}"
 HS_FORCE_COPY_TEQ="${HS_FORCE_COPY_TEQ:-0}"
+USE_CUDA_TRANSFORMS="${USE_CUDA_TRANSFORMS:-1}"
 
 if [[ -z "${FAST_GPU_DT_ATMOS:-}" ]]; then
   case "${FAST_GPU_RESOLUTION}" in
@@ -57,6 +58,7 @@ echo "FAST_GPU_RUN_MODE=${FAST_GPU_RUN_MODE}"
 echo "FAST_GPU_CASE_SUFFIX=${FAST_GPU_CASE_SUFFIX}"
 echo "HS_PROFILE=${HS_PROFILE}"
 echo "HS_FORCE_COPY_TEQ=${HS_FORCE_COPY_TEQ}"
+echo "USE_CUDA_TRANSFORMS=${USE_CUDA_TRANSFORMS}"
 
 if [[ "${FAST_GPU_RUN_MODE}" != "both" && "${FAST_GPU_RUN_MODE}" != "cpu" && "${FAST_GPU_RUN_MODE}" != "cuda" ]]; then
   echo "FAST_GPU_RUN_MODE must be one of: both, cpu, cuda"
@@ -65,7 +67,7 @@ fi
 
 if [[ "${FAST_GPU_REBUILD}" == "1" ]]; then
   echo "=== Build CUDA-capable Held-Suarez forcing executable ==="
-  USE_CUDA_HS_FORCE=1 "${REPO_ROOT}/run_compile_hybrid.sh"
+  USE_CUDA_HS_FORCE=1 USE_CUDA_TRANSFORMS="${USE_CUDA_TRANSFORMS}" "${REPO_ROOT}/run_compile_hybrid.sh"
 fi
 
 overwrite_arg=()
@@ -132,6 +134,13 @@ if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cuda" ]] &&
    ! grep -q 'HS_FORCE_CUDA_RUNTIME version=fused_persistent_20260724' "${CUDA_LOG}"; then
   echo "ERROR: fused persistent CUDA forcing runtime banner missing."
   exit 32
+fi
+
+if [[ "${USE_CUDA_TRANSFORMS}" == "1" ]] && \
+   [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cuda" ]] && \
+   ! grep -q 'TRANSFORMS_CUDA_RUNTIME version=horizontal_fused_20260724' "${CUDA_LOG}"; then
+  echo "ERROR: CUDA transforms runtime banner missing."
+  exit 33
 fi
 
 echo

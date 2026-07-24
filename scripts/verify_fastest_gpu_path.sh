@@ -32,14 +32,15 @@ echo "Checking ${LOG}"
 check_log 'HS_FORCE_RUNTIME version=combined_cuda_20260724 backend=cuda'
 check_log 'HS_FORCE_CUDA_RUNTIME version=fused_persistent_20260724'
 check_log 'copy_teq=0'
+check_log 'TRANSFORMS_CUDA_RUNTIME version=horizontal_fused_20260724'
 
 if [[ "${missing}" != "0" ]]; then
   echo
-  echo "This log did not use the latest fused CUDA forcing runtime."
+  echo "This log did not use the latest fused CUDA forcing plus transform runtime."
   echo "Rebuild and rerun with:"
   echo "  FAST_GPU_REBUILD=1 FAST_GPU_RESOLUTION=T170 FAST_GPU_DAYS=2 scripts/run_fastest_gpu_resolution.sh"
   exit 1
 fi
 
 echo
-echo "Fastest GPU fused CUDA forcing path verified."
+echo "Fastest GPU fused CUDA forcing plus transform path verified."
