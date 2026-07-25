@@ -230,6 +230,31 @@ int check_device_available() {
                      "fv_advection_kernels CUDA error: CUDA backend requested but no CUDA devices are available.\n");
         return FV_CUDA_ERROR;
     }
+    // Transfer PoC (addition 1): fan MPI ranks across the node's GPUs instead of
+    // piling every rank onto device 0. Keyed off the launcher's node-local rank
+    // so ranks sharing a node spread over that node's devices. Done once/process.
+    static bool device_selected = false;
+    if (!device_selected) {
+        int local_rank = 0;
+        const char* env = std::getenv("OMPI_COMM_WORLD_LOCAL_RANK");
+        if (env == nullptr) {
+            env = std::getenv("SLURM_LOCALID");
+        }
+        if (env != nullptr) {
+            local_rank = std::atoi(env);
+        }
+        const int device = local_rank % device_count;
+        ierr = check_cuda(cudaSetDevice(device), "cudaSetDevice");
+        if (ierr != FV_CUDA_SUCCESS) {
+            return ierr;
+        }
+        if (profile::enabled()) {
+            std::fprintf(stderr,
+                         "PROFILE_FV_ADVECTION_CUDA device_select local_rank=%d device=%d device_count=%d\n",
+                         local_rank, device, device_count);
+        }
+        device_selected = true;
+    }
     return FV_CUDA_SUCCESS;
 }
 
