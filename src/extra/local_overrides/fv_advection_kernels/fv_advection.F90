@@ -61,6 +61,13 @@ integer :: is, ie, js, je, pe, npes, nx, ny, nz
 real, allocatable, dimension(:) :: y, yy, c, s, cc, dy, dyy, dyyy, dy_plus, dy_minus
 real :: dx
 
+! Transfer PoC (addition 3): accumulate wall time spent in the neighbor halo
+! exchange (mpp_update_domains). Reported per-rank at fv_advection_end so the
+! current host-routed halo cost has a baseline before the GPU-to-GPU version.
+integer(kind=8) :: halo_t0 = 0_8, halo_t1 = 0_8, halo_rate = 1_8
+real(kind=8)    :: halo_seconds = 0.0d0
+integer         :: halo_calls = 0
+
 public :: fv_advection_init, fv_advection_end
 public :: a_grid_horiz_advection
 
@@ -183,8 +190,12 @@ end do
 vx(:, js:je, :) = va(:, js:je, :)
 qx(:, js:je, :) = q (:, js:je, :)
 
+call system_clock(halo_t0, halo_rate)
 call mpp_update_domains(vx, advection_domain)
 call mpp_update_domains(qx, advection_domain)
+call system_clock(halo_t1)
+halo_seconds = halo_seconds + real(halo_t1 - halo_t0, 8) / real(halo_rate, 8)
+halo_calls = halo_calls + 2
 
 if(js == 1) then
   do i = 1,nx
@@ -309,7 +320,11 @@ else
   q2(:,js:je,:) = q(:,js:je,:) + q2(:,js:je,:)
 endif
 
+call system_clock(halo_t0, halo_rate)
 call mpp_update_domains(q1, advection_domain)
+call system_clock(halo_t1)
+halo_seconds = halo_seconds + real(halo_t1 - halo_t0, 8) / real(halo_rate, 8)
+halo_calls = halo_calls + 1
 
 do i = 1,nx
   ii(i) = i + nx/2
@@ -724,6 +739,15 @@ end subroutine solid_body
 subroutine fv_advection_end
 
 if(.not.module_is_initialized) return
+
+! Transfer PoC (addition 3): report the per-rank host-routed halo-exchange cost.
+if (halo_calls > 0) then
+  write(*,'(a,i0,a,i0,a,es16.9,a,es16.9)') &
+    'PROFILE_FV_ADVECTION_HALO rank=', mpp_pe(), &
+    ' calls=', halo_calls, &
+    ' time=', halo_seconds, &
+    ' avg=', halo_seconds / real(halo_calls, 8)
+end if
 
 deallocate(y, yy, c, s, cc, dy, dyy, dyyy, dy_plus, dy_minus)
 module_is_initialized = .false.
