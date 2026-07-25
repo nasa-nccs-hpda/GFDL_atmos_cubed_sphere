@@ -303,6 +303,25 @@ __device__ inline cufftDoubleComplex cmul_real(cufftDoubleComplex a, double b)
     return make_cuDoubleComplex(a.x * b, a.y * b);
 }
 
+__device__ inline double atomic_add_double(double* address, double value)
+{
+#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ >= 600
+    return atomicAdd(address, value);
+#else
+    auto* address_as_ull = reinterpret_cast<unsigned long long int*>(address);
+    unsigned long long int old = *address_as_ull;
+    unsigned long long int assumed;
+    do {
+        assumed = old;
+        old = atomicCAS(
+            address_as_ull,
+            assumed,
+            __double_as_longlong(value + __longlong_as_double(assumed)));
+    } while (assumed != old);
+    return __longlong_as_double(old);
+#endif
+}
+
 __global__ void spherical_to_fourier_kernel(
     int total_tasks,
     const cufftDoubleComplex* spherical,
@@ -435,16 +454,16 @@ __global__ void fourier_to_spherical_kernel(
         const double leg = legendre_wts[m0 + nm * (n0 + nn * jhem0)];
         const size_t idx = static_cast<size_t>(m0) + static_cast<size_t>(nm) *
             (static_cast<size_t>(n0) + static_cast<size_t>(nn) * static_cast<size_t>(k0));
-        atomicAdd(&spherical[idx].x, x_even.x * leg);
-        atomicAdd(&spherical[idx].y, x_even.y * leg);
+        atomic_add_double(&spherical[idx].x, x_even.x * leg);
+        atomic_add_double(&spherical[idx].y, x_even.y * leg);
     }
     for (int n = nodd; n <= ne; n += 2) {
         const int n0 = n - ns;
         const double leg = legendre_wts[m0 + nm * (n0 + nn * jhem0)];
         const size_t idx = static_cast<size_t>(m0) + static_cast<size_t>(nm) *
             (static_cast<size_t>(n0) + static_cast<size_t>(nn) * static_cast<size_t>(k0));
-        atomicAdd(&spherical[idx].x, x_odd.x * leg);
-        atomicAdd(&spherical[idx].y, x_odd.y * leg);
+        atomic_add_double(&spherical[idx].x, x_odd.x * leg);
+        atomic_add_double(&spherical[idx].y, x_odd.y * leg);
     }
 }
 
