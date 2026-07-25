@@ -28,6 +28,10 @@ OVERLAY_SPECTRAL_DYNAMICS = (
 )
 ORIGINAL_TRANSFORMS = "atmos_spectral/tools/transforms.F90"
 OVERLAY_TRANSFORMS_CUDA = "extra/local_overrides/spectral_dynamics/transforms_cuda.F90"
+ORIGINAL_SPHERICAL_FOURIER = "atmos_spectral/tools/spherical_fourier.F90"
+OVERLAY_SPHERICAL_FOURIER_CUDA = (
+    "extra/local_overrides/spectral_dynamics/spherical_fourier_cuda.F90"
+)
 ORIGINAL_VERT_ADVECTION = "atmos_shared/vert_advection/vert_advection.F90"
 OVERLAY_VERT_ADVECTION = "extra/local_overrides/vert_advection/vert_advection.F90"
 ORIGINAL_FV_ADVECTION = "atmos_spectral/model/fv_advection.F90"
@@ -97,6 +101,11 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
                 replaced += 1
             elif os.environ.get("USE_CUDA_TRANSFORMS") == "1" and path == ORIGINAL_TRANSFORMS:
                 overlay_paths.append(OVERLAY_TRANSFORMS_CUDA)
+            elif (
+                os.environ.get("USE_CUDA_SPHERICAL_FOURIER") == "1"
+                and path == ORIGINAL_SPHERICAL_FOURIER
+            ):
+                overlay_paths.append(OVERLAY_SPHERICAL_FOURIER_CUDA)
             else:
                 overlay_paths.append(path)
 
@@ -115,6 +124,9 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
         if os.environ.get("USE_CUDA_TRANSFORMS") == "1":
             if "-DUSE_CUDA_TRANSFORMS" not in self.compile_flags:
                 self.compile_flags.append("-DUSE_CUDA_TRANSFORMS")
+        if os.environ.get("USE_CUDA_SPHERICAL_FOURIER") == "1":
+            if "-DUSE_CUDA_SPHERICAL_FOURIER" not in self.compile_flags:
+                self.compile_flags.append("-DUSE_CUDA_SPHERICAL_FOURIER")
 
     def prepare_hybrid_library(self):
         force_clean_native = os.environ.get("HYBRID_FORCE_CLEAN_NATIVE", "1")
@@ -179,6 +191,11 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
             raise RuntimeError(
                 "USE_CUDA_TRANSFORMS=1 requires USE_CUDA_HS_FORCE=1 because "
                 "the transform helper symbols are linked through the CUDA hybrid library."
+            )
+        if os.environ.get("USE_CUDA_SPHERICAL_FOURIER") == "1" and os.environ.get("USE_CUDA_HS_FORCE") != "1":
+            raise RuntimeError(
+                "USE_CUDA_SPHERICAL_FOURIER=1 requires USE_CUDA_HS_FORCE=1 because "
+                "the spherical Fourier helper symbols are linked through the CUDA hybrid library."
             )
         self.configure_overlay()
         self.prepare_hybrid_library()
