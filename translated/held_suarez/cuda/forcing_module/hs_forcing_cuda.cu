@@ -66,6 +66,21 @@ struct SphericalFourierBuffers {
 SphericalFourierBuffers g_spherical_fourier_buffers;
 bool g_spherical_fourier_banner_printed = false;
 
+struct GridFourierBuffers {
+    int n = 0;
+    int batch = 0;
+    double* grid = nullptr;
+    double* grid_padded = nullptr;
+    cufftDoubleComplex* fourier = nullptr;
+    cufftHandle r2c_plan = 0;
+    cufftHandle c2r_plan = 0;
+    bool r2c_plan_ready = false;
+    bool c2r_plan_ready = false;
+};
+
+GridFourierBuffers g_grid_fourier_buffers;
+bool g_grid_fourier_banner_printed = false;
+
 int check_cuda(cudaError_t status, const char* what)
 {
     if (status == cudaSuccess) {
@@ -73,6 +88,16 @@ int check_cuda(cudaError_t status, const char* what)
     }
     std::fprintf(stderr, "HS CUDA backend error: %s failed: %s\n",
                  what, cudaGetErrorString(status));
+    return HS_ERROR_INVALID_CONFIG;
+}
+
+int check_cufft(cufftResult status, const char* what)
+{
+    if (status == CUFFT_SUCCESS) {
+        return HS_SUCCESS;
+    }
+    std::fprintf(stderr, "HS CUDA backend error: %s failed: cufft status %d\n",
+                 what, static_cast<int>(status));
     return HS_ERROR_INVALID_CONFIG;
 }
 
@@ -144,6 +169,25 @@ void free_spherical_fourier_buffers()
     g_spherical_fourier_buffers.legendre_ready = false;
     g_spherical_fourier_buffers.legendre_wts_ready = false;
     g_spherical_fourier_buffers.jstart_ready = false;
+}
+
+void free_grid_fourier_buffers()
+{
+    free_ptr(g_grid_fourier_buffers.grid);
+    free_ptr(g_grid_fourier_buffers.grid_padded);
+    free_complex_ptr(g_grid_fourier_buffers.fourier);
+    if (g_grid_fourier_buffers.r2c_plan_ready) {
+        cufftDestroy(g_grid_fourier_buffers.r2c_plan);
+    }
+    if (g_grid_fourier_buffers.c2r_plan_ready) {
+        cufftDestroy(g_grid_fourier_buffers.c2r_plan);
+    }
+    g_grid_fourier_buffers.n = 0;
+    g_grid_fourier_buffers.batch = 0;
+    g_grid_fourier_buffers.r2c_plan = 0;
+    g_grid_fourier_buffers.c2r_plan = 0;
+    g_grid_fourier_buffers.r2c_plan_ready = false;
+    g_grid_fourier_buffers.c2r_plan_ready = false;
 }
 
 int alloc_ptr(double*& ptr, std::size_t count, const char* name)
@@ -250,6 +294,40 @@ int ensure_spherical_fourier_buffers(
     return HS_SUCCESS;
 }
 
+int ensure_grid_fourier_buffers(int n, int batch)
+{
+    if (g_grid_fourier_buffers.n == n && g_grid_fourier_buffers.batch == batch) {
+        return HS_SUCCESS;
+    }
+
+    free_grid_fourier_buffers();
+
+    const std::size_t grid_size = static_cast<std::size_t>(n) * static_cast<std::size_t>(batch);
+    const std::size_t grid_padded_size = static_cast<std::size_t>(n + 1) * static_cast<std::size_t>(batch);
+    const std::size_t fourier_size = static_cast<std::size_t>(n / 2 + 1) * static_cast<std::size_t>(batch);
+
+    int ierr = alloc_ptr(g_grid_fourier_buffers.grid, grid_size, "grid fourier grid");
+    if (ierr == HS_SUCCESS) ierr = alloc_ptr(g_grid_fourier_buffers.grid_padded, grid_padded_size, "grid fourier grid_padded");
+    if (ierr == HS_SUCCESS) ierr = alloc_complex_ptr(g_grid_fourier_buffers.fourier, fourier_size, "grid fourier fourier");
+    if (ierr == HS_SUCCESS) {
+        ierr = check_cufft(cufftPlan1d(&g_grid_fourier_buffers.r2c_plan, n, CUFFT_D2Z, batch), "cufftPlan1d D2Z");
+        if (ierr == HS_SUCCESS) g_grid_fourier_buffers.r2c_plan_ready = true;
+    }
+    if (ierr == HS_SUCCESS) {
+        ierr = check_cufft(cufftPlan1d(&g_grid_fourier_buffers.c2r_plan, n, CUFFT_Z2D, batch), "cufftPlan1d Z2D");
+        if (ierr == HS_SUCCESS) g_grid_fourier_buffers.c2r_plan_ready = true;
+    }
+
+    if (ierr != HS_SUCCESS) {
+        free_grid_fourier_buffers();
+        return ierr;
+    }
+
+    g_grid_fourier_buffers.n = n;
+    g_grid_fourier_buffers.batch = batch;
+    return HS_SUCCESS;
+}
+
 __global__ void horizontal_advection_accumulate_kernel(
     int n, int ni, int nj,
     const double* u_grid,
@@ -288,6 +366,52 @@ __global__ void divide_two_by_cos_kernel(
     b_grid[idx] *= cosm;
 }
 
+__global__ void grid_fourier_pack_grid_kernel(
+    int total,
+    const double* grid_in,
+    double* packed,
+    int n)
+{
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= total) {
+        return;
+    }
+    const int i = idx % n;
+    const int b = idx / n;
+    packed[idx] = grid_in[i + (n + 1) * b];
+}
+
+__global__ void grid_fourier_scale_kernel(
+    int total,
+    cufftDoubleComplex* fourier,
+    double scale)
+{
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= total) {
+        return;
+    }
+    fourier[idx].x *= scale;
+    fourier[idx].y *= scale;
+}
+
+__global__ void grid_fourier_unpack_grid_kernel(
+    int total,
+    const double* packed,
+    double* grid_out,
+    int n)
+{
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= total) {
+        return;
+    }
+    const int i = idx % n;
+    const int b = idx / n;
+    grid_out[i + (n + 1) * b] = packed[idx];
+    if (i == 0) {
+        grid_out[n + (n + 1) * b] = packed[idx];
+    }
+}
+
 __device__ inline cufftDoubleComplex cadd(cufftDoubleComplex a, cufftDoubleComplex b)
 {
     return make_cuDoubleComplex(a.x + b.x, a.y + b.y);
@@ -301,25 +425,6 @@ __device__ inline cufftDoubleComplex csub(cufftDoubleComplex a, cufftDoubleCompl
 __device__ inline cufftDoubleComplex cmul_real(cufftDoubleComplex a, double b)
 {
     return make_cuDoubleComplex(a.x * b, a.y * b);
-}
-
-__device__ inline double atomic_add_double(double* address, double value)
-{
-#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ >= 600
-    return atomicAdd(address, value);
-#else
-    auto* address_as_ull = reinterpret_cast<unsigned long long int*>(address);
-    unsigned long long int old = *address_as_ull;
-    unsigned long long int assumed;
-    do {
-        assumed = old;
-        old = atomicCAS(
-            address_as_ull,
-            assumed,
-            __double_as_longlong(value + __longlong_as_double(assumed)));
-    } while (assumed != old);
-    return __longlong_as_double(old);
-#endif
 }
 
 __global__ void spherical_to_fourier_kernel(
@@ -417,54 +522,51 @@ __global__ void fourier_to_spherical_kernel(
     int t = task;
     const int m0 = t % nm;
     t /= nm;
-    const int k0 = t % nk;
-    t /= nk;
-    const int j0 = t % nj;
-    const int jd0 = t / nj;
+    const int n0 = t % nn;
+    const int k0 = t / nn;
+    const int n_abs = ns + n0;
+    const bool use_even = (n_abs % 2) == 0;
 
-    if ((nd % 2) == 0 && jd0 == nd / 2) {
-        return;
-    }
-    if ((nd % 2) != 0 && jd0 == nd / 2 && j0 >= nj / 2) {
-        return;
+    cufftDoubleComplex sum = make_cuDoubleComplex(0.0, 0.0);
+    const int jd_count = nd / 2 + 1;
+
+    for (int jd0 = 0; jd0 < jd_count; ++jd0) {
+        if ((nd % 2) == 0 && jd0 == nd / 2) {
+            continue;
+        }
+        for (int j0 = 0; j0 < nj; ++j0) {
+            if ((nd % 2) != 0 && jd0 == nd / 2 && j0 >= nj / 2) {
+                continue;
+            }
+
+            const int mirror_j0 = nj - 1 - j0;
+            const int mirror_jd0 = nd - 1 - jd0;
+            const size_t left = static_cast<size_t>(m0) + static_cast<size_t>(nm) *
+                (static_cast<size_t>(j0) + static_cast<size_t>(nj) *
+                (static_cast<size_t>(k0) + static_cast<size_t>(nk) * static_cast<size_t>(jd0)));
+            const size_t right = static_cast<size_t>(m0) + static_cast<size_t>(nm) *
+                (static_cast<size_t>(mirror_j0) + static_cast<size_t>(nj) *
+                (static_cast<size_t>(k0) + static_cast<size_t>(nk) * static_cast<size_t>(mirror_jd0)));
+
+            cufftDoubleComplex x_even;
+            cufftDoubleComplex x_odd;
+            if (south_to_north) {
+                x_even = cadd(fourier[right], fourier[left]);
+                x_odd = csub(fourier[right], fourier[left]);
+            } else {
+                x_even = cadd(fourier[left], fourier[right]);
+                x_odd = csub(fourier[left], fourier[right]);
+            }
+
+            const int jhem0 = (jstart[jd0] - 1) + j0;
+            const double leg = legendre_wts[m0 + nm * (n0 + nn * jhem0)];
+            sum = cadd(sum, cmul_real(use_even ? x_even : x_odd, leg));
+        }
     }
 
-    const int mirror_j0 = nj - 1 - j0;
-    const int mirror_jd0 = nd - 1 - jd0;
-    const size_t left = static_cast<size_t>(m0) + static_cast<size_t>(nm) *
-        (static_cast<size_t>(j0) + static_cast<size_t>(nj) *
-        (static_cast<size_t>(k0) + static_cast<size_t>(nk) * static_cast<size_t>(jd0)));
-    const size_t right = static_cast<size_t>(m0) + static_cast<size_t>(nm) *
-        (static_cast<size_t>(mirror_j0) + static_cast<size_t>(nj) *
-        (static_cast<size_t>(k0) + static_cast<size_t>(nk) * static_cast<size_t>(mirror_jd0)));
-
-    cufftDoubleComplex x_even;
-    cufftDoubleComplex x_odd;
-    if (south_to_north) {
-        x_even = cadd(fourier[right], fourier[left]);
-        x_odd = csub(fourier[right], fourier[left]);
-    } else {
-        x_even = cadd(fourier[left], fourier[right]);
-        x_odd = csub(fourier[left], fourier[right]);
-    }
-
-    const int jhem0 = (jstart[jd0] - 1) + j0;
-    for (int n = neven; n <= ne; n += 2) {
-        const int n0 = n - ns;
-        const double leg = legendre_wts[m0 + nm * (n0 + nn * jhem0)];
-        const size_t idx = static_cast<size_t>(m0) + static_cast<size_t>(nm) *
-            (static_cast<size_t>(n0) + static_cast<size_t>(nn) * static_cast<size_t>(k0));
-        atomic_add_double(&spherical[idx].x, x_even.x * leg);
-        atomic_add_double(&spherical[idx].y, x_even.y * leg);
-    }
-    for (int n = nodd; n <= ne; n += 2) {
-        const int n0 = n - ns;
-        const double leg = legendre_wts[m0 + nm * (n0 + nn * jhem0)];
-        const size_t idx = static_cast<size_t>(m0) + static_cast<size_t>(nm) *
-            (static_cast<size_t>(n0) + static_cast<size_t>(nn) * static_cast<size_t>(k0));
-        atomic_add_double(&spherical[idx].x, x_odd.x * leg);
-        atomic_add_double(&spherical[idx].y, x_odd.y * leg);
-    }
+    const size_t idx = static_cast<size_t>(m0) + static_cast<size_t>(nm) *
+        (static_cast<size_t>(n0) + static_cast<size_t>(nn) * static_cast<size_t>(k0));
+    spherical[idx] = sum;
 }
 
 int copy_h2d(double* dst, const double* src, std::size_t count, const char* name)
@@ -839,7 +941,7 @@ extern "C" int spherical_fourier_s2f_cuda_c(
 
     if (!g_spherical_fourier_banner_printed) {
         std::fprintf(stderr,
-                     "SPHERICAL_FOURIER_CUDA_RUNTIME version=legendre_parallel_20260724 sync=implicit nm=%d nn=%d nk=%d nj=%d nd=%d\n",
+                     "SPHERICAL_FOURIER_CUDA_RUNTIME version=legendre_noatomic_20260725 sync=implicit nm=%d nn=%d nk=%d nj=%d nd=%d\n",
                      nm, nn, nk, nj, nd);
         g_spherical_fourier_banner_printed = true;
     }
@@ -871,6 +973,123 @@ extern "C" int spherical_fourier_s2f_cuda_c(
     ierr = check_cuda(cudaGetLastError(), "spherical_to_fourier_kernel launch");
     if (ierr == HS_SUCCESS) {
         ierr = check_cuda(cudaMemcpy(fourier, g_spherical_fourier_buffers.fourier, fourier_size * sizeof(cufftDoubleComplex), cudaMemcpyDeviceToHost), "sf copy fourier to host");
+    }
+    return ierr;
+}
+
+extern "C" int grid_fourier_r2c_cuda_c(
+    const double* grid,
+    cufftDoubleComplex* fourier,
+    int n,
+    int batch)
+{
+    if (grid == nullptr || fourier == nullptr) {
+        return HS_ERROR_NULL_POINTER;
+    }
+    if (n <= 0 || batch <= 0 || (n % 2) != 0) {
+        return HS_ERROR_INVALID_CONFIG;
+    }
+
+    int device_count = 0;
+    int ierr = check_cuda(cudaGetDeviceCount(&device_count), "cudaGetDeviceCount");
+    if (ierr != HS_SUCCESS || device_count <= 0) {
+        return HS_ERROR_INVALID_CONFIG;
+    }
+
+    ierr = ensure_grid_fourier_buffers(n, batch);
+    if (ierr != HS_SUCCESS) {
+        return ierr;
+    }
+
+    if (!g_grid_fourier_banner_printed) {
+        std::fprintf(stderr,
+                     "GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_20260725 sync=implicit n=%d batch=%d\n",
+                     n, batch);
+        g_grid_fourier_banner_printed = true;
+    }
+
+    const int threads = 256;
+    const int grid_total = n * batch;
+    int blocks = (grid_total + threads - 1) / threads;
+    grid_fourier_pack_grid_kernel<<<blocks, threads>>>(grid_total, grid, g_grid_fourier_buffers.grid, n);
+    ierr = check_cuda(cudaGetLastError(), "grid_fourier_pack_grid_kernel launch");
+    if (ierr == HS_SUCCESS) {
+        ierr = check_cufft(cufftExecD2Z(
+            g_grid_fourier_buffers.r2c_plan,
+            g_grid_fourier_buffers.grid,
+            g_grid_fourier_buffers.fourier), "cufftExecD2Z");
+    }
+
+    const int fourier_total = (n / 2 + 1) * batch;
+    blocks = (fourier_total + threads - 1) / threads;
+    if (ierr == HS_SUCCESS) {
+        grid_fourier_scale_kernel<<<blocks, threads>>>(fourier_total, g_grid_fourier_buffers.fourier, 1.0 / static_cast<double>(n));
+        ierr = check_cuda(cudaGetLastError(), "grid_fourier_scale_kernel launch");
+    }
+    if (ierr == HS_SUCCESS) {
+        ierr = check_cuda(cudaMemcpy(fourier, g_grid_fourier_buffers.fourier,
+                                     static_cast<std::size_t>(fourier_total) * sizeof(cufftDoubleComplex),
+                                     cudaMemcpyDeviceToHost),
+                          "grid fourier copy fourier to host");
+    }
+    return ierr;
+}
+
+extern "C" int grid_fourier_c2r_cuda_c(
+    const cufftDoubleComplex* fourier,
+    double* grid,
+    int n,
+    int batch)
+{
+    if (grid == nullptr || fourier == nullptr) {
+        return HS_ERROR_NULL_POINTER;
+    }
+    if (n <= 0 || batch <= 0 || (n % 2) != 0) {
+        return HS_ERROR_INVALID_CONFIG;
+    }
+
+    int device_count = 0;
+    int ierr = check_cuda(cudaGetDeviceCount(&device_count), "cudaGetDeviceCount");
+    if (ierr != HS_SUCCESS || device_count <= 0) {
+        return HS_ERROR_INVALID_CONFIG;
+    }
+
+    ierr = ensure_grid_fourier_buffers(n, batch);
+    if (ierr != HS_SUCCESS) {
+        return ierr;
+    }
+
+    if (!g_grid_fourier_banner_printed) {
+        std::fprintf(stderr,
+                     "GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_20260725 sync=implicit n=%d batch=%d\n",
+                     n, batch);
+        g_grid_fourier_banner_printed = true;
+    }
+
+    const int fourier_total = (n / 2 + 1) * batch;
+    ierr = check_cuda(cudaMemcpy(g_grid_fourier_buffers.fourier, fourier,
+                                 static_cast<std::size_t>(fourier_total) * sizeof(cufftDoubleComplex),
+                                 cudaMemcpyHostToDevice),
+                      "grid fourier copy fourier");
+    if (ierr == HS_SUCCESS) {
+        ierr = check_cufft(cufftExecZ2D(
+            g_grid_fourier_buffers.c2r_plan,
+            g_grid_fourier_buffers.fourier,
+            g_grid_fourier_buffers.grid), "cufftExecZ2D");
+    }
+
+    const int threads = 256;
+    const int grid_total = n * batch;
+    const int blocks = (grid_total + threads - 1) / threads;
+    if (ierr == HS_SUCCESS) {
+        grid_fourier_unpack_grid_kernel<<<blocks, threads>>>(grid_total, g_grid_fourier_buffers.grid, g_grid_fourier_buffers.grid_padded, n);
+        ierr = check_cuda(cudaGetLastError(), "grid_fourier_unpack_grid_kernel launch");
+    }
+    if (ierr == HS_SUCCESS) {
+        ierr = check_cuda(cudaMemcpy(grid, g_grid_fourier_buffers.grid_padded,
+                                     static_cast<std::size_t>(n + 1) * static_cast<std::size_t>(batch) * sizeof(double),
+                                     cudaMemcpyDeviceToHost),
+                          "grid fourier copy grid to host");
     }
     return ierr;
 }
@@ -918,7 +1137,7 @@ extern "C" int spherical_fourier_f2s_cuda_c(
 
     if (!g_spherical_fourier_banner_printed) {
         std::fprintf(stderr,
-                     "SPHERICAL_FOURIER_CUDA_RUNTIME version=legendre_parallel_20260724 sync=implicit nm=%d nn=%d nk=%d nj=%d nd=%d\n",
+                     "SPHERICAL_FOURIER_CUDA_RUNTIME version=legendre_noatomic_20260725 sync=implicit nm=%d nn=%d nk=%d nj=%d nd=%d\n",
                      nm, nn, nk, nj, nd);
         g_spherical_fourier_banner_printed = true;
     }
@@ -932,13 +1151,11 @@ extern "C" int spherical_fourier_f2s_cuda_c(
         ierr = check_cuda(cudaMemcpy(g_spherical_fourier_buffers.jstart, jstart, static_cast<std::size_t>(nd) * sizeof(int), cudaMemcpyHostToDevice), "sf copy jstart");
         if (ierr == HS_SUCCESS) g_spherical_fourier_buffers.jstart_ready = true;
     }
-    if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemset(g_spherical_fourier_buffers.spherical, 0, spherical_size * sizeof(cufftDoubleComplex)), "sf clear spherical");
     if (ierr != HS_SUCCESS) {
         return ierr;
     }
 
-    const int jd_count = nd / 2 + 1;
-    const int total_tasks = nm * nk * nj * jd_count;
+    const int total_tasks = nm * nn * nk;
     const int threads = 128;
     const int blocks = (total_tasks + threads - 1) / threads;
     fourier_to_spherical_kernel<<<blocks, threads>>>(

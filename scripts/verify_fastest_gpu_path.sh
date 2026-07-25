@@ -5,6 +5,7 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(cd "${SCRIPT_DIR}/.." && pwd)
 GFDL_BASE="${GFDL_BASE:-${REPO_ROOT}}"
 VERIFY_CUDA_TRANSFORMS="${VERIFY_CUDA_TRANSFORMS:-0}"
+VERIFY_CUDA_GRID_FOURIER="${VERIFY_CUDA_GRID_FOURIER:-1}"
 VERIFY_CUDA_SPHERICAL_FOURIER="${VERIFY_CUDA_SPHERICAL_FOURIER:-1}"
 
 LOG="${1:-}"
@@ -37,8 +38,11 @@ check_log 'copy_teq=0'
 if [[ "${VERIFY_CUDA_TRANSFORMS}" == "1" ]]; then
   check_log 'TRANSFORMS_CUDA_RUNTIME version=horizontal_fused_20260724'
 fi
+if [[ "${VERIFY_CUDA_GRID_FOURIER}" == "1" ]]; then
+  check_log 'GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_20260725'
+fi
 if [[ "${VERIFY_CUDA_SPHERICAL_FOURIER}" == "1" ]]; then
-  check_log 'SPHERICAL_FOURIER_CUDA_RUNTIME version=legendre_parallel_20260724'
+  check_log 'SPHERICAL_FOURIER_CUDA_RUNTIME version=legendre_noatomic_20260725'
 fi
 
 if [[ "${missing}" != "0" ]]; then
@@ -50,4 +54,4 @@ if [[ "${missing}" != "0" ]]; then
 fi
 
 echo
-echo "Fastest GPU fused CUDA forcing plus spherical Fourier path verified."
+echo "Fastest GPU fused CUDA forcing plus CUDA Fourier path verified."

@@ -21,7 +21,7 @@ CUDA_TEST_BIN = $(BIN_DIR)/validate_hs_forcing_cuda
 ifeq ($(USE_CUDA_HS_FORCE),1)
 CXXFLAGS += -DUSE_CUDA_HS_FORCE -I../../cuda/forcing_module
 OBJ += $(CUDA_OBJ)
-LDFLAGS += -L$(CUDA_LIBDIR) -lcudart
+LDFLAGS += -L$(CUDA_LIBDIR) -lcudart -lcufft
 endif
 
 all: lib test

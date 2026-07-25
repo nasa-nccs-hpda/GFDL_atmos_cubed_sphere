@@ -25,6 +25,7 @@ FAST_GPU_NO_TRACERS="${FAST_GPU_NO_TRACERS:-0}"
 HS_PROFILE="${HS_PROFILE:-1}"
 HS_FORCE_COPY_TEQ="${HS_FORCE_COPY_TEQ:-0}"
 USE_CUDA_TRANSFORMS="${USE_CUDA_TRANSFORMS:-0}"
+USE_CUDA_GRID_FOURIER="${USE_CUDA_GRID_FOURIER:-1}"
 USE_CUDA_SPHERICAL_FOURIER="${USE_CUDA_SPHERICAL_FOURIER:-1}"
 
 if [[ -z "${FAST_GPU_DT_ATMOS:-}" ]]; then
@@ -66,6 +67,7 @@ echo "FAST_GPU_NO_TRACERS=${FAST_GPU_NO_TRACERS}"
 echo "HS_PROFILE=${HS_PROFILE}"
 echo "HS_FORCE_COPY_TEQ=${HS_FORCE_COPY_TEQ}"
 echo "USE_CUDA_TRANSFORMS=${USE_CUDA_TRANSFORMS}"
+echo "USE_CUDA_GRID_FOURIER=${USE_CUDA_GRID_FOURIER}"
 echo "USE_CUDA_SPHERICAL_FOURIER=${USE_CUDA_SPHERICAL_FOURIER}"
 
 if [[ "${FAST_GPU_RUN_MODE}" != "both" && "${FAST_GPU_RUN_MODE}" != "cpu" && "${FAST_GPU_RUN_MODE}" != "cuda" ]]; then
@@ -77,6 +79,7 @@ if [[ "${FAST_GPU_REBUILD}" == "1" ]]; then
   echo "=== Build CUDA-capable Held-Suarez forcing executable ==="
   USE_CUDA_HS_FORCE=1 \
     USE_CUDA_TRANSFORMS="${USE_CUDA_TRANSFORMS}" \
+    USE_CUDA_GRID_FOURIER="${USE_CUDA_GRID_FOURIER}" \
     USE_CUDA_SPHERICAL_FOURIER="${USE_CUDA_SPHERICAL_FOURIER}" \
     "${REPO_ROOT}/run_compile_hybrid.sh"
 fi
@@ -114,6 +117,7 @@ export GFDL_DATA='${GFDL_DATA}'
 export GFDL_ENV=hybrid
 export HS_FORCE_BACKEND='${backend}'
 export TRANSFORMS_BACKEND='${backend}'
+export GRID_FOURIER_BACKEND='${backend}'
 export SPHERICAL_FOURIER_BACKEND='${backend}'
 export HS_PROFILE='${HS_PROFILE}'
 export HS_FORCE_COPY_TEQ='${HS_FORCE_COPY_TEQ}'
@@ -169,11 +173,18 @@ if [[ "${USE_CUDA_TRANSFORMS}" == "1" ]] && \
   exit 33
 fi
 
+if [[ "${USE_CUDA_GRID_FOURIER}" == "1" ]] && \
+   [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cuda" ]] && \
+   ! grep -q 'GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_20260725' "${CUDA_LOG}"; then
+  echo "ERROR: CUDA grid Fourier runtime banner missing."
+  exit 34
+fi
+
 if [[ "${USE_CUDA_SPHERICAL_FOURIER}" == "1" ]] && \
    [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cuda" ]] && \
-   ! grep -q 'SPHERICAL_FOURIER_CUDA_RUNTIME version=legendre_parallel_20260724' "${CUDA_LOG}"; then
+   ! grep -q 'SPHERICAL_FOURIER_CUDA_RUNTIME version=legendre_noatomic_20260725' "${CUDA_LOG}"; then
   echo "ERROR: CUDA spherical Fourier runtime banner missing."
-  exit 34
+  exit 35
 fi
 
 echo

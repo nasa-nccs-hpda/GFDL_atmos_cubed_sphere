@@ -28,6 +28,8 @@ OVERLAY_SPECTRAL_DYNAMICS = (
 )
 ORIGINAL_TRANSFORMS = "atmos_spectral/tools/transforms.F90"
 OVERLAY_TRANSFORMS_CUDA = "extra/local_overrides/spectral_dynamics/transforms_cuda.F90"
+ORIGINAL_GRID_FOURIER = "atmos_spectral/tools/grid_fourier.F90"
+OVERLAY_GRID_FOURIER_CUDA = "extra/local_overrides/spectral_dynamics/grid_fourier_cuda.F90"
 ORIGINAL_SPHERICAL_FOURIER = "atmos_spectral/tools/spherical_fourier.F90"
 OVERLAY_SPHERICAL_FOURIER_CUDA = (
     "extra/local_overrides/spectral_dynamics/spherical_fourier_cuda.F90"
@@ -102,6 +104,11 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
             elif os.environ.get("USE_CUDA_TRANSFORMS") == "1" and path == ORIGINAL_TRANSFORMS:
                 overlay_paths.append(OVERLAY_TRANSFORMS_CUDA)
             elif (
+                os.environ.get("USE_CUDA_GRID_FOURIER") == "1"
+                and path == ORIGINAL_GRID_FOURIER
+            ):
+                overlay_paths.append(OVERLAY_GRID_FOURIER_CUDA)
+            elif (
                 os.environ.get("USE_CUDA_SPHERICAL_FOURIER") == "1"
                 and path == ORIGINAL_SPHERICAL_FOURIER
             ):
@@ -124,6 +131,9 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
         if os.environ.get("USE_CUDA_TRANSFORMS") == "1":
             if "-DUSE_CUDA_TRANSFORMS" not in self.compile_flags:
                 self.compile_flags.append("-DUSE_CUDA_TRANSFORMS")
+        if os.environ.get("USE_CUDA_GRID_FOURIER") == "1":
+            if "-DUSE_CUDA_GRID_FOURIER" not in self.compile_flags:
+                self.compile_flags.append("-DUSE_CUDA_GRID_FOURIER")
         if os.environ.get("USE_CUDA_SPHERICAL_FOURIER") == "1":
             if "-DUSE_CUDA_SPHERICAL_FOURIER" not in self.compile_flags:
                 self.compile_flags.append("-DUSE_CUDA_SPHERICAL_FOURIER")
@@ -196,6 +206,11 @@ class HeldSuarezHybridCodeBase(DryCodeBase):
             raise RuntimeError(
                 "USE_CUDA_SPHERICAL_FOURIER=1 requires USE_CUDA_HS_FORCE=1 because "
                 "the spherical Fourier helper symbols are linked through the CUDA hybrid library."
+            )
+        if os.environ.get("USE_CUDA_GRID_FOURIER") == "1" and os.environ.get("USE_CUDA_HS_FORCE") != "1":
+            raise RuntimeError(
+                "USE_CUDA_GRID_FOURIER=1 requires USE_CUDA_HS_FORCE=1 because "
+                "the grid Fourier helper symbols are linked through the CUDA hybrid library."
             )
         self.configure_overlay()
         self.prepare_hybrid_library()
