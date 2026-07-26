@@ -175,7 +175,7 @@ fi
 
 if [[ "${USE_CUDA_GRID_FOURIER}" == "1" ]] && \
    [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cuda" ]] && \
-   ! grep -q 'GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_20260725' "${CUDA_LOG}"; then
+   ! grep -q 'GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_h2d_20260725' "${CUDA_LOG}"; then
   echo "ERROR: CUDA grid Fourier runtime banner missing."
   exit 34
 fi

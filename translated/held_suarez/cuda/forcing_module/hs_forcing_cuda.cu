@@ -1003,15 +1003,23 @@ extern "C" int grid_fourier_r2c_cuda_c(
 
     if (!g_grid_fourier_banner_printed) {
         std::fprintf(stderr,
-                     "GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_20260725 sync=implicit n=%d batch=%d\n",
+                     "GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_h2d_20260725 sync=implicit n=%d batch=%d\n",
                      n, batch);
         g_grid_fourier_banner_printed = true;
+    }
+
+    ierr = check_cuda(cudaMemcpy(g_grid_fourier_buffers.grid_padded, grid,
+                                 static_cast<std::size_t>(n + 1) * static_cast<std::size_t>(batch) * sizeof(double),
+                                 cudaMemcpyHostToDevice),
+                      "grid fourier copy grid");
+    if (ierr != HS_SUCCESS) {
+        return ierr;
     }
 
     const int threads = 256;
     const int grid_total = n * batch;
     int blocks = (grid_total + threads - 1) / threads;
-    grid_fourier_pack_grid_kernel<<<blocks, threads>>>(grid_total, grid, g_grid_fourier_buffers.grid, n);
+    grid_fourier_pack_grid_kernel<<<blocks, threads>>>(grid_total, g_grid_fourier_buffers.grid_padded, g_grid_fourier_buffers.grid, n);
     ierr = check_cuda(cudaGetLastError(), "grid_fourier_pack_grid_kernel launch");
     if (ierr == HS_SUCCESS) {
         ierr = check_cufft(cufftExecD2Z(
@@ -1061,7 +1069,7 @@ extern "C" int grid_fourier_c2r_cuda_c(
 
     if (!g_grid_fourier_banner_printed) {
         std::fprintf(stderr,
-                     "GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_20260725 sync=implicit n=%d batch=%d\n",
+                     "GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_h2d_20260725 sync=implicit n=%d batch=%d\n",
                      n, batch);
         g_grid_fourier_banner_printed = true;
     }

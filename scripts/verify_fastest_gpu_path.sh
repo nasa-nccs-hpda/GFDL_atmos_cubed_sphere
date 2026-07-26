@@ -39,7 +39,7 @@ if [[ "${VERIFY_CUDA_TRANSFORMS}" == "1" ]]; then
   check_log 'TRANSFORMS_CUDA_RUNTIME version=horizontal_fused_20260724'
 fi
 if [[ "${VERIFY_CUDA_GRID_FOURIER}" == "1" ]]; then
-  check_log 'GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_20260725'
+  check_log 'GRID_FOURIER_CUDA_RUNTIME version=cufft_batched_h2d_20260725'
 fi
 if [[ "${VERIFY_CUDA_SPHERICAL_FOURIER}" == "1" ]]; then
   check_log 'SPHERICAL_FOURIER_CUDA_RUNTIME version=legendre_noatomic_20260725'
