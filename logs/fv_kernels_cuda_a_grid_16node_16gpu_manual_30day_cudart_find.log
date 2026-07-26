@@ -1,0 +1,488 @@
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+HOST=gh027 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=0
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+Loading hybrid ubuntu-conda environment
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+Loading basic ubuntu-conda environment
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x0000400036ca0000)
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh027
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh027
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh027:3256331] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+HOST=gh051 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=6
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x0000400012a00000)
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh051
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh051
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh051:2728389] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+HOST=gh047 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=2
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+HOST=gh055 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=10
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+HOST=gh059 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=14
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+HOST=gh054 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=9
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+HOST=gh050 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=5
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+HOST=gh053 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=8
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x000040001ed50000)
+HOST=gh057 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=12
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x0000400003650000)
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x000040003f550000)
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x0000400040b20000)
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x000040002af20000)
+Loading hybrid ubuntu-conda environment
+ERROR: libcudart.so.12 not found on HOST=gh056
+Loading basic ubuntu-conda environment
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x0000400012fd0000)
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh055
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh055
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh055:2738253] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x000040001a490000)
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh047
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh047
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh047:2652305] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh059
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh059
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh059:2712459] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh054
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh054
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh054:2735738] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh050
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh050
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh050:2721660] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh053
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+HOST=gh058 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=13
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh053
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+[gh053:2724488] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh057
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh057
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh057:2716684] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+srun: error: gh056: task 11: Exited with exit code 127
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x0000400023b30000)
+HOST=gh052 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=7
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+HOST=gh046 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=1
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+HOST=gh060 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=15
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh058
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh058
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh058:2710046] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x00004000154b0000)
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x000040001b300000)
+HOST=gh048 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=3
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x0000400008820000)
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh052
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh052
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh052:2722776] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh046
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh046
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh046:1920875] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x000040002b060000)
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh060
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh048
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh060
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh048
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh060:2722856] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+[gh048:2735478] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+HOST=gh049 CUDA_VISIBLE_DEVICES=0 SLURM_LOCALID=0 SLURM_PROCID=4
+CUDART=/usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12
+LD_LIBRARY_PATH=/usr/local/cuda-12.4/targets/sbsa-linux/lib:/usr/local/cuda/lib64:/usr/local/cuda/targets/aarch64-linux/lib:/usr/local/cuda/targets/aarch64-linux/lib64:/usr/local/cuda/targets/sbsa-linux/lib:/usr/local/cuda/targets/sbsa-linux/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs
+	libcudart.so.12 => /usr/local/cuda-12.4/targets/sbsa-linux/lib/libcudart.so.12 (0x000040001e280000)
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh049
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh049
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh049:2718602] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+[2026-07-20T19:25:53.268] error:  mpi/pmix_v3: pmixp_p2p_send: gh055 [10]: pmixp_utils.c:447: send failed, rc=2, exceeded the retry limit
+[2026-07-20T19:25:53.269] error:  mpi/pmix_v3: _slurm_send: gh055 [10]: pmixp_server.c:1582: Cannot send message to /var/spool/slurmd/stepd.slurm.pmix.37885653.5, size = 246, hostlist:
+(null)

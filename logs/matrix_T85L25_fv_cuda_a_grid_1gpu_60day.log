@@ -1,0 +1,822 @@
+=== Run Held-Suarez matrix case ===
+start_timestamp=2026-07-24T16:02:16-04:00
+config=fv_cuda_a_grid_1gpu
+resolution=T85
+levels=25
+days=60
+num_ranks=16
+ntasks_per_node=16
+container=/lscratch/jli30/isca-sandbox
+GFDL_BASE=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+experiment=held_suarez_fv_cuda_a_grid_1gpu_T85L25_60day
+run_dir=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_cuda_a_grid_1gpu_T85L25_60day/run
+executable=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_cuda_a_grid_1gpu_T85L25_60day/run/held_suarez_fv_kernels_cuda.x
+log=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/logs/matrix_T85L25_fv_cuda_a_grid_1gpu_60day.log
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+Loading hybrid ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+hostname=gh032
+CUDA_VISIBLE_DEVICES=0
+hostname=gh032
+hostname=gh032
+CUDA_VISIBLE_DEVICES=0
+CUDA_VISIBLE_DEVICES=0
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+hostname=gh032
+CUDA_VISIBLE_DEVICES=0
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+hostname=gh032
+CUDA_VISIBLE_DEVICES=0
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+hostname=gh032
+CUDA_VISIBLE_DEVICES=0
+Loading hybrid ubuntu-conda environment
+hostname=gh032
+Loading basic ubuntu-conda environment
+CUDA_VISIBLE_DEVICES=0
+hostname=gh032
+CUDA_VISIBLE_DEVICES=0
+hostname=gh032
+Loading hybrid ubuntu-conda environment
+CUDA_VISIBLE_DEVICES=0
+hostname=gh032
+Loading basic ubuntu-conda environment
+CUDA_VISIBLE_DEVICES=0
+hostname=gh032
+hostname=gh032
+CUDA_VISIBLE_DEVICES=0
+CUDA_VISIBLE_DEVICES=0
+hostname=gh032
+CUDA_VISIBLE_DEVICES=0
+Loading hybrid ubuntu-conda environment
+Loading basic ubuntu-conda environment
+hostname=gh032
+CUDA_VISIBLE_DEVICES=0
+hostname=gh032
+CUDA_VISIBLE_DEVICES=0
+hostname=gh032
+CUDA_VISIBLE_DEVICES=0
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-8c6c6ea7-a446-2230-389b-5283ea3b4eab)
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh032:2098072] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+[gh032:2098076] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh032:2098080] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+[gh032:2098079] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh032:2098081] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+[gh032:2098082] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+[gh032:2098073] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+[gh032:2098074] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+[gh032:2098071] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+[gh032:2098085] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+[gh032:2098084] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh032:2098083] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh032:2098077] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh032:2098078] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh032:2098086] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh032
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh032:2098075] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: The default btl_vader_single_copy_mechanism CMA is
+not available due to different user namespaces.
+
+The vader shared memory BTL will fall back on another single-copy
+mechanism if one is available. This may result in lower performance.
+
+  Local host: gh032
+--------------------------------------------------------------------------
+NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+&MPP_IO_NML
+ HEADER_BUFFER_VAL=16384      ,
+ GLOBAL_FIELD_ON_ROOT_PE=T,
+ IO_CLOCKS_ON=F,
+ SHUFFLE=0          ,
+ DEFLATE_LEVEL=-1         ,
+ /
+NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+  starting            1  OpenMP threads per MPI-task
+ATMOS MODEL DOMAIN DECOMPOSITION
+  X-AXIS =  256
+  Y-AXIS =    8   8   8   8   8   8   8   8   8   8   8   8   8   8   8   8
+mean surface pressure=1000.0000 mb
+PROFILE_FV_GPU_MAPPING rank=5 local_rank=5 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=5 device=0 free_before=92170813440 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=8 local_rank=8 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=8 device=0 free_before=92170813440 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=6 local_rank=6 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=6 device=0 free_before=92166619136 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=15 local_rank=15 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=15 device=0 free_before=92160327680 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=14 local_rank=14 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=14 device=0 free_before=92152856576 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=13 local_rank=13 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=13 device=0 free_before=92150759424 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=2 local_rank=2 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=2 device=0 free_before=92150759424 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=7 local_rank=7 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=7 device=0 free_before=92150759424 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=3 local_rank=3 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=3 device=0 free_before=92136079360 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=10 local_rank=10 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=10 device=0 free_before=92121726976 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=9 local_rank=9 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=9 device=0 free_before=92119629824 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=1 local_rank=1 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=1 device=0 free_before=92119629824 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=11 local_rank=11 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=11 device=0 free_before=92119629824 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=12 local_rank=12 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=12 device=0 free_before=92119629824 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=0 local_rank=0 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=0 device=0 free_before=92117532672 total=102005473280
+PROFILE_FV_GPU_MAPPING rank=4 local_rank=4 device=0 visible_gpus=1 hostname=gh032 name="NVIDIA GH200 480GB" pci_bus_id=0009:01:00.0 policy=local_rank strict_unique=0 cuda_visible_devices=0
+PROFILE_FV_GPU_MEMORY rank=4 device=0 free_before=92098658304 total=102005473280
+ Integration completed through 2000 Jan  2   0: 0: 0
+ Integration completed through 2000 Jan  3   0: 0: 0
+ Integration completed through 2000 Jan  4   0: 0: 0
+ Integration completed through 2000 Jan  5   0: 0: 0
+ Integration completed through 2000 Jan  6   0: 0: 0
+ Integration completed through 2000 Jan  7   0: 0: 0
+ Integration completed through 2000 Jan  8   0: 0: 0
+ Integration completed through 2000 Jan  9   0: 0: 0
+ Integration completed through 2000 Jan 10   0: 0: 0
+ Integration completed through 2000 Jan 11   0: 0: 0
+ Integration completed through 2000 Jan 12   0: 0: 0
+ Integration completed through 2000 Jan 13   0: 0: 0
+ Integration completed through 2000 Jan 14   0: 0: 0
+ Integration completed through 2000 Jan 15   0: 0: 0
+ Integration completed through 2000 Jan 16   0: 0: 0
+ Integration completed through 2000 Jan 17   0: 0: 0
+ Integration completed through 2000 Jan 18   0: 0: 0
+ Integration completed through 2000 Jan 19   0: 0: 0
+ Integration completed through 2000 Jan 20   0: 0: 0
+ Integration completed through 2000 Jan 21   0: 0: 0
+ Integration completed through 2000 Jan 22   0: 0: 0
+ Integration completed through 2000 Jan 23   0: 0: 0
+ Integration completed through 2000 Jan 24   0: 0: 0
+ Integration completed through 2000 Jan 25   0: 0: 0
+ Integration completed through 2000 Jan 26   0: 0: 0
+ Integration completed through 2000 Jan 27   0: 0: 0
+ Integration completed through 2000 Jan 28   0: 0: 0
+ Integration completed through 2000 Jan 29   0: 0: 0
+ Integration completed through 2000 Jan 30   0: 0: 0
+ Integration completed through 2000 Feb  1   0: 0: 0
+ Integration completed through 2000 Feb  2   0: 0: 0
+ Integration completed through 2000 Feb  3   0: 0: 0
+ Integration completed through 2000 Feb  4   0: 0: 0
+ Integration completed through 2000 Feb  5   0: 0: 0
+ Integration completed through 2000 Feb  6   0: 0: 0
+ Integration completed through 2000 Feb  7   0: 0: 0
+ Integration completed through 2000 Feb  8   0: 0: 0
+ Integration completed through 2000 Feb  9   0: 0: 0
+ Integration completed through 2000 Feb 10   0: 0: 0
+ Integration completed through 2000 Feb 11   0: 0: 0
+ Integration completed through 2000 Feb 12   0: 0: 0
+ Integration completed through 2000 Feb 13   0: 0: 0
+ Integration completed through 2000 Feb 14   0: 0: 0
+ Integration completed through 2000 Feb 15   0: 0: 0
+ Integration completed through 2000 Feb 16   0: 0: 0
+ Integration completed through 2000 Feb 17   0: 0: 0
+ Integration completed through 2000 Feb 18   0: 0: 0
+ Integration completed through 2000 Feb 19   0: 0: 0
+ Integration completed through 2000 Feb 20   0: 0: 0
+ Integration completed through 2000 Feb 21   0: 0: 0
+ Integration completed through 2000 Feb 22   0: 0: 0
+ Integration completed through 2000 Feb 23   0: 0: 0
+ Integration completed through 2000 Feb 24   0: 0: 0
+ Integration completed through 2000 Feb 25   0: 0: 0
+ Integration completed through 2000 Feb 26   0: 0: 0
+ Integration completed through 2000 Feb 27   0: 0: 0
+ Integration completed through 2000 Feb 28   0: 0: 0
+ Integration completed through 2000 Feb 29   0: 0: 0
+ Integration completed through 2000 Feb 30   0: 0: 0
+ Integration completed through 2000 Mar  1   0: 0: 0
+NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     819200.
+ MPP_DOMAINS_STACK high water mark=      102400
+
+Tabulating mpp_clock statistics across     16 PEs...
+
+                                          tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+Total runtime                       525.309154    525.309155    525.309154      0.000001  1.000     0     0    15
+ MPP_STACK high water mark=           0
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=26.620755472 avg=1.540552979e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=27.284578910 avg=1.578968687e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=27.330683332 avg=1.581636767e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=24.441760253 avg=1.414453718e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.004811115 h2d=6.744706574 kernel=41.665704847 sync=42.077418566 d2h=0.472389882 free=0.000000000 total=51.754628644
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.000453825 h2d=5.878484406 kernel=44.417192442 sync=44.978990716 d2h=0.495655826 free=0.000000000 total=53.886232148
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=24.475148855 avg=1.416385929e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=22.938052886 avg=1.327433616e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.004567947 h2d=6.178663806 kernel=37.623868609 sync=38.213242955 d2h=0.494156607 free=0.000000000 total=47.394546235
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=29.405203065 avg=1.701689992e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=31.533672742 avg=1.824865321e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.000820737 h2d=6.346978939 kernel=50.965327618 sync=51.569404462 d2h=0.497885084 free=0.000000000 total=60.919521505
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=31.793250859 avg=1.839887202e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=29.293053217 avg=1.695199839e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.000940259 h2d=6.816599803 kernel=50.859148298 sync=51.277120130 d2h=0.492004497 free=0.000000000 total=61.068430356
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=27.674277043 avg=1.601520662e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=28.235730402 avg=1.634012176e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.000807745 h2d=6.633470799 kernel=45.758624083 sync=46.279386938 d2h=0.475089054 free=0.000000000 total=55.891782715
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=25.580250802 avg=1.480338588e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=27.726388984 avg=1.604536400e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.002685894 h2d=6.629007042 kernel=43.163753559 sync=43.702695774 d2h=0.476482693 free=0.000000000 total=53.287573589
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=19.187657662 avg=1.110396855e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=16.473891823 avg=9.533502212e-04
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.002175364 h2d=5.658621068 kernel=26.178978688 sync=26.867971831 d2h=0.499023730 free=0.000000000 total=35.639787167
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=34.027626689 avg=1.969191359e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=34.273593088 avg=1.983425526e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.004699819 h2d=6.491441705 kernel=58.161752077 sync=58.763851354 d2h=0.519325974 free=0.000000000 total=68.282006895
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=31.265249097 avg=1.809331545e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=32.483821129 avg=1.879850760e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.001791333 h2d=6.118875386 kernel=53.846975034 sync=54.574137500 d2h=0.520272801 free=0.000000000 total=63.730424832
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=26.298416641 avg=1.521899111e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=28.040668212 avg=1.622723855e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.001019906 h2d=5.784965754 kernel=44.712239807 sync=45.504102432 d2h=0.505042281 free=0.000000000 total=54.319933036
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=23.682925830 avg=1.370539689e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=28.681587783 avg=1.659814108e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.000621410 h2d=5.584830359 kernel=43.135623484 sync=43.695502610 d2h=0.504461189 free=0.000000000 total=52.340917797
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=24.139445822 avg=1.396958670e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=27.214066678 avg=1.574888118e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.000741634 h2d=5.666077374 kernel=42.104480798 sync=42.622792058 d2h=0.473348393 free=0.000000000 total=51.332335791
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=28.917081763 avg=1.673442232e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=32.472869595 avg=1.879216990e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.001125027 h2d=6.539599959 kernel=51.476243522 sync=51.843722043 d2h=0.480066994 free=0.000000000 total=61.371303652
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=28.336375607 avg=1.639836551e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=29.518578670 avg=1.708251080e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.003211303 h2d=6.091824001 kernel=48.086901948 sync=48.721779623 d2h=0.496472635 free=0.000000000 total=57.835554718
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_begin calls=17280 time=29.850418060 avg=1.727454749e-03
+PROFILE_FV_ADVECTION_KERNEL backend=cuda_resident rank=unknown name=resident_advection_finish calls=17280 time=34.666611124 avg=2.006169625e-03
+PROFILE_FV_ADVECTION_CUDA backend=cuda_resident rank=unknown calls=34560 allocation=0.000445154 h2d=6.735329925 kernel=54.436743523 sync=54.773964665 d2h=0.485973494 free=0.000000000 total=64.498005247
+end_timestamp=2026-07-24T16:11:03-04:00
+output=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_cuda_a_grid_1gpu_T85L25_60day/run0001/atmos_monthly.nc
+log=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/logs/matrix_T85L25_fv_cuda_a_grid_1gpu_60day.log

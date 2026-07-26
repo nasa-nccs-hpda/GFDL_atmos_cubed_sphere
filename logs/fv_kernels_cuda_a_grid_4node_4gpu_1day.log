@@ -1,0 +1,124 @@
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+=== Current container node ===
+gh016
+CUDA_VISIBLE_DEVICES=0
+GPU 0: NVIDIA GH200 480GB (UUID: GPU-66eb6ec0-837d-2a3c-af68-0ab6d3dc32d1)
+2026-07-20 13:19:43,540 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-07-20 13:19:43,627 - isca - INFO - RRTM compilation disabled.
+2026-07-20 13:19:43,627 - isca - INFO - SOCRATES compilation disabled.
+2026-07-20 13:19:43,630 - isca - INFO - RRTM compilation disabled.
+2026-07-20 13:19:43,630 - isca - INFO - SOCRATES compilation disabled.
+2026-07-20 13:19:43,658 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4node_4gpu_1day/run'
+2026-07-20 13:19:43,735 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4node_4gpu_1day/run/input.nml'
+2026-07-20 13:19:43,739 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4node_4gpu_1day/run/field_table'
+2026-07-20 13:19:43,746 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4node_4gpu_1day/run/diag_table'
+2026-07-20 13:19:43,750 - isca - INFO - Running without restart file
+2026-07-20 13:19:43,773 - isca - INFO - Beginning run 1
+2026-07-20 13:19:43,775 - isca - INFO - process running as 2589530
+2026-07-20 13:19:43,776 - isca - DEBUG - Loading hybrid ubuntu-conda environment
+2026-07-20 13:19:43,776 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-07-20 13:19:44,118 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+2026-07-20 13:19:44,118 - isca - DEBUG - &MPP_IO_NML
+2026-07-20 13:19:44,118 - isca - DEBUG - HEADER_BUFFER_VAL=16384      ,
+2026-07-20 13:19:44,118 - isca - DEBUG - GLOBAL_FIELD_ON_ROOT_PE=T,
+2026-07-20 13:19:44,118 - isca - DEBUG - IO_CLOCKS_ON=F,
+2026-07-20 13:19:44,118 - isca - DEBUG - SHUFFLE=0          ,
+2026-07-20 13:19:44,118 - isca - DEBUG - DEFLATE_LEVEL=-1         ,
+2026-07-20 13:19:44,118 - isca - DEBUG - /
+2026-07-20 13:19:44,118 - isca - DEBUG - NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+2026-07-20 13:19:44,130 - isca - DEBUG - NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+2026-07-20 13:19:44,135 - isca - DEBUG - starting            1  OpenMP threads per MPI-task
+2026-07-20 13:19:44,135 - isca - DEBUG - ATMOS MODEL DOMAIN DECOMPOSITION
+2026-07-20 13:19:44,135 - isca - DEBUG - X-AXIS =  128
+2026-07-20 13:19:44,135 - isca - DEBUG - Y-AXIS =   16  16  16  16
+2026-07-20 13:19:44,144 - isca - DEBUG - mean surface pressure=1000.0000 mb
+2026-07-20 13:19:44,405 - isca - DEBUG - fv_advection_kernels CUDA error: FV_KERNELS_REQUIRE_UNIQUE_GPU=1 but local_rank=2 and visible_gpus=1. Use fewer ranks per node or expose more GPUs.
+2026-07-20 13:19:44,405 - isca - DEBUG - 
+2026-07-20 13:19:44,405 - isca - DEBUG - FATAL from PE    2: fv_advection_mod: a_grid resident CUDA advection begin failed
+2026-07-20 13:19:44,405 - isca - DEBUG - 
+2026-07-20 13:19:44,405 - isca - DEBUG - --------------------------------------------------------------------------
+2026-07-20 13:19:44,405 - isca - DEBUG - MPI_ABORT was invoked on rank 2 in communicator MPI_COMM_WORLD
+2026-07-20 13:19:44,405 - isca - DEBUG - with errorcode 1.
+2026-07-20 13:19:44,405 - isca - DEBUG - 
+2026-07-20 13:19:44,405 - isca - DEBUG - NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+2026-07-20 13:19:44,405 - isca - DEBUG - You may or may not see output from other processes, depending on
+2026-07-20 13:19:44,405 - isca - DEBUG - exactly when Open MPI kills them.
+2026-07-20 13:19:44,405 - isca - DEBUG - --------------------------------------------------------------------------
+2026-07-20 13:19:44,432 - isca - DEBUG - fv_advection_kernels CUDA error: FV_KERNELS_REQUIRE_UNIQUE_GPU=1 but local_rank=1 and visible_gpus=1. Use fewer ranks per node or expose more GPUs.
+2026-07-20 13:19:44,432 - isca - DEBUG - 
+2026-07-20 13:19:44,432 - isca - DEBUG - FATAL from PE    1: fv_advection_mod: a_grid resident CUDA advection begin failed
+2026-07-20 13:19:44,432 - isca - DEBUG - 
+2026-07-20 13:19:44,432 - isca - DEBUG - fv_advection_kernels CUDA error: FV_KERNELS_REQUIRE_UNIQUE_GPU=1 but local_rank=3 and visible_gpus=1. Use fewer ranks per node or expose more GPUs.
+2026-07-20 13:19:44,432 - isca - DEBUG - 
+2026-07-20 13:19:44,432 - isca - DEBUG - FATAL from PE    3: fv_advection_mod: a_grid resident CUDA advection begin failed
+2026-07-20 13:19:44,432 - isca - DEBUG - 
+2026-07-20 13:19:44,432 - isca - DEBUG - [gh016:2589530] 1 more process has sent help message help-mpi-api.txt / mpi-abort
+2026-07-20 13:19:44,432 - isca - DEBUG - [gh016:2589530] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+2026-07-20 13:19:44,464 - isca - DEBUG - [gh016:2589530] PMIX ERROR: NO-PERMISSIONS in file ../../../../../../src/mca/common/dstore/dstore_base.c at line 247
+Exception in thread background thread for pid 2589530:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 1716, in wrap
+    fn(*rgs, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 2727, in background_thread
+    handle_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 2418, in fn
+    return self.command.handle_command_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 823, in handle_command_exit_code
+    raise exc
+sh.ErrorReturnCode_1: 
+
+  RAN: /usr/bin/bash /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4node_4gpu_1day/run/run.sh
+
+  STDOUT:
+
+
+  STDERR:
+
+2026-07-20 13:19:44,577 - isca - ERROR - Run 1 failed. See log for details.
+2026-07-20 13:19:44,577 - isca - ERROR - Error: ErrorReturnCode_1('\n\n  RAN: /usr/bin/bash /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4node_4gpu_1day/run/run.sh\n\n  STDOUT:\n\n\n  STDERR:\n')
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_fv_kernels_cuda_a_grid_4node_4gpu_1day
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_kernels_cuda_a_grid_4node_4gpu_1day
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4node_4gpu_1day/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_fv_kernels_cuda/held_suarez_fv_kernels_cuda.x
+Days = 1
+dt_atmos = 600
+num_cores = 4
+production_diag = True
+Traceback (most recent call last):
+  File "/isca/src/extra/python/isca/experiment.py", line 284, in run
+    proc.wait()
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 796, in wait
+    self.handle_command_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 823, in handle_command_exit_code
+    raise exc
+sh.ErrorReturnCode_1: 
+
+  RAN: /usr/bin/bash /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4node_4gpu_1day/run/run.sh
+
+  STDOUT:
+
+
+  STDERR:
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py", line 141, in <module>
+    main()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py", line 132, in main
+    exp.run(
+  File "/isca/src/extra/python/isca/helpers.py", line 22, in _destructive
+    return fn(*args, **kwargs)
+  File "/isca/src/extra/python/isca/helpers.py", line 38, in _useworkdir
+    return fn(*args, **kwargs)
+  File "/isca/src/extra/python/isca/experiment.py", line 298, in run
+    raise FailedRunError()
+isca.experiment.FailedRunError

@@ -1,0 +1,13 @@
+2026-07-21 10:50:21,555 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-07-21 10:50:21,698 - isca - INFO - RRTM compilation disabled.
+2026-07-21 10:50:21,698 - isca - INFO - SOCRATES compilation disabled.
+2026-07-21 10:50:21,714 - isca - INFO - Writing path_names to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_profile_dynamics_regions/path_names'
+2026-07-21 10:50:21,761 - isca - INFO - Running compiler
+2026-07-21 10:50:21,769 - isca - INFO - Loading basic ubuntu-conda environment
+2026-07-21 10:50:21,777 - isca - INFO - /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_profile_dynamics_regions/path_names
+2026-07-21 10:50:22,691 - isca - INFO - ................................................................................................................................ Makefile is ready.
+2026-07-21 10:50:22,807 - isca - INFO - make: Nothing to be done for 'all'.
+2026-07-21 10:50:22,854 - isca - INFO - make: 'held_suarez_profile_dynamics_regions.x' is up to date.
+2026-07-21 10:50:22,855 - isca - INFO - Compilation complete.
+Building Held-Suarez dynamics-region profile via CodeBase.compile()
+Generated: /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_profile_dynamics_regions/held_suarez_profile_dynamics_regions.x

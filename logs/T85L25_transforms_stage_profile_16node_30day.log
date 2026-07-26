@@ -1,0 +1,523 @@
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+Loading basic ubuntu-conda environment
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh033
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh033
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh033:3603804] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh043
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh043
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh043:4106054] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh038
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh038
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh038:588261] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh040
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh040
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh040:66863] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh036
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh036
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh036:1254526] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh057
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh057
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh057:3753585] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh056
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh056
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh056:3781852] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh059
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh059
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh059:3752614] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh045
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh045
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh045:3120353] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh039
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh039
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh039:139485] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh037
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh037
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh037:939002] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh042
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh042
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh042:3707385] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh034
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh034
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh034:3949266] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh041
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh041
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh041:1733078] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+Loading basic ubuntu-conda environment
+Loading basic ubuntu-conda environment
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh035
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh035
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh035:3687353] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh044
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+A requested component was not found, or was unable to be opened.  This
+means that this component is either not installed or is unable to be
+used on your system (e.g., sometimes this means that shared libraries
+that the component requires are unable to be found/loaded).  Note that
+PMIx stopped checking at the first component that it did not find.
+
+Host:      gh044
+Framework: psec
+Component: munge
+--------------------------------------------------------------------------
+
+[gh044:3727514] PMIX ERROR: ERROR in file ../../../../../../src/mca/gds/ds12/gds_ds12_lock_pthread.c at line 169
+NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+&MPP_IO_NML
+ HEADER_BUFFER_VAL=16384      ,
+ GLOBAL_FIELD_ON_ROOT_PE=T,
+ IO_CLOCKS_ON=F,
+ SHUFFLE=0          ,
+ DEFLATE_LEVEL=-1         ,
+ /
+NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+NOTE from PE    0: MPP_DOMAINS_SET_STACK_SIZE: stack size set to   600000.
+  starting            1  OpenMP threads per MPI-task
+ATMOS MODEL DOMAIN DECOMPOSITION
+  X-AXIS =  256
+  Y-AXIS =    8   8   8   8   8   8   8   8   8   8   8   8   8   8   8   8
+mean surface pressure=1000.0000 mb
+ Integration completed through 2000 Jan  2   0: 0: 0
+ Integration completed through 2000 Jan  3   0: 0: 0
+ Integration completed through 2000 Jan  4   0: 0: 0
+ Integration completed through 2000 Jan  5   0: 0: 0
+ Integration completed through 2000 Jan  6   0: 0: 0
+ Integration completed through 2000 Jan  7   0: 0: 0
+ Integration completed through 2000 Jan  8   0: 0: 0
+ Integration completed through 2000 Jan  9   0: 0: 0
+ Integration completed through 2000 Jan 10   0: 0: 0
+ Integration completed through 2000 Jan 11   0: 0: 0
+ Integration completed through 2000 Jan 12   0: 0: 0
+ Integration completed through 2000 Jan 13   0: 0: 0
+ Integration completed through 2000 Jan 14   0: 0: 0
+ Integration completed through 2000 Jan 15   0: 0: 0
+ Integration completed through 2000 Jan 16   0: 0: 0
+ Integration completed through 2000 Jan 17   0: 0: 0
+ Integration completed through 2000 Jan 18   0: 0: 0
+ Integration completed through 2000 Jan 19   0: 0: 0
+ Integration completed through 2000 Jan 20   0: 0: 0
+ Integration completed through 2000 Jan 21   0: 0: 0
+ Integration completed through 2000 Jan 22   0: 0: 0
+ Integration completed through 2000 Jan 23   0: 0: 0
+ Integration completed through 2000 Jan 24   0: 0: 0
+ Integration completed through 2000 Jan 25   0: 0: 0
+ Integration completed through 2000 Jan 26   0: 0: 0
+ Integration completed through 2000 Jan 27   0: 0: 0
+ Integration completed through 2000 Jan 28   0: 0: 0
+ Integration completed through 2000 Jan 29   0: 0: 0
+ Integration completed through 2000 Jan 30   0: 0: 0
+ Integration completed through 2000 Feb  1   0: 0: 0
+ PROFILE_DYNAMICS_DEEP name=transform_dt_ln_ps calls_max=        8640  time_max=   5.3480000000000798       avg_max=   6.1898148148149075E-004
+ PROFILE_DYNAMICS_DEEP name=transform_dt_t calls_max=        8640  time_max=   13.717000000000253       avg_max=   1.5876157407407701E-003
+ PROFILE_DYNAMICS_DEEP name=transform_vor_div_from_uv calls_max=        8640  time_max=   29.389000000001811       avg_max=   3.4015046296298392E-003
+ PROFILE_DYNAMICS_DEEP name=transform_phis_plus_ke calls_max=        8640  time_max=   14.076000000000413       avg_max=   1.6291666666667145E-003
+ PROFILE_DYNAMICS_DEEP name=transform_future_div calls_max=        8640  time_max=   18.844000000000477       avg_max=   2.1810185185185738E-003
+ PROFILE_DYNAMICS_DEEP name=transform_future_vor calls_max=        8640  time_max=   14.472000000000515       avg_max=   1.6750000000000595E-003
+ PROFILE_DYNAMICS_DEEP name=transform_future_uv_from_vor_div calls_max=        8640  time_max=   29.664000000001757       avg_max=   3.4333333333335368E-003
+ PROFILE_DYNAMICS_DEEP name=transform_future_t calls_max=        8640  time_max=   14.412000000000502       avg_max=   1.6680555555556136E-003
+ PROFILE_DYNAMICS_DEEP name=transform_future_ln_ps calls_max=        8640  time_max=   4.6709999999998839       avg_max=   5.4062499999998654E-004
+ PROFILE_DYNAMICS_DEEP name=horizontal_advection_temperature calls_max=        8640  time_max=   30.316000000002035       avg_max=   3.5087962962965318E-003
+ PROFILE_DYNAMICS_DEEP name=vertical_advection_u calls_max=        8640  time_max=  0.86000000000000065       avg_max=   9.9537037037037112E-005
+ PROFILE_DYNAMICS_DEEP name=vertical_advection_v calls_max=        8640  time_max=  0.89400000000000068       avg_max=   1.0347222222222230E-004
+ PROFILE_DYNAMICS_DEEP name=vertical_advection_t calls_max=        8640  time_max=  0.90500000000000069       avg_max=   1.0474537037037045E-004
+ PROFILE_DYNAMICS_DEEP name=update_tracers calls_max=        8640  time_max=   46.098000000003559       avg_max=   5.3354166666670783E-003
+ PROFILE_DYNAMICS_DEEP name=compute_corrections calls_max=        8640  time_max=   30.045000000002311       avg_max=   3.4774305555558232E-003
+ PROFILE_DYNAMICS_DEEP name=every_step_diagnostics calls_max=        8640  time_max=   8.0000000000000002E-003  avg_max=   9.2592592592592594E-007
+ PROFILE_DYNAMICS_DEEP name=tracer_horizontal_advection calls_max=           0  time_max=   0.0000000000000000       avg_max=   0.0000000000000000     
+ PROFILE_DYNAMICS_DEEP name=tracer_vertical_advection calls_max=        8640  time_max=   10.841999999999755       avg_max=   1.2548611111110827E-003
+ PROFILE_DYNAMICS_DEEP name=tracer_grid_to_spectral calls_max=           0  time_max=   0.0000000000000000       avg_max=   0.0000000000000000     
+ PROFILE_DYNAMICS_DEEP name=tracer_spectral_to_grid calls_max=           0  time_max=   0.0000000000000000       avg_max=   0.0000000000000000     
+ PROFILE_DYNAMICS_DEEP name=tracer_grid_horizontal_advection calls_max=        8640  time_max=   33.983000000002377       avg_max=   3.9332175925928681E-003
+ PROFILE_TRANSFORM_TOP name=grid_to_spherical_direct calls_max=       25923  time_max=   33.195000000002203       avg_max=   1.2805230876056862E-003
+ PROFILE_TRANSFORM_TOP name=spherical_to_grid_direct calls_max=       69124  time_max=   90.576000000001443       avg_max=   1.3103408367571530E-003
+ PROFILE_TRANSFORM_TOP name=vor_div_from_uv_grid_composite calls_max=        8641  time_max=   29.394000000001817       avg_max=   3.4016896192572408E-003
+ PROFILE_TRANSFORM_TOP name=uv_grid_from_vor_div_composite calls_max=        8642  time_max=   29.682000000001761       avg_max=   3.4346216153670170E-003
+ PROFILE_TRANSFORM_TOP name=grid_to_spherical_nested_vor_div calls_max=       17282  time_max=   27.756000000000054       avg_max=   1.6060641129498931E-003
+ PROFILE_TRANSFORM_TOP name=spherical_to_grid_nested_uv calls_max=       17284  time_max=   28.706999999999361       avg_max=   1.6609002545706643E-003
+ PROFILE_TRANSFORM_TOP name=nonoverlap_total calls_max=      112330  time_max=   181.80700000000760       avg_max=   1.6185079675955453E-003
+ PROFILE_TRANSFORM_STAGE name=fft_forward_total calls_max=       43205  time_max=   5.4260000000001485       avg_max=   1.2558731628284107E-004
+ PROFILE_TRANSFORM_STAGE name=fft_forward_pack calls_max=       43205  time_max=  0.84200000000000064       avg_max=   1.9488485129036007E-005
+ PROFILE_TRANSFORM_STAGE name=fft_forward_kernel calls_max=       43205  time_max=   4.7099999999999103       avg_max=   1.0901516028237265E-004
+ PROFILE_TRANSFORM_STAGE name=fft_inverse_total calls_max=       86408  time_max=   9.4990000000001746       avg_max=   1.0993195074530338E-004
+ PROFILE_TRANSFORM_STAGE name=fft_inverse_kernel calls_max=       86408  time_max=   8.3660000000008026       avg_max=   9.6819738913072896E-005
+ PROFILE_TRANSFORM_STAGE name=fft_inverse_unpack calls_max=       86408  time_max=   1.1659999999999824       avg_max=   1.3494120914729914E-005
+ PROFILE_TRANSFORM_STAGE name=legendre_spherical_to_fourier_total calls_max=       86408  time_max=   39.698999999998328       avg_max=   4.5943662623829193E-004
+ PROFILE_TRANSFORM_STAGE name=legendre_spherical_to_fourier_loop calls_max=       86408  time_max=   39.688999999998337       avg_max=   4.5932089621329432E-004
+ PROFILE_TRANSFORM_STAGE name=legendre_fourier_to_spherical_total calls_max=       43205  time_max=   20.404000000001954       avg_max=   4.7226015507468937E-004
+ PROFILE_TRANSFORM_STAGE name=legendre_fourier_to_spherical_loop calls_max=       43205  time_max=   20.158000000001653       avg_max=   4.6656636963318259E-004
+NOTE from PE    0: MPP_IO_SET_STACK_SIZE: stack size set to     819200.
+ MPP_DOMAINS_STACK high water mark=      102400
+
+Tabulating mpp_clock statistics across     16 PEs...
+
+                                          tmin          tmax          tavg          tstd  tfrac grain pemin pemax
+Total runtime                       307.548322    307.549007    307.548541      0.000253  1.000     0     0    15
+ MPP_STACK high water mark=           0

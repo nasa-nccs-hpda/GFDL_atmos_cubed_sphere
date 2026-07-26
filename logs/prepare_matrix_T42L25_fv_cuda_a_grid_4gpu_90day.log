@@ -1,0 +1,47 @@
+=== Prepare Held-Suarez matrix case ===
+config=fv_cuda_a_grid_4gpu
+resolution=T42
+levels=25
+days=90
+dt_atmos=600
+num_cores=16
+container=/lscratch/jli30/isca-sandbox
+GFDL_BASE=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+experiment=held_suarez_fv_cuda_a_grid_4gpu_T42L25_90day
+executable=held_suarez_fv_kernels_cuda.x
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+2026-07-24 16:55:09,573 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-07-24 16:55:09,625 - isca - INFO - RRTM compilation disabled.
+2026-07-24 16:55:09,625 - isca - INFO - SOCRATES compilation disabled.
+2026-07-24 16:55:09,628 - isca - INFO - RRTM compilation disabled.
+2026-07-24 16:55:09,628 - isca - INFO - SOCRATES compilation disabled.
+2026-07-24 16:55:09,629 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_cuda_a_grid_4gpu_T42L25_90day'
+2026-07-24 16:55:09,639 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-07-24 16:55:09,644 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_cuda_a_grid_4gpu_T42L25_90day/run'
+2026-07-24 16:55:09,725 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_cuda_a_grid_4gpu_T42L25_90day/run/input.nml'
+2026-07-24 16:55:09,729 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_cuda_a_grid_4gpu_T42L25_90day/run/field_table'
+2026-07-24 16:55:09,735 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_cuda_a_grid_4gpu_T42L25_90day/run/diag_table'
+Experiment = held_suarez_fv_cuda_a_grid_4gpu_T42L25_90day
+Backend = fv_cuda_a_grid_4gpu
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_fv_kernels_cuda/held_suarez_fv_kernels_cuda.x
+Resolution = T42
+Levels = 25
+Days = 90
+dt_atmos = 600
+num_cores = 16
+production_diag = True
+overwrite = True
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+Codebase dir = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+GFDL_ENV = hybrid
+HS_FORCE_BACKEND = 
+HS_PROFILE = 
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_cuda_a_grid_4gpu_T42L25_90day
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_cuda_a_grid_4gpu_T42L25_90day/run
+Prepared run directory = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_cuda_a_grid_4gpu_T42L25_90day/run
+prepared_run_dir=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_cuda_a_grid_4gpu_T42L25_90day/run
+log=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/logs/prepare_matrix_T42L25_fv_cuda_a_grid_4gpu_90day.log

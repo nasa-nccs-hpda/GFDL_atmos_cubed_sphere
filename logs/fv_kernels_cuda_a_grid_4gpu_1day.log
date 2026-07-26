@@ -1,0 +1,95 @@
+2026-07-17 14:47:51,956 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-07-17 14:47:52,133 - isca - INFO - RRTM compilation disabled.
+2026-07-17 14:47:52,133 - isca - INFO - SOCRATES compilation disabled.
+2026-07-17 14:47:52,139 - isca - INFO - RRTM compilation disabled.
+2026-07-17 14:47:52,139 - isca - INFO - SOCRATES compilation disabled.
+2026-07-17 14:47:52,146 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4gpu_1day'
+2026-07-17 14:47:52,164 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-07-17 14:47:52,175 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4gpu_1day/run'
+2026-07-17 14:47:52,792 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4gpu_1day/run/input.nml'
+2026-07-17 14:47:52,816 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4gpu_1day/run/field_table'
+2026-07-17 14:47:52,825 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4gpu_1day/run/diag_table'
+2026-07-17 14:47:52,846 - isca - INFO - Running without restart file
+2026-07-17 14:47:52,852 - isca - INFO - Beginning run 1
+2026-07-17 14:47:52,854 - isca - INFO - process running as 894096
+2026-07-17 14:47:52,856 - isca - DEBUG - Loading hybrid ubuntu-conda environment
+2026-07-17 14:47:52,856 - isca - DEBUG - Loading basic ubuntu-conda environment
+2026-07-17 14:47:53,077 - isca - DEBUG - --------------------------------------------------------------------------
+2026-07-17 14:47:53,077 - isca - DEBUG - The SLURM process starter for OpenMPI was unable to locate a
+2026-07-17 14:47:53,077 - isca - DEBUG - usable "srun" command in its path. Please check your path
+2026-07-17 14:47:53,077 - isca - DEBUG - and try again.
+2026-07-17 14:47:53,077 - isca - DEBUG - --------------------------------------------------------------------------
+2026-07-17 14:47:53,077 - isca - DEBUG - --------------------------------------------------------------------------
+2026-07-17 14:47:53,077 - isca - DEBUG - An internal error has occurred in ORTE:
+2026-07-17 14:47:53,077 - isca - DEBUG - 
+2026-07-17 14:47:53,077 - isca - DEBUG - [[36128,0],0] FORCE-TERMINATE AT (null):1 - error ../../../../../../orte/mca/plm/slurm/plm_slurm_module.c(475)
+2026-07-17 14:47:53,077 - isca - DEBUG - 
+2026-07-17 14:47:53,077 - isca - DEBUG - This is something that should be reported to the developers.
+2026-07-17 14:47:53,077 - isca - DEBUG - --------------------------------------------------------------------------
+Exception in thread background thread for pid 894096:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 1716, in wrap
+    fn(*rgs, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 2727, in background_thread
+    handle_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 2418, in fn
+    return self.command.handle_command_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 823, in handle_command_exit_code
+    raise exc
+sh.ErrorReturnCode_1: 
+
+  RAN: /usr/bin/bash /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4gpu_1day/run/run.sh
+
+  STDOUT:
+
+
+  STDERR:
+
+2026-07-17 14:47:53,154 - isca - ERROR - Run 1 failed. See log for details.
+2026-07-17 14:47:53,154 - isca - ERROR - Error: ErrorReturnCode_1('\n\n  RAN: /usr/bin/bash /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4gpu_1day/run/run.sh\n\n  STDOUT:\n\n\n  STDERR:\n')
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+Experiment = held_suarez_fv_kernels_cuda_a_grid_4gpu_1day
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fv_kernels_cuda_a_grid_4gpu_1day
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4gpu_1day/run
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_explore_nobackup_people_jli30_workspace_GFDL_atmos_cubed_sphere/build/held_suarez_fv_kernels_cuda/held_suarez_fv_kernels_cuda.x
+Days = 1
+dt_atmos = 600
+num_cores = 4
+production_diag = True
+Traceback (most recent call last):
+  File "/isca/src/extra/python/isca/experiment.py", line 284, in run
+    proc.wait()
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 796, in wait
+    self.handle_command_exit_code(exit_code)
+  File "/usr/local/lib/python3.10/dist-packages/sh/__init__.py", line 823, in handle_command_exit_code
+    raise exc
+sh.ErrorReturnCode_1: 
+
+  RAN: /usr/bin/bash /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fv_kernels_cuda_a_grid_4gpu_1day/run/run.sh
+
+  STDOUT:
+
+
+  STDERR:
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py", line 141, in <module>
+    main()
+  File "/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py", line 132, in main
+    exp.run(
+  File "/isca/src/extra/python/isca/helpers.py", line 22, in _destructive
+    return fn(*args, **kwargs)
+  File "/isca/src/extra/python/isca/helpers.py", line 38, in _useworkdir
+    return fn(*args, **kwargs)
+  File "/isca/src/extra/python/isca/experiment.py", line 298, in run
+    raise FailedRunError()
+isca.experiment.FailedRunError

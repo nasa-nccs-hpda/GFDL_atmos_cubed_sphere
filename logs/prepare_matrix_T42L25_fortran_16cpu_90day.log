@@ -1,0 +1,47 @@
+=== Prepare Held-Suarez matrix case ===
+config=fortran_16cpu
+resolution=T42
+levels=25
+days=90
+dt_atmos=600
+num_cores=16
+container=/lscratch/jli30/isca-sandbox
+GFDL_BASE=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+GFDL_WORK=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+experiment=held_suarez_fortran_16cpu_T42L25_90day
+executable=held_suarez.x
+INFO:    Environment variable SINGULARITY_TMPDIR is set, but APPTAINER_TMPDIR is preferred
+2026-07-24 10:49:58,764 - isca - WARNING - Environment variable GFDL_SOC not set, but this is only required if using SocratesCodebase. Setting to None
+2026-07-24 10:49:58,853 - isca - INFO - RRTM compilation disabled.
+2026-07-24 10:49:58,853 - isca - INFO - SOCRATES compilation disabled.
+2026-07-24 10:49:58,857 - isca - INFO - RRTM compilation disabled.
+2026-07-24 10:49:58,857 - isca - INFO - SOCRATES compilation disabled.
+2026-07-24 10:49:58,857 - isca - DEBUG - Making directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_16cpu_T42L25_90day'
+2026-07-24 10:49:58,867 - isca - WARNING - Tried to remove run directory but it doesnt exist
+2026-07-24 10:49:58,872 - isca - INFO - Emptied run directory '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_16cpu_T42L25_90day/run'
+2026-07-24 10:49:59,069 - isca - INFO - Writing namelist to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_16cpu_T42L25_90day/run/input.nml'
+2026-07-24 10:49:59,081 - isca - INFO - Writing field_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_16cpu_T42L25_90day/run/field_table'
+2026-07-24 10:49:59,087 - isca - INFO - Writing diag_table to '/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_16cpu_T42L25_90day/run/diag_table'
+Experiment = held_suarez_fortran_16cpu_T42L25_90day
+Backend = fortran_16cpu
+Executable = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/codebase/_isca/build/held_suarez/held_suarez.x
+Resolution = T42
+Levels = 25
+Days = 90
+dt_atmos = 600
+num_cores = 16
+production_diag = True
+overwrite = True
+GFDL_BASE = /explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere
+Codebase dir = /isca
+GFDL_WORK = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work
+GFDL_DATA = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data
+GFDL_ENV = ubuntu_conda
+HS_FORCE_BACKEND = 
+HS_PROFILE = 
+Data dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_data/held_suarez_fortran_16cpu_T42L25_90day
+Run dir = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_16cpu_T42L25_90day/run
+Prepared run directory = /explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_16cpu_T42L25_90day/run
+prepared_run_dir=/explore/nobackup/people/jli30/SystemTesting/Isca/isca_work/experiment/held_suarez_fortran_16cpu_T42L25_90day/run
+log=/explore/nobackup/people/jli30/workspace/GFDL_atmos_cubed_sphere/logs/prepare_matrix_T42L25_fortran_16cpu_90day.log

@@ -1,0 +1,17 @@
+resolution,days,fortran_16cpu,fv_cuda_a_grid_1gpu,fv_cuda_a_grid_4gpu
+T42L25,30,complete,complete,complete
+T42L25,60,complete,complete,complete
+T42L25,90,complete,complete,complete
+T42L25,120,complete,complete,complete
+T85L25,30,complete,complete,complete
+T85L25,60,complete,complete,complete
+T85L25,90,complete,complete,complete
+T85L25,120,complete,complete,complete
+T170L25,30,complete,complete,complete
+T170L25,60,complete,complete,partial_time_limit
+T170L25,90,complete,complete,missing
+T170L25,120,missing,missing,missing
+T340L25,30,missing,missing,missing
+T340L25,60,missing,missing,missing
+T340L25,90,missing,missing,missing
+T340L25,120,missing,missing,missing
