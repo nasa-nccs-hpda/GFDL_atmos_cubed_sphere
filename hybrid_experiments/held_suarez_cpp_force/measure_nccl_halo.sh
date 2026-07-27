@@ -25,6 +25,7 @@ apptainer exec --nv \
   "${CONTAINER}" \
   bash -lc "
 set -e
+set -o pipefail
 
 export GFDL_BASE=${GFDL_BASE}
 export GFDL_WORK=${GFDL_WORK}
@@ -65,7 +66,7 @@ run_case () {
     --num-cores 2 \
     --days \${DAYS} \
     \${extra} \
-    --overwrite >> \${log} 2>&1
+    --overwrite 2>&1 | tee -a \${log}
 }
 
 HOST_LOG=logs/nccl_measure_host_\${TAG}.log
