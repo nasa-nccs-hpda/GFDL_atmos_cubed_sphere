@@ -586,6 +586,52 @@ int exchange_q1_halo_nccl(double* d_q1, int nx, int ny, int nz,
     if (timing) phases.kernel += elapsed_seconds(exchange_start);
     return ierr;
 }
+
+// Fill a pole's q1 halo rows on the GPU by reflecting the interior across the
+// pole, matching the host fold: the longitude opposite (src = c + nx/2, wrapped)
+// supplies the value, and the two halo rows mirror the two nearest interior rows.
+// A pole side has no neighbor, so NCCL leaves it untouched and this fills it.
+// Reads touch only interior rows, writes only halo rows, so there is no race.
+__global__ void polar_fold_q1_kernel(double* q1, int nx, int ny, int nz,
+                                     bool fold_south, bool fold_north) {
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    const int total = nx * nz;
+    if (idx >= total) return;
+    const int c = idx % nx;
+    const int k = idx / nx;
+    const int src = (c + nx / 2) % nx;
+    const int plane = nx * (ny + 4);
+    const int base = k * plane;
+    if (fold_south) {
+        // South halo rows {1,0} reflect interior rows {2,3}.
+        q1[base + 1 * nx + c] = q1[base + 2 * nx + src];
+        q1[base + 0 * nx + c] = q1[base + 3 * nx + src];
+    }
+    if (fold_north) {
+        // North halo rows {ny+2,ny+3} reflect interior rows {ny+1,ny}.
+        q1[base + (ny + 2) * nx + c] = q1[base + (ny + 1) * nx + src];
+        q1[base + (ny + 3) * nx + c] = q1[base + (ny) * nx + src];
+    }
+}
+
+// Launch the pole fold for whichever sides this rank owns. No-op when the rank
+// touches neither pole (both flags false), which is the interior-rank case.
+int fold_q1_poles(double* d_q1, int nx, int ny, int nz, bool fold_south,
+                  bool fold_north, CudaPhaseCounter& phases) {
+    if (!fold_south && !fold_north) {
+        return FV_CUDA_SUCCESS;
+    }
+    const bool timing = profile::enabled();
+    const auto fold_start = Clock::now();
+    const int threads = 256;
+    const int blocks = static_cast<int>((static_cast<std::size_t>(nx) * nz + threads - 1) / threads);
+    polar_fold_q1_kernel<<<blocks, threads>>>(d_q1, nx, ny, nz, fold_south, fold_north);
+    int ierr = check_cuda(cudaGetLastError(), "polar_fold_q1_kernel");
+    if (ierr != FV_CUDA_SUCCESS) return ierr;
+    ierr = check_cuda(cudaDeviceSynchronize(), "polar fold sync");
+    if (timing) phases.kernel += elapsed_seconds(fold_start);
+    return ierr;
+}
 #endif  // FV_ADVECTION_USE_NCCL
 
 int ensure_buffer(std::size_t slot, std::size_t count, CudaPhaseCounter& phases) {
@@ -1749,6 +1795,43 @@ int nccl_exchange_resident_q1_halo(int nx, int ny, int nz) {
 #endif
 }
 
+// Fill this rank's pole q1 halo rows on the GPU (device-side stand-in for the
+// host polar fold). is_south_boundary/is_north_boundary come from the model
+// (js==1 / je==ny) and mark which poles this rank owns. Needs an active resident
+// stage matching nx/ny/nz. Step 4 calls this from the resident spine.
+int fold_resident_q1_poles(int nx, int ny, int nz, bool is_south_boundary,
+                           bool is_north_boundary) {
+#ifdef FV_ADVECTION_USE_NCCL
+    const CudaMode mode = selected_cuda_mode();
+    PhaseCall phase_call(mode);
+    CudaPhaseCounter& phases = phase_call.counter();
+    if (mode != CudaMode::resident || !persistent_context.resident_stage_active ||
+        nx != persistent_context.resident_nx || ny != persistent_context.resident_ny ||
+        nz != persistent_context.resident_nz) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels NCCL error: q1 polar fold needs an active "
+                     "resident stage matching nx/ny/nz.\n");
+        return FV_CUDA_INVALID_ARGUMENT;
+    }
+    double* d_q1 = persistent_context.buffers[3].data;
+    if (d_q1 == nullptr) {
+        return FV_CUDA_INVALID_ARGUMENT;
+    }
+    return fold_q1_poles(d_q1, nx, ny, nz, is_south_boundary, is_north_boundary, phases);
+#else
+    (void)nx;
+    (void)ny;
+    (void)nz;
+    (void)is_south_boundary;
+    (void)is_north_boundary;
+    std::fprintf(stderr,
+                 "fv_advection_kernels NCCL error: this overlay was built without "
+                 "FV_ADVECTION_USE_NCCL; rebuild with NCCL support to use the "
+                 "GPU-to-GPU halo exchange.\n");
+    return FV_CUDA_ERROR;
+#endif
+}
+
 int resident_advection_begin(
     int nx,
     int ny,
@@ -2235,4 +2318,12 @@ extern "C" int fv_advection_nccl_init_cuda_c() {
 extern "C" int fv_advection_nccl_exchange_q1_halo_cuda_c(int nx, int ny, int nz) {
     register_cuda_profile_report();
     return fv_advection_kernels::cuda_backend::nccl_exchange_resident_q1_halo(nx, ny, nz);
+}
+
+extern "C" int fv_advection_nccl_fold_q1_poles_cuda_c(int nx, int ny, int nz,
+                                                      int is_south_boundary,
+                                                      int is_north_boundary) {
+    register_cuda_profile_report();
+    return fv_advection_kernels::cuda_backend::fold_resident_q1_poles(
+        nx, ny, nz, is_south_boundary != 0, is_north_boundary != 0);
 }

@@ -81,6 +81,13 @@ int nccl_init();
 // side is left for the fold. Returns 0 on success.
 int nccl_exchange_resident_q1_halo(int nx, int ny, int nz);
 
+// Fill this rank's pole q1 halo rows on the GPU by reflecting the interior across
+// the pole (device-side stand-in for the host polar fold). is_south_boundary /
+// is_north_boundary mark which poles this rank owns. Needs an active resident
+// stage matching nx/ny/nz. Returns 0 on success.
+int fold_resident_q1_poles(int nx, int ny, int nz, bool is_south_boundary,
+                           bool is_north_boundary);
+
 int resident_advection_begin(
     int nx,
     int ny,
@@ -226,5 +233,12 @@ extern "C" int fv_advection_nccl_init_cuda_c();
 // Swap the resident q1 y-halo with the neighbor ranks on the GPU. Needs an active
 // resident stage matching nx/ny/nz. Returns 0 on success.
 extern "C" int fv_advection_nccl_exchange_q1_halo_cuda_c(int nx, int ny, int nz);
+
+// Fill this rank's pole q1 halo rows on the GPU. is_south_boundary /
+// is_north_boundary are nonzero for the poles this rank owns. Needs an active
+// resident stage matching nx/ny/nz. Returns 0 on success.
+extern "C" int fv_advection_nccl_fold_q1_poles_cuda_c(int nx, int ny, int nz,
+                                                      int is_south_boundary,
+                                                      int is_north_boundary);
 
 #endif  // FV_ADVECTION_KERNELS_CUDA_H
