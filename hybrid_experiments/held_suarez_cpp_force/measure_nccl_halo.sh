@@ -41,27 +41,45 @@ export OMPI_MCA_btl_vader_single_copy_mechanism=none
 cd ${GFDL_BASE}
 mkdir -p logs
 
+# Resolution sweep knobs (outer env). RES/DT_ATMOS default to the original test
+# case (T42-ish); higher resolution needs a smaller CFL timestep (T85:300,
+# T170:150). REPEAT runs the host/device pair several times and appends to the
+# logs so the parser averages across runs, damping shared-node timing noise.
+RES='${RES:-}'
+DT_ATMOS='${DT_ATMOS:-}'
+DAYS='${DAYS:-1}'
+REPEAT='${REPEAT:-1}'
+TAG=\${RES:-default}
+
 run_case () {
   local exp_name=\$1 log=\$2
-  echo \"=== running \${exp_name} (FV_ADVECTION_NCCL_HALO=\${FV_ADVECTION_NCCL_HALO:-0}) ===\"
+  local extra=''
+  [ -n \"\${RES}\" ] && extra=\"\${extra} --resolution \${RES}\"
+  [ -n \"\${DT_ATMOS}\" ] && extra=\"\${extra} --dt-atmos \${DT_ATMOS}\"
+  echo \"=== running \${exp_name} (FV_ADVECTION_NCCL_HALO=\${FV_ADVECTION_NCCL_HALO:-0}) res=\${RES:-default} dt=\${DT_ATMOS:-default} days=\${DAYS} ===\"
   python3 hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py \
     --exp-name \${exp_name} \
     --executable-name held_suarez_fv_kernels_cuda.x \
     --num-cores 2 \
-    --days 1 \
-    --overwrite > \${log} 2>&1
+    --days \${DAYS} \
+    \${extra} \
+    --overwrite >> \${log} 2>&1
 }
 
-HOST_LOG=logs/nccl_measure_host.log
-DEV_LOG=logs/nccl_measure_device.log
+HOST_LOG=logs/nccl_measure_host_\${TAG}.log
+DEV_LOG=logs/nccl_measure_device_\${TAG}.log
+: > \${HOST_LOG}
+: > \${DEV_LOG}
 
-unset FV_ADVECTION_NCCL_HALO
-run_case nccl_measure_host \${HOST_LOG}
+for iter in \$(seq 1 \${REPEAT}); do
+  echo \"--- iteration \${iter}/\${REPEAT} (res=\${RES:-default}) ---\"
+  unset FV_ADVECTION_NCCL_HALO
+  run_case nccl_measure_host_\${TAG} \${HOST_LOG}
+  export FV_ADVECTION_NCCL_HALO=1
+  run_case nccl_measure_device_\${TAG} \${DEV_LOG}
+done
 
-export FV_ADVECTION_NCCL_HALO=1
-run_case nccl_measure_device \${DEV_LOG}
-
-echo '=== transfer cost: host-routed halo vs GPU-to-GPU NCCL halo ==='
+echo \"=== transfer cost (res=\${RES:-default}, repeat=\${REPEAT}): host-routed halo vs GPU-to-GPU NCCL halo ===\"
 python3 - \"\${HOST_LOG}\" \"\${DEV_LOG}\" <<'PY'
 import re, sys
 
