@@ -50,65 +50,121 @@ def find_nc(exp):
         sys.exit('no output .nc found for %s' % exp)
     return {os.path.basename(p): p for p in hits}
 
-# Pick whatever reader exists; return dict var -> ndarray(float64).
-reader = None
-try:
+# Candidate readers, best first. Each returns a load(path) -> {var: ndarray}.
+# The container base python3 has no netCDF4/scipy and xarray has no working
+# engine, but the netCDF C library (libnetcdf.so.19) is installed, so the
+# reliable path is to call it directly through ctypes: it does all the offset
+# and unlimited-dimension bookkeeping itself. Each candidate is verified by
+# actually opening a file before use, so an importable-but-unusable backend
+# (xarray with no engine) is rejected rather than crashing mid-run.
+
+def make_netcdf4():
     from netCDF4 import Dataset
     def load(path):
         ds = Dataset(path)
         out = {v: np.asarray(ds.variables[v][:], dtype='float64') for v in ds.variables}
         ds.close(); return out
-    reader = 'netCDF4'
-except Exception:
-    pass
-if reader is None:
-    try:
-        import xarray as xr
-        def load(path):
-            ds = xr.open_dataset(path, decode_times=False)
-            out = {v: np.asarray(ds[v].values, dtype='float64') for v in ds.data_vars}
-            ds.close(); return out
-        reader = 'xarray'
-    except Exception:
-        pass
-if reader is None:
-    try:
-        from scipy.io import netcdf_file
-        def load(path):
-            ds = netcdf_file(path, 'r', mmap=False)
-            out = {v: np.asarray(ds.variables[v][:], dtype='float64') for v in ds.variables}
-            ds.close(); return out
-        reader = 'scipy'
-    except Exception:
-        pass
-if reader is None:
-    # No python NetCDF backend in the container base python3. Reuse the
-    # ncdump-parsing helpers the model validator already relies on.
-    sys.path.insert(0, os.path.join(os.environ['GFDL_BASE'], 'tests'))
-    try:
-        from validate_T85L25_forcing_outputs import parse_header, parse_ncdump_values
-    except Exception as exc:
-        sys.exit('no python NetCDF backend and could not import ncdump helpers: %s' % exc)
-    def load(path):
-        sizes, meta = parse_header(path)
-        out = {}
-        for name, m in meta.items():
-            if m['type'] in ('char',):
-                continue
-            try:
-                vals = np.array(parse_ncdump_values(path, name), dtype='float64')
-            except Exception:
-                continue
-            shape = tuple(sizes[d] for d in m['dims'] if d in sizes)
-            if shape and vals.size == int(np.prod(shape)):
-                vals = vals.reshape(shape)
-            out[name] = vals
-        return out
-    reader = 'ncdump'
+    return load
 
-print('reader: %s' % reader)
+def make_scipy():
+    from scipy.io import netcdf_file
+    def load(path):
+        ds = netcdf_file(path, 'r', mmap=False)
+        out = {v: np.asarray(ds.variables[v][:], dtype='float64') for v in ds.variables}
+        ds.close(); return out
+    return load
+
+def make_xarray():
+    import xarray as xr
+    def load(path):
+        ds = xr.open_dataset(path, decode_times=False)
+        out = {v: np.asarray(ds[v].values, dtype='float64') for v in ds.data_vars}
+        ds.close(); return out
+    return load
+
+def make_ctypes():
+    import ctypes
+    lib = None
+    for name in ('libnetcdf.so.19', 'libnetcdf.so', 'libnetcdf.so.18'):
+        try:
+            lib = ctypes.CDLL(name); break
+        except OSError:
+            continue
+    if lib is None:
+        raise OSError('libnetcdf not loadable')
+    c_int, size_t, c_double = ctypes.c_int, ctypes.c_size_t, ctypes.c_double
+    P = ctypes.POINTER
+    lib.nc_open.argtypes = [ctypes.c_char_p, c_int, P(c_int)]
+    lib.nc_inq.argtypes = [c_int, P(c_int), P(c_int), P(c_int), P(c_int)]
+    lib.nc_inq_varname.argtypes = [c_int, c_int, ctypes.c_char_p]
+    lib.nc_inq_vartype.argtypes = [c_int, c_int, P(c_int)]
+    lib.nc_inq_varndims.argtypes = [c_int, c_int, P(c_int)]
+    lib.nc_inq_vardimid.argtypes = [c_int, c_int, P(c_int)]
+    lib.nc_inq_dimlen.argtypes = [c_int, c_int, P(size_t)]
+    lib.nc_get_var_double.argtypes = [c_int, c_int, P(c_double)]
+    lib.nc_close.argtypes = [c_int]
+
+    def chk(status, ctx=''):
+        if status != 0:
+            raise RuntimeError('netcdf error %d (%s)' % (status, ctx))
+
+    NC_CHAR = 2
+
+    def load(path):
+        ncid = c_int()
+        chk(lib.nc_open(path.encode(), 0, ctypes.byref(ncid)), 'open ' + path)
+        try:
+            nd, nv, ng, un = c_int(), c_int(), c_int(), c_int()
+            chk(lib.nc_inq(ncid, ctypes.byref(nd), ctypes.byref(nv),
+                           ctypes.byref(ng), ctypes.byref(un)))
+            out = {}
+            namebuf = ctypes.create_string_buffer(256)
+            for vid in range(nv.value):
+                chk(lib.nc_inq_varname(ncid, vid, namebuf))
+                vname = namebuf.value.decode()
+                xt = c_int(); chk(lib.nc_inq_vartype(ncid, vid, ctypes.byref(xt)))
+                if xt.value == NC_CHAR:
+                    continue
+                vnd = c_int(); chk(lib.nc_inq_varndims(ncid, vid, ctypes.byref(vnd)))
+                dimids = (c_int * max(vnd.value, 1))()
+                chk(lib.nc_inq_vardimid(ncid, vid, dimids))
+                shape = []
+                for d in range(vnd.value):
+                    ln = size_t()
+                    chk(lib.nc_inq_dimlen(ncid, dimids[d], ctypes.byref(ln)))
+                    shape.append(ln.value)
+                count = 1
+                for s in shape:
+                    count *= s
+                buf = np.empty(max(count, 1), dtype=np.float64)
+                chk(lib.nc_get_var_double(
+                    ncid, vid, buf.ctypes.data_as(P(c_double))), 'get ' + vname)
+                out[vname] = buf[:count].reshape(shape) if shape else buf[:1]
+            return out
+        finally:
+            lib.nc_close(ncid)
+    return load
+
+candidates = [('netCDF4', make_netcdf4), ('scipy', make_scipy),
+              ('xarray', make_xarray), ('ctypes-netcdf', make_ctypes)]
+
 ref = find_nc(ref_exp)
 dev = find_nc(dev_exp)
+probe = next(iter(ref.values()))
+
+load = None; reader = None
+for label, factory in candidates:
+    try:
+        fn = factory()
+        fn(probe)          # must actually open the file, not just import
+        load, reader = fn, label
+        break
+    except Exception as exc:
+        print('reader %s unavailable: %s' % (label, exc))
+if load is None:
+    sys.exit('no usable NetCDF reader in this container')
+
+print('reader: %s' % reader)
 common = sorted(set(ref) & set(dev))
 if not common:
     sys.exit('no output files in common between the two runs')
