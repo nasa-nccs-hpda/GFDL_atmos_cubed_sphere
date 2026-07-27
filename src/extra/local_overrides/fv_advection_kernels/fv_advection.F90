@@ -43,7 +43,8 @@ use fv_advection_kernels_c_interface, only : semi_x_3d_cpp_wrapper, slope_x_cpp_
 use fv_advection_kernels_c_interface, only : semi_x_3d_cuda_wrapper, slope_x_cuda_wrapper, &
   integer_flux_x_cuda_wrapper, vanleer_x_3d_cuda_wrapper, slope_sphere_cuda_wrapper, &
   vanleer_sphere_3d_cuda_wrapper, fv_advection_resident_enabled, &
-  fv_advection_resident_begin_wrapper, fv_advection_resident_finish_wrapper
+  fv_advection_resident_begin_wrapper, fv_advection_resident_finish_wrapper, &
+  fv_advection_nccl_init
 #endif
 
 implicit none
@@ -90,6 +91,9 @@ subroutine fv_advection_init(nx_in, ny_in, yy_in, degrees_lon, advection_layout)
 
 
   integer :: layout(2)
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+  integer :: nccl_ierr
+#endif
 
   if (module_is_initialized) return
 
@@ -142,6 +146,20 @@ subroutine fv_advection_init(nx_in, ny_in, yy_in, degrees_lon, advection_layout)
   module_is_initialized=.TRUE.
 
   call mpp_get_compute_domain( advection_domain, is, ie, js, je )
+
+#ifdef USE_CUDA_FV_ADVECTION_KERNELS
+  ! Level 1 (FV transfer PoC): when the resident CUDA path is active, build the
+  ! NCCL communicator once at startup so the GPU-to-GPU halo exchange is ready
+  ! and any misconfiguration (for example more MPI ranks than GPUs) is reported
+  ! here rather than mid-run.
+  if ( fv_advection_resident_enabled() ) then
+    call fv_advection_nccl_init(nccl_ierr)
+    if ( nccl_ierr /= 0 ) then
+      call error_mesg( 'fv_advection_init', &
+        'NCCL communicator setup failed; see the preceding message', FATAL )
+    end if
+  end if
+#endif
 
 return
 end subroutine fv_advection_init

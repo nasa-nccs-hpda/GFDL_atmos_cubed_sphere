@@ -469,6 +469,9 @@ class HeldSuarezFvKernelsCodeBase(DryCodeBase):
         make_cmd = ["make", "CXX=%s" % cxx, "AR=%s" % ar]
         if self.use_cuda:
             make_cmd.extend(["USE_CUDA_FV_ADVECTION_KERNELS=1", "NVCC=%s" % nvcc])
+            # Level 1: compile the CUDA halo exchange against NCCL for the model
+            # build (the standalone validate targets leave this off).
+            make_cmd.append("USE_FV_ADVECTION_NCCL=1")
         make_cmd.append("lib")
         subprocess.check_call(make_cmd, cwd=str(lib_workdir))
 

@@ -11,6 +11,15 @@
 #include <cuda_runtime.h>
 #include <utility>
 
+// GPU-to-GPU halo exchange (FV transfer PoC, Level 1). The MPI and NCCL headers
+// and every symbol that uses them are compiled only when the overlay build
+// defines FV_ADVECTION_USE_NCCL (and adds the include/link flags). Without that
+// define the file builds exactly as before, so the current model is unaffected.
+#ifdef FV_ADVECTION_USE_NCCL
+#include <mpi.h>
+#include <nccl.h>
+#endif
+
 namespace {
 
 namespace profile = fv_advection_kernels_profile;
@@ -272,6 +281,155 @@ int ensure_persistent_context() {
     }
     return FV_CUDA_SUCCESS;
 }
+
+#ifdef FV_ADVECTION_USE_NCCL
+// One NCCL communicator per process, built once over the running MPI world and
+// bound to this rank's GPU. Level 1 uses it to swap halo rows GPU-to-GPU instead
+// of routing them through the host. Neighbors follow the Y-only decomposition
+// (layout = 1 x npes): north = rank+1, south = rank-1; a -1 marks a pole, which
+// has no neighbor on that side and reflects instead of exchanging.
+struct NcclContext {
+    ncclComm_t comm = nullptr;
+    cudaStream_t stream = nullptr;
+    int world_rank = -1;
+    int world_size = 0;
+    int north = -1;
+    int south = -1;
+    bool initialized = false;
+    bool cleanup_registered = false;
+};
+
+NcclContext nccl_context;
+
+int check_nccl(ncclResult_t status, const char* what) {
+    if (status == ncclSuccess) {
+        return FV_CUDA_SUCCESS;
+    }
+    std::fprintf(stderr, "fv_advection_kernels NCCL error: %s failed: %s\n", what,
+                 ncclGetErrorString(status));
+    return FV_CUDA_ERROR;
+}
+
+void release_nccl_context() {
+    if (nccl_context.stream != nullptr) {
+        cudaStreamDestroy(nccl_context.stream);
+        nccl_context.stream = nullptr;
+    }
+    if (nccl_context.comm != nullptr) {
+        ncclCommDestroy(nccl_context.comm);
+        nccl_context.comm = nullptr;
+    }
+    nccl_context.initialized = false;
+}
+
+// Build the NCCL communicator once. Safe to call repeatedly; only the first call
+// does work. Returns FV_CUDA_SUCCESS once the communicator, stream, and neighbor
+// ranks are ready.
+int ensure_nccl_context() {
+    if (nccl_context.initialized) {
+        return FV_CUDA_SUCCESS;
+    }
+
+    // The device must be chosen before NCCL binds a communicator to it; this is
+    // the same per-rank cudaSetDevice the resident path already relies on.
+    int ierr = ensure_persistent_context();
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+
+    // FMS owns MPI and initializes it before any kernel runs; we only read the
+    // existing world and use it to hand NCCL its bootstrap id.
+    int mpi_ready = 0;
+    if (MPI_Initialized(&mpi_ready) != MPI_SUCCESS || mpi_ready == 0) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels NCCL error: MPI is not initialized; "
+                     "cannot bootstrap the NCCL communicator.\n");
+        return FV_CUDA_ERROR;
+    }
+
+    int world_rank = 0;
+    int world_size = 0;
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+
+    // NCCL requires one rank per GPU. If more ranks share this node than it has
+    // GPUs, the launcher's node-local rank runs past the device count; stop with
+    // a clear message rather than letting NCCL fail with "invalid usage".
+    int device_count = 0;
+    ierr = check_cuda(cudaGetDeviceCount(&device_count), "cudaGetDeviceCount");
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+    int local_rank = 0;
+    const char* env = std::getenv("OMPI_COMM_WORLD_LOCAL_RANK");
+    if (env == nullptr) {
+        env = std::getenv("SLURM_LOCALID");
+    }
+    if (env != nullptr) {
+        local_rank = std::atoi(env);
+    }
+    if (local_rank >= device_count) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels NCCL error: rank %d is node-local rank %d "
+                     "but the node has only %d GPU(s). NCCL needs one MPI rank per "
+                     "GPU; launch one rank per GPU (for example mpirun -np %d).\n",
+                     world_rank, local_rank, device_count, device_count);
+        return FV_CUDA_ERROR;
+    }
+
+    // Bootstrap: rank 0 makes the unique id and broadcasts it. Only host bytes
+    // cross MPI here, so the container's non-GPU-aware MPI is fine; the payload
+    // later moves through NCCL itself.
+    ncclUniqueId id;
+    if (world_rank == 0) {
+        ierr = check_nccl(ncclGetUniqueId(&id), "ncclGetUniqueId");
+        if (ierr != FV_CUDA_SUCCESS) {
+            return ierr;
+        }
+    }
+    if (MPI_Bcast(&id, sizeof(id), MPI_BYTE, 0, MPI_COMM_WORLD) != MPI_SUCCESS) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels NCCL error: MPI_Bcast of the NCCL id failed.\n");
+        return FV_CUDA_ERROR;
+    }
+
+    ncclComm_t comm = nullptr;
+    ierr = check_nccl(ncclCommInitRank(&comm, world_size, id, world_rank),
+                      "ncclCommInitRank");
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+
+    cudaStream_t stream = nullptr;
+    ierr = check_cuda(cudaStreamCreate(&stream), "cudaStreamCreate");
+    if (ierr != FV_CUDA_SUCCESS) {
+        ncclCommDestroy(comm);
+        return ierr;
+    }
+
+    nccl_context.comm = comm;
+    nccl_context.stream = stream;
+    nccl_context.world_rank = world_rank;
+    nccl_context.world_size = world_size;
+    nccl_context.north = (world_rank + 1 < world_size) ? world_rank + 1 : -1;
+    nccl_context.south = (world_rank - 1 >= 0) ? world_rank - 1 : -1;
+    nccl_context.initialized = true;
+
+    if (!nccl_context.cleanup_registered) {
+        std::atexit(release_nccl_context);
+        nccl_context.cleanup_registered = true;
+    }
+
+    if (profile::enabled()) {
+        std::fprintf(stderr,
+                     "PROFILE_FV_ADVECTION_CUDA nccl_init world_rank=%d world_size=%d "
+                     "north=%d south=%d device_count=%d\n",
+                     world_rank, world_size, nccl_context.north, nccl_context.south,
+                     device_count);
+    }
+    return FV_CUDA_SUCCESS;
+}
+#endif  // FV_ADVECTION_USE_NCCL
 
 int ensure_buffer(std::size_t slot, std::size_t count, CudaPhaseCounter& phases) {
     if (slot >= kNumBuffers) {
@@ -1384,6 +1542,22 @@ bool resident_boundary_enabled() {
     return selected_cuda_mode() == CudaMode::resident;
 }
 
+// Build (or confirm) the process's NCCL communicator. Returns FV_CUDA_SUCCESS on
+// success. When the overlay is built without FV_ADVECTION_USE_NCCL this reports
+// that GPU-to-GPU halo support was not compiled in, so a misconfigured run fails
+// loudly instead of silently skipping the device exchange.
+int nccl_init() {
+#ifdef FV_ADVECTION_USE_NCCL
+    return ensure_nccl_context();
+#else
+    std::fprintf(stderr,
+                 "fv_advection_kernels NCCL error: this overlay was built without "
+                 "FV_ADVECTION_USE_NCCL; rebuild with NCCL support to use the "
+                 "GPU-to-GPU halo exchange.\n");
+    return FV_CUDA_ERROR;
+#endif
+}
+
 int resident_advection_begin(
     int nx,
     int ny,
@@ -1860,4 +2034,9 @@ extern "C" int fv_advection_resident_finish_cuda_c(
     return fv_advection_kernels::cuda_backend::resident_advection_finish(
         nx, je - js + 1, nz, dt, dx, monotone != 0, js == 1,
         je == ny_total, q1, dq_dt);
+}
+
+extern "C" int fv_advection_nccl_init_cuda_c() {
+    register_cuda_profile_report();
+    return fv_advection_kernels::cuda_backend::nccl_init();
 }

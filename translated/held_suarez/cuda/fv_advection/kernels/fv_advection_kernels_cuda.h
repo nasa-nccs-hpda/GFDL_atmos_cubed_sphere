@@ -72,6 +72,10 @@ int vanleer_sphere_3d_cuda(
 
 bool resident_boundary_enabled();
 
+// Build (or confirm) the process's NCCL communicator for GPU-to-GPU halo
+// exchange. Returns 0 on success. Fails when built without FV_ADVECTION_USE_NCCL.
+int nccl_init();
+
 int resident_advection_begin(
     int nx,
     int ny,
@@ -208,5 +212,10 @@ extern "C" int fv_advection_resident_finish_cuda_c(
     int monotone,
     const double* q1,
     double* dq_dt);
+
+// Bootstrap the NCCL communicator once, over the running MPI world. Returns 0 on
+// success. Callable from Fortran to force setup (and surface any misconfiguration)
+// before the first halo exchange.
+extern "C" int fv_advection_nccl_init_cuda_c();
 
 #endif  // FV_ADVECTION_KERNELS_CUDA_H

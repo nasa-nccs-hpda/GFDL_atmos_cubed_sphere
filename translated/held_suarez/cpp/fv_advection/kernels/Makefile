@@ -26,6 +26,16 @@ OBJ += $(CUDA_OBJ) $(SEMI_Y_CUDA_OBJ)
 CXXFLAGS += -DUSE_CUDA_FV_ADVECTION_KERNELS -I../../../cuda/fv_advection/kernels
 endif
 
+# GPU-to-GPU halo exchange (FV transfer PoC, Level 1). Compiling the CUDA
+# sources with NCCL pulls in MPI + NCCL, so it is opt-in: the model build turns
+# it on, while the standalone CUDA validate/fixture targets leave it off and
+# stay MPI-free. -ccbin mpicxx lets nvcc find <mpi.h> for the host code; nccl.h
+# and libnccl are on the container's default include/library paths.
+USE_FV_ADVECTION_NCCL ?= 0
+ifeq ($(USE_FV_ADVECTION_NCCL),1)
+NVCCFLAGS += -DFV_ADVECTION_USE_NCCL -ccbin mpicxx
+endif
+
 .PHONY: all lib run compare check cuda_check cuda_check_impl \
 	cuda_persistent_check cuda_persistent_check_impl \
 	cuda_resident_check cuda_resident_check_impl clean
