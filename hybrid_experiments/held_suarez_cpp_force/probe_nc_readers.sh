@@ -20,7 +20,11 @@ echo \"sample file: \${NC}\"
 echo '--- magic (first 4 bytes) ---'
 head -c 4 \"\${NC}\" | od -An -c
 echo '--- ncdump on disk ---'
-command -v ncdump || find / -name ncdump -type f 2>/dev/null | head -3
+command -v ncdump || \
+  for d in /usr/bin /usr/local/bin /bin /opt/conda/bin /opt/conda/envs/*/bin \
+           /usr/lib/x86_64-linux-gnu/netcdf/bin; do
+    [ -x \"\$d/ncdump\" ] && echo \"found: \$d/ncdump\"
+  done
 echo '--- python interpreters with a backend ---'
 for py in python3 python /opt/conda/bin/python /usr/bin/python3; do
   command -v \"\$py\" >/dev/null 2>&1 || continue
