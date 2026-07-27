@@ -27,6 +27,13 @@ class Experiment(Logger, EventEmitter):
     """A basic GFDL experiment"""
 
     RESOLUTIONS = {
+        'T340': {
+            'lon_max': 1024,
+            'lat_max': 512,
+            'num_fourier': 340,
+            'num_spherical': 341
+        },
+
         'T170': {
             'lon_max': 512,
             'lat_max': 256,
