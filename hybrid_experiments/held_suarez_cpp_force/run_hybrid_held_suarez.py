@@ -45,6 +45,16 @@ def make_experiment(args):
     exp.namelist = original.namelist.copy()
     exp.diag_table = original.diag.copy()
 
+    # The container's bundled Isca resolution table tops out at T170; register
+    # higher-resolution entries at runtime so the transfer sweep can request them
+    # without depending on the container's baked-in copy of experiment.py.
+    extra_resolutions = {
+        "T340": {"lon_max": 1024, "lat_max": 512,
+                 "num_fourier": 340, "num_spherical": 341},
+    }
+    for res_name, spec in extra_resolutions.items():
+        type(exp).RESOLUTIONS.setdefault(res_name, spec)
+
     # Resolution/levels default to the original test case; override for scaling sweeps.
     resolution = args.resolution or original.RESOLUTION[0]
     levels = args.levels if args.levels is not None else original.RESOLUTION[1]
