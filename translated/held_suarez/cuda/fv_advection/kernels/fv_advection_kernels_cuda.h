@@ -76,6 +76,11 @@ bool resident_boundary_enabled();
 // exchange. Returns 0 on success. Fails when built without FV_ADVECTION_USE_NCCL.
 int nccl_init();
 
+// Swap the resident q1 y-halo with the neighbor ranks on the GPU (pack, NCCL
+// send/recv, unpack). Needs an active resident stage matching nx/ny/nz. The pole
+// side is left for the fold. Returns 0 on success.
+int nccl_exchange_resident_q1_halo(int nx, int ny, int nz);
+
 int resident_advection_begin(
     int nx,
     int ny,
@@ -217,5 +222,9 @@ extern "C" int fv_advection_resident_finish_cuda_c(
 // success. Callable from Fortran to force setup (and surface any misconfiguration)
 // before the first halo exchange.
 extern "C" int fv_advection_nccl_init_cuda_c();
+
+// Swap the resident q1 y-halo with the neighbor ranks on the GPU. Needs an active
+// resident stage matching nx/ny/nz. Returns 0 on success.
+extern "C" int fv_advection_nccl_exchange_q1_halo_cuda_c(int nx, int ny, int nz);
 
 #endif  // FV_ADVECTION_KERNELS_CUDA_H

@@ -297,6 +297,14 @@ struct NcclContext {
     int south = -1;
     bool initialized = false;
     bool cleanup_registered = false;
+    // Scratch for the GPU-to-GPU halo swap: one packed edge (two rows over all
+    // levels) per direction, kept device-resident and reused across calls. Sized
+    // lazily to the current tile; halo_capacity is elements per edge buffer.
+    double* halo_send_south = nullptr;
+    double* halo_recv_south = nullptr;
+    double* halo_send_north = nullptr;
+    double* halo_recv_north = nullptr;
+    std::size_t halo_capacity = 0;
 };
 
 NcclContext nccl_context;
@@ -311,6 +319,18 @@ int check_nccl(ncclResult_t status, const char* what) {
 }
 
 void release_nccl_context() {
+    double* halo_buffers[] = {nccl_context.halo_send_south, nccl_context.halo_recv_south,
+                              nccl_context.halo_send_north, nccl_context.halo_recv_north};
+    for (double* buffer : halo_buffers) {
+        if (buffer != nullptr) {
+            cudaFree(buffer);
+        }
+    }
+    nccl_context.halo_send_south = nullptr;
+    nccl_context.halo_recv_south = nullptr;
+    nccl_context.halo_send_north = nullptr;
+    nccl_context.halo_recv_north = nullptr;
+    nccl_context.halo_capacity = 0;
     if (nccl_context.stream != nullptr) {
         cudaStreamDestroy(nccl_context.stream);
         nccl_context.stream = nullptr;
@@ -428,6 +448,143 @@ int ensure_nccl_context() {
                      device_count);
     }
     return FV_CUDA_SUCCESS;
+}
+
+// Gather two rows of the haloed q1 (row0 and row0+1) across all levels into a
+// contiguous [k][r][i] buffer, so a single NCCL send moves the whole edge.
+__global__ void pack_halo_rows_kernel(const double* q1, double* buf, int nx, int ny,
+                                      int nz, int row0) {
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    const int total = nx * 2 * nz;
+    if (idx >= total) return;
+    const int i = idx % nx;
+    const int r = (idx / nx) % 2;
+    const int k = idx / (nx * 2);
+    buf[idx] = q1[i + (row0 + r) * nx + k * nx * (ny + 4)];
+}
+
+// Scatter a contiguous [k][r][i] buffer back into two rows of the haloed q1.
+__global__ void unpack_halo_rows_kernel(double* q1, const double* buf, int nx, int ny,
+                                        int nz, int row0) {
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    const int total = nx * 2 * nz;
+    if (idx >= total) return;
+    const int i = idx % nx;
+    const int r = (idx / nx) % 2;
+    const int k = idx / (nx * 2);
+    q1[i + (row0 + r) * nx + k * nx * (ny + 4)] = buf[idx];
+}
+
+// Size the four packed-edge scratch buffers to the current tile, once. Reused
+// across calls; grown (never shrunk) if a later call needs more.
+int ensure_nccl_halo_buffers(std::size_t edge_count) {
+    if (nccl_context.halo_capacity >= edge_count && nccl_context.halo_send_south != nullptr) {
+        return FV_CUDA_SUCCESS;
+    }
+    double** slots[] = {&nccl_context.halo_send_south, &nccl_context.halo_recv_south,
+                        &nccl_context.halo_send_north, &nccl_context.halo_recv_north};
+    for (double** slot : slots) {
+        if (*slot != nullptr) {
+            cudaFree(*slot);
+            *slot = nullptr;
+        }
+        int ierr = check_cuda(cudaMalloc(slot, edge_count * sizeof(double)),
+                              "nccl halo scratch alloc");
+        if (ierr != FV_CUDA_SUCCESS) {
+            return ierr;
+        }
+    }
+    nccl_context.halo_capacity = edge_count;
+    return FV_CUDA_SUCCESS;
+}
+
+// Swap the q1 y-halo with the north/south neighbor ranks entirely on the GPU:
+// pack the two interior edge rows, exchange them over NCCL (NVLink, no host
+// round-trip), and unpack into the halo rows. A pole side (neighbor == -1) is
+// left untouched here; the polar fold fills it. The device stream carries the
+// pack, the exchange, and the unpack in order, so the halo is ready when this
+// returns.
+int exchange_q1_halo_nccl(double* d_q1, int nx, int ny, int nz,
+                          CudaPhaseCounter& phases) {
+    if (!nccl_context.initialized) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels NCCL error: halo exchange requested before "
+                     "the communicator was built.\n");
+        return FV_CUDA_ERROR;
+    }
+    const bool has_south = nccl_context.south >= 0;
+    const bool has_north = nccl_context.north >= 0;
+    if (!has_south && !has_north) {
+        return FV_CUDA_SUCCESS;  // single-rank column: nothing to exchange.
+    }
+
+    const std::size_t edge = static_cast<std::size_t>(nx) * 2 * nz;
+    int ierr = ensure_nccl_halo_buffers(edge);
+    if (ierr != FV_CUDA_SUCCESS) return ierr;
+
+    cudaStream_t stream = nccl_context.stream;
+    const int threads = 256;
+    const int blocks = static_cast<int>((edge + threads - 1) / threads);
+    const bool timing = profile::enabled();
+    const auto exchange_start = Clock::now();
+
+    // Pack the outbound interior edge rows: south {2,3}, north {ny,ny+1}.
+    if (has_south) {
+        pack_halo_rows_kernel<<<blocks, threads, 0, stream>>>(
+            d_q1, nccl_context.halo_send_south, nx, ny, nz, 2);
+    }
+    if (has_north) {
+        pack_halo_rows_kernel<<<blocks, threads, 0, stream>>>(
+            d_q1, nccl_context.halo_send_north, nx, ny, nz, ny);
+    }
+    ierr = check_cuda(cudaGetLastError(), "nccl halo pack");
+    if (ierr != FV_CUDA_SUCCESS) return ierr;
+
+    // One grouped exchange so the paired send/recv cannot deadlock.
+    if ((ierr = check_nccl(ncclGroupStart(), "ncclGroupStart")) != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+    if (has_south) {
+        if ((ierr = check_nccl(ncclSend(nccl_context.halo_send_south, edge, ncclDouble,
+                                        nccl_context.south, nccl_context.comm, stream),
+                               "ncclSend south")) != FV_CUDA_SUCCESS ||
+            (ierr = check_nccl(ncclRecv(nccl_context.halo_recv_south, edge, ncclDouble,
+                                        nccl_context.south, nccl_context.comm, stream),
+                               "ncclRecv south")) != FV_CUDA_SUCCESS) {
+            ncclGroupEnd();
+            return ierr;
+        }
+    }
+    if (has_north) {
+        if ((ierr = check_nccl(ncclSend(nccl_context.halo_send_north, edge, ncclDouble,
+                                        nccl_context.north, nccl_context.comm, stream),
+                               "ncclSend north")) != FV_CUDA_SUCCESS ||
+            (ierr = check_nccl(ncclRecv(nccl_context.halo_recv_north, edge, ncclDouble,
+                                        nccl_context.north, nccl_context.comm, stream),
+                               "ncclRecv north")) != FV_CUDA_SUCCESS) {
+            ncclGroupEnd();
+            return ierr;
+        }
+    }
+    if ((ierr = check_nccl(ncclGroupEnd(), "ncclGroupEnd")) != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+
+    // Unpack inbound halo rows: south halo {0,1}, north halo {ny+2,ny+3}.
+    if (has_south) {
+        unpack_halo_rows_kernel<<<blocks, threads, 0, stream>>>(
+            d_q1, nccl_context.halo_recv_south, nx, ny, nz, 0);
+    }
+    if (has_north) {
+        unpack_halo_rows_kernel<<<blocks, threads, 0, stream>>>(
+            d_q1, nccl_context.halo_recv_north, nx, ny, nz, ny + 2);
+    }
+    ierr = check_cuda(cudaGetLastError(), "nccl halo unpack");
+    if (ierr != FV_CUDA_SUCCESS) return ierr;
+
+    ierr = check_cuda(cudaStreamSynchronize(stream), "nccl halo exchange sync");
+    if (timing) phases.kernel += elapsed_seconds(exchange_start);
+    return ierr;
 }
 #endif  // FV_ADVECTION_USE_NCCL
 
@@ -1558,6 +1715,40 @@ int nccl_init() {
 #endif
 }
 
+// Swap the resident q1 y-halo (buffers[3]) with the neighbor ranks on the GPU.
+// Requires an active resident stage matching nx/ny/nz. This is the device-side
+// stand-in for the host mpp_update_domains(q1) of the neighbor rows; the pole
+// side is left for the fold. Step 4 calls this from the resident spine.
+int nccl_exchange_resident_q1_halo(int nx, int ny, int nz) {
+#ifdef FV_ADVECTION_USE_NCCL
+    const CudaMode mode = selected_cuda_mode();
+    PhaseCall phase_call(mode);
+    CudaPhaseCounter& phases = phase_call.counter();
+    if (mode != CudaMode::resident || !persistent_context.resident_stage_active ||
+        nx != persistent_context.resident_nx || ny != persistent_context.resident_ny ||
+        nz != persistent_context.resident_nz) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels NCCL error: q1 halo exchange needs an active "
+                     "resident stage matching nx/ny/nz.\n");
+        return FV_CUDA_INVALID_ARGUMENT;
+    }
+    double* d_q1 = persistent_context.buffers[3].data;
+    if (d_q1 == nullptr) {
+        return FV_CUDA_INVALID_ARGUMENT;
+    }
+    return exchange_q1_halo_nccl(d_q1, nx, ny, nz, phases);
+#else
+    (void)nx;
+    (void)ny;
+    (void)nz;
+    std::fprintf(stderr,
+                 "fv_advection_kernels NCCL error: this overlay was built without "
+                 "FV_ADVECTION_USE_NCCL; rebuild with NCCL support to use the "
+                 "GPU-to-GPU halo exchange.\n");
+    return FV_CUDA_ERROR;
+#endif
+}
+
 int resident_advection_begin(
     int nx,
     int ny,
@@ -2039,4 +2230,9 @@ extern "C" int fv_advection_resident_finish_cuda_c(
 extern "C" int fv_advection_nccl_init_cuda_c() {
     register_cuda_profile_report();
     return fv_advection_kernels::cuda_backend::nccl_init();
+}
+
+extern "C" int fv_advection_nccl_exchange_q1_halo_cuda_c(int nx, int ny, int nz) {
+    register_cuda_profile_report();
+    return fv_advection_kernels::cuda_backend::nccl_exchange_resident_q1_halo(nx, ny, nz);
 }
