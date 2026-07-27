@@ -56,6 +56,15 @@ def make_experiment(args):
         main_nml["dt_atmos"] = args.dt_atmos
     exp.update_namelist({"main_nml": main_nml})
 
+    # Higher resolutions overflow the FMS mpp_domains global-field scratch stack
+    # during the diagnostic gather (MPP_DO_GLOBAL_FIELD). fms_nml domains_stack_size
+    # raises that scratch size (0 = FMS default). Default None here keeps the
+    # original test case untouched; the resolution sweep passes a generous value.
+    if args.domains_stack_size is not None:
+        exp.update_namelist(
+            {"fms_nml": {"domains_stack_size": args.domains_stack_size}}
+        )
+
     if not args.production_diag:
         for output_file in exp.diag_table.files.values():
             output_file["freq"] = args.diag_frequency_days
@@ -108,6 +117,14 @@ def main():
         default=None,
         help="Dynamics timestep (s). Must scale with resolution for CFL "
         "(T42:600, T85:300, T170:150). Defaults to the namelist value.",
+    )
+    parser.add_argument(
+        "--domains-stack-size",
+        type=int,
+        default=None,
+        help="FMS fms_nml domains_stack_size (elements). Needed at higher "
+        "resolution to avoid the MPP_DO_GLOBAL_FIELD stack overflow. Defaults "
+        "to the namelist value (0 = FMS default).",
     )
     parser.add_argument(
         "--diag-frequency-days",
