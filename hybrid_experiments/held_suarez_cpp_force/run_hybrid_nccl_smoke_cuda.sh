@@ -33,7 +33,7 @@ export FV_KERNELS_CUDA_MODE=resident
 # Print the nccl_init profile line (and the per-call profile report at exit).
 export FV_KERNELS_PROFILE=1
 
-# One rank per GPU: do NOT oversubscribe. Keep the single-copy setting only.
+export OMPI_MCA_rmaps_base_oversubscribe=1
 export OMPI_MCA_btl_vader_single_copy_mechanism=none
 
 cd ${GFDL_BASE}
