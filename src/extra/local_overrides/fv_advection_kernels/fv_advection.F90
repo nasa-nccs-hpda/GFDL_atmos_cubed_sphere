@@ -183,6 +183,7 @@ integer, dimension(nx) :: ii
 
 logical :: flux_local
 logical :: use_resident_boundary
+logical :: use_device_halo
 
 if(.not.module_is_initialized) then
   call error_mesg('a_grid_horiz_advection','fv_advection_mod is not initialized', FATAL)
@@ -193,8 +194,10 @@ if(present(flux)) flux_local = flux
 
 #ifdef USE_CUDA_FV_ADVECTION_KERNELS
 use_resident_boundary = fv_advection_resident_enabled()
+use_device_halo = use_resident_boundary .and. fv_advection_nccl_halo_enabled()
 #else
 use_resident_boundary = .false.
+use_device_halo = .false.
 #endif
 
 vx = 0.0
@@ -208,27 +211,33 @@ end do
 vx(:, js:je, :) = va(:, js:je, :)
 qx(:, js:je, :) = q (:, js:je, :)
 
-call system_clock(halo_t0, halo_rate)
-call mpp_update_domains(vx, advection_domain)
-call mpp_update_domains(qx, advection_domain)
-call system_clock(halo_t1)
-halo_seconds = halo_seconds + real(halo_t1 - halo_t0, 8) / real(halo_rate, 8)
-halo_calls = halo_calls + 2
+! Host-routed vx/qx halo: neighbor exchange then the polar fold. Skipped when
+! the GPU-to-GPU path is on, since the resident begin swaps both halos over NCCL
+! and folds the poles on the device (vx with a sign flip, qx symmetrically). The
+! interior rows built above are still uploaded and the device fills the halos.
+if (.not. use_device_halo) then
+  call system_clock(halo_t0, halo_rate)
+  call mpp_update_domains(vx, advection_domain)
+  call mpp_update_domains(qx, advection_domain)
+  call system_clock(halo_t1)
+  halo_seconds = halo_seconds + real(halo_t1 - halo_t0, 8) / real(halo_rate, 8)
+  halo_calls = halo_calls + 2
 
-if(js == 1) then
-  do i = 1,nx
-    vx(i, 0,:) = - vx(ii(i),1,:)
-    qx(i, 0,:) =   qx(ii(i),1,:)
-    qx(i,-1,:) =   qx(ii(i),2,:)
-  end do
-endif
+  if(js == 1) then
+    do i = 1,nx
+      vx(i, 0,:) = - vx(ii(i),1,:)
+      qx(i, 0,:) =   qx(ii(i),1,:)
+      qx(i,-1,:) =   qx(ii(i),2,:)
+    end do
+  endif
 
-if(je == ny) then
-  do i = 1,nx
-    vx(i,ny+1,:) = - vx(ii(i),ny  ,:)
-    qx(i,ny+1,:) =   qx(ii(i),ny  ,:)
-    qx(i,ny+2,:) =   qx(ii(i),ny-1,:)
-  end do
+  if(je == ny) then
+    do i = 1,nx
+      vx(i,ny+1,:) = - vx(ii(i),ny  ,:)
+      qx(i,ny+1,:) =   qx(ii(i),ny  ,:)
+      qx(i,ny+2,:) =   qx(ii(i),ny-1,:)
+    end do
+  endif
 endif
 
 ! Resident scope-B folds uc/vc and the divergence term onto the device in

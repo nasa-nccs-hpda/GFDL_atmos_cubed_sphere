@@ -668,6 +668,55 @@ int fold_q1_poles(double* d_q1, int nx, int ny, int nz, bool fold_south,
     }
     return ierr;
 }
+
+// Pole fold for the meridional wind vx (haloed va), matching the host fold at
+// a_grid_horiz_advection: vx(i,0) = -vx(ii,1) and vx(i,ny+1) = -vx(ii,ny), where
+// ii = i + nx/2 wrapped. The sign flips (a wind reflected across the pole
+// reverses direction) and only the inner halo row on each pole side is filled,
+// which is the single row compute_vc reads (device rows 1 and ny+2). Reads touch
+// only interior rows, writes only halo rows, so it is race-free like the q1 fold.
+__global__ void polar_fold_vx_kernel(double* vx, int nx, int ny, int nz,
+                                     bool fold_south, bool fold_north) {
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    const int total = nx * nz;
+    if (idx >= total) return;
+    const int c = idx % nx;
+    const int k = idx / nx;
+    const int src = (c + nx / 2) % nx;
+    const int plane = nx * (ny + 4);
+    const int base = k * plane;
+    if (fold_south) {
+        // South inner halo row 1 (Fortran 0) reflects interior row 2 (Fortran 1).
+        vx[base + 1 * nx + c] = -vx[base + 2 * nx + src];
+    }
+    if (fold_north) {
+        // North inner halo row ny+2 (Fortran ny+1) reflects interior row ny+1
+        // (Fortran ny).
+        vx[base + (ny + 2) * nx + c] = -vx[base + (ny + 1) * nx + src];
+    }
+}
+
+// Launch the vx pole fold for whichever sides this rank owns. Mirrors
+// fold_q1_poles: no-op for an interior rank, runs on the default compute stream,
+// and gates the host block on synchronize so the resident spine can overlap it.
+int fold_vx_poles(double* d_vx, int nx, int ny, int nz, bool fold_south,
+                  bool fold_north, CudaPhaseCounter& phases, bool synchronize) {
+    if (!fold_south && !fold_north) {
+        return FV_CUDA_SUCCESS;
+    }
+    const bool timing = profile::enabled();
+    const auto fold_start = Clock::now();
+    const int threads = 256;
+    const int blocks = static_cast<int>((static_cast<std::size_t>(nx) * nz + threads - 1) / threads);
+    polar_fold_vx_kernel<<<blocks, threads>>>(d_vx, nx, ny, nz, fold_south, fold_north);
+    int ierr = check_cuda(cudaGetLastError(), "polar_fold_vx_kernel");
+    if (ierr != FV_CUDA_SUCCESS) return ierr;
+    if (synchronize) {
+        ierr = check_cuda(cudaDeviceSynchronize(), "polar fold vx sync");
+        if (timing) phases.kernel += elapsed_seconds(fold_start);
+    }
+    return ierr;
+}
 #endif  // FV_ADVECTION_USE_NCCL
 
 int ensure_buffer(std::size_t slot, std::size_t count, CudaPhaseCounter& phases) {
@@ -2010,6 +2059,36 @@ int resident_advection_begin(
     if (timing && (ierr = ensure_timing_events()) == FV_CUDA_SUCCESS) {
         ierr = check_cuda(cudaEventRecord(timing_events.start), "resident begin event start");
     }
+
+    // Phase B: swap the qx (q) and vx (va) y-halos GPU-to-GPU over NCCL and fold
+    // the poles on the device, so the host skips mpp_update_domains(vx)/(qx) and
+    // their polar folds in a_grid_horiz_advection. Both fields share the resident
+    // q1 slot layout (nx*(ny+4)*nz), so the same exchange serves them. semi_x and
+    // form_q1 read only the stripped interior, so they run without waiting; the
+    // compute stream waits on halo_done just before semi_y (reads the q halo) and
+    // compute_vc (reads the va halo). Pole sides come from the NCCL neighbors:
+    // south/north < 0 marks a pole, which reflects instead of exchanging. qx folds
+    // symmetrically (same as q1); vx flips sign (a wind reflected across the pole).
+#ifdef FV_ADVECTION_USE_NCCL
+    const bool device_halo = nccl_halo_enabled();
+    if (ierr == FV_CUDA_SUCCESS && device_halo) {
+        const bool fold_south = nccl_context.south < 0;
+        const bool fold_north = nccl_context.north < 0;
+        ierr = exchange_q1_halo_nccl(d_q_halo, nx, ny, nz, phases, /*synchronize=*/false);
+        if (ierr == FV_CUDA_SUCCESS) {
+            ierr = exchange_q1_halo_nccl(d_va_halo, nx, ny, nz, phases, /*synchronize=*/false);
+        }
+        if (ierr == FV_CUDA_SUCCESS) {
+            ierr = fold_q1_poles(d_q_halo, nx, ny, nz, fold_south, fold_north, phases,
+                                 /*synchronize=*/false);
+        }
+        if (ierr == FV_CUDA_SUCCESS) {
+            ierr = fold_vx_poles(d_va_halo, nx, ny, nz, fold_south, fold_north, phases,
+                                 /*synchronize=*/false);
+        }
+    }
+#endif
+
     const int threads = 256;
     const int blocks = static_cast<int>((count + threads - 1) / threads);
     if (ierr == FV_CUDA_SUCCESS) {
@@ -2021,6 +2100,18 @@ int resident_advection_begin(
         form_q1_with_halo_kernel<<<blocks, threads>>>(nx, ny, nz, d_q, d_semi_dq, d_q1);
         ierr = check_cuda(cudaGetLastError(), "resident form_q1_with_halo_kernel");
     }
+
+#ifdef FV_ADVECTION_USE_NCCL
+    // The q/va halos feed semi_y and compute_vc below; wait for the GPU-to-GPU
+    // exchange to land before the first kernel that reads them. The folds already
+    // ran on the compute stream, so only the NCCL exchange needs the cross-stream
+    // wait (halo_done was recorded after the last unpack).
+    if (ierr == FV_CUDA_SUCCESS && device_halo &&
+        (nccl_context.south >= 0 || nccl_context.north >= 0)) {
+        ierr = check_cuda(cudaStreamWaitEvent(0, nccl_context.halo_done, 0),
+                          "resident begin wait halo");
+    }
+#endif
 
     // q2 = q + semi_y(q): semi_y reads the haloed q (not q1), matching the
     // Fortran cross term; form_q2 adds the field back.
