@@ -305,6 +305,10 @@ struct NcclContext {
     double* halo_send_north = nullptr;
     double* halo_recv_north = nullptr;
     std::size_t halo_capacity = 0;
+    // Recorded on `stream` after the unpack. The compute stream waits on this
+    // instead of the host blocking on the exchange, so the fold and the flux
+    // work can overlap the NCCL communication.
+    cudaEvent_t halo_done = nullptr;
 };
 
 NcclContext nccl_context;
@@ -331,6 +335,10 @@ void release_nccl_context() {
     nccl_context.halo_send_north = nullptr;
     nccl_context.halo_recv_north = nullptr;
     nccl_context.halo_capacity = 0;
+    if (nccl_context.halo_done != nullptr) {
+        cudaEventDestroy(nccl_context.halo_done);
+        nccl_context.halo_done = nullptr;
+    }
     if (nccl_context.stream != nullptr) {
         cudaStreamDestroy(nccl_context.stream);
         nccl_context.stream = nullptr;
@@ -427,8 +435,20 @@ int ensure_nccl_context() {
         return ierr;
     }
 
+    // Ordering-only event (no timing) so the compute stream can wait for the
+    // exchange without a host-side block.
+    cudaEvent_t halo_done = nullptr;
+    ierr = check_cuda(cudaEventCreateWithFlags(&halo_done, cudaEventDisableTiming),
+                      "cudaEventCreate halo_done");
+    if (ierr != FV_CUDA_SUCCESS) {
+        cudaStreamDestroy(stream);
+        ncclCommDestroy(comm);
+        return ierr;
+    }
+
     nccl_context.comm = comm;
     nccl_context.stream = stream;
+    nccl_context.halo_done = halo_done;
     nccl_context.world_rank = world_rank;
     nccl_context.world_size = world_size;
     nccl_context.north = (world_rank + 1 < world_size) ? world_rank + 1 : -1;
@@ -502,10 +522,12 @@ int ensure_nccl_halo_buffers(std::size_t edge_count) {
 // pack the two interior edge rows, exchange them over NCCL (NVLink, no host
 // round-trip), and unpack into the halo rows. A pole side (neighbor == -1) is
 // left untouched here; the polar fold fills it. The device stream carries the
-// pack, the exchange, and the unpack in order, so the halo is ready when this
-// returns.
+// pack, the exchange, and the unpack in order, and records nccl_context.halo_done
+// when the unpack is queued. With synchronize == true the host waits for the
+// stream (standalone test entry); with synchronize == false it returns without
+// blocking and the caller orders the compute stream against halo_done.
 int exchange_q1_halo_nccl(double* d_q1, int nx, int ny, int nz,
-                          CudaPhaseCounter& phases) {
+                          CudaPhaseCounter& phases, bool synchronize) {
     if (!nccl_context.initialized) {
         std::fprintf(stderr,
                      "fv_advection_kernels NCCL error: halo exchange requested before "
@@ -582,8 +604,16 @@ int exchange_q1_halo_nccl(double* d_q1, int nx, int ny, int nz,
     ierr = check_cuda(cudaGetLastError(), "nccl halo unpack");
     if (ierr != FV_CUDA_SUCCESS) return ierr;
 
-    ierr = check_cuda(cudaStreamSynchronize(stream), "nccl halo exchange sync");
-    if (timing) phases.kernel += elapsed_seconds(exchange_start);
+    // Mark the exchange complete on the NCCL stream so the compute stream can
+    // wait for it without the host blocking here.
+    ierr = check_cuda(cudaEventRecord(nccl_context.halo_done, stream),
+                      "nccl halo event record");
+    if (ierr != FV_CUDA_SUCCESS) return ierr;
+
+    if (synchronize) {
+        ierr = check_cuda(cudaStreamSynchronize(stream), "nccl halo exchange sync");
+        if (timing) phases.kernel += elapsed_seconds(exchange_start);
+    }
     return ierr;
 }
 
@@ -615,9 +645,13 @@ __global__ void polar_fold_q1_kernel(double* q1, int nx, int ny, int nz,
 }
 
 // Launch the pole fold for whichever sides this rank owns. No-op when the rank
-// touches neither pole (both flags false), which is the interior-rank case.
+// touches neither pole (both flags false), which is the interior-rank case. The
+// fold runs on the default compute stream; it reads only interior rows and
+// writes only pole halo rows, so it can run concurrently with the NCCL exchange
+// (which touches the neighbor halo rows). With synchronize == false it returns
+// without a host block and the caller's stream ordering covers completion.
 int fold_q1_poles(double* d_q1, int nx, int ny, int nz, bool fold_south,
-                  bool fold_north, CudaPhaseCounter& phases) {
+                  bool fold_north, CudaPhaseCounter& phases, bool synchronize) {
     if (!fold_south && !fold_north) {
         return FV_CUDA_SUCCESS;
     }
@@ -628,8 +662,10 @@ int fold_q1_poles(double* d_q1, int nx, int ny, int nz, bool fold_south,
     polar_fold_q1_kernel<<<blocks, threads>>>(d_q1, nx, ny, nz, fold_south, fold_north);
     int ierr = check_cuda(cudaGetLastError(), "polar_fold_q1_kernel");
     if (ierr != FV_CUDA_SUCCESS) return ierr;
-    ierr = check_cuda(cudaDeviceSynchronize(), "polar fold sync");
-    if (timing) phases.kernel += elapsed_seconds(fold_start);
+    if (synchronize) {
+        ierr = check_cuda(cudaDeviceSynchronize(), "polar fold sync");
+        if (timing) phases.kernel += elapsed_seconds(fold_start);
+    }
     return ierr;
 }
 #endif  // FV_ADVECTION_USE_NCCL
@@ -1800,7 +1836,9 @@ int nccl_exchange_resident_q1_halo(int nx, int ny, int nz) {
     if (d_q1 == nullptr) {
         return FV_CUDA_INVALID_ARGUMENT;
     }
-    return exchange_q1_halo_nccl(d_q1, nx, ny, nz, phases);
+    // Standalone entry: block until the exchange is done so callers get a
+    // completed halo.
+    return exchange_q1_halo_nccl(d_q1, nx, ny, nz, phases, /*synchronize=*/true);
 #else
     (void)nx;
     (void)ny;
@@ -1835,7 +1873,9 @@ int fold_resident_q1_poles(int nx, int ny, int nz, bool is_south_boundary,
     if (d_q1 == nullptr) {
         return FV_CUDA_INVALID_ARGUMENT;
     }
-    return fold_q1_poles(d_q1, nx, ny, nz, is_south_boundary, is_north_boundary, phases);
+    // Standalone entry: block until the fold is done.
+    return fold_q1_poles(d_q1, nx, ny, nz, is_south_boundary, is_north_boundary, phases,
+                         /*synchronize=*/true);
 #else
     (void)nx;
     (void)ny;
@@ -2109,17 +2149,35 @@ int resident_advection_finish(
     double* d_uc = persistent_context.buffers[12].data;
     double* d_vc = persistent_context.buffers[13].data;
 
+    const bool device_halo = nccl_halo_enabled();
+    const bool timing = profile::enabled();
+    if (ierr == FV_CUDA_SUCCESS && timing) {
+        ierr = ensure_timing_events();
+    }
+    // Device path: open the timing window before the halo work so the event
+    // window covers the NCCL exchange and the fold as well as the flux kernels.
+    // The host path opens it after the upload (below) so the h2d cost stays in
+    // the h2d counter, not the kernel window.
+    if (ierr == FV_CUDA_SUCCESS && timing && device_halo) {
+        ierr = check_cuda(cudaEventRecord(timing_events.start, 0),
+                          "resident finish event start");
+    }
+
     // Halo-only residency: d_q1's interior is still valid from resident_begin, so
     // only the two halo rows per side need to be filled before the sphere flux
     // kernel reads them.
-    if (ierr == FV_CUDA_SUCCESS && nccl_halo_enabled()) {
+    if (ierr == FV_CUDA_SUCCESS && device_halo) {
 #ifdef FV_ADVECTION_USE_NCCL
         // GPU-to-GPU path: swap the neighbor rows over NCCL and fold the poles,
         // all on the device. No host round-trip; the host q1 argument is unused.
-        ierr = exchange_q1_halo_nccl(d_q1, nx, ny, nz, phases);
+        // Neither call blocks the host: the exchange records halo_done on the
+        // NCCL stream, the fold runs on the compute stream (overlapping the
+        // exchange), and the compute stream waits on halo_done just before the
+        // sphere flux kernel reads the halo (below).
+        ierr = exchange_q1_halo_nccl(d_q1, nx, ny, nz, phases, /*synchronize=*/false);
         if (ierr == FV_CUDA_SUCCESS) {
             ierr = fold_q1_poles(d_q1, nx, ny, nz, is_south_boundary, is_north_boundary,
-                                 phases);
+                                 phases, /*synchronize=*/false);
         }
 #endif
     } else if (ierr == FV_CUDA_SUCCESS) {
@@ -2144,17 +2202,30 @@ int resident_advection_finish(
         if (profile::enabled()) phases.h2d += elapsed_seconds(copy_start);
     }
 
-    const bool timing = profile::enabled();
-    if (ierr == FV_CUDA_SUCCESS && timing && (ierr = ensure_timing_events()) == FV_CUDA_SUCCESS) {
+    // Host path: open the timing window after the upload (the device path
+    // already opened it before the halo work).
+    if (ierr == FV_CUDA_SUCCESS && timing && !device_halo) {
         ierr = check_cuda(cudaEventRecord(timing_events.start), "resident finish event start");
     }
     const int threads = 256;
     const int blocks = static_cast<int>((count + threads - 1) / threads);
     if (ierr == FV_CUDA_SUCCESS) {
+        // vanleer_x reads d_q2/d_uc/d_dq, not the q1 halo, so it can run on the
+        // compute stream while the NCCL exchange is still in flight.
         vanleer_x_kernel<<<blocks, threads>>>(nx, ny, nz, dt, dx, d_c, monotone,
                                               d_uc, d_q2, d_dq);
         ierr = check_cuda(cudaGetLastError(), "resident vanleer_x_kernel");
     }
+#ifdef FV_ADVECTION_USE_NCCL
+    // The sphere flux kernel below reads the neighbor halo rows filled on the
+    // NCCL stream, so the compute stream must wait for the exchange first. Only
+    // needed when this rank actually exchanged (has a neighbor).
+    if (ierr == FV_CUDA_SUCCESS && device_halo &&
+        (nccl_context.south >= 0 || nccl_context.north >= 0)) {
+        ierr = check_cuda(cudaStreamWaitEvent(0, nccl_context.halo_done, 0),
+                          "resident finish wait halo");
+    }
+#endif
     if (ierr == FV_CUDA_SUCCESS) {
         vanleer_sphere_kernel<<<blocks, threads>>>(
             nx, ny, nz, dt, monotone, is_south_boundary, is_north_boundary,
