@@ -1745,6 +1745,24 @@ bool resident_boundary_enabled() {
     return selected_cuda_mode() == CudaMode::resident;
 }
 
+// Runtime switch (env FV_ADVECTION_NCCL_HALO) for the GPU-to-GPU q1 halo path.
+// Off by default, so the host-routed halo stays the reference and the same binary
+// can run both for a bit-for-bit A/B. Only takes effect in resident mode built
+// with FV_ADVECTION_USE_NCCL. Read once and cached.
+bool nccl_halo_enabled() {
+#ifdef FV_ADVECTION_USE_NCCL
+    static const bool enabled = [] {
+        const char* value = std::getenv("FV_ADVECTION_NCCL_HALO");
+        return value != nullptr &&
+               (value[0] == '1' || value[0] == 't' || value[0] == 'T' ||
+                value[0] == 'y' || value[0] == 'Y');
+    }();
+    return enabled;
+#else
+    return false;
+#endif
+}
+
 // Build (or confirm) the process's NCCL communicator. Returns FV_CUDA_SUCCESS on
 // success. When the overlay is built without FV_ADVECTION_USE_NCCL this reports
 // that GPU-to-GPU halo support was not compiled in, so a misconfigured run fails
@@ -2020,7 +2038,9 @@ int resident_advection_begin(
     // the host. mpp_update_domains sends those rows to neighbors and the polar
     // fold reads rows {1,2} / {ny-1,ny} from them; the deep interior is never
     // touched host-side before resident_advection_finish uploads the halo back.
-    if (ierr == FV_CUDA_SUCCESS) {
+    // With the GPU-to-GPU halo path on, the neighbor swap and fold happen on the
+    // device in finish, so these edge rows never need to reach the host.
+    if (ierr == FV_CUDA_SUCCESS && !nccl_halo_enabled()) {
         const std::size_t host_pitch = static_cast<std::size_t>(nx) * ny * sizeof(double);
         const std::size_t dev_pitch = static_cast<std::size_t>(nx) * (ny + 4) * sizeof(double);
         const std::size_t edge_width = static_cast<std::size_t>(nx) * 2 * sizeof(double);
@@ -2090,10 +2110,22 @@ int resident_advection_finish(
     double* d_vc = persistent_context.buffers[13].data;
 
     // Halo-only residency: d_q1's interior is still valid from resident_begin, so
-    // only the two halo rows per side (filled host-side by mpp_update_domains and
-    // the polar fold) need to be uploaded. Layout matches device d_q1 (halo
-    // offset 2), so rows map 1:1.
-    if (ierr == FV_CUDA_SUCCESS) {
+    // only the two halo rows per side need to be filled before the sphere flux
+    // kernel reads them.
+    if (ierr == FV_CUDA_SUCCESS && nccl_halo_enabled()) {
+#ifdef FV_ADVECTION_USE_NCCL
+        // GPU-to-GPU path: swap the neighbor rows over NCCL and fold the poles,
+        // all on the device. No host round-trip; the host q1 argument is unused.
+        ierr = exchange_q1_halo_nccl(d_q1, nx, ny, nz, phases);
+        if (ierr == FV_CUDA_SUCCESS) {
+            ierr = fold_q1_poles(d_q1, nx, ny, nz, is_south_boundary, is_north_boundary,
+                                 phases);
+        }
+#endif
+    } else if (ierr == FV_CUDA_SUCCESS) {
+        // Host path: the halo rows were filled host-side by mpp_update_domains and
+        // the polar fold; upload them. Layout matches device d_q1 (halo offset 2),
+        // so rows map 1:1.
         const std::size_t pitch = static_cast<std::size_t>(nx) * (ny + 4) * sizeof(double);
         const std::size_t halo_width = static_cast<std::size_t>(nx) * 2 * sizeof(double);
         const auto copy_start = Clock::now();
@@ -2326,4 +2358,8 @@ extern "C" int fv_advection_nccl_fold_q1_poles_cuda_c(int nx, int ny, int nz,
     register_cuda_profile_report();
     return fv_advection_kernels::cuda_backend::fold_resident_q1_poles(
         nx, ny, nz, is_south_boundary != 0, is_north_boundary != 0);
+}
+
+extern "C" int fv_advection_nccl_halo_enabled_cuda_c() {
+    return fv_advection_kernels::cuda_backend::nccl_halo_enabled() ? 1 : 0;
 }

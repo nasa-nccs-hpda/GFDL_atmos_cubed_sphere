@@ -44,7 +44,7 @@ use fv_advection_kernels_c_interface, only : semi_x_3d_cuda_wrapper, slope_x_cud
   integer_flux_x_cuda_wrapper, vanleer_x_3d_cuda_wrapper, slope_sphere_cuda_wrapper, &
   vanleer_sphere_3d_cuda_wrapper, fv_advection_resident_enabled, &
   fv_advection_resident_begin_wrapper, fv_advection_resident_finish_wrapper, &
-  fv_advection_nccl_init
+  fv_advection_nccl_init, fv_advection_nccl_halo_enabled
 #endif
 
 implicit none
@@ -310,11 +310,14 @@ real, dimension(nx, js-2:je+2, size(q,3)) :: q1
 integer, dimension(nx) :: ii
 integer :: i, ierr
 logical :: use_resident_boundary
+logical :: use_device_halo
 
 #ifdef USE_CUDA_FV_ADVECTION_KERNELS
 use_resident_boundary = fv_advection_resident_enabled()
+use_device_halo = use_resident_boundary .and. fv_advection_nccl_halo_enabled()
 #else
 use_resident_boundary = .false.
+use_device_halo = .false.
 #endif
 
 if (use_resident_boundary) then
@@ -338,29 +341,34 @@ else
   q2(:,js:je,:) = q(:,js:je,:) + q2(:,js:je,:)
 endif
 
-call system_clock(halo_t0, halo_rate)
-call mpp_update_domains(q1, advection_domain)
-call system_clock(halo_t1)
-halo_seconds = halo_seconds + real(halo_t1 - halo_t0, 8) / real(halo_rate, 8)
-halo_calls = halo_calls + 1
+! Host-routed q1 halo: neighbor exchange (mpp_update_domains) then the polar
+! fold. Skipped when the GPU-to-GPU path is on, since the resident finish does
+! both on the device; the deep interior stays resident on the GPU throughout.
+if (.not. use_device_halo) then
+  call system_clock(halo_t0, halo_rate)
+  call mpp_update_domains(q1, advection_domain)
+  call system_clock(halo_t1)
+  halo_seconds = halo_seconds + real(halo_t1 - halo_t0, 8) / real(halo_rate, 8)
+  halo_calls = halo_calls + 1
 
-do i = 1,nx
-  ii(i) = i + nx/2
-  if (ii(i) > nx) ii(i) = ii(i) - nx
-end do
-
-if(js == 1) then
   do i = 1,nx
-    q1(i, 0,:) =   q1(ii(i),1,:)
-    q1(i,-1,:) =   q1(ii(i),2,:)
+    ii(i) = i + nx/2
+    if (ii(i) > nx) ii(i) = ii(i) - nx
   end do
-endif
 
-if(je == ny) then
-  do i = 1,nx
-    q1(i,ny+1,:) =   q1(ii(i),ny  ,:)
-    q1(i,ny+2,:) =   q1(ii(i),ny-1,:)
-  end do
+  if(js == 1) then
+    do i = 1,nx
+      q1(i, 0,:) =   q1(ii(i),1,:)
+      q1(i,-1,:) =   q1(ii(i),2,:)
+    end do
+  endif
+
+  if(je == ny) then
+    do i = 1,nx
+      q1(i,ny+1,:) =   q1(ii(i),ny  ,:)
+      q1(i,ny+2,:) =   q1(ii(i),ny-1,:)
+    end do
+  endif
 endif
 
 if (use_resident_boundary) then

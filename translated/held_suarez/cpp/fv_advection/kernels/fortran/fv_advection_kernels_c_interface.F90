@@ -20,6 +20,7 @@ module fv_advection_kernels_c_interface
   public :: fv_advection_resident_begin_wrapper
   public :: fv_advection_resident_finish_wrapper
   public :: fv_advection_nccl_init
+  public :: fv_advection_nccl_halo_enabled
 #endif
 
   interface
@@ -123,6 +124,11 @@ module fv_advection_kernels_c_interface
       use, intrinsic :: iso_c_binding, only: c_int
       integer(c_int) :: fv_advection_nccl_init_cuda_c
     end function fv_advection_nccl_init_cuda_c
+
+    function fv_advection_nccl_halo_enabled_cuda_c() bind(C, name='fv_advection_nccl_halo_enabled_cuda_c')
+      use, intrinsic :: iso_c_binding, only: c_int
+      integer(c_int) :: fv_advection_nccl_halo_enabled_cuda_c
+    end function fv_advection_nccl_halo_enabled_cuda_c
 
     function fv_advection_resident_begin_cuda_c(nx, js, je, nz, half_dt, dx, fold_div, &
         c, cc, dy, dy_plus, dy_minus, dyy, ua, q, va, q1) &
@@ -289,6 +295,12 @@ contains
   logical function fv_advection_resident_enabled()
     fv_advection_resident_enabled = fv_advection_resident_enabled_cuda_c() /= 0_c_int
   end function fv_advection_resident_enabled
+
+  ! True when the GPU-to-GPU q1 halo path is on (env FV_ADVECTION_NCCL_HALO). Lets
+  ! the resident advection skip the host mpp_update_domains(q1) and polar fold.
+  logical function fv_advection_nccl_halo_enabled()
+    fv_advection_nccl_halo_enabled = fv_advection_nccl_halo_enabled_cuda_c() /= 0_c_int
+  end function fv_advection_nccl_halo_enabled
 
   ! Build (or confirm) the process's NCCL communicator for GPU-to-GPU halo
   ! exchange. ierr is 0 on success; nonzero means NCCL support was not compiled

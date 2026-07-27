@@ -88,6 +88,10 @@ int nccl_exchange_resident_q1_halo(int nx, int ny, int nz);
 int fold_resident_q1_poles(int nx, int ny, int nz, bool is_south_boundary,
                            bool is_north_boundary);
 
+// True when the GPU-to-GPU q1 halo path is on (env FV_ADVECTION_NCCL_HALO). Off
+// by default; only meaningful in resident mode built with FV_ADVECTION_USE_NCCL.
+bool nccl_halo_enabled();
+
 int resident_advection_begin(
     int nx,
     int ny,
@@ -240,5 +244,9 @@ extern "C" int fv_advection_nccl_exchange_q1_halo_cuda_c(int nx, int ny, int nz)
 extern "C" int fv_advection_nccl_fold_q1_poles_cuda_c(int nx, int ny, int nz,
                                                       int is_south_boundary,
                                                       int is_north_boundary);
+
+// Returns 1 when the GPU-to-GPU q1 halo path is on (env FV_ADVECTION_NCCL_HALO),
+// else 0. Lets the Fortran side skip the host halo exchange and fold.
+extern "C" int fv_advection_nccl_halo_enabled_cuda_c();
 
 #endif  // FV_ADVECTION_KERNELS_CUDA_H
