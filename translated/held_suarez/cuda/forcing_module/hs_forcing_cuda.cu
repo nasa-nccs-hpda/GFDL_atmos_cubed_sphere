@@ -662,13 +662,17 @@ __global__ void hs_forcing_accumulate_kernel(
         utnd *= mask[idx];
         vtnd *= mask[idx];
         ttnd *= mask[idx];
-        teq_value *= mask[idx];
+        if (teq != nullptr) {
+            teq_value *= mask[idx];
+        }
     }
 
     udt[idx] += utnd;
     vdt[idx] += vtnd;
     tdt[idx] += ttnd;
-    teq[idx] = teq_value;
+    if (teq != nullptr) {
+        teq[idx] = teq_value;
+    }
 }
 
 int hs_forcing_driver_cuda(
@@ -738,8 +742,8 @@ int hs_forcing_driver_cuda(
 
     if (!g_banner_printed) {
         std::fprintf(stderr,
-                     "HS_FORCE_CUDA_RUNTIME version=fused_persistent_20260724 sync=implicit copy_teq=%d size_3d=%zu\n",
-                     copy_teq ? 1 : 0, size_3d);
+                     "HS_FORCE_CUDA_RUNTIME version=fused_persistent_20260724 sync=implicit copy_teq=%d no_teq_store=%d size_3d=%zu\n",
+                     copy_teq ? 1 : 0, copy_teq ? 0 : 1, size_3d);
         g_banner_printed = true;
     }
 
@@ -772,7 +776,7 @@ int hs_forcing_driver_cuda(
         g_buffers.t, config.t_zero, config.t_strat, config.delh, config.delv,
         config.eps, config.P00, config.kappa, config.tka, config.tks,
         config.vkf, config.sigma_b, mask != nullptr ? g_buffers.mask : nullptr,
-        g_buffers.udt, g_buffers.vdt, g_buffers.tdt, g_buffers.teq);
+        g_buffers.udt, g_buffers.vdt, g_buffers.tdt, copy_teq ? g_buffers.teq : nullptr);
     ierr = check_cuda(cudaGetLastError(), "hs_forcing_accumulate_kernel launch");
 
     if (ierr == HS_SUCCESS) ierr = check_cuda(cudaMemcpy(udt, g_buffers.udt, size_3d * sizeof(double), cudaMemcpyDeviceToHost), "copy udt to host");

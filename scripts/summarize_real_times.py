@@ -25,8 +25,10 @@ def main():
     args = parser.parse_args()
 
     first = None
+    last_values = []
     for log in args.logs:
         values = real_seconds(log)
+        last_values.append(values[-1] if values else None)
         text = ", ".join(f"{value:.3f}s" for value in values) if values else "none"
         print(f"{log}: real={text}")
         if values and first is None:
@@ -34,6 +36,10 @@ def main():
         elif values and first:
             ratio = first / values[-1]
             print(f"speedup_vs_first={ratio:.3f}x")
+    if len(last_values) == 2 and last_values[0] and last_values[1]:
+        speedup = last_values[0] / last_values[1]
+        print(f"cpu_vs_gpu_speedup={speedup:.3f}x")
+        print(f"target_2x={'PASS' if speedup >= 2.0 else 'MISS'}")
 
 
 if __name__ == "__main__":
