@@ -123,7 +123,7 @@ def main():
     sys.path.insert(0, str(HELD_SUAREZ_CASE_DIR))
 
     import held_suarez_test_case as original
-    from isca import DryCodeBase, Experiment, FailedRunError, GFDL_BASE
+    from isca import DryCodeBase, Experiment, GFDL_BASE
 
     class RuntimeCodeBase(DryCodeBase):
         pass
@@ -199,7 +199,7 @@ def main():
             use_restart=False,
             overwrite_data=args.overwrite,
         )
-    except FailedRunError:
+    except Exception:
         print_failure_diagnostics(exp.rundir)
         raise
 

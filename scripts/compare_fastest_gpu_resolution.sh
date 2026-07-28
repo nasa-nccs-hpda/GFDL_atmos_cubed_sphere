@@ -108,8 +108,10 @@ run_backend() {
   local label=$2
   local log=$3
   local exp_name="fastest_gpu_${CASE_TAG}_${backend}"
+  local run_dir="${GFDL_WORK}/experiment/${exp_name}/run"
 
   echo "=== Run ${label} backend: ${CASE_TAG} ==="
+  set +e
   apptainer exec --nv \
     --bind "${APPTAINER_BIND_ROOT}:${APPTAINER_BIND_ROOT}" \
     "${CONTAINER}" \
@@ -142,6 +144,22 @@ time python3 scripts/run_T85L25_case.py \
   ${no_tracer_arg[*]} \
   ${overwrite_arg[*]}
 " 2>&1 | tee "${log}"
+  local status=${PIPESTATUS[0]}
+  set -e
+  if [[ "${status}" != "0" ]]; then
+    echo "ERROR: ${label} backend failed with status ${status}."
+    echo "Run dir: ${run_dir}"
+    if [[ -d "${run_dir}" ]]; then
+      echo "--- run dir files ---"
+      ls -lah "${run_dir}" || true
+      for file in "${run_dir}"/*.out "${run_dir}"/*.err "${run_dir}"/*.log "${run_dir}"/fms.out "${run_dir}"/logfile.out "${run_dir}"/input.nml "${run_dir}"/run.sh; do
+        [[ -f "${file}" ]] || continue
+        echo "--- tail ${file} ---"
+        tail -n 120 "${file}" || true
+      done
+    fi
+    return "${status}"
+  fi
 }
 
 if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cpu" ]]; then
