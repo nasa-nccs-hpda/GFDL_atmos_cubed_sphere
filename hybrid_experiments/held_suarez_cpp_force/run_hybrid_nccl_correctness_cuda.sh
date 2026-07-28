@@ -38,6 +38,10 @@ export FV_KERNELS_PROFILE=1
 
 export OMPI_MCA_rmaps_base_oversubscribe=1
 export OMPI_MCA_btl_vader_single_copy_mechanism=none
+# Fork ranks locally and ignore Slurm. Inside an interactive salloc, mpirun
+# otherwise selects its Slurm launch module and shells out to srun, which is
+# absent from the container; isolated launches on the local node directly.
+export OMPI_MCA_plm=isolated
 
 cd ${GFDL_BASE}
 mkdir -p logs
