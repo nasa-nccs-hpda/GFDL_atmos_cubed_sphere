@@ -33,7 +33,9 @@ if [[ -z "${FAST_GPU_DT_ATMOS:-}" ]]; then
     T42) FAST_GPU_DT_ATMOS=600 ;;
     T85) FAST_GPU_DT_ATMOS=300 ;;
     T170) FAST_GPU_DT_ATMOS=150 ;;
+    T340) FAST_GPU_DT_ATMOS=75 ;;
     T341) FAST_GPU_DT_ATMOS=75 ;;
+    T682) FAST_GPU_DT_ATMOS=37 ;;
     *)
       echo "FAST_GPU_DT_ATMOS is required for resolution ${FAST_GPU_RESOLUTION}."
       exit 2

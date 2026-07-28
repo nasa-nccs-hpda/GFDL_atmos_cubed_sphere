@@ -17,6 +17,37 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 HELD_SUAREZ_CASE_DIR = REPO_ROOT / "exp" / "test_cases" / "held_suarez"
 
 
+EXTRA_RESOLUTIONS = {
+    "T340": {
+        "lon_max": 1024,
+        "lat_max": 512,
+        "num_fourier": 340,
+        "num_spherical": 341,
+    },
+    "T341": {
+        "lon_max": 1024,
+        "lat_max": 512,
+        "num_fourier": 341,
+        "num_spherical": 342,
+    },
+    "T682": {
+        "lon_max": 2048,
+        "lat_max": 1024,
+        "num_fourier": 682,
+        "num_spherical": 683,
+    },
+}
+
+
+def set_case_resolution(exp, res, num_levels):
+    if res in EXTRA_RESOLUTIONS:
+        delta = EXTRA_RESOLUTIONS[res].copy()
+        delta["num_levels"] = num_levels
+        exp.update_namelist({"spectral_dynamics_nml": delta})
+        return
+    exp.set_resolution(res, num_levels)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--exp-name", required=True)
@@ -79,7 +110,7 @@ def main():
     exp = Experiment(args.exp_name, codebase=cb)
     exp.namelist = original.namelist.copy()
     exp.diag_table = original.diag.copy()
-    exp.set_resolution(args.resolution, args.levels)
+    set_case_resolution(exp, args.resolution, args.levels)
     exp.update_namelist(
         {
             "main_nml": {
