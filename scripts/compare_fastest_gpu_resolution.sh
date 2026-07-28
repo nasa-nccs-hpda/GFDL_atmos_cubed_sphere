@@ -46,6 +46,7 @@ fi
 CASE_TAG="${FAST_GPU_RESOLUTION}L${FAST_GPU_LEVELS}_dt${FAST_GPU_DT_ATMOS}_${FAST_GPU_DAYS}day${FAST_GPU_CASE_SUFFIX}"
 CPU_LOG="${GFDL_BASE}/logs/fastest_gpu_${CASE_TAG}_cpu.log"
 CUDA_LOG="${GFDL_BASE}/logs/fastest_gpu_${CASE_TAG}_cuda.log"
+CPU_BASELINE_LOG="${FAST_GPU_CPU_BASELINE_LOG:-${CPU_LOG}}"
 
 mkdir -p "${GFDL_BASE}/logs"
 
@@ -71,6 +72,7 @@ echo "HS_FORCE_COPY_TEQ=${HS_FORCE_COPY_TEQ}"
 echo "USE_CUDA_TRANSFORMS=${USE_CUDA_TRANSFORMS}"
 echo "USE_CUDA_GRID_FOURIER=${USE_CUDA_GRID_FOURIER}"
 echo "USE_CUDA_SPHERICAL_FOURIER=${USE_CUDA_SPHERICAL_FOURIER}"
+echo "FAST_GPU_CPU_BASELINE_LOG=${CPU_BASELINE_LOG}"
 
 if [[ "${FAST_GPU_RUN_MODE}" != "both" && "${FAST_GPU_RUN_MODE}" != "cpu" && "${FAST_GPU_RUN_MODE}" != "cuda" ]]; then
   echo "FAST_GPU_RUN_MODE must be one of: both, cpu, cuda"
@@ -203,5 +205,10 @@ if [[ "${FAST_GPU_RUN_MODE}" == "both" ]]; then
 elif [[ "${FAST_GPU_RUN_MODE}" == "cpu" ]]; then
   "${REPO_ROOT}/scripts/summarize_real_times.py" "${CPU_LOG}"
 else
-  "${REPO_ROOT}/scripts/summarize_real_times.py" "${CUDA_LOG}"
+  if [[ -f "${CPU_BASELINE_LOG}" ]]; then
+    "${REPO_ROOT}/scripts/summarize_real_times.py" "${CPU_BASELINE_LOG}" "${CUDA_LOG}"
+  else
+    echo "CPU baseline log not found: ${CPU_BASELINE_LOG}"
+    "${REPO_ROOT}/scripts/summarize_real_times.py" "${CUDA_LOG}"
+  fi
 fi

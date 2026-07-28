@@ -48,6 +48,37 @@ def set_case_resolution(exp, res, num_levels):
     exp.set_resolution(res, num_levels)
 
 
+def print_failure_diagnostics(run_dir):
+    run_path = Path(run_dir)
+    print("\n=== Failed run diagnostics ===", file=sys.stderr)
+    print(f"Run dir: {run_path}", file=sys.stderr)
+    if not run_path.exists():
+        print("Run dir does not exist.", file=sys.stderr)
+        return
+
+    print("Run dir files:", file=sys.stderr)
+    for path in sorted(run_path.iterdir()):
+        size = path.stat().st_size if path.is_file() else 0
+        print(f"  {path.name} {size} bytes", file=sys.stderr)
+
+    candidates = []
+    for pattern in ("*.out", "*.err", "*.log", "fms.out", "logfile.out", "input.nml", "run.sh"):
+        candidates.extend(run_path.glob(pattern))
+    seen = set()
+    for path in candidates:
+        if path in seen or not path.is_file():
+            continue
+        seen.add(path)
+        print(f"\n--- tail {path.name} ---", file=sys.stderr)
+        try:
+            lines = path.read_text(errors="replace").splitlines()
+        except OSError as exc:
+            print(f"Could not read {path}: {exc}", file=sys.stderr)
+            continue
+        for line in lines[-80:]:
+            print(line, file=sys.stderr)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--exp-name", required=True)
@@ -92,7 +123,7 @@ def main():
     sys.path.insert(0, str(HELD_SUAREZ_CASE_DIR))
 
     import held_suarez_test_case as original
-    from isca import DryCodeBase, Experiment, GFDL_BASE
+    from isca import DryCodeBase, Experiment, FailedRunError, GFDL_BASE
 
     class RuntimeCodeBase(DryCodeBase):
         pass
@@ -161,12 +192,16 @@ def main():
     print("Data dir =", exp.datadir)
     print("Run dir =", exp.rundir)
 
-    exp.run(
-        1,
-        num_cores=args.num_cores,
-        use_restart=False,
-        overwrite_data=args.overwrite,
-    )
+    try:
+        exp.run(
+            1,
+            num_cores=args.num_cores,
+            use_restart=False,
+            overwrite_data=args.overwrite,
+        )
+    except FailedRunError:
+        print_failure_diagnostics(exp.rundir)
+        raise
 
 
 if __name__ == "__main__":

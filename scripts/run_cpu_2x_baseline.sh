@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-export FAST_GPU_RUN_MODE=both
+export FAST_GPU_RUN_MODE=cpu
 export FAST_GPU_REBUILD="${FAST_GPU_REBUILD:-1}"
 export FAST_GPU_RESOLUTION="${FAST_GPU_RESOLUTION:-T340}"
 export FAST_GPU_DAYS="${FAST_GPU_DAYS:-1}"
