@@ -51,6 +51,7 @@ DT_ATMOS='${DT_ATMOS:-}'
 DAYS='${DAYS:-1}'
 REPEAT='${REPEAT:-1}'
 STACK='${STACK:-}'
+NP='${NP:-2}'
 TAG=\${RES:-default}
 
 run_case () {
@@ -59,11 +60,11 @@ run_case () {
   [ -n \"\${RES}\" ] && extra=\"\${extra} --resolution \${RES}\"
   [ -n \"\${DT_ATMOS}\" ] && extra=\"\${extra} --dt-atmos \${DT_ATMOS}\"
   [ -n \"\${STACK}\" ] && extra=\"\${extra} --domains-stack-size \${STACK}\"
-  echo \"=== running \${exp_name} (FV_ADVECTION_NCCL_HALO=\${FV_ADVECTION_NCCL_HALO:-0}) res=\${RES:-default} dt=\${DT_ATMOS:-default} days=\${DAYS} stack=\${STACK:-default} ===\"
+  echo \"=== running \${exp_name} (FV_ADVECTION_NCCL_HALO=\${FV_ADVECTION_NCCL_HALO:-0}) np=\${NP} res=\${RES:-default} dt=\${DT_ATMOS:-default} days=\${DAYS} stack=\${STACK:-default} ===\"
   python3 hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py \
     --exp-name \${exp_name} \
     --executable-name held_suarez_fv_kernels_cuda.x \
-    --num-cores 2 \
+    --num-cores \${NP} \
     --days \${DAYS} \
     \${extra} \
     --overwrite 2>&1 | tee -a \${log}

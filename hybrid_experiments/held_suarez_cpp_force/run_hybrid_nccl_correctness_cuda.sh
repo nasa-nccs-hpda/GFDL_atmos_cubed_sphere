@@ -42,13 +42,17 @@ export OMPI_MCA_btl_vader_single_copy_mechanism=none
 cd ${GFDL_BASE}
 mkdir -p logs
 
+# Rank/GPU count. np>=3 is what exercises the interior-rank device exchange
+# (a rank with two real neighbors and no pole fold) that np=2 never reaches.
+NP='${NP:-2}'
+
 run_case () {
   local exp_name=\$1
-  echo \"=== running \${exp_name} (FV_ADVECTION_NCCL_HALO=\${FV_ADVECTION_NCCL_HALO:-0}) ===\"
+  echo \"=== running \${exp_name} (FV_ADVECTION_NCCL_HALO=\${FV_ADVECTION_NCCL_HALO:-0}) np=\${NP} ===\"
   python3 hybrid_experiments/held_suarez_cpp_force/run_hybrid_held_suarez.py \
     --exp-name \${exp_name} \
     --executable-name held_suarez_fv_kernels_cuda.x \
-    --num-cores 2 \
+    --num-cores \${NP} \
     --days 1 \
     --overwrite
 }

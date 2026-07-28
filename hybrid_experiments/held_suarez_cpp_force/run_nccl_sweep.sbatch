@@ -10,11 +10,13 @@
 #   REPEAT=1 sbatch hybrid_experiments/held_suarez_cpp_force/run_nccl_sweep.sbatch
 #   RES=T170 DT_ATMOS=150 STACK=8000000 REPEAT=3 sbatch .../run_nccl_sweep.sbatch
 #
-# Allocation matches the interactive one you used (salloc -G2 -c10).
+# One rank per GPU over intra-node NVLink. -G 4 uses the node's full 4x V100;
+# at np=4 T340's per-GPU memory ~halves (np=2 pinned it at 96% of 32 GB and
+# could not finish one day inside 4 h).
 #SBATCH --job-name=nccl_sweep
-#SBATCH -G 2
+#SBATCH -G 4
 #SBATCH -c 10
-#SBATCH --time=04:00:00
+#SBATCH --time=08:00:00
 #SBATCH --output=logs/nccl_sweep_%j.out
 #SBATCH --error=logs/nccl_sweep_%j.out
 set -euo pipefail
@@ -40,12 +42,15 @@ if [ ! -e "${CONTAINER}" ]; then
 fi
 
 # Sweep knobs -- default to the T340 case; override any at submit time.
+# NP follows the GPUs actually allocated (one rank per GPU), so changing -G
+# above or `sbatch -G N` keeps the rank count in step.
+export NP="${NP:-${SLURM_GPUS_ON_NODE:-4}}"
 export RES="${RES:-T340}"
 export DT_ATMOS="${DT_ATMOS:-75}"
 export STACK="${STACK:-40000000}"
 export REPEAT="${REPEAT:-3}"
 
-echo "=== nccl sweep: RES=${RES} DT_ATMOS=${DT_ATMOS} STACK=${STACK} REPEAT=${REPEAT}" \
+echo "=== nccl sweep: NP=${NP} RES=${RES} DT_ATMOS=${DT_ATMOS} STACK=${STACK} REPEAT=${REPEAT}" \
      "job=${SLURM_JOB_ID:-none} node=$(hostname) start=$(date) ==="
 
 bash hybrid_experiments/held_suarez_cpp_force/measure_nccl_halo.sh
