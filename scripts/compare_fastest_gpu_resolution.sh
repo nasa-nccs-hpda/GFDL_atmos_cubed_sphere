@@ -22,6 +22,7 @@ FAST_GPU_CASE_SUFFIX="${FAST_GPU_CASE_SUFFIX:-}"
 FAST_GPU_PRODUCTION_DIAG="${FAST_GPU_PRODUCTION_DIAG:-1}"
 FAST_GPU_DIAG_FREQUENCY_DAYS="${FAST_GPU_DIAG_FREQUENCY_DAYS:-${FAST_GPU_DAYS}}"
 FAST_GPU_NO_TRACERS="${FAST_GPU_NO_TRACERS:-0}"
+FAST_GPU_DOMAINS_STACK_SIZE="${FAST_GPU_DOMAINS_STACK_SIZE:-}"
 HS_PROFILE="${HS_PROFILE:-1}"
 HS_FORCE_COPY_TEQ="${HS_FORCE_COPY_TEQ:-0}"
 USE_CUDA_TRANSFORMS="${USE_CUDA_TRANSFORMS:-0}"
@@ -67,6 +68,7 @@ echo "FAST_GPU_CASE_SUFFIX=${FAST_GPU_CASE_SUFFIX}"
 echo "FAST_GPU_PRODUCTION_DIAG=${FAST_GPU_PRODUCTION_DIAG}"
 echo "FAST_GPU_DIAG_FREQUENCY_DAYS=${FAST_GPU_DIAG_FREQUENCY_DAYS}"
 echo "FAST_GPU_NO_TRACERS=${FAST_GPU_NO_TRACERS}"
+echo "FAST_GPU_DOMAINS_STACK_SIZE=${FAST_GPU_DOMAINS_STACK_SIZE}"
 echo "HS_PROFILE=${HS_PROFILE}"
 echo "HS_FORCE_COPY_TEQ=${HS_FORCE_COPY_TEQ}"
 echo "USE_CUDA_TRANSFORMS=${USE_CUDA_TRANSFORMS}"
@@ -127,6 +129,7 @@ export GRID_FOURIER_BACKEND='${backend}'
 export SPHERICAL_FOURIER_BACKEND='${backend}'
 export HS_PROFILE='${HS_PROFILE}'
 export HS_FORCE_COPY_TEQ='${HS_FORCE_COPY_TEQ}'
+export FAST_GPU_DOMAINS_STACK_SIZE='${FAST_GPU_DOMAINS_STACK_SIZE}'
 export OMPI_MCA_rmaps_base_oversubscribe=1
 export OMPI_MCA_btl_vader_single_copy_mechanism=none
 cd '${GFDL_BASE}'
@@ -152,7 +155,7 @@ time python3 scripts/run_T85L25_case.py \
     if [[ -d "${run_dir}" ]]; then
       echo "--- run dir files ---"
       ls -lah "${run_dir}" || true
-      for file in "${run_dir}"/*.out "${run_dir}"/*.err "${run_dir}"/*.log "${run_dir}"/fms.out "${run_dir}"/logfile.out "${run_dir}"/input.nml "${run_dir}"/run.sh; do
+      for file in "${run_dir}"/*.out "${run_dir}"/*.out.* "${run_dir}"/*.err "${run_dir}"/*.err.* "${run_dir}"/*.log "${run_dir}"/*.log.* "${run_dir}"/fms.out "${run_dir}"/fms.out.* "${run_dir}"/logfile.out "${run_dir}"/logfile.* "${run_dir}"/input.nml "${run_dir}"/run.sh; do
         [[ -f "${file}" ]] || continue
         echo "--- tail ${file} ---"
         tail -n 120 "${file}" || true

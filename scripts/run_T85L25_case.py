@@ -39,6 +39,14 @@ EXTRA_RESOLUTIONS = {
 }
 
 
+def default_domains_stack_size(res):
+    if res in {"T340", "T341"}:
+        return 40000000
+    if res == "T682":
+        return 160000000
+    return None
+
+
 def set_case_resolution(exp, res, num_levels):
     if res in EXTRA_RESOLUTIONS:
         delta = EXTRA_RESOLUTIONS[res].copy()
@@ -62,7 +70,20 @@ def print_failure_diagnostics(run_dir):
         print(f"  {path.name} {size} bytes", file=sys.stderr)
 
     candidates = []
-    for pattern in ("*.out", "*.err", "*.log", "fms.out", "logfile.out", "input.nml", "run.sh"):
+    for pattern in (
+        "*.out",
+        "*.out.*",
+        "*.err",
+        "*.err.*",
+        "*.log",
+        "*.log.*",
+        "fms.out",
+        "fms.out.*",
+        "logfile.out",
+        "logfile.*",
+        "input.nml",
+        "run.sh",
+    ):
         candidates.extend(run_path.glob(pattern))
     seen = set()
     for path in candidates:
@@ -118,6 +139,12 @@ def main():
         action="store_true",
         help="Use an empty field_table for dry-core performance benchmarking.",
     )
+    parser.add_argument(
+        "--domains-stack-size",
+        type=int,
+        default=None,
+        help="Override fms_nml domains_stack_size for high-resolution runs.",
+    )
     args = parser.parse_args()
 
     sys.path.insert(0, str(HELD_SUAREZ_CASE_DIR))
@@ -150,6 +177,16 @@ def main():
             }
         }
     )
+    domains_stack_size = args.domains_stack_size
+    if domains_stack_size is None:
+        env_domains_stack_size = os.environ.get("FAST_GPU_DOMAINS_STACK_SIZE")
+        if env_domains_stack_size:
+            domains_stack_size = int(env_domains_stack_size)
+    if domains_stack_size is None:
+        domains_stack_size = default_domains_stack_size(args.resolution)
+    if domains_stack_size is not None:
+        exp.update_namelist({"fms_nml": {"domains_stack_size": domains_stack_size}})
+
     if not args.production_diag:
         for output_file in exp.diag_table.files.values():
             output_file["freq"] = args.diag_frequency_days
@@ -181,6 +218,7 @@ def main():
     print("production_diag =", args.production_diag)
     print("diag_frequency_days =", args.diag_frequency_days)
     print("no_tracer_field_table =", args.no_tracer_field_table)
+    print("domains_stack_size =", domains_stack_size)
     print("overwrite =", args.overwrite)
     print("GFDL_BASE =", os.environ.get("GFDL_BASE"))
     print("Codebase dir =", codebase_dir)
