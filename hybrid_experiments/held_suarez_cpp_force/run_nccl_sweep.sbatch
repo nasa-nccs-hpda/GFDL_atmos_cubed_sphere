@@ -19,8 +19,25 @@
 #SBATCH --error=logs/nccl_sweep_%j.out
 set -euo pipefail
 
-cd "${SLURM_SUBMIT_DIR:-$PWD}"
+# Pin the base to the logical /explore path. Slurm records the submit dir as the
+# resolved physical path (/panfs/ccds02/...), and Isca keys its codebase workdir
+# by that string; the interactive build lives under the /explore-keyed dir, so
+# without this the batch job looks under an empty _panfs_ccds02_... key and fails
+# with "Hybrid executable not found". GFDL_BASE_OVERRIDE feeds the measure script.
+REPO="${REPO:-/explore/nobackup/people/rlgill/innovation-lab-repositories/GFDL_atmos_cubed_sphere}"
+export GFDL_BASE_OVERRIDE="${REPO}"
+cd "${REPO}"
 mkdir -p logs
+
+# The container lives only in node-local /lscratch (no shared copy). Fail fast
+# with a clear message if this node lacks it, rather than deep in apptainer.
+CONTAINER="${CONTAINER:-/lscratch/rlgill/isca-debian_latest}"
+export CONTAINER
+if [ ! -e "${CONTAINER}" ]; then
+  echo "FATAL: container not found on $(hostname): ${CONTAINER}" >&2
+  echo "       node-local /lscratch is not staged here; resubmit or stage it." >&2
+  exit 1
+fi
 
 # Sweep knobs -- default to the T340 case; override any at submit time.
 export RES="${RES:-T340}"
