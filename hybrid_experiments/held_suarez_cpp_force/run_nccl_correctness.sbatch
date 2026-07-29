@@ -29,13 +29,27 @@ export GFDL_BASE_OVERRIDE="${REPO}"
 cd "${REPO}"
 mkdir -p logs
 
-# Node-local container preflight (no shared copy) -- fail fast with a clear msg.
+# The container lives only in node-local /lscratch (no shared copy), so whichever
+# node this job lands on may not have it. Build the sandbox from the public image
+# when missing -- one-time per node, idempotent (a node that has it skips this).
 CONTAINER="${CONTAINER:-/lscratch/rlgill/isca-debian_latest}"
 export CONTAINER
+IMAGE="${IMAGE:-docker://nasanccs/isca-debian:latest}"
 if [ ! -e "${CONTAINER}" ]; then
-  echo "FATAL: container not found on $(hostname): ${CONTAINER}" >&2
-  echo "       node-local /lscratch is not staged here; resubmit or stage it." >&2
-  exit 1
+  echo "Container not on $(hostname): staging sandbox from ${IMAGE} (one-time)..."
+  mkdir -p "$(dirname "${CONTAINER}")"
+  BUILDER=$(command -v singularity || command -v apptainer || true)
+  if [ -z "${BUILDER}" ]; then
+    echo "FATAL: neither singularity nor apptainer on PATH to build ${CONTAINER}" >&2
+    exit 1
+  fi
+  # Build to a temp path then rename, so an interrupted build never leaves a
+  # partial sandbox that the -e check would wrongly accept.
+  TMP_SANDBOX="${CONTAINER}.building.$$"
+  rm -rf "${TMP_SANDBOX}"
+  "${BUILDER}" build --sandbox "${TMP_SANDBOX}" "${IMAGE}"
+  mv "${TMP_SANDBOX}" "${CONTAINER}"
+  echo "Container staged at ${CONTAINER}"
 fi
 
 # One rank per GPU; follows the allocation.
