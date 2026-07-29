@@ -17,6 +17,71 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 HELD_SUAREZ_CASE_DIR = REPO_ROOT / "exp" / "test_cases" / "held_suarez"
 
 
+EXTRA_RESOLUTIONS = {
+    "T340": {
+        "lon_max": 1024,
+        "lat_max": 512,
+        "num_fourier": 340,
+        "num_spherical": 341,
+    },
+    "T341": {
+        "lon_max": 1024,
+        "lat_max": 512,
+        "num_fourier": 341,
+        "num_spherical": 342,
+    },
+}
+
+
+def default_domains_stack_size(res):
+    if res in {"T340", "T341"}:
+        return 40000000
+    return None
+
+
+def set_case_resolution(exp, res, num_levels):
+    if res in EXTRA_RESOLUTIONS:
+        delta = EXTRA_RESOLUTIONS[res].copy()
+        delta["num_levels"] = num_levels
+        exp.update_namelist({"spectral_dynamics_nml": delta})
+        return
+    exp.set_resolution(res, num_levels)
+
+
+def print_failure_diagnostics(run_dir):
+    run_path = Path(run_dir)
+    print("\n=== Failed run diagnostics ===", file=sys.stderr)
+    print(f"Run dir: {run_path}", file=sys.stderr)
+    if not run_path.exists():
+        print("Run dir does not exist.", file=sys.stderr)
+        return
+
+    print("Run dir files:", file=sys.stderr)
+    for path in sorted(run_path.iterdir()):
+        size = path.stat().st_size if path.is_file() else 0
+        print(f"  {path.name} {size} bytes", file=sys.stderr)
+
+    patterns = (
+        "*.out", "*.out.*", "*.err", "*.err.*", "*.log", "*.log.*",
+        "fms.out", "fms.out.*", "logfile.out", "logfile.*",
+        "input.nml", "run.sh",
+    )
+    seen = set()
+    for pattern in patterns:
+        for path in run_path.glob(pattern):
+            if path in seen or not path.is_file():
+                continue
+            seen.add(path)
+            print(f"\n--- tail {path.name} ---", file=sys.stderr)
+            try:
+                lines = path.read_text(errors="replace").splitlines()
+            except OSError as exc:
+                print(f"Could not read {path}: {exc}", file=sys.stderr)
+                continue
+            for line in lines[-100:]:
+                print(line, file=sys.stderr)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--exp-name", required=True)
@@ -39,6 +104,22 @@ def main():
         "--overwrite",
         action="store_true",
         help="Overwrite existing run0001 output. Default preserves existing output.",
+    )
+    parser.add_argument(
+        "--diag-frequency-days",
+        type=int,
+        default=30,
+        help="Diagnostic output cadence in days when not using --production-diag.",
+    )
+    parser.add_argument(
+        "--production-diag",
+        action="store_true",
+        help="Use the original Held-Suarez diagnostic cadence exactly.",
+    )
+    parser.add_argument(
+        "--no-tracer-field-table",
+        action="store_true",
+        help="Use an empty field_table for dry-core performance benchmarking.",
     )
     args = parser.parse_args()
 
@@ -63,7 +144,7 @@ def main():
     exp = Experiment(args.exp_name, codebase=cb)
     exp.namelist = original.namelist.copy()
     exp.diag_table = original.diag.copy()
-    exp.set_resolution(args.resolution, args.levels)
+    set_case_resolution(exp, args.resolution, args.levels)
     exp.update_namelist(
         {
             "main_nml": {
@@ -72,6 +153,34 @@ def main():
             }
         }
     )
+    domains_stack_size = None
+    env_domains_stack_size = os.environ.get("FAST_GPU_DOMAINS_STACK_SIZE")
+    if env_domains_stack_size:
+        domains_stack_size = int(env_domains_stack_size)
+    if domains_stack_size is None:
+        domains_stack_size = default_domains_stack_size(args.resolution)
+    if domains_stack_size is not None:
+        exp.update_namelist({"fms_nml": {"domains_stack_size": domains_stack_size}})
+
+    if not args.production_diag:
+        for output_file in exp.diag_table.files.values():
+            output_file["freq"] = args.diag_frequency_days
+            output_file["units"] = "days"
+            output_file["time_units"] = "days"
+
+    if args.no_tracer_field_table:
+        empty_field_table = Path(os.environ["GFDL_WORK"]) / "empty_dry_field_table"
+        empty_field_table.parent.mkdir(parents=True, exist_ok=True)
+        empty_field_table.write_text("\n")
+        exp.field_table_file = str(empty_field_table)
+        exp.update_namelist(
+            {
+                "spectral_dynamics_nml": {
+                    "do_water_correction": False,
+                    "use_virtual_temperature": False,
+                }
+            }
+        )
 
     print("Experiment =", exp.name)
     print("Backend =", args.backend_label)
@@ -81,7 +190,10 @@ def main():
     print("Days =", args.days)
     print("dt_atmos =", args.dt_atmos)
     print("num_cores =", args.num_cores)
-    print("production_diag = True")
+    print("production_diag =", args.production_diag)
+    print("diag_frequency_days =", args.diag_frequency_days)
+    print("no_tracer_field_table =", args.no_tracer_field_table)
+    print("domains_stack_size =", domains_stack_size)
     print("overwrite =", args.overwrite)
     print("GFDL_BASE =", os.environ.get("GFDL_BASE"))
     print("Codebase dir =", codebase_dir)
@@ -93,12 +205,16 @@ def main():
     print("Data dir =", exp.datadir)
     print("Run dir =", exp.rundir)
 
-    exp.run(
-        1,
-        num_cores=args.num_cores,
-        use_restart=False,
-        overwrite_data=args.overwrite,
-    )
+    try:
+        exp.run(
+            1,
+            num_cores=args.num_cores,
+            use_restart=False,
+            overwrite_data=args.overwrite,
+        )
+    except Exception:
+        print_failure_diagnostics(exp.rundir)
+        raise
 
 
 if __name__ == "__main__":

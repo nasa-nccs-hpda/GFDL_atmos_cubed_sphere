@@ -18,6 +18,10 @@ FAST_GPU_NUM_CORES="${FAST_GPU_NUM_CORES:-16}"
 FAST_GPU_OVERWRITE="${FAST_GPU_OVERWRITE:-1}"
 FAST_GPU_REBUILD="${FAST_GPU_REBUILD:-1}"
 FAST_GPU_RUN_MODE="${FAST_GPU_RUN_MODE:-both}"
+FAST_GPU_PRODUCTION_DIAG="${FAST_GPU_PRODUCTION_DIAG:-1}"
+FAST_GPU_DIAG_FREQUENCY_DAYS="${FAST_GPU_DIAG_FREQUENCY_DAYS:-${FAST_GPU_DAYS}}"
+FAST_GPU_NO_TRACERS="${FAST_GPU_NO_TRACERS:-0}"
+FAST_GPU_DOMAINS_STACK_SIZE="${FAST_GPU_DOMAINS_STACK_SIZE:-}"
 HS_PROFILE="${HS_PROFILE:-1}"
 
 if [[ -z "${FAST_GPU_DT_ATMOS:-}" ]]; then
@@ -25,6 +29,7 @@ if [[ -z "${FAST_GPU_DT_ATMOS:-}" ]]; then
     T42) FAST_GPU_DT_ATMOS=600 ;;
     T85) FAST_GPU_DT_ATMOS=300 ;;
     T170) FAST_GPU_DT_ATMOS=150 ;;
+    T340) FAST_GPU_DT_ATMOS=75 ;;
     T341) FAST_GPU_DT_ATMOS=75 ;;
     *)
       echo "FAST_GPU_DT_ATMOS is required for resolution ${FAST_GPU_RESOLUTION}."
@@ -36,6 +41,7 @@ fi
 CASE_TAG="${FAST_GPU_RESOLUTION}L${FAST_GPU_LEVELS}_dt${FAST_GPU_DT_ATMOS}_${FAST_GPU_DAYS}day"
 CPU_LOG="${GFDL_BASE}/logs/fastest_gpu_${CASE_TAG}_cpu.log"
 CUDA_LOG="${GFDL_BASE}/logs/fastest_gpu_${CASE_TAG}_cuda.log"
+CPU_BASELINE_LOG="${FAST_GPU_CPU_BASELINE_LOG:-${CPU_LOG}}"
 
 mkdir -p "${GFDL_BASE}/logs"
 
@@ -52,6 +58,11 @@ echo "FAST_GPU_NUM_CORES=${FAST_GPU_NUM_CORES}"
 echo "FAST_GPU_OVERWRITE=${FAST_GPU_OVERWRITE}"
 echo "FAST_GPU_REBUILD=${FAST_GPU_REBUILD}"
 echo "FAST_GPU_RUN_MODE=${FAST_GPU_RUN_MODE}"
+echo "FAST_GPU_PRODUCTION_DIAG=${FAST_GPU_PRODUCTION_DIAG}"
+echo "FAST_GPU_DIAG_FREQUENCY_DAYS=${FAST_GPU_DIAG_FREQUENCY_DAYS}"
+echo "FAST_GPU_NO_TRACERS=${FAST_GPU_NO_TRACERS}"
+echo "FAST_GPU_DOMAINS_STACK_SIZE=${FAST_GPU_DOMAINS_STACK_SIZE}"
+echo "FAST_GPU_CPU_BASELINE_LOG=${CPU_BASELINE_LOG}"
 echo "HS_PROFILE=${HS_PROFILE}"
 
 if [[ "${FAST_GPU_RUN_MODE}" != "both" && "${FAST_GPU_RUN_MODE}" != "cpu" && "${FAST_GPU_RUN_MODE}" != "cuda" ]]; then
@@ -69,13 +80,25 @@ if [[ "${FAST_GPU_OVERWRITE}" == "1" ]]; then
   overwrite_arg=(--overwrite)
 fi
 
+production_diag_arg=()
+if [[ "${FAST_GPU_PRODUCTION_DIAG}" == "1" ]]; then
+  production_diag_arg=(--production-diag)
+fi
+
+no_tracer_arg=()
+if [[ "${FAST_GPU_NO_TRACERS}" == "1" ]]; then
+  no_tracer_arg=(--no-tracer-field-table)
+fi
+
 run_backend() {
   local backend=$1
   local label=$2
   local log=$3
   local exp_name="fastest_gpu_${CASE_TAG}_${backend}"
+  local run_dir="${GFDL_WORK}/experiment/${exp_name}/run"
 
   echo "=== Run ${label} backend: ${CASE_TAG} ==="
+  set +e
   apptainer exec --nv \
     --bind "${APPTAINER_BIND_ROOT}:${APPTAINER_BIND_ROOT}" \
     "${CONTAINER}" \
@@ -87,6 +110,7 @@ export GFDL_DATA='${GFDL_DATA}'
 export GFDL_ENV=hybrid
 export HS_FORCE_BACKEND='${backend}'
 export HS_PROFILE='${HS_PROFILE}'
+export FAST_GPU_DOMAINS_STACK_SIZE='${FAST_GPU_DOMAINS_STACK_SIZE}'
 export OMPI_MCA_rmaps_base_oversubscribe=1
 export OMPI_MCA_btl_vader_single_copy_mechanism=none
 cd '${GFDL_BASE}'
@@ -99,8 +123,27 @@ time python3 scripts/run_T85L25_case.py \
   --dt-atmos '${FAST_GPU_DT_ATMOS}' \
   --days '${FAST_GPU_DAYS}' \
   --num-cores '${FAST_GPU_NUM_CORES}' \
+  --diag-frequency-days '${FAST_GPU_DIAG_FREQUENCY_DAYS}' \
+  ${production_diag_arg[*]} \
+  ${no_tracer_arg[*]} \
   ${overwrite_arg[*]}
 " 2>&1 | tee "${log}"
+  local status=${PIPESTATUS[0]}
+  set -e
+  if [[ "${status}" != "0" ]]; then
+    echo "ERROR: ${label} backend failed with status ${status}."
+    echo "Run dir: ${run_dir}"
+    if [[ -d "${run_dir}" ]]; then
+      echo "--- run dir files ---"
+      ls -lah "${run_dir}" || true
+      for file in "${run_dir}"/*.out "${run_dir}"/*.out.* "${run_dir}"/*.err "${run_dir}"/*.err.* "${run_dir}"/*.log "${run_dir}"/*.log.* "${run_dir}"/fms.out "${run_dir}"/fms.out.* "${run_dir}"/logfile.out "${run_dir}"/logfile.* "${run_dir}"/input.nml "${run_dir}"/run.sh; do
+        [[ -f "${file}" ]] || continue
+        echo "--- tail ${file} ---"
+        tail -n 120 "${file}" || true
+      done
+    fi
+    return "${status}"
+  fi
 }
 
 if [[ "${FAST_GPU_RUN_MODE}" == "both" || "${FAST_GPU_RUN_MODE}" == "cpu" ]]; then
@@ -143,5 +186,10 @@ if [[ "${FAST_GPU_RUN_MODE}" == "both" ]]; then
 elif [[ "${FAST_GPU_RUN_MODE}" == "cpu" ]]; then
   "${REPO_ROOT}/scripts/summarize_real_times.py" "${CPU_LOG}"
 else
-  "${REPO_ROOT}/scripts/summarize_real_times.py" "${CUDA_LOG}"
+  if [[ -f "${CPU_BASELINE_LOG}" ]]; then
+    "${REPO_ROOT}/scripts/summarize_real_times.py" "${CPU_BASELINE_LOG}" "${CUDA_LOG}"
+  else
+    echo "CPU baseline log not found: ${CPU_BASELINE_LOG}"
+    "${REPO_ROOT}/scripts/summarize_real_times.py" "${CUDA_LOG}"
+  fi
 fi
