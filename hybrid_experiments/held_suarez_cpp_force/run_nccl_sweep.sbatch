@@ -10,11 +10,14 @@
 #   REPEAT=1 sbatch hybrid_experiments/held_suarez_cpp_force/run_nccl_sweep.sbatch
 #   RES=T170 DT_ATMOS=150 STACK=8000000 REPEAT=3 sbatch .../run_nccl_sweep.sbatch
 #
-# One rank per GPU over intra-node NVLink. -G 4 uses the node's full 4x V100;
-# at np=4 T340's per-GPU memory ~halves (np=2 pinned it at 96% of 32 GB and
-# could not finish one day inside 4 h).
+# One rank per GPU over intra-node NVLink. --gres=gpu:4 on a single node claims
+# the node's full 4x V100; at np=4 T340's per-GPU memory ~halves (np=2 pinned it
+# at 96% of 32 GB and could not finish one day inside 4 h). Note: `-G 4`
+# (--gpus=4) was granting only 2 GPUs on these gpu:4 nodes; --gres=gpu:4 -N1 is
+# the request that reliably yields SLURM_GPUS_ON_NODE=4.
 #SBATCH --job-name=nccl_sweep
-#SBATCH -G 4
+#SBATCH --nodes=1
+#SBATCH --gres=gpu:4
 #SBATCH -c 10
 #SBATCH --time=08:00:00
 #SBATCH --output=logs/nccl_sweep_%j.out
@@ -42,8 +45,8 @@ if [ ! -e "${CONTAINER}" ]; then
 fi
 
 # Sweep knobs -- default to the T340 case; override any at submit time.
-# NP follows the GPUs actually allocated (one rank per GPU), so changing -G
-# above or `sbatch -G N` keeps the rank count in step.
+# NP follows the GPUs actually allocated (one rank per GPU), so changing the
+# --gres=gpu:N above keeps the rank count in step.
 export NP="${NP:-${SLURM_GPUS_ON_NODE:-4}}"
 export RES="${RES:-T340}"
 export DT_ATMOS="${DT_ATMOS:-75}"

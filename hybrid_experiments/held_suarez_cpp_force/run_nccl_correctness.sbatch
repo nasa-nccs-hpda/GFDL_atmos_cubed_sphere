@@ -7,11 +7,14 @@
 #
 # Submit from the repo root:
 #   sbatch hybrid_experiments/held_suarez_cpp_force/run_nccl_correctness.sbatch
-# Override the rank count with `sbatch -G N` (NP follows the allocation).
+# Change the rank count with the --gres=gpu:N below (NP follows the allocation).
+# Note: `-G 4` was granting only 2 GPUs on these gpu:4 nodes; --gres=gpu:4 -N1
+# reliably yields SLURM_GPUS_ON_NODE=4.
 #
 # Default resolution (cheap) is enough: at np=4 ranks 1 and 2 are interior.
 #SBATCH --job-name=nccl_correct
-#SBATCH -G 4
+#SBATCH --nodes=1
+#SBATCH --gres=gpu:4
 #SBATCH -c 10
 #SBATCH --time=01:00:00
 #SBATCH --output=logs/nccl_correct_%j.out
