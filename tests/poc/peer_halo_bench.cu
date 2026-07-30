@@ -17,10 +17,11 @@
 //
 // Because one rank per GPU means one process per GPU, a neighbor's device
 // pointer is reached with CUDA IPC: each rank exports its field's base handle
-// once (the grid is fixed for a run), neighbors import it, and the exchange is
-//   cudaMemcpy2DPeerAsync(my_halo_band, pitch, my_dev,
-//                         neighbor_edge,  pitch, neighbor_dev, nx*halo*8, nz)
-// pulling the neighbor's interior edge rows directly into my halo. Ordering that
+// once (the grid is fixed for a run), neighbors import it (which enables peer
+// access), and the exchange is a device-to-device strided copy
+//   cudaMemcpy2DAsync(my_halo_band, pitch, neighbor_edge, pitch,
+//                     nx*halo*8, nz, cudaMemcpyDefault, stream)
+// that travels over NVLink and lands directly in my halo. Ordering that
 // NCCL got implicitly from send/recv is supplied by interprocess CUDA events:
 // each rank records "my edge is current"; a puller waits on its neighbor's event
 // before reading. A per-iteration MPI_Barrier variant is also timed, to show the
@@ -173,17 +174,22 @@ int main(int argc, char** argv) {
     const int j_src_south  = nyl;               // south neighbor's top interior
     const int j_src_north  = halo;              // north neighbor's bottom interior
 
+    // Peer access is already enabled by cudaIpcOpenMemHandle(LazyEnablePeerAccess),
+    // so a device-to-device 2D copy from the imported neighbor pointer travels
+    // directly over NVLink under unified addressing (there is no 2D "Peer"
+    // variant in the runtime API; the 1D/3D Peer calls are the only ones, and
+    // the model's own edge copies use cudaMemcpy2D the same way).
     auto pull_south = [&]() {
-        CUDA_CHECK(cudaMemcpy2DPeerAsync(
-            d_field + (size_t)nx * j_recv_south, pitch, device,
-            peer_field[0] + (size_t)nx * j_src_south, pitch, peer_device[0],
-            row_bytes, nz, stream));
+        CUDA_CHECK(cudaMemcpy2DAsync(
+            d_field + (size_t)nx * j_recv_south, pitch,
+            peer_field[0] + (size_t)nx * j_src_south, pitch,
+            row_bytes, nz, cudaMemcpyDefault, stream));
     };
     auto pull_north = [&]() {
-        CUDA_CHECK(cudaMemcpy2DPeerAsync(
-            d_field + (size_t)nx * j_recv_north, pitch, device,
-            peer_field[1] + (size_t)nx * j_src_north, pitch, peer_device[1],
-            row_bytes, nz, stream));
+        CUDA_CHECK(cudaMemcpy2DAsync(
+            d_field + (size_t)nx * j_recv_north, pitch,
+            peer_field[1] + (size_t)nx * j_src_north, pitch,
+            row_bytes, nz, cudaMemcpyDefault, stream));
     };
 
     // Event-ordered exchange: publish that my edge is current, wait for the
