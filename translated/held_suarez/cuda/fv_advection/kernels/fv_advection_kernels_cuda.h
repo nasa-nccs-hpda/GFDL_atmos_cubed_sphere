@@ -92,6 +92,15 @@ int fold_resident_q1_poles(int nx, int ny, int nz, bool is_south_boundary,
 // by default; only meaningful in resident mode built with FV_ADVECTION_USE_NCCL.
 bool nccl_halo_enabled();
 
+// Build (or confirm) the process's CUDA IPC peer context for the direct NVLink
+// peer-copy halo. Returns 0 on success. Fails when built without
+// FV_ADVECTION_USE_PEER.
+int peer_init();
+
+// True when the direct peer-copy halo path is on (env FV_ADVECTION_PEER_HALO).
+// Off by default; only meaningful in resident mode built with FV_ADVECTION_USE_PEER.
+bool peer_halo_enabled();
+
 int resident_advection_begin(
     int nx,
     int ny,
@@ -248,5 +257,15 @@ extern "C" int fv_advection_nccl_fold_q1_poles_cuda_c(int nx, int ny, int nz,
 // Returns 1 when the GPU-to-GPU q1 halo path is on (env FV_ADVECTION_NCCL_HALO),
 // else 0. Lets the Fortran side skip the host halo exchange and fold.
 extern "C" int fv_advection_nccl_halo_enabled_cuda_c();
+
+// Bootstrap the CUDA IPC peer context once, over the running MPI world. Returns 0
+// on success. Callable from Fortran to force setup (and surface any
+// misconfiguration, such as a GPU pair without peer access) before the first
+// peer-copy halo.
+extern "C" int fv_advection_peer_init_cuda_c();
+
+// Returns 1 when the direct peer-copy halo path is on (env FV_ADVECTION_PEER_HALO),
+// else 0. Lets the Fortran side skip the host halo exchange and fold.
+extern "C" int fv_advection_peer_halo_enabled_cuda_c();
 
 #endif  // FV_ADVECTION_KERNELS_CUDA_H

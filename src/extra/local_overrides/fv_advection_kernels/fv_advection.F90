@@ -44,7 +44,8 @@ use fv_advection_kernels_c_interface, only : semi_x_3d_cuda_wrapper, slope_x_cud
   integer_flux_x_cuda_wrapper, vanleer_x_3d_cuda_wrapper, slope_sphere_cuda_wrapper, &
   vanleer_sphere_3d_cuda_wrapper, fv_advection_resident_enabled, &
   fv_advection_resident_begin_wrapper, fv_advection_resident_finish_wrapper, &
-  fv_advection_nccl_init, fv_advection_nccl_halo_enabled
+  fv_advection_nccl_init, fv_advection_nccl_halo_enabled, &
+  fv_advection_peer_init, fv_advection_peer_halo_enabled
 #endif
 
 implicit none
@@ -93,6 +94,7 @@ subroutine fv_advection_init(nx_in, ny_in, yy_in, degrees_lon, advection_layout)
   integer :: layout(2)
 #ifdef USE_CUDA_FV_ADVECTION_KERNELS
   integer :: nccl_ierr
+  integer :: peer_ierr
 #endif
 
   if (module_is_initialized) return
@@ -148,15 +150,27 @@ subroutine fv_advection_init(nx_in, ny_in, yy_in, degrees_lon, advection_layout)
   call mpp_get_compute_domain( advection_domain, is, ie, js, je )
 
 #ifdef USE_CUDA_FV_ADVECTION_KERNELS
-  ! Level 1 (FV transfer PoC): when the resident CUDA path is active, build the
-  ! NCCL communicator once at startup so the GPU-to-GPU halo exchange is ready
-  ! and any misconfiguration (for example more MPI ranks than GPUs) is reported
-  ! here rather than mid-run.
+  ! FV transfer PoC: when the resident CUDA path is active, build the selected
+  ! GPU-to-GPU halo backend once at startup so it is ready and any
+  ! misconfiguration (for example more MPI ranks than GPUs, or a GPU pair without
+  ! peer access) is reported here rather than mid-run. The backend is chosen by
+  ! env at runtime; only the one that is on is bootstrapped, so a build carrying
+  ! both flags does not FATAL on the inactive one. NCCL and peer are mutually
+  ! exclusive per run.
   if ( fv_advection_resident_enabled() ) then
-    call fv_advection_nccl_init(nccl_ierr)
-    if ( nccl_ierr /= 0 ) then
-      call error_mesg( 'fv_advection_init', &
-        'NCCL communicator setup failed; see the preceding message', FATAL )
+    if ( fv_advection_nccl_halo_enabled() ) then
+      call fv_advection_nccl_init(nccl_ierr)
+      if ( nccl_ierr /= 0 ) then
+        call error_mesg( 'fv_advection_init', &
+          'NCCL communicator setup failed; see the preceding message', FATAL )
+      end if
+    end if
+    if ( fv_advection_peer_halo_enabled() ) then
+      call fv_advection_peer_init(peer_ierr)
+      if ( peer_ierr /= 0 ) then
+        call error_mesg( 'fv_advection_init', &
+          'CUDA IPC peer context setup failed; see the preceding message', FATAL )
+      end if
     end if
   end if
 #endif
@@ -194,7 +208,8 @@ if(present(flux)) flux_local = flux
 
 #ifdef USE_CUDA_FV_ADVECTION_KERNELS
 use_resident_boundary = fv_advection_resident_enabled()
-use_device_halo = use_resident_boundary .and. fv_advection_nccl_halo_enabled()
+use_device_halo = use_resident_boundary .and. &
+  ( fv_advection_nccl_halo_enabled() .or. fv_advection_peer_halo_enabled() )
 #else
 use_resident_boundary = .false.
 use_device_halo = .false.
@@ -323,7 +338,8 @@ logical :: use_device_halo
 
 #ifdef USE_CUDA_FV_ADVECTION_KERNELS
 use_resident_boundary = fv_advection_resident_enabled()
-use_device_halo = use_resident_boundary .and. fv_advection_nccl_halo_enabled()
+use_device_halo = use_resident_boundary .and. &
+  ( fv_advection_nccl_halo_enabled() .or. fv_advection_peer_halo_enabled() )
 #else
 use_resident_boundary = .false.
 use_device_halo = .false.

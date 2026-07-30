@@ -21,6 +21,8 @@ module fv_advection_kernels_c_interface
   public :: fv_advection_resident_finish_wrapper
   public :: fv_advection_nccl_init
   public :: fv_advection_nccl_halo_enabled
+  public :: fv_advection_peer_init
+  public :: fv_advection_peer_halo_enabled
 #endif
 
   interface
@@ -129,6 +131,16 @@ module fv_advection_kernels_c_interface
       use, intrinsic :: iso_c_binding, only: c_int
       integer(c_int) :: fv_advection_nccl_halo_enabled_cuda_c
     end function fv_advection_nccl_halo_enabled_cuda_c
+
+    function fv_advection_peer_init_cuda_c() bind(C, name='fv_advection_peer_init_cuda_c')
+      use, intrinsic :: iso_c_binding, only: c_int
+      integer(c_int) :: fv_advection_peer_init_cuda_c
+    end function fv_advection_peer_init_cuda_c
+
+    function fv_advection_peer_halo_enabled_cuda_c() bind(C, name='fv_advection_peer_halo_enabled_cuda_c')
+      use, intrinsic :: iso_c_binding, only: c_int
+      integer(c_int) :: fv_advection_peer_halo_enabled_cuda_c
+    end function fv_advection_peer_halo_enabled_cuda_c
 
     function fv_advection_resident_begin_cuda_c(nx, js, je, nz, half_dt, dx, fold_div, &
         c, cc, dy, dy_plus, dy_minus, dyy, ua, q, va, q1) &
@@ -309,6 +321,22 @@ contains
     integer, intent(out) :: ierr
     ierr = int(fv_advection_nccl_init_cuda_c())
   end subroutine fv_advection_nccl_init
+
+  ! True when the direct NVLink peer-copy q1 halo path is on (env
+  ! FV_ADVECTION_PEER_HALO). Like the NCCL switch, lets the resident advection
+  ! skip the host mpp_update_domains(q1) and polar fold.
+  logical function fv_advection_peer_halo_enabled()
+    fv_advection_peer_halo_enabled = fv_advection_peer_halo_enabled_cuda_c() /= 0_c_int
+  end function fv_advection_peer_halo_enabled
+
+  ! Build (or confirm) the process's CUDA IPC peer context for the direct NVLink
+  ! peer-copy halo. ierr is 0 on success; nonzero means peer support was not
+  ! compiled in or the context could not be built, for example a GPU pair without
+  ! peer access (the C side prints the reason).
+  subroutine fv_advection_peer_init(ierr)
+    integer, intent(out) :: ierr
+    ierr = int(fv_advection_peer_init_cuda_c())
+  end subroutine fv_advection_peer_init
 
   subroutine fv_advection_resident_begin_wrapper(nx, js, je, nz, half_dt, dx, fold_div, &
       c, cc, dy, dy_plus, dy_minus, dyy, ua, q, va, q1, ierr)

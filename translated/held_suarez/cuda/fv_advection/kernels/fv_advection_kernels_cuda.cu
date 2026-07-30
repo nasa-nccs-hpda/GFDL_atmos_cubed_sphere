@@ -11,12 +11,20 @@
 #include <cuda_runtime.h>
 #include <utility>
 
-// GPU-to-GPU halo exchange (FV transfer PoC, Level 1). The MPI and NCCL headers
-// and every symbol that uses them are compiled only when the overlay build
-// defines FV_ADVECTION_USE_NCCL (and adds the include/link flags). Without that
-// define the file builds exactly as before, so the current model is unaffected.
-#ifdef FV_ADVECTION_USE_NCCL
+// GPU-to-GPU halo exchange (FV transfer PoC). Two backends fill the y-halo without
+// routing it through the host: NCCL (pack/send/recv/unpack) under
+// FV_ADVECTION_USE_NCCL, and a direct NVLink peer copy (strided cudaMemcpy2DAsync
+// from the neighbor's resident buffer, imported over CUDA IPC) under
+// FV_ADVECTION_USE_PEER. Both bootstrap their neighbor handles with host-only MPI,
+// so <mpi.h> is needed whenever either is on; <nccl.h> only for the NCCL backend.
+// Without either define the file builds exactly as before, so the current model is
+// unaffected. FV_ADVECTION_DEVICE_HALO marks code shared by both backends (the
+// pole folds and the begin/finish dispatch).
+#if defined(FV_ADVECTION_USE_NCCL) || defined(FV_ADVECTION_USE_PEER)
 #include <mpi.h>
+#define FV_ADVECTION_DEVICE_HALO 1
+#endif
+#ifdef FV_ADVECTION_USE_NCCL
 #include <nccl.h>
 #endif
 
@@ -616,7 +624,369 @@ int exchange_q1_halo_nccl(double* d_q1, int nx, int ny, int nz,
     }
     return ierr;
 }
+#endif  // FV_ADVECTION_USE_NCCL
 
+#ifdef FV_ADVECTION_USE_PEER
+// Direct NVLink peer-copy halo. One process per GPU means a neighbor's device
+// pointer is meaningless in this address space, so each rank imports the
+// neighbor's resident buffer base with CUDA IPC (exchanged once over host-only
+// MPI, refreshed only if a buffer is reallocated) and the exchange becomes a
+// single strided cudaMemcpy2DAsync that pulls the neighbor's interior edge rows
+// straight into this rank's halo rows -- no pack, no send/recv, no unpack, no
+// staging buffer. Neighbors follow the same Y-only decomposition as NCCL:
+// north = rank+1, south = rank-1; a -1 marks a pole, which the fold fills.
+struct PeerContext {
+    cudaStream_t stream = nullptr;
+    int world_rank = -1;
+    int world_size = 0;
+    int north = -1;
+    int south = -1;
+    int device = -1;
+    bool initialized = false;
+    bool cleanup_registered = false;
+    // Imported neighbor resident-buffer base pointers, indexed [side][slot]
+    // (side 0 = south, 1 = north). Only the halo-field slots are populated; the
+    // peer copy offsets from these to the neighbor's interior edge rows.
+    double* peer_base[2][kNumBuffers] = {};
+    // The base pointers this rank exported, cached to detect a buffer realloc
+    // (ensure_buffer frees and re-mallocs when the grid grows), which would make
+    // the imported handles stale and force a re-exchange.
+    double* my_base[kNumBuffers] = {};
+    bool handles_ready = false;
+    // Recorded on `stream` after the peer copies. The compute stream waits on
+    // this instead of the host blocking, exactly as the NCCL path uses halo_done.
+    cudaEvent_t halo_done = nullptr;
+};
+
+PeerContext peer_context;
+
+// The resident buffer slots whose y-halo the peer path fills: q_halo (14),
+// va_halo (5), and q1 (3). All share the nx*(ny+4)*nz layout.
+const int kPeerHaloSlots[] = {3, 5, 14};
+
+void release_peer_context() {
+    for (int side = 0; side < 2; ++side) {
+        for (int slot : kPeerHaloSlots) {
+            if (peer_context.peer_base[side][slot] != nullptr) {
+                cudaIpcCloseMemHandle(peer_context.peer_base[side][slot]);
+                peer_context.peer_base[side][slot] = nullptr;
+            }
+        }
+    }
+    for (int slot : kPeerHaloSlots) {
+        peer_context.my_base[slot] = nullptr;
+    }
+    peer_context.handles_ready = false;
+    if (peer_context.halo_done != nullptr) {
+        cudaEventDestroy(peer_context.halo_done);
+        peer_context.halo_done = nullptr;
+    }
+    if (peer_context.stream != nullptr) {
+        cudaStreamDestroy(peer_context.stream);
+        peer_context.stream = nullptr;
+    }
+    peer_context.initialized = false;
+}
+
+// Build the peer context once: bind the device, read the MPI world, work out the
+// Y-neighbors, create the exchange stream and the halo_done gate, and confirm
+// this rank can reach each neighbor's GPU over the fabric (cudaDeviceCanAccessPeer).
+// The per-buffer IPC handles are exchanged lazily in ensure_peer_buffer_handles,
+// once the resident buffers exist. Safe to call repeatedly; only the first does work.
+int ensure_peer_context() {
+    if (peer_context.initialized) {
+        return FV_CUDA_SUCCESS;
+    }
+
+    // The device must be chosen before any IPC handle is exported; this is the
+    // same per-rank cudaSetDevice the resident path already relies on.
+    int ierr = ensure_persistent_context();
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+
+    int mpi_ready = 0;
+    if (MPI_Initialized(&mpi_ready) != MPI_SUCCESS || mpi_ready == 0) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels peer error: MPI is not initialized; "
+                     "cannot bootstrap the peer context.\n");
+        return FV_CUDA_ERROR;
+    }
+
+    int world_rank = 0;
+    int world_size = 0;
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+
+    // One rank per GPU, mirroring the NCCL bootstrap: the launcher's node-local
+    // rank picks the device, and running past the device count is a misconfiguration.
+    int device_count = 0;
+    ierr = check_cuda(cudaGetDeviceCount(&device_count), "cudaGetDeviceCount");
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+    int local_rank = 0;
+    const char* env = std::getenv("OMPI_COMM_WORLD_LOCAL_RANK");
+    if (env == nullptr) {
+        env = std::getenv("SLURM_LOCALID");
+    }
+    if (env != nullptr) {
+        local_rank = std::atoi(env);
+    }
+    if (local_rank >= device_count) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels peer error: rank %d is node-local rank %d "
+                     "but the node has only %d GPU(s). The peer halo needs one MPI "
+                     "rank per GPU; launch one rank per GPU (for example mpirun -np %d).\n",
+                     world_rank, local_rank, device_count, device_count);
+        return FV_CUDA_ERROR;
+    }
+    int device = 0;
+    ierr = check_cuda(cudaGetDevice(&device), "cudaGetDevice");
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+
+    const int north = (world_rank + 1 < world_size) ? world_rank + 1 : -1;
+    const int south = (world_rank - 1 >= 0) ? world_rank - 1 : -1;
+
+    // Confirm the fabric can carry a direct peer copy to each neighbor's GPU.
+    // Exchange device ordinals (global under one-rank-per-GPU) and check
+    // cudaDeviceCanAccessPeer, so a topology without peer access fails here with a
+    // clear message rather than at the first cudaIpcOpenMemHandle.
+    const int neighbors[2] = {south, north};
+    for (int side = 0; side < 2; ++side) {
+        const int nbr = neighbors[side];
+        if (nbr < 0) continue;
+        int nbr_device = -1;
+        if (MPI_Sendrecv(&device, 1, MPI_INT, nbr, 100,
+                         &nbr_device, 1, MPI_INT, nbr, 100,
+                         MPI_COMM_WORLD, MPI_STATUS_IGNORE) != MPI_SUCCESS) {
+            std::fprintf(stderr,
+                         "fv_advection_kernels peer error: MPI_Sendrecv of the device "
+                         "ordinal failed.\n");
+            return FV_CUDA_ERROR;
+        }
+        int can_access = 0;
+        ierr = check_cuda(cudaDeviceCanAccessPeer(&can_access, device, nbr_device),
+                          "cudaDeviceCanAccessPeer");
+        if (ierr != FV_CUDA_SUCCESS) {
+            return ierr;
+        }
+        if (!can_access) {
+            std::fprintf(stderr,
+                         "fv_advection_kernels peer error: rank %d GPU %d cannot access "
+                         "neighbor rank %d GPU %d over the fabric; the peer-copy halo is "
+                         "not possible on this topology.\n",
+                         world_rank, device, nbr, nbr_device);
+            return FV_CUDA_ERROR;
+        }
+    }
+
+    cudaStream_t stream = nullptr;
+    ierr = check_cuda(cudaStreamCreate(&stream), "peer cudaStreamCreate");
+    if (ierr != FV_CUDA_SUCCESS) {
+        return ierr;
+    }
+    cudaEvent_t halo_done = nullptr;
+    ierr = check_cuda(cudaEventCreateWithFlags(&halo_done, cudaEventDisableTiming),
+                      "peer cudaEventCreate halo_done");
+    if (ierr != FV_CUDA_SUCCESS) {
+        cudaStreamDestroy(stream);
+        return ierr;
+    }
+
+    peer_context.stream = stream;
+    peer_context.halo_done = halo_done;
+    peer_context.world_rank = world_rank;
+    peer_context.world_size = world_size;
+    peer_context.device = device;
+    peer_context.north = north;
+    peer_context.south = south;
+    peer_context.initialized = true;
+
+    if (!peer_context.cleanup_registered) {
+        std::atexit(release_peer_context);
+        peer_context.cleanup_registered = true;
+    }
+
+    if (profile::enabled()) {
+        std::fprintf(stderr,
+                     "PROFILE_FV_ADVECTION_CUDA peer_init world_rank=%d world_size=%d "
+                     "north=%d south=%d device=%d device_count=%d\n",
+                     world_rank, world_size, north, south, device, device_count);
+    }
+    return FV_CUDA_SUCCESS;
+}
+
+// Import (or re-import) the neighbor resident-buffer bases for the halo-field
+// slots. Called from the resident spine once the buffers exist; a no-op after the
+// first success unless a buffer was reallocated (base changed), which forces a
+// fresh IPC exchange. Collective across the neighbor pair (MPI_Sendrecv of the
+// mem handles), so every rank must reach it together -- the resident begin calls
+// it uniformly before the first peer copy.
+int ensure_peer_buffer_handles() {
+    if (!peer_context.initialized) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels peer error: buffer handles requested before "
+                     "the peer context was built.\n");
+        return FV_CUDA_ERROR;
+    }
+    bool need = !peer_context.handles_ready;
+    for (int slot : kPeerHaloSlots) {
+        if (peer_context.my_base[slot] != persistent_context.buffers[slot].data) {
+            need = true;
+        }
+    }
+    if (!need) {
+        return FV_CUDA_SUCCESS;
+    }
+
+    // Drop any handles from a previous grid before importing the current ones.
+    for (int side = 0; side < 2; ++side) {
+        for (int slot : kPeerHaloSlots) {
+            if (peer_context.peer_base[side][slot] != nullptr) {
+                cudaIpcCloseMemHandle(peer_context.peer_base[side][slot]);
+                peer_context.peer_base[side][slot] = nullptr;
+            }
+        }
+    }
+
+    const int neighbors[2] = {peer_context.south, peer_context.north};
+    for (int slot : kPeerHaloSlots) {
+        double* base = persistent_context.buffers[slot].data;
+        if (base == nullptr) {
+            std::fprintf(stderr,
+                         "fv_advection_kernels peer error: resident buffer slot %d is not "
+                         "allocated before the IPC handle exchange.\n",
+                         slot);
+            return FV_CUDA_INVALID_ARGUMENT;
+        }
+        cudaIpcMemHandle_t my_handle;
+        int ierr = check_cuda(cudaIpcGetMemHandle(&my_handle, base),
+                              "peer cudaIpcGetMemHandle");
+        if (ierr != FV_CUDA_SUCCESS) {
+            return ierr;
+        }
+        for (int side = 0; side < 2; ++side) {
+            const int nbr = neighbors[side];
+            if (nbr < 0) continue;
+            cudaIpcMemHandle_t nbr_handle;
+            if (MPI_Sendrecv(&my_handle, sizeof(my_handle), MPI_BYTE, nbr, 200 + slot,
+                             &nbr_handle, sizeof(nbr_handle), MPI_BYTE, nbr, 200 + slot,
+                             MPI_COMM_WORLD, MPI_STATUS_IGNORE) != MPI_SUCCESS) {
+                std::fprintf(stderr,
+                             "fv_advection_kernels peer error: MPI_Sendrecv of the IPC mem "
+                             "handle for slot %d failed.\n",
+                             slot);
+                return FV_CUDA_ERROR;
+            }
+            void* p = nullptr;
+            ierr = check_cuda(
+                cudaIpcOpenMemHandle(&p, nbr_handle, cudaIpcMemLazyEnablePeerAccess),
+                "peer cudaIpcOpenMemHandle");
+            if (ierr != FV_CUDA_SUCCESS) {
+                return ierr;
+            }
+            peer_context.peer_base[side][slot] = static_cast<double*>(p);
+        }
+        peer_context.my_base[slot] = base;
+    }
+    peer_context.handles_ready = true;
+    return FV_CUDA_SUCCESS;
+}
+
+// Fill d_field's y-halo by pulling the neighbor's interior edge rows straight into
+// this rank's halo rows over NVLink. d_field must be one of the resident halo-field
+// buffers (q_halo, va_halo, or q1); the matching neighbor base is looked up by slot.
+// A pole side (neighbor == -1) is left for the fold. Ordering: the halo uploads are
+// synchronous cudaMemcpy and each begin/finish ends with a full device sync, so a
+// single host MPI_Barrier before the copies is enough -- it guarantees every rank
+// has its current-step interior on the device before any neighbor reads it (RAW),
+// while the end-of-stage device sync guarantees this read completes long before the
+// neighbor overwrites the edge on its next step (WAR). halo_done is recorded on the
+// peer stream so the compute stream can wait without the host blocking, exactly as
+// the NCCL path does.
+int exchange_halo_peer(double* d_field, int nx, int ny, int nz,
+                       CudaPhaseCounter& phases, bool synchronize) {
+    if (!peer_context.initialized) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels peer error: halo exchange requested before the "
+                     "peer context was built.\n");
+        return FV_CUDA_ERROR;
+    }
+    const bool has_south = peer_context.south >= 0;
+    const bool has_north = peer_context.north >= 0;
+    if (!has_south && !has_north) {
+        return FV_CUDA_SUCCESS;  // single-rank column: nothing to exchange.
+    }
+
+    // Identify which resident buffer this field is, so the neighbor base matches.
+    int slot = -1;
+    for (int candidate : kPeerHaloSlots) {
+        if (d_field == persistent_context.buffers[candidate].data) {
+            slot = candidate;
+            break;
+        }
+    }
+    if (slot < 0) {
+        std::fprintf(stderr,
+                     "fv_advection_kernels peer error: halo field is not a known resident "
+                     "buffer; cannot resolve the neighbor source.\n");
+        return FV_CUDA_INVALID_ARGUMENT;
+    }
+
+    cudaStream_t stream = peer_context.stream;
+    const bool timing = profile::enabled();
+    const auto exchange_start = Clock::now();
+
+    // Both the field and the neighbor's field share the nx*(ny+4)*nz layout, so a
+    // single pitch spans both. Each band is two rows (halo=2) over all nz levels.
+    const std::size_t pitch = static_cast<std::size_t>(nx) * (ny + 4) * sizeof(double);
+    const std::size_t band_bytes = static_cast<std::size_t>(nx) * 2 * sizeof(double);
+
+    // Host-side ordering point: after the synchronous halo uploads, this ensures
+    // every neighbor's current-step interior is on the device before any pull.
+    if (MPI_Barrier(MPI_COMM_WORLD) != MPI_SUCCESS) {
+        std::fprintf(stderr, "fv_advection_kernels peer error: MPI_Barrier failed.\n");
+        return FV_CUDA_ERROR;
+    }
+
+    int ierr = FV_CUDA_SUCCESS;
+    if (has_south) {
+        // My south halo rows {0,1} <- south neighbor's interior rows {ny, ny+1}.
+        const double* src = peer_context.peer_base[0][slot];
+        ierr = check_cuda(
+            cudaMemcpy2DAsync(d_field, pitch,
+                              src + static_cast<std::size_t>(ny) * nx, pitch,
+                              band_bytes, nz, cudaMemcpyDefault, stream),
+            "peer halo copy south");
+        if (ierr != FV_CUDA_SUCCESS) return ierr;
+    }
+    if (has_north) {
+        // My north halo rows {ny+2,ny+3} <- north neighbor's interior rows {2,3}.
+        const double* src = peer_context.peer_base[1][slot];
+        ierr = check_cuda(
+            cudaMemcpy2DAsync(d_field + static_cast<std::size_t>(ny + 2) * nx, pitch,
+                              src + static_cast<std::size_t>(2) * nx, pitch,
+                              band_bytes, nz, cudaMemcpyDefault, stream),
+            "peer halo copy north");
+        if (ierr != FV_CUDA_SUCCESS) return ierr;
+    }
+
+    ierr = check_cuda(cudaEventRecord(peer_context.halo_done, stream),
+                      "peer halo event record");
+    if (ierr != FV_CUDA_SUCCESS) return ierr;
+
+    if (synchronize) {
+        ierr = check_cuda(cudaStreamSynchronize(stream), "peer halo exchange sync");
+        if (timing) phases.kernel += elapsed_seconds(exchange_start);
+    }
+    return ierr;
+}
+#endif  // FV_ADVECTION_USE_PEER
+
+#ifdef FV_ADVECTION_DEVICE_HALO
 // Fill a pole's q1 halo rows on the GPU by reflecting the interior across the
 // pole, matching the host fold: the longitude opposite (src = c + nx/2, wrapped)
 // supplies the value, and the two halo rows mirror the two nearest interior rows.
@@ -717,7 +1087,7 @@ int fold_vx_poles(double* d_vx, int nx, int ny, int nz, bool fold_south,
     }
     return ierr;
 }
-#endif  // FV_ADVECTION_USE_NCCL
+#endif  // FV_ADVECTION_DEVICE_HALO
 
 int ensure_buffer(std::size_t slot, std::size_t count, CudaPhaseCounter& phases) {
     if (slot >= kNumBuffers) {
@@ -1848,6 +2218,109 @@ bool nccl_halo_enabled() {
 #endif
 }
 
+// Runtime switch (env FV_ADVECTION_PEER_HALO) for the direct NVLink peer-copy
+// halo path. Off by default, so the host-routed halo stays the reference. Only
+// takes effect in resident mode built with FV_ADVECTION_USE_PEER. Read once and
+// cached, mirroring nccl_halo_enabled.
+bool peer_halo_enabled() {
+#ifdef FV_ADVECTION_USE_PEER
+    static const bool enabled = [] {
+        const char* value = std::getenv("FV_ADVECTION_PEER_HALO");
+        return value != nullptr &&
+               (value[0] == '1' || value[0] == 't' || value[0] == 'T' ||
+                value[0] == 'y' || value[0] == 'Y');
+    }();
+    return enabled;
+#else
+    return false;
+#endif
+}
+
+// True when either GPU-to-GPU halo backend is active. The resident spine gates on
+// this to skip the host halo exchange and fold; the specific backend (NCCL pack
+// or peer copy) is picked inside the dispatch helpers. The two are mutually
+// exclusive at runtime -- a run sets one env switch, never both.
+bool device_halo_enabled() {
+    return nccl_halo_enabled() || peer_halo_enabled();
+}
+
+// Build (or confirm) the process's CUDA IPC peer context. Returns FV_CUDA_SUCCESS
+// on success. When the overlay is built without FV_ADVECTION_USE_PEER this reports
+// that peer-copy halo support was not compiled in, so a misconfigured run fails
+// loudly instead of silently skipping the device exchange.
+int peer_init() {
+#ifdef FV_ADVECTION_USE_PEER
+    return ensure_peer_context();
+#else
+    std::fprintf(stderr,
+                 "fv_advection_kernels peer error: this overlay was built without "
+                 "FV_ADVECTION_USE_PEER; rebuild with peer support to use the direct "
+                 "NVLink peer-copy halo.\n");
+    return FV_CUDA_ERROR;
+#endif
+}
+
+#ifdef FV_ADVECTION_DEVICE_HALO
+// True when this rank has at least one real (non-pole) neighbor under the active
+// device-halo backend. Gates the compute-stream wait on the halo event.
+bool device_halo_has_neighbor() {
+#ifdef FV_ADVECTION_USE_PEER
+    if (peer_halo_enabled()) {
+        return peer_context.south >= 0 || peer_context.north >= 0;
+    }
+#endif
+#ifdef FV_ADVECTION_USE_NCCL
+    if (nccl_halo_enabled()) {
+        return nccl_context.south >= 0 || nccl_context.north >= 0;
+    }
+#endif
+    return false;
+}
+
+// The event recorded after the active backend's halo copies, for the compute
+// stream to wait on before the first kernel that reads the halo.
+cudaEvent_t device_halo_done_event() {
+#ifdef FV_ADVECTION_USE_PEER
+    if (peer_halo_enabled()) {
+        return peer_context.halo_done;
+    }
+#endif
+#ifdef FV_ADVECTION_USE_NCCL
+    if (nccl_halo_enabled()) {
+        return nccl_context.halo_done;
+    }
+#endif
+    return nullptr;
+}
+
+// Fill d_field's y-halo with the active backend, and (when the fold pointers are
+// given) report which poles this rank owns so the caller can run the device fold.
+// Dispatches to the NCCL pack/send/recv/unpack or the direct peer copy; the two
+// are mutually selected at runtime.
+int exchange_device_halo(double* d_field, int nx, int ny, int nz,
+                         CudaPhaseCounter& phases, bool synchronize,
+                         bool* fold_south, bool* fold_north) {
+#ifdef FV_ADVECTION_USE_PEER
+    if (peer_halo_enabled()) {
+        if (fold_south) *fold_south = peer_context.south < 0;
+        if (fold_north) *fold_north = peer_context.north < 0;
+        return exchange_halo_peer(d_field, nx, ny, nz, phases, synchronize);
+    }
+#endif
+#ifdef FV_ADVECTION_USE_NCCL
+    if (nccl_halo_enabled()) {
+        if (fold_south) *fold_south = nccl_context.south < 0;
+        if (fold_north) *fold_north = nccl_context.north < 0;
+        return exchange_q1_halo_nccl(d_field, nx, ny, nz, phases, synchronize);
+    }
+#endif
+    (void)d_field; (void)nx; (void)ny; (void)nz; (void)phases; (void)synchronize;
+    if (fold_south) *fold_south = false;
+    if (fold_north) *fold_north = false;
+    return FV_CUDA_ERROR;
+}
+#endif  // FV_ADVECTION_DEVICE_HALO
+
 // Build (or confirm) the process's NCCL communicator. Returns FV_CUDA_SUCCESS on
 // success. When the overlay is built without FV_ADVECTION_USE_NCCL this reports
 // that GPU-to-GPU halo support was not compiled in, so a misconfigured run fails
@@ -2069,14 +2542,28 @@ int resident_advection_begin(
     // compute_vc (reads the va halo). Pole sides come from the NCCL neighbors:
     // south/north < 0 marks a pole, which reflects instead of exchanging. qx folds
     // symmetrically (same as q1); vx flips sign (a wind reflected across the pole).
-#ifdef FV_ADVECTION_USE_NCCL
-    const bool device_halo = nccl_halo_enabled();
+#ifdef FV_ADVECTION_DEVICE_HALO
+    const bool device_halo = device_halo_enabled();
     if (ierr == FV_CUDA_SUCCESS && device_halo) {
-        const bool fold_south = nccl_context.south < 0;
-        const bool fold_north = nccl_context.north < 0;
-        ierr = exchange_q1_halo_nccl(d_q_halo, nx, ny, nz, phases, /*synchronize=*/false);
+        bool fold_south = false;
+        bool fold_north = false;
+#ifdef FV_ADVECTION_USE_PEER
+        // The peer copy reads the neighbor's resident buffer directly, so its IPC
+        // handles must be current before the first pull. Lazy and collective: a
+        // no-op after the first begin unless a buffer was reallocated.
+        if (peer_halo_enabled()) {
+            ierr = ensure_peer_buffer_handles();
+        }
+#endif
+        // qx (q) halo: fold flags come back from the active backend's neighbors.
         if (ierr == FV_CUDA_SUCCESS) {
-            ierr = exchange_q1_halo_nccl(d_va_halo, nx, ny, nz, phases, /*synchronize=*/false);
+            ierr = exchange_device_halo(d_q_halo, nx, ny, nz, phases,
+                                        /*synchronize=*/false, &fold_south, &fold_north);
+        }
+        // vx (va) halo: same neighbors, so the fold flags are already known.
+        if (ierr == FV_CUDA_SUCCESS) {
+            ierr = exchange_device_halo(d_va_halo, nx, ny, nz, phases,
+                                        /*synchronize=*/false, nullptr, nullptr);
         }
         if (ierr == FV_CUDA_SUCCESS) {
             ierr = fold_q1_poles(d_q_halo, nx, ny, nz, fold_south, fold_north, phases,
@@ -2101,14 +2588,13 @@ int resident_advection_begin(
         ierr = check_cuda(cudaGetLastError(), "resident form_q1_with_halo_kernel");
     }
 
-#ifdef FV_ADVECTION_USE_NCCL
+#ifdef FV_ADVECTION_DEVICE_HALO
     // The q/va halos feed semi_y and compute_vc below; wait for the GPU-to-GPU
     // exchange to land before the first kernel that reads them. The folds already
-    // ran on the compute stream, so only the NCCL exchange needs the cross-stream
-    // wait (halo_done was recorded after the last unpack).
-    if (ierr == FV_CUDA_SUCCESS && device_halo &&
-        (nccl_context.south >= 0 || nccl_context.north >= 0)) {
-        ierr = check_cuda(cudaStreamWaitEvent(0, nccl_context.halo_done, 0),
+    // ran on the compute stream, so only the exchange needs the cross-stream wait
+    // (halo_done was recorded on the halo stream after the last copy).
+    if (ierr == FV_CUDA_SUCCESS && device_halo && device_halo_has_neighbor()) {
+        ierr = check_cuda(cudaStreamWaitEvent(0, device_halo_done_event(), 0),
                           "resident begin wait halo");
     }
 #endif
@@ -2171,7 +2657,7 @@ int resident_advection_begin(
     // touched host-side before resident_advection_finish uploads the halo back.
     // With the GPU-to-GPU halo path on, the neighbor swap and fold happen on the
     // device in finish, so these edge rows never need to reach the host.
-    if (ierr == FV_CUDA_SUCCESS && !nccl_halo_enabled()) {
+    if (ierr == FV_CUDA_SUCCESS && !device_halo_enabled()) {
         const std::size_t host_pitch = static_cast<std::size_t>(nx) * ny * sizeof(double);
         const std::size_t dev_pitch = static_cast<std::size_t>(nx) * (ny + 4) * sizeof(double);
         const std::size_t edge_width = static_cast<std::size_t>(nx) * 2 * sizeof(double);
@@ -2240,7 +2726,7 @@ int resident_advection_finish(
     double* d_uc = persistent_context.buffers[12].data;
     double* d_vc = persistent_context.buffers[13].data;
 
-    const bool device_halo = nccl_halo_enabled();
+    const bool device_halo = device_halo_enabled();
     const bool timing = profile::enabled();
     if (ierr == FV_CUDA_SUCCESS && timing) {
         ierr = ensure_timing_events();
@@ -2258,14 +2744,23 @@ int resident_advection_finish(
     // only the two halo rows per side need to be filled before the sphere flux
     // kernel reads them.
     if (ierr == FV_CUDA_SUCCESS && device_halo) {
-#ifdef FV_ADVECTION_USE_NCCL
-        // GPU-to-GPU path: swap the neighbor rows over NCCL and fold the poles,
-        // all on the device. No host round-trip; the host q1 argument is unused.
-        // Neither call blocks the host: the exchange records halo_done on the
-        // NCCL stream, the fold runs on the compute stream (overlapping the
-        // exchange), and the compute stream waits on halo_done just before the
-        // sphere flux kernel reads the halo (below).
-        ierr = exchange_q1_halo_nccl(d_q1, nx, ny, nz, phases, /*synchronize=*/false);
+#ifdef FV_ADVECTION_DEVICE_HALO
+        // GPU-to-GPU path: fill the neighbor rows on the device (NCCL swap or peer
+        // copy) and fold the poles, all on the device. No host round-trip; the host
+        // q1 argument is unused. Neither call blocks the host: the exchange records
+        // halo_done on the halo stream, the fold runs on the compute stream
+        // (overlapping the exchange), and the compute stream waits on halo_done just
+        // before the sphere flux kernel reads the halo (below). The poles this rank
+        // owns come from is_south_boundary/is_north_boundary, not the neighbor map.
+#ifdef FV_ADVECTION_USE_PEER
+        if (peer_halo_enabled()) {
+            ierr = ensure_peer_buffer_handles();
+        }
+#endif
+        if (ierr == FV_CUDA_SUCCESS) {
+            ierr = exchange_device_halo(d_q1, nx, ny, nz, phases, /*synchronize=*/false,
+                                        nullptr, nullptr);
+        }
         if (ierr == FV_CUDA_SUCCESS) {
             ierr = fold_q1_poles(d_q1, nx, ny, nz, is_south_boundary, is_north_boundary,
                                  phases, /*synchronize=*/false);
@@ -2307,13 +2802,12 @@ int resident_advection_finish(
                                               d_uc, d_q2, d_dq);
         ierr = check_cuda(cudaGetLastError(), "resident vanleer_x_kernel");
     }
-#ifdef FV_ADVECTION_USE_NCCL
-    // The sphere flux kernel below reads the neighbor halo rows filled on the
-    // NCCL stream, so the compute stream must wait for the exchange first. Only
-    // needed when this rank actually exchanged (has a neighbor).
-    if (ierr == FV_CUDA_SUCCESS && device_halo &&
-        (nccl_context.south >= 0 || nccl_context.north >= 0)) {
-        ierr = check_cuda(cudaStreamWaitEvent(0, nccl_context.halo_done, 0),
+#ifdef FV_ADVECTION_DEVICE_HALO
+    // The sphere flux kernel below reads the neighbor halo rows filled on the halo
+    // stream, so the compute stream must wait for the exchange first. Only needed
+    // when this rank actually exchanged (has a neighbor).
+    if (ierr == FV_CUDA_SUCCESS && device_halo && device_halo_has_neighbor()) {
+        ierr = check_cuda(cudaStreamWaitEvent(0, device_halo_done_event(), 0),
                           "resident finish wait halo");
     }
 #endif
@@ -2524,4 +3018,13 @@ extern "C" int fv_advection_nccl_fold_q1_poles_cuda_c(int nx, int ny, int nz,
 
 extern "C" int fv_advection_nccl_halo_enabled_cuda_c() {
     return fv_advection_kernels::cuda_backend::nccl_halo_enabled() ? 1 : 0;
+}
+
+extern "C" int fv_advection_peer_init_cuda_c() {
+    register_cuda_profile_report();
+    return fv_advection_kernels::cuda_backend::peer_init();
+}
+
+extern "C" int fv_advection_peer_halo_enabled_cuda_c() {
+    return fv_advection_kernels::cuda_backend::peer_halo_enabled() ? 1 : 0;
 }

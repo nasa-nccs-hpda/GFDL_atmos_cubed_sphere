@@ -472,6 +472,10 @@ class HeldSuarezFvKernelsCodeBase(DryCodeBase):
             # Level 1: compile the CUDA halo exchange against NCCL for the model
             # build (the standalone validate targets leave this off).
             make_cmd.append("USE_FV_ADVECTION_NCCL=1")
+            # Peer backend: also compile the direct NVLink peer-copy halo path so
+            # one binary can run the host, NCCL, and peer legs of the A/B, selected
+            # at runtime by FV_ADVECTION_NCCL_HALO / FV_ADVECTION_PEER_HALO.
+            make_cmd.append("USE_FV_ADVECTION_PEER=1")
         make_cmd.append("lib")
         subprocess.check_call(make_cmd, cwd=str(lib_workdir))
 

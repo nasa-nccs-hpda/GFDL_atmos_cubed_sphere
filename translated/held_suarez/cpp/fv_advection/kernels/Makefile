@@ -36,6 +36,17 @@ ifeq ($(USE_FV_ADVECTION_NCCL),1)
 NVCCFLAGS += -DFV_ADVECTION_USE_NCCL -ccbin mpicxx
 endif
 
+# Direct NVLink peer-copy halo (FV transfer PoC, peer backend). A separate opt-in
+# from NCCL: it fills the y-halo with a strided cudaMemcpy2DAsync straight from the
+# neighbor's resident buffer (imported over CUDA IPC) instead of packing and
+# sending. It needs <mpi.h> for the one-time IPC-handle bootstrap (hence
+# -ccbin mpicxx) but no NCCL. NCCL and peer are mutually selected at runtime; a
+# build may enable either or both, and the env switch picks which one runs.
+USE_FV_ADVECTION_PEER ?= 0
+ifeq ($(USE_FV_ADVECTION_PEER),1)
+NVCCFLAGS += -DFV_ADVECTION_USE_PEER -ccbin mpicxx
+endif
+
 .PHONY: all lib run compare check cuda_check cuda_check_impl \
 	cuda_persistent_check cuda_persistent_check_impl \
 	cuda_resident_check cuda_resident_check_impl clean
